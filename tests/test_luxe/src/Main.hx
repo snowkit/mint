@@ -71,12 +71,11 @@ class Main extends luxe.Game {
         button1 = new MIButton({
             parent : window,
             name : 'click1',
-            bounds : new Rectangle( 10, 10, 100, 35 ),
+            bounds : new Rectangle( 10, 30, 100, 35 ),
             text : 'clicked',
             text_size : 15,
             onclick : function(){ trace('window 1'); }
         });
-
 
         itemlist.add_item('items one');
         itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);

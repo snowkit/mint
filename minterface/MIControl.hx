@@ -61,11 +61,13 @@ class MIControl {
 		mouse_down_handlers = [];
 
 		if(_options.parent != null) {
+
 			renderer = _options.parent.renderer;
 			canvas = _options.parent.canvas;
 			_options.parent.add(this);
 			depth = parent.depth + 0.1;
-			trace('control depth ' + name + ' ' + depth);
+			// trace('control depth ' + name + ' ' + depth);
+			
 		} else { //parent != null
 
 			if( !Std.is(this, MICanvas) && canvas == null) {

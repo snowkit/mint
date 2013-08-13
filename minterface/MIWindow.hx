@@ -11,8 +11,6 @@ import minterface.MIControl;
 
 class MIWindow extends MIControl {
 	
-	public var geom : NineSlice;
-	public var _title : Text;
 	public var title_bounds : Rectangle;
 	public var view_bounds : Rectangle;
 
@@ -37,18 +35,13 @@ class MIWindow extends MIControl {
 		title_bounds = new Rectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );
 		view_bounds = new Rectangle(32, 32, bounds.w - 64, bounds.h - 64 );
 
-
 		_options.pos = new Vector(real_bounds.x, real_bounds.y);
-		_title = new Text( options_plus(_options, {depth : 2, bounds:title_bounds, color:new Color().rgb(0x999999) }) );
+			
+			//set for the title info
+		_options = options_plus( _options, { bounds:title_bounds, color:new Color().rgb(0x999999) } );
 
-		geom = new NineSlice({
-			texture : Luxe.loadTexture('assets/box.ui.png'),
-			depth : 2,
-			top : 32, left : 32, right : 32, bottom : 32,
-		});
-
-		geom.pos = new Vector( real_bounds.x, real_bounds.y );
-		geom.create( new Vector(real_bounds.x, real_bounds.y), real_bounds.w, real_bounds.h );
+			//update
+		renderer.window.init( this, _options );
 
 	} //new
  
@@ -85,9 +78,10 @@ class MIWindow extends MIControl {
 		super.translate(_x,_y);
 		
 		title_bounds = new Rectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );		
-		_title.pos = new Vector(_title.pos.x + _x, _title.pos.y + _y);
-		geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
-	}
+		
+		renderer.window.translate( this, _x, _y );
+		
+	} //translate
 
 
 }

@@ -17,6 +17,7 @@ import minterface.MIWindow;
 import luxe.Text;
 import luxe.Color;
 import luxe.Vector;
+import luxe.Sprite;
 
 import phoenix.geometry.QuadGeometry;
 import luxe.utils.NineSlice;
@@ -107,7 +108,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 	public override function init( _control:MIButton, _options:Dynamic ) {
 		
 		var geom = new NineSlice({
-			texture : Luxe.loadTexture('assets/button.ui.png'),
+			texture : Luxe.loadTexture('default_ui_button'),
 			depth : _control.depth,
 			top : 8, left : 8, right : 8, bottom : 8,
 		});
@@ -174,7 +175,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 		Luxe.addGeometry( sliderh );
 		Luxe.addGeometry( sliderv );
 
-		_control.render_items.set('back', back);		
+		_control.render_items.set('back', back);
 		_control.render_items.set('sliderh', sliderh);
 		_control.render_items.set('sliderv', sliderv);
 
@@ -196,7 +197,6 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 		var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
 		var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
-
 	} //set_clip
 
 	public override function refresh_scroll( _control:MIScrollArea, shx:Float, shy:Float, svx:Float, svy:Float, hv:Bool, vv:Bool ) {
@@ -217,13 +217,33 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
 	public override function init( _control:MIImage, _options:Dynamic ) {
 
+			//create the image
+		var image = new Sprite(_options);
+			//store for later
+        _control.render_items.set('image', image);
+			//clip the geometry
+		set_clip( _control, _control.parent.real_bounds );
+
 	} //init
 
 	public override function translate( _control:MIImage, _x:Float, _y:Float ) {
+		
+		var image:Sprite = cast _control.render_items.get('image');
+
+		image.pos = image.pos.add( new Vector(_x,_y) );
 
 	} //translate
 
 	public override function set_clip( _control:MIImage, ?_clip_rect:Rectangle=null ) {
+
+		var image:Sprite = cast _control.render_items.get('image');
+
+        if(_clip_rect == null) {
+			image.geometry.clip = false;
+		} else {
+			image.geometry.clip = true;
+        	image.geometry.clip_rect = _clip_rect;
+		}
 
 	} //set_clip
 
@@ -233,13 +253,37 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
 	public override function init( _control:MIWindow, _options:Dynamic ) {
 
+		var geom = new NineSlice({
+			texture : Luxe.loadTexture('default_ui_box'),
+			depth : _control.depth,
+			top : 32, left : 32, right : 32, bottom : 32,
+		});
+
+		geom.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
+		geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y ), _control.real_bounds.w, _control.real_bounds.h );
+
+		_options.depth = _control.depth+0.1;
+
+		var title = new Text( _options );
+
+		_control.render_items.set('title', title);
+		_control.render_items.set('geom', geom);
+		
 	} //init
 
 	public override function translate( _control:MIWindow, _x:Float, _y:Float ) {
+		
+		var geom : NineSlice = cast _control.render_items.get('geom'); 
+		var title : Text = cast _control.render_items.get('title');
+
+		title.pos = new Vector( title.pos.x + _x,  title.pos.y + _y);
+		geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
 
 	} //translate
 
 	public override function set_clip( _control:MIWindow, ?_clip_rect:Rectangle=null ) { 
+
+
 
 	} //set_clip
 
