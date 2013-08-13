@@ -16,10 +16,6 @@ class MIScrollArea extends MIControl {
 	public var scroll_percent : Vector;
 	public var child_bounds : Dynamic;
 
-	public var back : QuadGeometry;
-	public var sliderv : QuadGeometry;
-	public var sliderh : QuadGeometry;
-
 	public function new(_options:Dynamic) {
 
 		super(_options);
@@ -27,34 +23,7 @@ class MIScrollArea extends MIControl {
 		scroll_amount = new Vector();
 		scroll_percent = new Vector();
 
-		back = new QuadGeometry({
-			depth : 1,
-			x: real_bounds.x,
-            y: real_bounds.y,
-            width: real_bounds.w,
-            height: real_bounds.h,
-            color : new Color().rgb(0x121212)
-		});
-		sliderv = new QuadGeometry({
-			depth : 3,
-			x: (real_bounds.x+real_bounds.w - 4),
-            y: real_bounds.y + ((real_bounds.h-10) * scroll_percent.y),
-            width: 3,
-            height: 10,
-            color : new Color().rgb(0x999999)
-		});
-		sliderh = new QuadGeometry({
-			depth : 3,
-			x: real_bounds.x + ((real_bounds.w-10) * scroll_percent.x),
-            y: (real_bounds.y+real_bounds.h - 4),
-            width: 10,
-            height: 3,
-            color : new Color().rgb(0x999999)
-		});
-
-		Luxe.addGeometry( back );
-		Luxe.addGeometry( sliderh );
-		Luxe.addGeometry( sliderv );
+		renderer.scroll.init( this, _options );
 
 		refresh_scroll();
 		
@@ -62,7 +31,7 @@ class MIScrollArea extends MIControl {
 
 	public override function add(child:MIControl) {
 		super.add(child);
-		refresh_scroll();
+		refresh_scroll();		
 	}
 
 	public override function onmousedown(e) {
@@ -89,7 +58,7 @@ class MIScrollArea extends MIControl {
 
 	public override function translate(?_x:Float = 0, ?_y:Float = 0) {
 		super.translate(_x,_y);
-		back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
+		renderer.scroll.translate(this,_x,_y);
 	}
 
 	public function scrolly(diff:Float) {
@@ -121,23 +90,26 @@ class MIScrollArea extends MIControl {
 	public function refresh_scroll() {
 
 			//get child bounds
-		child_bounds = children_bounds();		
+		child_bounds = children_bounds();
+
+		var slider_h_visible = false;
+		var slider_v_visible = false;
 
 			//if the children bounds are < our size, it can't scroll
 		if(child_bounds.w < real_bounds.w) {
 			can_scroll_h = false;
-			sliderh.enabled = false;
+			slider_h_visible = false;
 		} else {
 			can_scroll_h = true;
-			sliderh.enabled = true;
+			slider_h_visible = true;
 		}
 
 		if(child_bounds.h < real_bounds.h) {
 			can_scroll_v = false;
-			sliderv.enabled = false;
+			slider_v_visible = false;
 		} else {
 			can_scroll_v = true;
-			sliderv.enabled = true;
+			slider_v_visible = true;
 		} 
 		
 		if(can_scroll_h) {
@@ -157,8 +129,12 @@ class MIScrollArea extends MIControl {
 
 		} //can_scroll_v
 
-		sliderh.pos = new Vector(real_bounds.x + ((real_bounds.w-10) * scroll_percent.x), (real_bounds.y+real_bounds.h - 4) );
-		sliderv.pos = new Vector((real_bounds.x+real_bounds.w - 4), real_bounds.y + ((real_bounds.h-10) * scroll_percent.y));
+		var sliderh_x = real_bounds.x + ( (real_bounds.w-10) * scroll_percent.x );
+		var sliderh_y = ( real_bounds.y + real_bounds.h - 4 );
+		var sliderv_x = ( real_bounds.x + real_bounds.w - 4 );
+		var sliderv_y = real_bounds.y + ( (real_bounds.h-10) * scroll_percent.y );
+
+		renderer.scroll.refresh_scroll( this, sliderh_x, sliderh_y, sliderv_x, sliderv_y, slider_h_visible, slider_v_visible );
 
 	} // refresh_scroll
 

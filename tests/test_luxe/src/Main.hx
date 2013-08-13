@@ -62,6 +62,7 @@ class Main extends luxe.Game {
 
         window = new MIWindow({
             parent : canvas,
+            name : 'inspector',
             title : 'inspector',
             title_size : 15,
             bounds : new Rectangle(750, 20, 200, 300)
@@ -112,7 +113,7 @@ class Main extends luxe.Game {
             });
         }
 
-        window.depth = 8;
+        // window.depth = 8;
 
     } //ready
     

@@ -3,6 +3,7 @@ package minterface;
 import luxe.Text;
 import luxe.Color;
 import luxe.Vector;
+import luxe.Rectangle;
 
 import minterface.MIControl;
 
@@ -26,8 +27,8 @@ class MILabel extends MIControl {
 		_options = options_plus(_options, {depth : 2});
 			//create it
 		renderer.label.init(this,_options);
-
-		debug_color = new Color(0,1,0.6,0.5);		
+			//debug color
+		debug_color = new Color(0,1,0.6,0.5);
 
 	} //new
 
@@ -36,5 +37,11 @@ class MILabel extends MIControl {
 		renderer.label.translate(this, _x, _y);
 	}
 
+	public override function set_clip( ?_clip_rect:Rectangle = null ) {
+
+		super.set_clip( _clip_rect );
+		renderer.label.set_clip( this, _clip_rect );
+
+	} // 
 
 }

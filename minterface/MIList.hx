@@ -28,6 +28,7 @@ class MIList extends MIControl {
 
 		var l = new MILabel({
 			text : _item,
+			name : name + '.item.' + _item,
 			bounds : new Rectangle(0, _childbounds.h, bounds.w, 30),			
 			parent : view,
 			color : new Color().rgb(0x999999),

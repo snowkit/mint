@@ -44,18 +44,7 @@ class MIControl {
 
 	private var debug_color : Color;
 
-	@:isVar public var depth(default,set) : Float = 0;
-	public function set_depth(v:Float) {
-		//when changing the depth, all children depth become above 
-		if(children != null) {
-			var n = 0;
-			for(child in children) {
-				n++;
-				child.depth = v+(0.01*n);
-			}
-		} //children
-		return v;
-	} //set_depth
+	@:isVar public var depth(default,default) : Float = 0;
 
 	public function new(_options:Dynamic) {
 
@@ -72,9 +61,11 @@ class MIControl {
 		mouse_down_handlers = [];
 
 		if(_options.parent != null) {
+			renderer = _options.parent.renderer;
+			canvas = _options.parent.canvas;
 			_options.parent.add(this);
-			renderer = parent.renderer;
-			canvas = parent.canvas;
+			depth = parent.depth + 0.1;
+			trace('control depth ' + name + ' ' + depth);
 		} else { //parent != null
 
 			if( !Std.is(this, MICanvas) && canvas == null) {
@@ -108,7 +99,17 @@ class MIControl {
 		for(child in children) {
 			child.translate( _x, _y );
 		}
+
 	}
+
+	public function set_clip( ?_clip_rect:Rectangle = null ) {
+		//temporarily, all children clip by their parent clip
+
+		for(_child in children) {
+			_child.set_clip( _clip_rect );
+		}
+
+	} //set clip
 
 	private function options_plus(options:Dynamic, plus:Dynamic) {
 		var _fields = Reflect.fields(plus);
