@@ -22,9 +22,13 @@ class MIControl {
 	
 	public var name : String = 'control';
 
-		//parent canvas
+		//parent canvas that this element belongs to
 	public var canvas : MICanvas;
+		//the renderer that is handling the canvas
 	public var renderer : MIRenderer;
+
+		//the items specific to rendering this item
+	public var render_items : Map<String, Dynamic>;
 
 	public var bounds : Rectangle;
 	public var real_bounds : Rectangle;
@@ -57,6 +61,8 @@ class MIControl {
 
 		debug_color = new Color(0.5,0.3,0.2,0.5);		
 
+		render_items = new Map<String,Dynamic>();
+		
 		bounds = _options.bounds == null ? new Rectangle(0,0,32,32) : _options.bounds;
 		real_bounds = bounds.clone();
 
