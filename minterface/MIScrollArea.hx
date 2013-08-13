@@ -30,6 +30,7 @@ class MIScrollArea extends MIControl {
 	} //new
 
 	public override function add(child:MIControl) {
+		
 		super.add(child);
 		refresh_scroll();		
 	}

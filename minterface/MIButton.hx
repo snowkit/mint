@@ -34,11 +34,15 @@ class MIButton extends MIControl {
 		}
 		
 		renderer.button.init( this, _options );
-	}
+
+		clip_with_closest_to_canvas();
+
+	} //new
 
 	public override function translate(?_x:Float = 0, ?_y:Float = 0) {
 		super.translate(_x,_y);		
 		renderer.button.translate( this, _x, _y );
+		clip_with_closest_to_canvas();
 	}
 
 

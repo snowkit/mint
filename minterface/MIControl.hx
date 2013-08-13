@@ -26,6 +26,8 @@ class MIControl {
 	public var canvas : MICanvas;
 		//the renderer that is handling the canvas
 	public var renderer : MIRenderer;
+		//the top most control below the canvas that holds us
+	public var closest_to_canvas : MIControl;
 
 		//the items specific to rendering this item
 	public var render_items : Map<String, Dynamic>;
@@ -66,8 +68,7 @@ class MIControl {
 			canvas = _options.parent.canvas;
 			_options.parent.add(this);
 			depth = parent.depth + 0.1;
-			// trace('control depth ' + name + ' ' + depth);
-			
+
 		} else { //parent != null
 
 			if( !Std.is(this, MICanvas) && canvas == null) {
@@ -75,7 +76,34 @@ class MIControl {
 			} //canvas
 		}
 
+			//closest_to_canvas
+		closest_to_canvas = find_top_parent();
+
 	} //new
+
+	function clip_with_closest_to_canvas() {
+		if(closest_to_canvas != null) {
+			set_clip( closest_to_canvas.real_bounds );
+		}
+	} //clip_with_closest_to_canvas
+
+	function find_top_parent( ?_from:MIControl = null ) {
+
+		var _target = (_from == null) ? this : _from;
+
+		if(_target == null || _target.parent == null) {
+			return null;
+		}
+
+			//if the parent of the target is not canvas, 
+			//keep escalating until it is
+		if( Std.is( _target.parent, MICanvas ) ) {
+			return _target;
+		} else { //is
+			return parent.find_top_parent( this );
+		} 
+
+	} //find_top_parent
 
 	function get_mousedown() {
 		return mouse_down_handlers[0];
