@@ -14,7 +14,7 @@ class MIImage extends MIControl {
 			//image size to the parent,
 		_options.centered = false;
 		_options.pos = new Vector(real_bounds.x, real_bounds.y);
-		_options.depth = depth + 0.2;
+		_options.depth = depth + 1;
 
 		renderer.image.init(this, _options);
 

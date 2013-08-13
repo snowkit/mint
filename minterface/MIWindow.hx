@@ -46,6 +46,9 @@ class MIWindow extends MIControl {
 	} //new
  
 	public override function onmousemove(e:MouseEvent)  {
+		
+		super.onmousemove(e);
+
 		var _m : Vector = new Vector(e.x,e.y);
 		if(dragging) {
 			var diff = Vector.Subtract( _m , drag_start );			
@@ -55,6 +58,9 @@ class MIWindow extends MIControl {
 	} //onmousemove
 
 	public override function onmousedown(e:MouseEvent)  {
+
+		super.onmousedown(e);
+
 		var _m : Vector = new Vector(e.x,e.y);
 
 			if(!dragging) {
@@ -68,6 +74,9 @@ class MIWindow extends MIControl {
 	} //onmousedown
 
 	public override function onmouseup(e:MouseEvent)  {
+
+		super.onmouseup(e);
+
 		var _m : Vector = new Vector(e.x,e.y);
 		if(dragging) {
 			dragging = false;
@@ -80,7 +89,7 @@ class MIWindow extends MIControl {
 		title_bounds = new Rectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );		
 		
 		renderer.window.translate( this, _x, _y );
-		
+
 	} //translate
 
 
