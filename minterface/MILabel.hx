@@ -9,7 +9,7 @@ import minterface.MIControl;
 
 class MILabel extends MIControl {
 	
-	public var _text : Text;
+	public var text : String;
 
 	public function new(_options:Dynamic) {		
 
@@ -22,6 +22,8 @@ class MILabel extends MIControl {
 		if(_options.text_size != null) { _options.size = _options.text_size; }		
 
 		_options.pos = new Vector(real_bounds.x, real_bounds.y);
+			//store the text
+		text = _options.text;
 			
 			//adjust for label
 		_options.depth = depth;

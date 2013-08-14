@@ -1,5 +1,6 @@
 package minterface;
 
+import luxe.Input.MouseButton;
 import minterface.MIControl;
 
 import luxe.Rectangle;
@@ -48,7 +49,20 @@ class MIList extends MIControl {
 
 	public override function onmousedown(e) {
 		super.onmousedown(e);
+
+		if(e.button == MouseButton.left) {
+
+			var _rel_mouse_x = e.x - real_bounds.x;
+			var _rel_mouse_y = e.y - real_bounds.y;
+			var _childbounds = view.children_bounds();
+			
+			_rel_mouse_y += (_childbounds.h * view.scroll_percent.y);
+			trace(_rel_mouse_y);
+			
+		}
+
 	}
+
 	public override function onmouseup(e) {
 		super.onmouseup(e);
 	}

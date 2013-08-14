@@ -69,7 +69,7 @@ class MIControl {
 			_options.parent.add(this);
 			canvas.depth+=1;
 			depth = canvas.depth;//(parent.depth + 0.01);
-			trace('depth : ' + name + ' ' + depth);
+			// trace('depth : ' + name + ' ' + depth);
 
 		} else { //parent != null
 
