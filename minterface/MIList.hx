@@ -14,6 +14,9 @@ class MIList extends MIControl {
 			
 			//create the base control
 		super(_options);
+			//
+		// _options.depth = _depth;
+
 		view = new MIScrollArea({
 			parent : this,
 			bounds : _options.bounds.clone().set(0,0),

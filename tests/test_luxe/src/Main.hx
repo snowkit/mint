@@ -60,22 +60,6 @@ class Main extends luxe.Game {
             bounds : new Rectangle(10,50, 100,380)
         });
 
-        window = new MIWindow({
-            parent : canvas,
-            name : 'inspector',
-            title : 'inspector',
-            title_size : 15,
-            bounds : new Rectangle(750, 20, 200, 300)
-        });
-
-        button1 = new MIButton({
-            parent : window,
-            name : 'click1',
-            bounds : new Rectangle( 10, 30, 100, 35 ),
-            text : 'clicked',
-            text_size : 15,
-            onclick : function(){ trace('window 1'); }
-        });
 
         itemlist.add_item('items one');
         itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);
@@ -111,6 +95,23 @@ class Main extends luxe.Game {
                 onclick : function(){ trace('click me + '+ (i+1)); }
             });
         }
+
+        window = new MIWindow({
+            parent : canvas,
+            name : 'inspector',
+            title : 'inspector',
+            title_size : 15,
+            bounds : new Rectangle(750, 20, 200, 300)
+        });
+
+        button1 = new MIButton({
+            parent : window,
+            name : 'click1',
+            bounds : new Rectangle( 10, 30, 100, 35 ),
+            text : 'clicked',
+            text_size : 15,
+            onclick : function(){ trace('window 1'); }
+        });        
 
         // window.depth = 8;
 

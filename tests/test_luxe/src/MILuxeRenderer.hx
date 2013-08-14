@@ -262,7 +262,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 		geom.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
 		geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y ), _control.real_bounds.w, _control.real_bounds.h );
 
-		_options.depth = _control.depth+0.1;
+		_options.depth = _control.depth+0.01;
 
 		var title = new Text( _options );
 

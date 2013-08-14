@@ -9,6 +9,7 @@ import minterface.MIControl;
 class MICanvas extends MIControl {
 
 	public var focused : MIControl;
+	public var _child_depth : Float = 0;
 
 	public function new( _options:Dynamic ) {
 
@@ -28,12 +29,17 @@ class MICanvas extends MIControl {
 
 		mouse_enabled = true;
 		focused = null;
+		depth = _options.depth;
 
 		debug_color = new Color(0.5,0,0,0.5);		
 
 		renderer.canvas.init( this, _options );
 
 	} //new
+
+	public override function add( child:MIControl ) {
+		super.add(child);		
+	} //add
 
 	public function update(dt:Float) {
 		_debug();

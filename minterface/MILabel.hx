@@ -24,7 +24,7 @@ class MILabel extends MIControl {
 		_options.pos = new Vector(real_bounds.x, real_bounds.y);
 			
 			//adjust for label
-		_options = options_plus(_options, {depth : 2});
+		_options.depth = depth;
 			//create it
 		renderer.label.init(this,_options);
 			//debug color

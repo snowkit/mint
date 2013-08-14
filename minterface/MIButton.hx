@@ -25,7 +25,6 @@ class MIButton extends MIControl {
 			text:_options.text,
 			text_size:_options.text_size,
 			name : name + '.label',
-			depth : 4.1,
 			color : new Color().rgb(0x999999)
 		});
 
