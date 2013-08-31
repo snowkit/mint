@@ -42,6 +42,18 @@ class MICanvas extends MIControl {
 		renderer.canvas.set_visible(this, _visible);
 	} //set_visible
 
+	public function topmost_control_under_point(_p:Vector) {
+		return topmost_child_under_point(_p);
+	}
+
+	public override function onmousedown(e) {
+		var m = new Vector(e.x,e.y);
+		var s = topmost_control_under_point(m);
+
+		trace(s);
+		if(s != null) trace(s.name);
+
+	} //onmousedown
 
 	public function next_depth() {
 		depth++;

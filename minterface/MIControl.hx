@@ -83,6 +83,33 @@ class MIControl {
 
 	} //new
 
+	public function topmost_child_under_point(_p:Vector) : MIControl {
+
+		for(_child in children) {
+			if(_child.real_bounds.point_inside(_p) && _child.mouse_enabled) {
+
+				if(_child.children.length == 0) {
+					return _child;
+				} else { //child has no further children, early out with that child
+					var _found = _child.topmost_child_under_point(_p);
+					if(_found == null) {
+						return _child;
+					} else {
+						return _found;
+					}
+				} //child has children, loop them
+
+			} //child contains point
+		} //child in children
+
+		return null;
+
+ 	} //topmost_child_under_point
+
+	public function contains_point(_p:Vector) {
+		return real_bounds.point_inside(_p);
+	} //contains point
+
 	function clip_with_closest_to_canvas() {
 		if(closest_to_canvas != null) {
 			set_clip( closest_to_canvas.real_bounds );
