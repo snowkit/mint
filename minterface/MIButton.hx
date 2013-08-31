@@ -1,7 +1,7 @@
 package minterface;
 
 import luxe.Rectangle;
-import luxe.utils.NineSlice;
+import luxe.NineSlice;
 import luxe.Vector;
 import luxe.Color;
 
@@ -25,7 +25,7 @@ class MIButton extends MIControl {
 			text:_options.text,
 			text_size:_options.text_size,
 			name : name + '.label',
-			color : new Color().rgb(0x999999)
+			color : new Color(0,0,0,1).rgb(0x999999)
 		});
 
 		if(_options.onclick != null) {

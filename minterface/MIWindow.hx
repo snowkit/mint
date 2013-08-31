@@ -4,15 +4,18 @@ import luxe.Input.MouseEvent;
 import luxe.Rectangle;
 import luxe.Text;
 import luxe.Color;
-import luxe.utils.NineSlice;
+import luxe.NineSlice;
 import luxe.Vector;
 
 import minterface.MIControl;
+import minterface.MILabel;
 
 class MIWindow extends MIControl {
 	
 	public var title_bounds : Rectangle;
 	public var view_bounds : Rectangle;
+
+	public var title : MILabel;
 
 	public var dragging : Bool = false;
 	public var drag_start : Vector;
@@ -32,13 +35,21 @@ class MIWindow extends MIControl {
 		if(_options.title_size != null) { _options.size = _options.title_size; }		
 		if(_options.title != null) { _options.text = _options.title; }		
 
-		title_bounds = new Rectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );
+		title_bounds = new Rectangle(6, 6, bounds.w-12, 20 );
 		view_bounds = new Rectangle(32, 32, bounds.w - 64, bounds.h - 64 );
 
 		_options.pos = new Vector(real_bounds.x, real_bounds.y);
 			
-			//set for the title info
-		_options = options_plus( _options, { bounds:title_bounds, color:new Color().rgb(0x999999) } );
+			//create the title label
+		// _options = options_plus( _options, { bounds:title_bounds, color:new Color().rgb(0x999999) } );
+		title = new MILabel({
+			parent : this,
+			bounds : title_bounds,
+			text:_options.text,
+			text_size:_options.title_size,
+			name : name + '.titlelabel',
+			color : new Color().rgb(0x999999)
+		});
 
 			//update
 		renderer.window.init( this, _options );
@@ -64,7 +75,7 @@ class MIWindow extends MIControl {
 		var _m : Vector = new Vector(e.x,e.y);
 
 			if(!dragging) {
-				if( title_bounds.point_inside(_m) ) {			
+				if( title.real_bounds.point_inside(_m) ) {			
 					dragging = true;			
 					drag_start = _m.clone();
 					down_start = new Vector(real_bounds.x, real_bounds.y);

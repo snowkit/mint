@@ -7,6 +7,7 @@ class MIRenderer {
 	public var canvas 	: MICanvasRenderer;
 	public var label 	: MILabelRenderer;
 	public var button 	: MIButtonRenderer;
+	public var list 	: MIListRenderer;
 	public var scroll 	: MIScrollAreaRenderer;
 	public var image 	: MIImageRenderer;
 	public var window   : MIWindowRenderer;
@@ -37,6 +38,15 @@ class MIButtonRenderer {
 	public function translate( _control:MIButton, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIButton, ?_clip_rect:Rectangle=null ) { } //set_clip
 } //MIButtonRenderer
+
+class MIListRenderer {
+	public function new(){}
+	public function init( _control:MIList, _options:Dynamic ) { } //init
+	public function translate( _control:MIList, _x:Float, _y:Float ) { } //translate
+	public function set_clip( _control:MIList, ?_clip_rect:Rectangle=null ) { } //set_clip
+	public function select_item( _control:MIList, _selected:MIControl ) { } //select_item
+	public function scroll( _control:MIList, _x:Float, _y:Float ) { } //scroll
+} //MIList
 
 class MIImageRenderer {
 	public function new(){}

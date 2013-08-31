@@ -16,12 +16,16 @@ class MIScrollArea extends MIControl {
 	public var scroll_percent : Vector;
 	public var child_bounds : Dynamic;
 
+	public var onscroll : Float -> Float -> Void;
+
 	public function new(_options:Dynamic) {
 
 		super(_options);
 
 		scroll_amount = new Vector();
 		scroll_percent = new Vector();
+
+		onscroll = _options.onscroll;
 
 		renderer.scroll.init( this, _options );
 
@@ -71,6 +75,10 @@ class MIScrollArea extends MIControl {
 			child.translate(0, diff);
 		}
 
+		if(onscroll != null && diff != 0) {
+			onscroll(0,diff);
+		}
+
 		refresh_scroll();
 	}
 
@@ -83,6 +91,10 @@ class MIScrollArea extends MIControl {
 
 		for(child in children) {
 			child.translate(diff, 0);
+		}
+
+		if(onscroll != null && diff != 0) {
+			onscroll(diff,0);
 		}
 
 		refresh_scroll();

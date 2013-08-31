@@ -1,5 +1,6 @@
 package minterface;
 
+import luxe.Input.MouseButton;
 import luxe.Text;
 import luxe.Color;
 import luxe.Vector;
@@ -17,9 +18,19 @@ class MILabel extends MIControl {
 
 		_options.bounds = real_bounds;
 
+			//disable mouse input by default
+		mouse_enabled = false;
+
+		if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
 		if(_options.align == null) { _options.align = TextAlign.center; }
 		if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
-		if(_options.text_size != null) { _options.size = _options.text_size; }		
+		if(_options.text_size != null) { _options.size = _options.text_size; }	
+		if(_options.color != null) { _options.color = new Color().rgb(0x999999); }	
+
+		if(_options.onclick != null) {
+			mouse_enabled = true;
+			mousedown = _options.onclick;
+		}	
 
 		_options.pos = new Vector(real_bounds.x, real_bounds.y);
 			//store the text
@@ -35,6 +46,7 @@ class MILabel extends MIControl {
 		clip_with_closest_to_canvas();
 
 	} //new
+
 
 	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
 		super.translate(_x,_y);		

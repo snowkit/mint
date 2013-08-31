@@ -37,6 +37,11 @@ class MICanvas extends MIControl {
 
 	} //new
 
+	public function next_depth() {
+		depth++;
+		return depth;
+	} //next_depth
+
 	public override function add( child:MIControl ) {
 		super.add(child);		
 	} //add

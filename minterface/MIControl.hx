@@ -37,20 +37,20 @@ class MIControl {
 	@:isVar public var parent(get,set) : MIControl;
 	public var children : Array<MIControl>;
 
-	@:isVar public var mousedown(get,set) : MIControl->Void;
-	var mouse_down_handlers : Array<MIControl->Void>;
+	@:isVar public var mousedown(get,set) : MIControl->?MouseEvent->Void;
+	var mouse_down_handlers : Array<MIControl->?MouseEvent->Void>;
 
 	public var isfocused : Bool = false;
 	public var ishovered : Bool = false;
 	public var mouse_enabled : Bool = true;
 
-	private var debug_color : Color;
+	public var debug_color : Color;
 
 	@:isVar public var depth(default,default) : Float = 0;
 
 	public function new(_options:Dynamic) {
 
-		debug_color = new Color(0.5,0.3,0.2,0.5);		
+		debug_color = new Color(0.5,0.3,0.2,0.8);		
 
 		render_items = new Map<String,Dynamic>();
 		
@@ -66,10 +66,9 @@ class MIControl {
 
 			renderer = _options.parent.renderer;
 			canvas = _options.parent.canvas;
-			_options.parent.add(this);
-			canvas.depth+=1;
-			depth = canvas.depth;//(parent.depth + 0.01);
-			// trace('depth : ' + name + ' ' + depth);
+			_options.parent.add(this);			
+			depth = canvas.next_depth();
+			trace('depth : ' + name + ' ' + depth);
 
 		} else { //parent != null
 
@@ -111,7 +110,7 @@ class MIControl {
 		return mouse_down_handlers[0];
 	}
 
-	function set_mousedown( listener:MIControl -> Void ) {
+	function set_mousedown( listener: MIControl->?MouseEvent->Void ) {
 		mouse_down_handlers.push(listener);
 		return listener;
 	}
@@ -245,7 +244,7 @@ class MIControl {
 			
 			if(e.button == MouseButton.left) {
 				for(handler in mouse_down_handlers) {
-					handler(this);
+					handler(this, e);
 				}
 			}
 

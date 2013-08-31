@@ -16,7 +16,10 @@ class MIImage extends MIControl {
 		_options.pos = new Vector(real_bounds.x, real_bounds.y);
 		_options.depth = depth + 0.1;
 
-		renderer.image.init(this, _options);
+			//disable mouse input,todo optionify
+		mouse_enabled = false;
+
+		renderer.image.init(this, _options);	
 
 	} //new
 
