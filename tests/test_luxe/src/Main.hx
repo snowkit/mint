@@ -42,7 +42,8 @@ class Main extends luxe.Game {
 
         canvas  = new MICanvas({
             bounds : new Rectangle( 0, 0, Luxe.screen.w, Luxe.screen.h ),
-            renderer : renderer
+            renderer : renderer,
+            depth : 100
         });
 
         button = new MIButton({
@@ -61,7 +62,7 @@ class Main extends luxe.Game {
         });
 
 
-        itemlist.add_item('items one');
+        itemlist.add_item('items one');     
         itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);
 
         scroller = new MIScrollArea({
@@ -114,6 +115,8 @@ class Main extends luxe.Game {
         });        
 
         // window.depth = 8;
+
+        trace("OK");
 
     } //ready
     

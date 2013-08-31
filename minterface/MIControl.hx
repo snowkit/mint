@@ -68,7 +68,7 @@ class MIControl {
 			canvas = _options.parent.canvas;
 			_options.parent.add(this);			
 			depth = canvas.next_depth();
-			trace('depth : ' + name + ' ' + depth);
+			// trace('depth : ' + name + ' ' + depth);
 
 		} else { //parent != null
 
@@ -88,6 +88,15 @@ class MIControl {
 		}
 	} //clip_with_closest_to_canvas
 
+	public function set_clip( ?_clip_rect:Rectangle = null ) {
+		//temporarily, all children clip by their parent clip
+
+		for(_child in children) {
+			_child.set_clip( _clip_rect );
+		}
+
+	} //set clip
+	
 	function find_top_parent( ?_from:MIControl = null ) {
 
 		var _target = (_from == null) ? this : _from;
@@ -133,14 +142,6 @@ class MIControl {
 
 	}
 
-	public function set_clip( ?_clip_rect:Rectangle = null ) {
-		//temporarily, all children clip by their parent clip
-
-		for(_child in children) {
-			_child.set_clip( _clip_rect );
-		}
-
-	} //set clip
 
 	private function options_plus(options:Dynamic, plus:Dynamic) {
 		var _fields = Reflect.fields(plus);

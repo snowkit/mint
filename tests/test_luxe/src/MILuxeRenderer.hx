@@ -67,6 +67,8 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
         back.texture = Luxe.loadTexture('assets/transparency.png');
         back.uv(new Rectangle(0,0,960,640));
 
+        back.id = _control.name + '.back';
+
         Luxe.addGeometry( back );
 
             //store inside the element  
@@ -94,6 +96,9 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         // });
         // _control.render_items.set('bounds', bounds);
 
+        for(_g in text.geometry.geometry) {
+        	_g.id = _control.name + '.text';
+        } 
 
     } //init
 
@@ -138,6 +143,8 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
         geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y), _control.real_bounds.w, _control.real_bounds.h );
         
         geom.color = new Color(1,1,1,1);
+
+        geom._geometry.id = _control.name + '.button';
 
         _control.render_items.set('geom', geom);
 
@@ -293,6 +300,10 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             color : new Color().rgb(0x999999)
         });
 
+        back.id = _control.name + '.back';
+        sliderh.id = _control.name + '.sliderh';
+        sliderv.id = _control.name + '.sliderv';
+
         Luxe.addGeometry( back );
         Luxe.addGeometry( sliderh );
         Luxe.addGeometry( sliderv );
@@ -346,6 +357,8 @@ class MIImageLuxeRenderer extends MIImageRenderer {
             //clip the geometry
         set_clip( _control, _control.parent.real_bounds );
 
+        image.geometry.id = _control.name + '.image';
+
     } //init
 
     public override function translate( _control:MIImage, _x:Float, _y:Float ) {
@@ -387,6 +400,8 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
         _options.depth = _control.depth+0.01;
 
         geom.color = new Color(1,1,1,1);
+
+        geom._geometry.id = _control.name + '.window';
 
         // var title = new Text( _options );
 

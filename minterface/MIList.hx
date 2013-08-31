@@ -26,13 +26,15 @@ class MIList extends MIControl {
 			parent : this,
 			bounds : _options.bounds.clone().set(0,0),
 			name : name + '.view',
-			onscroll : onscroll
+			onscroll : function(){}
 		});
 
 	}
 
 	private function onscroll(_x:Float=0, _y:Float=0) {
-		renderer.list.scroll(this, _x, _y);
+		
+		// renderer.list.scroll(this, _x, _y);
+
 	} //onscroll
 
 	public function add_item( _item:String ) {
