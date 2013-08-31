@@ -95,6 +95,7 @@ class MIWindow extends MIControl {
 	} //onmouseup
 
 	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
+
 		super.translate(_x,_y);
 		
 		title_bounds = new Rectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );		
@@ -103,5 +104,9 @@ class MIWindow extends MIControl {
 
 	} //translate
 
+	public override function set_visible( ?_visible:Bool = true ) {
+		super.set_visible(_visible);
+		renderer.window.set_visible(this, _visible);
+	} //set_visible
 
 }

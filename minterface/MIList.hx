@@ -2,6 +2,7 @@ package minterface;
 
 import luxe.Input.MouseButton;
 import luxe.Input.MouseEvent;
+import luxe.Text.TextAlign;
 import minterface.MIControl;
 
 import luxe.Rectangle;
@@ -12,28 +13,34 @@ class MIList extends MIControl {
 	public var view : MIScrollArea;
 	public var items : Array<MIControl>;
 	public var multiselect : Bool = false;
-	public var onselect : MIList->?MouseEvent->Void;
+	public var onselect : String->MIList->?MouseEvent->Void;
+	public var _options : Dynamic;
 
-	public function new(_options:Dynamic) {
+	public function new(__options:Dynamic) {
 			
 			//create the base control
-		super(_options);
+		super(__options);
 			//
-		multiselect = (_options.multiselect == null) ? false : _options.multiselect;
-		onselect = (_options.onselect == null) ? null : _options.onselect;
+		multiselect = (__options.multiselect == null) ? false : __options.multiselect;
+		onselect = (__options.onselect == null) ? null : __options.onselect;
 
 		view = new MIScrollArea({
 			parent : this,
-			bounds : _options.bounds.clone().set(0,0),
+			bounds : __options.bounds.clone().set(0,0),
 			name : name + '.view',
 			onscroll : function(){}
 		});
 
-	}
+		_options = __options;
+		if(_options.align == null) {
+			_options.align = TextAlign.center;
+		}
+
+	} //new
 
 	private function onscroll(_x:Float=0, _y:Float=0) {
 		
-		// renderer.list.scroll(this, _x, _y);
+		renderer.list.scroll(this, _x, _y);
 
 	} //onscroll
 
@@ -47,11 +54,25 @@ class MIList extends MIControl {
 			name : name + '.item.' + _item,
 			bounds : new Rectangle(0, _childbounds.h, bounds.w, 30),			
 			parent : view,
-			color : new Color(0,0,0,0.2).rgb(0x999999),
+			color : new Color(0,0,0,1).rgb(0x999999),
 			text_size : 18,
+			align : _options.align
 		});
+
+			//clip the label by the scroll view's bounds
+		l.clip_with(view);
 		
 	} //add_item
+
+	public override function translate(?_x:Float=0, ?_y:Float=0) {
+		
+		super.translate(_x,_y);
+
+		for(_item in view.children) {
+			_item.clip_with(view);
+		}
+
+	}
 
 	private function label_selected(_control:MIControl, e:MouseEvent) {
 		
@@ -60,7 +81,7 @@ class MIList extends MIControl {
 
 		//call callback
 		if(onselect != null) {
-			onselect(this, e);
+			onselect(_label.text, this, e);
 		}
 
 	} //label_selected
@@ -70,6 +91,15 @@ class MIList extends MIControl {
 			add_item(_item);
 		}
 	} //add_items
+
+	public override function set_visible( ?_visible:Bool = true ) {
+		
+		super.set_visible(_visible);
+
+		renderer.list.set_visible(this,_visible);
+
+	} //set_visible
+
 
 	public override function onmouseup(e) {
 		super.onmouseup(e);

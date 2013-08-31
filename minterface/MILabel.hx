@@ -43,15 +43,14 @@ class MILabel extends MIControl {
 			//debug color
 		debug_color = new Color(0,1,0.6,0.5);
 
-		clip_with_closest_to_canvas();
+		set_clip( clip_rect );
 
 	} //new
 
 
 	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
 		super.translate(_x,_y);		
-		renderer.label.translate(this, _x, _y);
-		clip_with_closest_to_canvas();
+		renderer.label.translate(this, _x, _y);		
 	}
 
 	public override function set_clip( ?_clip_rect:Rectangle = null ) {
@@ -60,5 +59,10 @@ class MILabel extends MIControl {
 		renderer.label.set_clip( this, _clip_rect );
 		
 	} // 
+
+	public override function set_visible( ?_visible:Bool = true ) {
+		super.set_visible(_visible);
+		renderer.label.set_visible(this, _visible);
+	} //set_visible
 
 }

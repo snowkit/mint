@@ -34,6 +34,7 @@ class MIControl {
 
 	public var bounds : Rectangle;
 	public var real_bounds : Rectangle;
+	public var clip_rect : Rectangle;
 	@:isVar public var parent(get,set) : MIControl;
 	public var children : Array<MIControl>;
 
@@ -88,15 +89,34 @@ class MIControl {
 		}
 	} //clip_with_closest_to_canvas
 
+
+	public function clip_with( ?_control:MIControl ) {
+		if(_control != null) {
+			set_clip( _control.real_bounds );
+		} else {
+			set_clip();
+		}
+	} //clip_with
+
 	public function set_clip( ?_clip_rect:Rectangle = null ) {
 		//temporarily, all children clip by their parent clip
 
-		for(_child in children) {
-			_child.set_clip( _clip_rect );
-		}
+		clip_rect = _clip_rect;
+		
+		// for(_child in children) {
+		// 	_child.set_clip( _clip_rect );
+		// }
 
 	} //set clip
-	
+
+	public function set_visible( ?_visible:Bool = true ) {
+
+		for(_child in children) {
+			_child.set_visible( _visible );
+		}
+
+	} //set visible
+
 	function find_top_parent( ?_from:MIControl = null ) {
 
 		var _target = (_from == null) ? this : _from;

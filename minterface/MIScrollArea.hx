@@ -36,7 +36,10 @@ class MIScrollArea extends MIControl {
 	public override function add(child:MIControl) {
 		
 		super.add(child);
-		refresh_scroll();		
+		refresh_scroll();	
+
+		child.clip_with( this );	
+		
 	}
 
 	public override function onmousedown(e) {
@@ -150,6 +153,12 @@ class MIScrollArea extends MIControl {
 		renderer.scroll.refresh_scroll( this, sliderh_x, sliderh_y, sliderv_x, sliderv_y, slider_h_visible, slider_v_visible );
 
 	} // refresh_scroll
+
+	public override function set_visible( ?_visible:Bool = true ) {
+		super.set_visible(_visible);
+		renderer.scroll.set_visible(this, _visible);
+	} //set_visible
+
 
 	public override function _debug() {
 

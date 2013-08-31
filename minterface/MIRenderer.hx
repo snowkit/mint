@@ -11,6 +11,7 @@ class MIRenderer {
 	public var scroll 	: MIScrollAreaRenderer;
 	public var image 	: MIImageRenderer;
 	public var window   : MIWindowRenderer;
+	public var dropdown : MIDropdownRenderer;
 
 	public function new() {
 		//this should stay blank to not needlessly create instances
@@ -23,6 +24,7 @@ class MICanvasRenderer {
 	public function init( _control:MICanvas, _options:Dynamic ) { } //init
 	public function translate( _control:MICanvas, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MICanvas, _clip_rect:Rectangle ) { } //set_clip
+	public function set_visible( _control:MICanvas, ?_visible:Bool=true ) { } //set_visible
 } //MICanvasRenderer
 
 class MILabelRenderer {
@@ -30,6 +32,7 @@ class MILabelRenderer {
 	public function init( _control:MILabel, _options:Dynamic ) { } //init
 	public function translate( _control:MILabel, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MILabel, ?_clip_rect:Rectangle=null ) { } //set_clip
+	public function set_visible( _control:MILabel, ?_visible:Bool=true ) { } //set_visible
 } //MILabelRenderer
 
 class MIButtonRenderer {
@@ -37,6 +40,7 @@ class MIButtonRenderer {
 	public function init( _control:MIButton, _options:Dynamic ) { } //init
 	public function translate( _control:MIButton, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIButton, ?_clip_rect:Rectangle=null ) { } //set_clip
+	public function set_visible( _control:MIButton, ?_visible:Bool=true ) { } //set_visible
 } //MIButtonRenderer
 
 class MIListRenderer {
@@ -46,6 +50,7 @@ class MIListRenderer {
 	public function set_clip( _control:MIList, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function select_item( _control:MIList, _selected:MIControl ) { } //select_item
 	public function scroll( _control:MIList, _x:Float, _y:Float ) { } //scroll
+	public function set_visible( _control:MIList, ?_visible:Bool=true ) { } //set_visible	
 } //MIList
 
 class MIImageRenderer {
@@ -53,6 +58,7 @@ class MIImageRenderer {
 	public function init( _control:MIImage, _options:Dynamic ) { } //init
 	public function translate( _control:MIImage, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIImage, ?_clip_rect:Rectangle=null ) { } //set_clip
+	public function set_visible( _control:MIImage, ?_visible:Bool=true ) { } //set_visible	
 } //MIImageRenderer
 
 class MIWindowRenderer {
@@ -60,6 +66,7 @@ class MIWindowRenderer {
 	public function init( _control:MIWindow, _options:Dynamic ) { } //init
 	public function translate( _control:MIWindow, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIWindow, ?_clip_rect:Rectangle=null ) { } //set_clip
+	public function set_visible( _control:MIWindow, ?_visible:Bool=true ) { } //set_visible	
 } //MIWindowRenderer
 
 class MIScrollAreaRenderer {
@@ -68,5 +75,13 @@ class MIScrollAreaRenderer {
 	public function translate( _control:MIScrollArea, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIScrollArea, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function refresh_scroll( _control:MIScrollArea, shx:Float, shy:Float, svx:Float, svy:Float, hv:Bool, vv:Bool ) { } //refresh_scroll
+	public function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) { } //set_visible
 } //MIScrollAreaRenderer
 
+class MIDropdownRenderer {
+	public function new(){}
+	public function init( _control:MIDropdown, _options:Dynamic ) { } //init
+	public function translate( _control:MIDropdown, _x:Float, _y:Float ) { } //translate
+	public function set_clip( _control:MIDropdown, ?_clip_rect:Rectangle=null ) { } //set_clip
+	public function set_visible( _control:MIDropdown, ?_visible:Bool=true ) { } //set_visible
+} //MIDropdownRenderer

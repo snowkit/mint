@@ -16,6 +16,7 @@ import minterface.MIImage;
 import minterface.MIScrollArea;
 import minterface.MIList;
 import minterface.MIWindow;
+import minterface.MIDropdown;
 
 import MILuxeRenderer;
 
@@ -31,6 +32,7 @@ class Main extends luxe.Game {
     public var scroller1 : MIScrollArea;
     public var itemlist : MIList;
     public var window : MIWindow;
+    public var selector : MIDropdown;
 
     var s : Sprite;
 
@@ -60,7 +62,6 @@ class Main extends luxe.Game {
             name : 'list1',
             bounds : new Rectangle(10,50, 100,380)
         });
-
 
         itemlist.add_item('items one');     
         itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);
@@ -112,7 +113,16 @@ class Main extends luxe.Game {
             text : 'clicked',
             text_size : 15,
             onclick : function(){ trace('window 1'); }
-        });        
+        });
+
+        selector = new MIDropdown({
+            parent : window,
+            name : 'selector',
+            bounds : new Rectangle(10, 70, 180, 30),
+            text : 'Select output target'
+        });
+
+        selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
 
         // window.depth = 8;
 

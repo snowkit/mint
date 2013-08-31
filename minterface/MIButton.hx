@@ -32,23 +32,33 @@ class MIButton extends MIControl {
 			mousedown = _options.onclick;
 		}
 		
-		renderer.button.init( this, _options );
+		renderer.button.init( this, _options );	
 
-		clip_with_closest_to_canvas();
+		//now that we are all created, we ensure that the clip rect is set
+		set_clip( clip_rect );	
 
 	} //new
 
 	public override function translate(?_x:Float = 0, ?_y:Float = 0) {
 		super.translate(_x,_y);		
 		renderer.button.translate( this, _x, _y );
-		clip_with_closest_to_canvas();
 	}
 
 
 	public override function set_clip( ?_clip_rect:Rectangle = null ) {
 		super.set_clip(_clip_rect);
 		renderer.button.set_clip(this,_clip_rect);
+
+		if(label != null) {
+			label.set_clip(_clip_rect);
+		}
 	}
+
+	public override function set_visible( ?_visible:Bool = true ) {
+		super.set_visible(_visible);
+		renderer.button.set_visible(this,_visible);
+	} //set_visible
+
 
 	public override function onmousedown(e) {
 		super.onmousedown(e);

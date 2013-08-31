@@ -21,7 +21,7 @@ class MIImage extends MIControl {
 
 		renderer.image.init(this, _options);	
 
-	} //new
+	} //new	
 
 	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
 
@@ -29,5 +29,11 @@ class MIImage extends MIControl {
 		renderer.image.translate(this, _x, _y);
 
 	} //translate
+
+	public override function set_visible( ?_visible:Bool = true ) {
+		super.set_visible(_visible);
+		renderer.image.set_visible(this,_visible);
+	} //set_visible
+
 
 }

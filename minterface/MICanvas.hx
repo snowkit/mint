@@ -37,6 +37,12 @@ class MICanvas extends MIControl {
 
 	} //new
 
+	public override function set_visible( ?_visible:Bool = true ) {
+		super.set_visible(_visible);
+		renderer.canvas.set_visible(this, _visible);
+	} //set_visible
+
+
 	public function next_depth() {
 		depth++;
 		return depth;

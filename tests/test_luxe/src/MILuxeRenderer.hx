@@ -15,6 +15,7 @@ import minterface.MIList;
 import minterface.MIScrollArea;
 import minterface.MIImage;
 import minterface.MIWindow;
+import minterface.MIDropdown;
 
 import luxe.Text;
 import luxe.Color;
@@ -22,8 +23,9 @@ import luxe.Vector;
 import luxe.Sprite;
 
 import phoenix.geometry.QuadGeometry;
-import luxe.NineSlice;
 import phoenix.geometry.RectangleGeometry;
+
+import luxe.NineSlice;
 
 
 //temp copy paste base
@@ -46,6 +48,7 @@ class MILuxeRenderer extends MIRenderer {
         scroll = new MIScrollAreaLuxeRenderer();
         image = new MIImageLuxeRenderer();
         window = new MIWindowLuxeRenderer();
+        dropdown = new MIDropdownLuxeRenderer();
 
     } //new
 
@@ -76,15 +79,24 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
 
     } //init
 
+    public override function set_visible( _control:MICanvas, ?_visible:Bool=true ) { 
+        
+        var back:QuadGeometry = cast _control.render_items.get('back');  
+        
+            back.enabled = _visible;
+
+    } //set_visible   
+
 } //MICanvasLuxeRenderer
 
 class MILabelLuxeRenderer extends MILabelRenderer {
 
 
     public override function init( _control:MILabel, _options:Dynamic ) {
-        
+            
         var text = new Text( _options );
-        _control.render_items.set('text', text);
+
+            _control.render_items.set('text', text);
 
         // var bounds = Luxe.draw.rectangle({
         //     color:_control.debug_color,
@@ -121,11 +133,21 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         if(_clip_rect == null) {
             text.geometry.clip = false;
         } else {
-            text.geometry.clip = true;
-            text.geometry.clip_rect = _clip_rect.clone();
+            if(text != null && text.geometry != null) {
+                text.geometry.clip = true;
+                text.geometry.clip_rect = _clip_rect.clone();
+            }
         }
 
     } //set clip
+
+    public override function set_visible( _control:MILabel, ?_visible:Bool=true ) { 
+        
+        var text:Text = cast _control.render_items.get('text');  
+
+            text.visible = _visible;
+
+    } //set_visible    
 
 } //MILabelLuxeRenderer
 
@@ -165,22 +187,35 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
         if(_clip_rect == null) {
             geom.clip = false;
         } else {
-            geom.clip = true;
-            geom.clip_rect = _clip_rect.clone();
+            if(geom != null) {
+                geom.clip = true;
+                geom.clip_rect = _clip_rect.clone();
+            }
         }
 
     } //set_clip
 
+
+    public override function set_visible( _control:MIButton, ?_visible:Bool=true ) { 
+        
+        var geom : NineSlice = cast _control.render_items.get('geom');
+
+            geom.visible = _visible;
+
+    } //set_visible    
+
 } //MIButtonLuxeRenderer
 
 class MIListLuxeRenderer extends MIListRenderer {
-    public override function init( _control:MIList, _options:Dynamic ) { } //init
+
+    public override function init( _control:MIList, _options:Dynamic ) {
+    } //init
     
     public override function translate( _control:MIList, _x:Float, _y:Float ) {
-
     } //translate
 
-    public override function set_clip( _control:MIList, ?_clip_rect:Rectangle=null ) { } //set_clip
+    public override function set_clip( _control:MIList, ?_clip_rect:Rectangle=null ) {
+    } //set_clip
     
     public override function scroll(_control:MIList, _x:Float, _y:Float) {
         
@@ -269,6 +304,10 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //select item
 
+    public override function set_visible( _control:MIList, ?_visible:Bool=true ) { 
+
+    } //set_visible    
+
 } //MIListLuxeRenderer
 
 
@@ -321,14 +360,13 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
         back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
+        sliderh.pos = new Vector( sliderh.pos.x + _x, sliderh.pos.y + _y );
+        sliderv.pos = new Vector( sliderv.pos.x + _x, sliderv.pos.y + _y );
 
     } //translate 
 
     public override function set_clip( _control:MIScrollArea, ?_clip_rect:Rectangle=null ) {
         
-        // var back:QuadGeometry = cast _control.render_items.get('back');      
-        // var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
-        // var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
         
     } //set_clip
 
@@ -343,6 +381,19 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         sliderh.enabled = hv;
         sliderv.enabled = vv;
     }
+
+
+    public override function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) { 
+
+        var back:QuadGeometry = cast _control.render_items.get('back');      
+        var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
+        var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
+
+            back.enabled = _visible;
+            sliderh.enabled = _visible;
+            sliderv.enabled = _visible;
+
+    } //set_visible
 
 } //MIScrollAreaLuxeRenderer
 
@@ -381,6 +432,15 @@ class MIImageLuxeRenderer extends MIImageRenderer {
         }
 
     } //set_clip
+
+
+    public override function set_visible( _control:MIImage, ?_visible:Bool=true ) { 
+
+        var image:Sprite = cast _control.render_items.get('image');
+
+            image.visible = _visible;
+
+    } //set_visible 
 
 } //MIImageLuxeRenderer
 
@@ -422,8 +482,58 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     public override function set_clip( _control:MIWindow, ?_clip_rect:Rectangle=null ) { 
 
+    } //set_clip
 
+    public override function set_visible( _control:MIWindow, ?_visible:Bool=true ) { 
+
+        var geom : NineSlice = cast _control.render_items.get('geom'); 
+
+            geom.visible = _visible;
+
+    } //set_visible
+
+
+} //MIWindowLuxeRenderer
+
+class MIDropdownLuxeRenderer extends MIDropdownRenderer {
+
+    public override function init( _control:MIDropdown, _options:Dynamic ) {
+        
+        var back = new QuadGeometry({
+            depth : _control.depth,
+            x: _control.real_bounds.x,
+            y: _control.real_bounds.y,
+            width: _control.real_bounds.w,
+            height: _control.real_bounds.h,
+            color : new Color(1,1,1,1).rgb(0x0d0d0d)
+        });
+
+        Luxe.addGeometry( back );
+
+        _control.render_items.set('back', back);
+
+    } //init
+
+    public override function translate( _control:MIDropdown, _x:Float, _y:Float ) {
+        
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
+            back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
+
+    } //translate
+
+    public override function set_clip( _control:MIDropdown, ?_clip_rect:Rectangle=null ) {
 
     } //set_clip
 
-} //MIWindowLuxeRenderer
+    public override function set_visible( _control:MIDropdown, ?_visible:Bool=true ) { 
+
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
+            back.enabled = _visible;
+        
+    } //set_visible
+
+
+} //MIDropdownLuxeRenderer
+
