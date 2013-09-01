@@ -33,6 +33,7 @@ class Main extends luxe.Game {
     public var itemlist : MIList;
     public var window : MIWindow;
     public var selector : MIDropdown;
+    public var selector2 : MIDropdown;
 
     var s : Sprite;
 
@@ -122,7 +123,15 @@ class Main extends luxe.Game {
             text : 'Select output target'
         });
 
+        selector2 = new MIDropdown({
+            parent : window,
+            name : 'selector2',
+            bounds : new Rectangle( 10, 110, 180, 30 ),
+            text : 'Select build format'
+        });
+
         selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
+        selector2.add_items(['zip', 'folder']);
 
         // window.depth = 8;
 
@@ -143,9 +152,9 @@ class Main extends luxe.Game {
     }
 
     public function onkeyup(e) {
-      if(e.value == Input.Keys.escape) {
-        Luxe.shutdown();
-      }
+        if(e.value == Input.Keys.escape) {
+            Luxe.shutdown();
+        }
     } //onkeyup
 
     public function update(dt:Float) {

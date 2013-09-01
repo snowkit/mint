@@ -19,5 +19,6 @@
 	<haxelib name="luxe" />
 	<haxelib name="lime" />
 	<haxelib name="minterface" />
+	<haxelib name="actuate" />
 	
 </project>

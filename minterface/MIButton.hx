@@ -35,7 +35,7 @@ class MIButton extends MIControl {
 		renderer.button.init( this, _options );	
 
 		//now that we are all created, we ensure that the clip rect is set
-		set_clip( clip_rect );	
+		set_clip( clip_rect );
 
 	} //new
 
@@ -43,7 +43,6 @@ class MIButton extends MIControl {
 		super.translate(_x,_y);		
 		renderer.button.translate( this, _x, _y );
 	}
-
 
 	public override function set_clip( ?_clip_rect:Rectangle = null ) {
 		super.set_clip(_clip_rect);

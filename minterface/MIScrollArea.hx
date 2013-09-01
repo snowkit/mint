@@ -46,8 +46,6 @@ class MIScrollArea extends MIControl {
 			//forward to 
 		super.onmousedown(e);
 		
-		if(!ishovered) return;
-
 		if(e.button == lime.InputHandler.MouseButton.wheel_up) {
 			if(e.ctrl_down) {
             	scrollx(-10);

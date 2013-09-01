@@ -93,8 +93,26 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
 
     public override function init( _control:MILabel, _options:Dynamic ) {
-            
+           
+        	//if there is padding, we change the bounds
+        if( _options.padding.x != 0 ) {
+        	_options.bounds.x += _options.padding.x;
+        }
+
+        if( _options.padding.y != 0 ) {
+        	_options.bounds.y += _options.padding.y;
+        }
+
+        if( _options.padding.w != 0 ) {
+        	_options.bounds.w -= _options.padding.w*2;
+        }
+
+        if( _options.padding.h != 0 ) {
+        	_options.bounds.h -= _options.padding.h*2;
+        }
+
         var text = new Text( _options );
+
 
             _control.render_items.set('text', text);
 
@@ -147,7 +165,17 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
             text.visible = _visible;
 
-    } //set_visible    
+    } //set_visible   
+
+    public override function set_text( _control:MILabel, ?_text:String='label' ) {
+
+    	var text:Text = cast _control.render_items.get('text');
+
+    	if(text != null) {
+    		text.text = _text;
+	    }
+
+    } //set_text 
 
 } //MILabelLuxeRenderer
 
@@ -212,6 +240,7 @@ class MIListLuxeRenderer extends MIListRenderer {
     } //init
     
     public override function translate( _control:MIList, _x:Float, _y:Float ) {
+
     } //translate
 
     public override function set_clip( _control:MIList, ?_clip_rect:Rectangle=null ) {
@@ -236,6 +265,23 @@ class MIListLuxeRenderer extends MIListRenderer {
     } //
 
     public override function select_item( _control:MIList, _selected:MIControl ) {
+
+		if(_selected == null) {
+
+			if(_control.multiselect) {
+				var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
+				for(_select in _existing_selections) {
+					_select.drop();
+				}
+			} else {
+				var _select : QuadGeometry = _control.render_items.get('select');
+				if(_select != null) {
+					_select.drop();
+				}
+			}
+
+			return;
+		}
 
         if(!_control.multiselect) {
 
@@ -306,6 +352,21 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     public override function set_visible( _control:MIList, ?_visible:Bool=true ) { 
 
+    	if(_control.multiselect) {
+			
+			var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
+			for(_select in _existing_selections) {
+				_select.enabled = _visible;
+			}
+
+    	} else {
+    		
+    		var _select : QuadGeometry = _control.render_items.get('select');
+    		if(_select != null) {
+    			_select.enabled = _visible;
+    		}
+
+    	}
     } //set_visible    
 
 } //MIListLuxeRenderer
@@ -342,6 +403,9 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         back.id = _control.name + '.back';
         sliderh.id = _control.name + '.sliderh';
         sliderv.id = _control.name + '.sliderv';
+
+        sliderh.enabled = false;
+        sliderv.enabled = false;
 
         Luxe.addGeometry( back );
         Luxe.addGeometry( sliderh );

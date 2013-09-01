@@ -36,7 +36,7 @@ class MIDropdown extends MIControl {
 
         selected_label = new MILabel({
 			parent : this,
-			bounds : new Rectangle(0,0,bounds.w, bounds.h),
+			bounds : new Rectangle(5,0,bounds.w-10, bounds.h),
 			text:_options.text,
 			text_size: (_options.text_size == null) ? 18 : _options.text_size,
 			name : name + '.selected_label',
@@ -46,14 +46,15 @@ class MIDropdown extends MIControl {
 
 		renderer.dropdown.init( this, _options );
 
-			//the list is hidden
+			//the list is hidden at start
 		list.set_visible(false);
 
 	} //new
 
 	private function onselect(v:String, l:MIList, e:Dynamic) {
-		
-		trace("selected :" + v);
+			
+		renderer.list.select_item(l, null);
+		selected_label.text = v;
 
 	} //onselect
 
@@ -70,7 +71,6 @@ class MIDropdown extends MIControl {
 	public override function translate(?_x:Float = 0, ?_y:Float = 0) {
 		super.translate(_x,_y);		
 		renderer.dropdown.translate( this, _x, _y );
-		// clip_with_closest_to_canvas();
 	}
 
 	public override function set_visible( ?_visible:Bool = true ) {
@@ -85,14 +85,16 @@ class MIDropdown extends MIControl {
 
 	public function close_list() {
 		list.set_visible(false);
-		trace('closing list');
+
+			real_bounds.h = bounds.h;
 
 		is_open = false;
 	}	
 
 	public function open_list() {
 		list.set_visible(true);
-		trace('opening list');
+		
+			real_bounds.h = bounds.h + list.bounds.h;
 
 		is_open = true;
 	}
@@ -100,11 +102,6 @@ class MIDropdown extends MIControl {
 	public override function onmousedown(e) {
 
 		super.onmousedown(e);
-
-			//propogate the message to the child list
-		if(is_open) {
-			list.onmousedown(e);
-		}
 
 		if(e.button == MouseButton.left) {
 
@@ -118,6 +115,7 @@ class MIDropdown extends MIControl {
 			if( selected_label.real_bounds.point_inside(m) ) {
 				open_list();
 			}
+
 		}//mouse left
 
 	} //onmousedown

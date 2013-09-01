@@ -33,6 +33,7 @@ class MILabelRenderer {
 	public function translate( _control:MILabel, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MILabel, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function set_visible( _control:MILabel, ?_visible:Bool=true ) { } //set_visible
+	public function set_text( _control:MILabel, ?_text:String='label' ) { } //set_text
 } //MILabelRenderer
 
 class MIButtonRenderer {

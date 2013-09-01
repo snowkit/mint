@@ -43,6 +43,7 @@ class MIControl {
 
 	public var isfocused : Bool = false;
 	public var ishovered : Bool = false;
+	public var visible : Bool = true;
 	public var mouse_enabled : Bool = true;
 
 	public var debug_color : Color;
@@ -86,7 +87,7 @@ class MIControl {
 	public function topmost_child_under_point(_p:Vector) : MIControl {
 
 		for(_child in children) {
-			if(_child.real_bounds.point_inside(_p) && _child.mouse_enabled) {
+			if(_child.real_bounds.point_inside(_p) && _child.mouse_enabled && _child.visible) {
 
 				if(_child.children.length == 0) {
 					return _child;
@@ -137,6 +138,8 @@ class MIControl {
 	} //set clip
 
 	public function set_visible( ?_visible:Bool = true ) {
+
+		visible = _visible;
 
 		for(_child in children) {
 			_child.set_visible( _visible );
@@ -259,66 +262,35 @@ class MIControl {
 	}
 		
 	public function onmousemove( e:MouseEvent ) {
-		if(real_bounds.point_inside(new Vector(e.x,e.y))) {
-			if(!ishovered) {				
-				onmouseenter(e);
-			} else {				
-				for(child in children) {
-					child.onmousemove(e);
-				}
-			}
-		} else {
-			if(ishovered) {
-				onmouseleave(e);
-			}
-		}	
-
-	} //mousemove
+		
+	} //onmousemove
 
 	public function onmouseup( e:MouseEvent ) {
-		if(!mouse_enabled) return;
+		
+	} //onmouseup
 
-		if(ishovered) {
-			for(child in children) {
-				child.onmouseup(e);
-			}
-		}
-
-	}
 	public function onmousedown( e:MouseEvent ) {
-		if(!mouse_enabled) return;
-
-		if(ishovered) {
-			
+		if(mousedown != null) {
 			if(e.button == MouseButton.left) {
 				for(handler in mouse_down_handlers) {
 					handler(this, e);
 				}
-			}
+			}//left down
+		} //mousedown != null
 
-			for(child in children) {
-				child.onmousedown(e);
-			}
-		}
-	}
+			//events bubble upward into the parent
+		if(parent != null && parent != canvas) {
+			parent.onmousedown(e);
+		} //parent not null and parent not canvas
+
+	} //onmousedown
+
 	public function onmouseenter( e:MouseEvent ) {
-		if(!ishovered) {
-			ishovered = true;
-			// trace('mouse enter ' + name);
-		}
-
-			//other stuff must be after this
-		if(!mouse_enabled) return;
+		// trace('mouse enter ' + name);
 	}
 
 	public function onmouseleave( e:MouseEvent ) {		
-		if(ishovered) {
-			ishovered = false;
-			// trace('mouse leave ' + name);
-		}
-
-			//other stuff must be after this
-		if(!mouse_enabled) return;
+		// trace('mouse leave ' + name);
 	}
 
 	public function _debug() {

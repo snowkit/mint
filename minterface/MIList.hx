@@ -28,7 +28,7 @@ class MIList extends MIControl {
 			parent : this,
 			bounds : __options.bounds.clone().set(0,0),
 			name : name + '.view',
-			onscroll : function(){}
+			onscroll : onscroll
 		});
 
 		_options = __options;
@@ -61,6 +61,7 @@ class MIList extends MIControl {
 
 			//clip the label by the scroll view's bounds
 		l.clip_with(view);
+		l.mouse_enabled = true;
 		
 	} //add_item
 
@@ -70,9 +71,9 @@ class MIList extends MIControl {
 
 		for(_item in view.children) {
 			_item.clip_with(view);
-		}
+		} //_item in children
 
-	}
+	} //translate
 
 	private function label_selected(_control:MIControl, e:MouseEvent) {
 		
@@ -82,14 +83,14 @@ class MIList extends MIControl {
 		//call callback
 		if(onselect != null) {
 			onselect(_label.text, this, e);
-		}
+		} //onselect
 
 	} //label_selected
 
 	public function add_items( _items:Array<String> ) {
 		for(_item in _items) {
 			add_item(_item);
-		}
+		} //item
 	} //add_items
 
 	public override function set_visible( ?_visible:Bool = true ) {
@@ -101,7 +102,13 @@ class MIList extends MIControl {
 	} //set_visible
 
 
+
+	public override function onmousemove(e) {
+		trace('move in list');
+	}
+
 	public override function onmouseup(e) {
 		super.onmouseup(e);
-	}
-}
+	} //onmouseup
+
+} //MIList
