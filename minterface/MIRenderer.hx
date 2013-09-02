@@ -1,6 +1,7 @@
 package minterface;
 
 import luxe.Rectangle;
+import minterface.MIDropdown;
 
 class MIRenderer {
 	
@@ -25,6 +26,7 @@ class MICanvasRenderer {
 	public function translate( _control:MICanvas, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MICanvas, _clip_rect:Rectangle ) { } //set_clip
 	public function set_visible( _control:MICanvas, ?_visible:Bool=true ) { } //set_visible
+	public function set_depth( _control:MICanvas, ?_depth:Float=0.0 ) { } //set_depth
 } //MICanvasRenderer
 
 class MILabelRenderer {
@@ -33,6 +35,7 @@ class MILabelRenderer {
 	public function translate( _control:MILabel, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MILabel, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function set_visible( _control:MILabel, ?_visible:Bool=true ) { } //set_visible
+	public function set_depth( _control:MILabel, ?_depth:Float=0.0 ) { } //set_depth
 	public function set_text( _control:MILabel, ?_text:String='label' ) { } //set_text
 } //MILabelRenderer
 
@@ -42,6 +45,7 @@ class MIButtonRenderer {
 	public function translate( _control:MIButton, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIButton, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function set_visible( _control:MIButton, ?_visible:Bool=true ) { } //set_visible
+	public function set_depth( _control:MIButton, ?_depth:Float=0.0 ) { } //set_depth
 } //MIButtonRenderer
 
 class MIListRenderer {
@@ -52,6 +56,7 @@ class MIListRenderer {
 	public function select_item( _control:MIList, _selected:MIControl ) { } //select_item
 	public function scroll( _control:MIList, _x:Float, _y:Float ) { } //scroll
 	public function set_visible( _control:MIList, ?_visible:Bool=true ) { } //set_visible	
+	public function set_depth( _control:MIList, ?_depth:Float=0.0 ) { } //set_depth
 } //MIList
 
 class MIImageRenderer {
@@ -60,6 +65,7 @@ class MIImageRenderer {
 	public function translate( _control:MIImage, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIImage, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function set_visible( _control:MIImage, ?_visible:Bool=true ) { } //set_visible	
+	public function set_depth( _control:MIImage, ?_depth:Float=0.0 ) { } //set_depth
 } //MIImageRenderer
 
 class MIWindowRenderer {
@@ -68,6 +74,7 @@ class MIWindowRenderer {
 	public function translate( _control:MIWindow, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIWindow, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function set_visible( _control:MIWindow, ?_visible:Bool=true ) { } //set_visible	
+	public function set_depth( _control:MIWindow, ?_depth:Float=0.0 ) { } //set_depth
 } //MIWindowRenderer
 
 class MIScrollAreaRenderer {
@@ -77,6 +84,7 @@ class MIScrollAreaRenderer {
 	public function set_clip( _control:MIScrollArea, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function refresh_scroll( _control:MIScrollArea, shx:Float, shy:Float, svx:Float, svy:Float, hv:Bool, vv:Bool ) { } //refresh_scroll
 	public function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) { } //set_visible
+	public function set_depth( _control:MIScrollArea, ?_depth:Float=0.0 ) { } //set_depth
 } //MIScrollAreaRenderer
 
 class MIDropdownRenderer {
@@ -85,4 +93,5 @@ class MIDropdownRenderer {
 	public function translate( _control:MIDropdown, _x:Float, _y:Float ) { } //translate
 	public function set_clip( _control:MIDropdown, ?_clip_rect:Rectangle=null ) { } //set_clip
 	public function set_visible( _control:MIDropdown, ?_visible:Bool=true ) { } //set_visible
+	public function set_depth( _control:MIDropdown, ?_depth:Float=0.0 ) { } //set_depth
 } //MIDropdownRenderer

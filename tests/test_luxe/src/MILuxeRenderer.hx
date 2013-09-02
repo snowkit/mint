@@ -87,6 +87,17 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
 
     } //set_visible   
 
+    public override function set_depth( _control:MICanvas, ?_depth:Float=0.0 ) {
+
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
+            if(back != null) {
+                // back.depth = _depth;
+            }
+
+    } //set_depth
+
+
 } //MICanvasLuxeRenderer
 
 class MILabelLuxeRenderer extends MILabelRenderer {
@@ -167,6 +178,16 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //set_visible   
 
+    public override function set_depth( _control:MILabel, ?_depth:Float=0.0 ) {
+
+        var text:Text = cast _control.render_items.get('text'); 
+
+            if(text != null) {
+                text.geometry.depth = _depth;
+            }
+
+    } //set_depth
+
     public override function set_text( _control:MILabel, ?_text:String='label' ) {
 
     	var text:Text = cast _control.render_items.get('text');
@@ -231,6 +252,16 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
             geom.visible = _visible;
 
     } //set_visible    
+
+    public override function set_depth( _control:MIButton, ?_depth:Float=0.0 ) {
+
+        var geom : NineSlice = cast _control.render_items.get('geom');
+
+            if(geom != null) {
+                geom.depth = _depth;
+            }
+
+    } //set_depth
 
 } //MIButtonLuxeRenderer
 
@@ -367,7 +398,28 @@ class MIListLuxeRenderer extends MIListRenderer {
     		}
 
     	}
-    } //set_visible    
+    } //set_visible  
+
+    public override function set_depth( _control:MIList, ?_depth:Float=0.0 ) {
+
+
+        if(_control.multiselect) {
+            
+            var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
+            for(_select in _existing_selections) {
+                _select.depth = _depth;
+            }
+
+        } else {
+            
+            var _select : QuadGeometry = _control.render_items.get('select');
+            if(_select != null) {
+                _select.depth = _depth;
+            }
+
+        }
+
+    } //set_depth
 
 } //MIListLuxeRenderer
 
@@ -459,6 +511,26 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     } //set_visible
 
+    public override function set_depth( _control:MIScrollArea, ?_depth:Float=0.0 ) {
+
+        var back:QuadGeometry = cast _control.render_items.get('back');      
+        var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
+        var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
+
+            if(back != null) {
+                back.depth = _depth;
+            }
+
+            if(sliderh != null) {
+                sliderh.depth = _depth+2;
+            }
+
+            if(sliderv != null) {
+                sliderv.depth = _depth+2;
+            }
+
+    } //set_depth
+
 } //MIScrollAreaLuxeRenderer
 
 class MIImageLuxeRenderer extends MIImageRenderer {
@@ -480,7 +552,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
         
         var image:Sprite = cast _control.render_items.get('image');
 
-        image.pos = image.pos.add( new Vector(_x,_y) );
+            image.pos = image.pos.add( new Vector(_x,_y) );
 
     } //translate
 
@@ -505,6 +577,16 @@ class MIImageLuxeRenderer extends MIImageRenderer {
             image.visible = _visible;
 
     } //set_visible 
+
+    public override function set_depth( _control:MIImage, ?_depth:Float=0.0 ) {
+    
+        var image:Sprite = cast _control.render_items.get('image');
+
+            if(image != null) {
+                image.depth = _depth;
+            }
+
+    } //set_depth
 
 } //MIImageLuxeRenderer
 
@@ -556,6 +638,15 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     } //set_visible
 
+    public override function set_depth( _control:MIWindow, ?_depth:Float=0.0 ) {
+
+        var geom : NineSlice = cast _control.render_items.get('geom'); 
+
+            if(geom != null) {
+                geom.depth = _depth;
+            }
+
+    } //set_depth
 
 } //MIWindowLuxeRenderer
 
@@ -595,8 +686,18 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
         var back:QuadGeometry = cast _control.render_items.get('back');
 
             back.enabled = _visible;
-        
+
     } //set_visible
+
+    public override function set_depth( _control:MIDropdown, ?_depth:Float=0.0 ) {
+    
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
+            if(back != null) {
+                back.depth = _depth;
+            }
+
+    } //set_depth
 
 
 } //MIDropdownLuxeRenderer

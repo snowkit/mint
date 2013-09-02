@@ -59,6 +59,14 @@ class MIButton extends MIControl {
 	} //set_visible
 
 
+	private override function set_depth( _depth:Float ) : Float {
+
+		renderer.button.set_depth(this, _depth);
+
+		return depth = _depth;
+
+	} //set_depth
+
 	public override function onmousedown(e) {
 		super.onmousedown(e);
 	}

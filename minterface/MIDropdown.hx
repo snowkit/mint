@@ -73,6 +73,14 @@ class MIDropdown extends MIControl {
 		renderer.dropdown.translate( this, _x, _y );
 	}
 
+	private override function set_depth( _depth:Float ) : Float {
+
+		renderer.dropdown.set_depth(this, _depth);
+
+		return depth = _depth;
+
+	} //set_depth
+
 	public override function set_visible( ?_visible:Bool = true ) {
 		super.set_visible(_visible);
 		renderer.dropdown.set_visible(this,_visible);
@@ -84,20 +92,29 @@ class MIDropdown extends MIControl {
 	}
 
 	public function close_list() {
+		
 		list.set_visible(false);
 
 			real_bounds.h = bounds.h;
 
 		is_open = false;
-	}	
+
+	} //close_list
 
 	public function open_list() {
-		list.set_visible(true);
-		
-			real_bounds.h = bounds.h + list.bounds.h;
 
+			//make sure it's always on top
+		list.depth = canvas.depth+1;
+		trace(' setting list depth ' + list.depth);
+
+			//make it visible
+		list.set_visible(true);
+				//adjust the bounds so we get mouse events still
+			real_bounds.h = bounds.h + list.bounds.h;
+			//and flag it
 		is_open = true;
-	}
+
+	} //open_list
 
 	public override function onmousedown(e) {
 

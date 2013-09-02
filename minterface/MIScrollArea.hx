@@ -158,47 +158,11 @@ class MIScrollArea extends MIControl {
 	} //set_visible
 
 
-	public override function _debug() {
+	private override function set_depth( _depth:Float ) : Float {
 
-		
-		super._debug();
+		renderer.scroll.set_depth(this, _depth);
 
-			//horizontal scroll
-		if(can_scroll_h) {
-			Luxe.draw.rectangle({
-				depth : 8,
-				immediate : true,
-				color : debug_color,			
-				x : real_bounds.x + ((real_bounds.w-10) * scroll_percent.x), 
-				y : (real_bounds.y+real_bounds.h - 4), 
-				w:10, h:3
-			});
-		}
+		return depth = _depth;
 
-			//vertical scroll
-		if(can_scroll_v) {
-			Luxe.draw.rectangle({
-				depth : 8,
-				immediate : true,
-				color : debug_color,
-				x : (real_bounds.x+real_bounds.w - 4), 
-				y: real_bounds.y + ((real_bounds.h-10) * scroll_percent.y), 
-				w:3, h:10
-			});
-		}
-
-		// var cy:Float = child_bounds.realy;
-		// var diffy:Float = (real_bounds.y - child_bounds.realy);
-
-		// Luxe.draw.text({
-		// 	text :  'y =' + real_bounds.y + ' cy = ' + cy + ' diffy = ' + diffy + ' [ ' +scroll_percent.y+ ']',
-		// 	depth : 5,
-		// 	size : 14,
-		// 	immediate : true,
-		// 	pos : new Vector(real_bounds.x, real_bounds.y),
-		// 	color : debug_color			
-		// });
-
-	}
-
+	} //set_depth
 }

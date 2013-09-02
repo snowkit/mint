@@ -76,9 +76,10 @@ class MIWindow extends MIControl {
 
 			if(!dragging) {
 				if( title.real_bounds.point_inside(_m) ) {			
-					dragging = true;			
+					dragging = true;		
 					drag_start = _m.clone();
 					down_start = new Vector(real_bounds.x, real_bounds.y);
+					canvas.dragged = this;
 				} //if inside title bounds
 			} //!dragging
 
@@ -91,6 +92,7 @@ class MIWindow extends MIControl {
 		var _m : Vector = new Vector(e.x,e.y);
 		if(dragging) {
 			dragging = false;
+			canvas.dragged = null;
 		} //dragging
 	} //onmouseup
 
@@ -108,5 +110,14 @@ class MIWindow extends MIControl {
 		super.set_visible(_visible);
 		renderer.window.set_visible(this, _visible);
 	} //set_visible
+
+
+	private override function set_depth( _depth:Float ) : Float {
+
+		renderer.window.set_depth(this, _depth);
+
+		return depth = _depth;
+
+	} //set_depth	
 
 }

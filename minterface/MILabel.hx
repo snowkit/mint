@@ -41,8 +41,6 @@ class MILabel extends MIControl {
 		_options.depth = depth;
 			//create it
 		renderer.label.init(this,_options);
-			//debug color
-		debug_color = new Color(0,1,0.6,0.5);
 
 		set_clip( clip_rect );
 
@@ -82,5 +80,13 @@ class MILabel extends MIControl {
 		super.set_visible(_visible);
 		renderer.label.set_visible(this, _visible);
 	} //set_visible
+
+	private override function set_depth( _depth:Float ) : Float {
+
+		renderer.label.set_depth(this, _depth);
+
+		return depth = _depth;
+
+	} //set_depth
 
 }

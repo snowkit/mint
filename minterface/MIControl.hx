@@ -32,27 +32,33 @@ class MIControl {
 		//the items specific to rendering this item
 	public var render_items : Map<String, Dynamic>;
 
+		//the relative bounds to the parent 
 	public var bounds : Rectangle;
+		//the absolute bounds in screen space
 	public var real_bounds : Rectangle;
+		//the clipping rectangle for this control
 	public var clip_rect : Rectangle;
-	@:isVar public var parent(get,set) : MIControl;
+		//the list of children added to this control
 	public var children : Array<MIControl>;
 
+		//a shortcut to adding multiple mousedown handlers
 	@:isVar public var mousedown(get,set) : MIControl->?MouseEvent->Void;
+		//the list of internal handlers, for calling 
 	var mouse_down_handlers : Array<MIControl->?MouseEvent->Void>;
 
+		//if the control is under the mouse
 	public var isfocused : Bool = false;
+		//if the control is under the mouse
 	public var ishovered : Bool = false;
+		//if the control is visible
 	public var visible : Bool = true;
+		//if the control accepts mouse events
 	public var mouse_enabled : Bool = true;
 
-	public var debug_color : Color;
-
-	@:isVar public var depth(default,default) : Float = 0;
+	@:isVar public var parent(get,set) : MIControl;
+	@:isVar public var depth(get,set) : Float = 0.0;
 
 	public function new(_options:Dynamic) {
-
-		debug_color = new Color(0.5,0.3,0.2,0.8);		
 
 		render_items = new Map<String,Dynamic>();
 		
@@ -247,19 +253,6 @@ class MIControl {
 
 	} //children_bounds
 
-	private function set_parent(p:MIControl) {
-		if(p != null) {
-			real_bounds.set( p.real_bounds.x+bounds.x, p.real_bounds.y+bounds.y, bounds.w, bounds.h);
-		} else {
-			real_bounds.set(bounds.x, bounds.y, bounds.w, bounds.h);
-		}
-
-		return parent = p;
-	} //set_parent
-
-	private function get_parent() {
-		return parent;
-	}
 		
 	public function onmousemove( e:MouseEvent ) {
 		
@@ -270,6 +263,7 @@ class MIControl {
 	} //onmouseup
 
 	public function onmousedown( e:MouseEvent ) {
+
 		if(mousedown != null) {
 			if(e.button == MouseButton.left) {
 				for(handler in mouse_down_handlers) {
@@ -293,15 +287,32 @@ class MIControl {
 		// trace('mouse leave ' + name);
 	}
 
-	public function _debug() {
-		// Luxe.draw.rectangle({
-		// 	immediate : true,
-		// 	color : debug_color,
-		// 	x : real_bounds.x, y:real_bounds.y, w:real_bounds.w, h:real_bounds.h
-		// });
-		// for(control in children) {
-		// 	control._debug();
-		// }		
-	}	
+//Properties
+//Depth properties
 
-}
+	private function get_depth() : Float {
+		return depth;
+	} //get_depth
+
+	private function set_depth( _d:Float ) : Float {
+		return depth = _d;
+	} //set_depth
+
+//Parent properties
+
+	private function set_parent(p:MIControl) {
+		if(p != null) {
+			real_bounds.set( p.real_bounds.x+bounds.x, p.real_bounds.y+bounds.y, bounds.w, bounds.h);
+		} else {
+			real_bounds.set(bounds.x, bounds.y, bounds.w, bounds.h);
+		}
+
+		return parent = p;
+	} //set_parent
+
+	private function get_parent() {
+		return parent;
+	} //get_parent
+
+} //MIControl
+

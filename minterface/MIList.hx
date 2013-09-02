@@ -102,6 +102,17 @@ class MIList extends MIControl {
 	} //set_visible
 
 
+	private override function set_depth( _depth:Float ) : Float {
+
+		renderer.list.set_depth(this, _depth);
+
+		if(view!=null) {
+			view.depth = _depth;
+		}
+
+		return depth = _depth;
+
+	} //set_depth
 
 	public override function onmousemove(e) {
 		trace('move in list');

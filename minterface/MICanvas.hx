@@ -9,7 +9,7 @@ import minterface.MIControl;
 class MICanvas extends MIControl {
 
 	public var focused : MIControl;
-	public var _child_depth : Float = 0;
+	public var dragged : MIControl;
 
 	public function new( _options:Dynamic ) {
 
@@ -31,8 +31,6 @@ class MICanvas extends MIControl {
 		focused = null;
 		depth = _options.depth;
 
-		debug_color = new Color(0.5,0,0,0.5);		
-
 		renderer.canvas.init( this, _options );
 
 		_mouse_last = new Vector();
@@ -43,6 +41,15 @@ class MICanvas extends MIControl {
 		super.set_visible(_visible);
 		renderer.canvas.set_visible(this, _visible);
 	} //set_visible
+
+
+	private override function set_depth( _d:Float ) : Float {
+
+		renderer.canvas.set_depth(this, _d);
+
+		return depth = _d;
+
+	} //set_depth
 
 	public function topmost_control_under_point(_p:Vector) {
 		return topmost_child_under_point(_p);
@@ -137,6 +144,10 @@ class MICanvas extends MIControl {
 			
 		} //focused != null
 
+		if(dragged != null && dragged != focused) {
+			dragged.onmousemove(e);
+		} //dragged ! null and ! focused
+
 	} //onmousemove
 	
 	public override function onmouseup(e) {
@@ -169,7 +180,6 @@ class MICanvas extends MIControl {
 	} //add
 
 	public function update(dt:Float) {
-		_debug();
 	} //update
 
 	public function destroy(){

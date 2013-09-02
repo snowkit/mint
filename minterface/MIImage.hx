@@ -36,4 +36,12 @@ class MIImage extends MIControl {
 	} //set_visible
 
 
+	private override function set_depth( _depth:Float ) : Float {
+
+		renderer.image.set_depth(this, _depth);
+
+		return depth = _depth;
+
+	} //set_depth
+
 }
