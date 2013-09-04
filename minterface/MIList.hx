@@ -17,12 +17,16 @@ class MIList extends MIControl {
 	public var _options : Dynamic;
 
 	public function new(__options:Dynamic) {
-			
+		
+		items = [];
+
 			//create the base control
 		super(__options);
 			//
 		multiselect = (__options.multiselect == null) ? false : __options.multiselect;
 		onselect = (__options.onselect == null) ? null : __options.onselect;
+
+		
 
 		view = new MIScrollArea({
 			parent : this,
@@ -55,6 +59,7 @@ class MIList extends MIControl {
 			bounds : new Rectangle(0, _childbounds.h, bounds.w, 30),			
 			parent : view,
 			color : new Color(0,0,0,1).rgb(0x999999),
+			depth : depth,
 			text_size : 18,
 			align : _options.align
 		});
@@ -62,6 +67,8 @@ class MIList extends MIControl {
 			//clip the label by the scroll view's bounds
 		l.clip_with(view);
 		l.mouse_enabled = true;
+
+		items.push(l);
 		
 	} //add_item
 
@@ -104,10 +111,17 @@ class MIList extends MIControl {
 
 	private override function set_depth( _depth:Float ) : Float {
 
+		super.set_depth(_depth);
+
 		renderer.list.set_depth(this, _depth);
 
-		if(view!=null) {
+		if(view != null) {	
 			view.depth = _depth;
+		}
+
+		for(_item in items) {
+				//children are +1
+			_item.depth = _depth+1;
 		}
 
 		return depth = _depth;

@@ -49,55 +49,55 @@ class Main extends luxe.Game {
             depth : 100
         });
 
-        // button = new MIButton({
-        //     parent : canvas,
-        //     name : 'click',
-        //     bounds : new Rectangle( 10, 10, 100, 35 ),
-        //     text : 'click me',
-        //     text_size : 15,
-        //     onclick : function(){ trace('hello world'); }
-        // });
+        button = new MIButton({
+            parent : canvas,
+            name : 'click',
+            bounds : new Rectangle( 10, 10, 100, 35 ),
+            text : 'click me',
+            text_size : 15,
+            onclick : function(){ trace('hello world'); }
+        });
 
-        // itemlist = new MIList({
-        //     parent : canvas,
-        //     name : 'list1',
-        //     bounds : new Rectangle(10,50, 100,380)
-        // });
+        itemlist = new MIList({
+            parent : canvas,
+            name : 'list1',
+            bounds : new Rectangle(10,50, 100,380)
+        });
 
-        // itemlist.add_item('items one');     
-        // itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);
+        itemlist.add_item('items one');     
+        itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);
 
-        // scroller = new MIScrollArea({
-        //     parent : canvas,
-        //     name : 'scrollarea',
-        //     bounds : new Rectangle( 120, 10, 300, 360 )
-        // });        
+        scroller = new MIScrollArea({
+            parent : canvas,
+            name : 'scrollarea',
+            bounds : new Rectangle( 120, 10, 300, 360 )
+        });        
 
-        // scroller1 = new MIScrollArea({
-        //     parent : canvas,
-        //     name : 'scrollarea1',
-        //     bounds : new Rectangle( 430, 10, 300, 360 )
-        // });
+        scroller1 = new MIScrollArea({
+            parent : canvas,
+            name : 'scrollarea1',
+            bounds : new Rectangle( 430, 10, 300, 360 )
+        });
 
-        // image = new MIImage({
-        //     parent : scroller1,
-        //     name : 'image',
-        //     bounds : new Rectangle( 0, 0, 1280, 720 ),
-        //     texture : Luxe.loadTexture('assets/image.png'),
-        // });
+        image = new MIImage({
+            parent : scroller1,
+            name : 'image',
+            bounds : new Rectangle( 0, 0, 1280, 720 ),
+            texture : Luxe.loadTexture('assets/image.png'),
+        });
 
-        // scroller1.scrolly(-360);
+        scroller1.scrolly(-360);
 
-        // for(i in 0 ... 5) {
-        //     var l = new MIButton({
-        //         parent : scroller,
-        //         name : 'button' + (i+1),
-        //         bounds : new Rectangle(50, i * 100, 100, 100 ),
-        //         text : 'click me + '+ (i+1),
-        //         text_size : 18,
-        //         onclick : function(){ trace('click me + '+ (i+1)); }
-        //     });
-        // }
+        for(i in 0 ... 5) {
+            var l = new MIButton({
+                parent : scroller,
+                name : 'button' + (i+1),
+                bounds : new Rectangle(50, i * 100, 100, 100 ),
+                text : 'click me + '+ (i+1),
+                text_size : 18,
+                onclick : function(){ trace('click me + '+ (i+1)); }
+            });
+        }
 
         window = new MIWindow({
             parent : canvas,
@@ -133,9 +133,6 @@ class Main extends luxe.Game {
         selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
         selector2.add_items(['zip', 'folder']);
 
-        // window.depth = 8;
-
-        trace("OK");
 
     } //ready
     

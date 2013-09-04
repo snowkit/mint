@@ -105,8 +105,7 @@ class MIDropdown extends MIControl {
 
 			//make sure it's always on top
 		list.depth = canvas.depth+1;
-		trace(' setting list depth ' + list.depth);
-
+		
 			//make it visible
 		list.set_visible(true);
 				//adjust the bounds so we get mouse events still

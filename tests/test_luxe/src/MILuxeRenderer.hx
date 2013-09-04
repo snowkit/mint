@@ -61,8 +61,8 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
         var back = new QuadGeometry({           
             x: _control.real_bounds.x,
             y: _control.real_bounds.y,
-            width: _control.real_bounds.w,
-            height: _control.real_bounds.h,
+            w: _control.real_bounds.w,
+            h: _control.real_bounds.h,
             color : new Color(1,1,1,1),
             depth : _control.depth
         });
@@ -225,7 +225,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
         
         var geom : NineSlice = cast _control.render_items.get('geom');
 
-        geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
+            geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
 
     } //translate
 
@@ -329,8 +329,8 @@ class MIListLuxeRenderer extends MIListRenderer {
                     depth : _control.depth+1.1,
                     x: _selected.real_bounds.x,
                     y: _selected.real_bounds.y,
-                    width: _selected.real_bounds.w,
-                    height: _selected.real_bounds.h,
+                    w: _selected.real_bounds.w,
+                    h: _selected.real_bounds.h,
                     color : new Color().rgb(0x262626)
                 });
 
@@ -361,8 +361,8 @@ class MIListLuxeRenderer extends MIListRenderer {
                     depth : _control.depth+1.1,
                     x: _selected.real_bounds.x,
                     y: _selected.real_bounds.y,
-                    width: _selected.real_bounds.w,
-                    height: _selected.real_bounds.h,
+                    w: _selected.real_bounds.w,
+                    h: _selected.real_bounds.h,
                     color : new Color().rgb(0x262626)
                 });
 
@@ -431,33 +431,33 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             depth : _control.depth,
             x: _control.real_bounds.x,
             y: _control.real_bounds.y,
-            width: _control.real_bounds.w,
-            height: _control.real_bounds.h,
+            w: _control.real_bounds.w,
+            h: _control.real_bounds.h,
             color : new Color(1,1,1,1).rgb(0x121212)
         });
         var sliderv = new QuadGeometry({
             depth : _control.depth+2,
             x: (_control.real_bounds.x+_control.real_bounds.w - 4),
             y: _control.real_bounds.y + ((_control.real_bounds.h-10) * _control.scroll_percent.y),
-            width: 3,
-            height: 10,
-            color : new Color().rgb(0x999999)
+            w: 3,
+            h: 10,
+            color : new Color().rgb(0x999999),
+            enabled : false
         });
         var sliderh = new QuadGeometry({
             depth : _control.depth+2,
             x: _control.real_bounds.x + ((_control.real_bounds.w-10) * _control.scroll_percent.x),
             y: (_control.real_bounds.y+_control.real_bounds.h - 4),
-            width: 10,
-            height: 3,
-            color : new Color().rgb(0x999999)
+            w: 10,
+            h: 3,
+            color : new Color().rgb(0x999999),
+            enabled : false
         });
 
         back.id = _control.name + '.back';
         sliderh.id = _control.name + '.sliderh';
         sliderv.id = _control.name + '.sliderv';
 
-        sliderh.enabled = false;
-        sliderv.enabled = false;
 
         Luxe.addGeometry( back );
         Luxe.addGeometry( sliderh );
@@ -609,9 +609,6 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
         geom._geometry.id = _control.name + '.window';
 
-        // var title = new Text( _options );
-
-        // _control.render_items.set('title', title);
         _control.render_items.set('geom', geom);
         
     } //init
@@ -619,9 +616,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
     public override function translate( _control:MIWindow, _x:Float, _y:Float ) {
         
         var geom : NineSlice = cast _control.render_items.get('geom'); 
-        // var title : Text = cast _control.render_items.get('title');
 
-        // title.pos = new Vector( title.pos.x + _x,  title.pos.y + _y);
         geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
 
     } //translate
@@ -658,8 +653,8 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
             depth : _control.depth,
             x: _control.real_bounds.x,
             y: _control.real_bounds.y,
-            width: _control.real_bounds.w,
-            height: _control.real_bounds.h,
+            w: _control.real_bounds.w,
+            h: _control.real_bounds.h,
             color : new Color(1,1,1,1).rgb(0x0d0d0d)
         });
 

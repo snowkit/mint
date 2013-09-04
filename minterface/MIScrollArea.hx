@@ -69,8 +69,11 @@ class MIScrollArea extends MIControl {
 
 	public function scrolly(diff:Float) {
 
+		if(!can_scroll_v) return;
+
 		if(diff > 0 && scroll_percent.y <= 0) return;
 		if(diff < 0 && scroll_percent.y >= 1) return;
+
 
 		for(child in children) {
 			child.translate(0, diff);
@@ -125,7 +128,7 @@ class MIScrollArea extends MIControl {
 			can_scroll_v = true;
 			slider_v_visible = true;
 		} 
-		
+
 		if(can_scroll_h) {
 
 			var _diff_x = (real_bounds.x - child_bounds.realx);
@@ -139,7 +142,6 @@ class MIScrollArea extends MIControl {
 			var _diff_y = (real_bounds.y - child_bounds.realy);
 			scroll_percent.y = (_diff_y / (child_bounds.h - bounds.h));
 			scroll_percent.y = Luxe.utils.clamp( scroll_percent.y, 0, 1);
-			
 
 		} //can_scroll_v
 

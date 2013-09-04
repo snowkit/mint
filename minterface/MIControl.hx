@@ -262,7 +262,7 @@ class MIControl {
 		
 	} //onmouseup
 
-	public function onmousedown( e:MouseEvent ) {
+	public function onmousedown( e:MouseEvent ) {		
 
 		if(mousedown != null) {
 			if(e.button == MouseButton.left) {
