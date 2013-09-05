@@ -12,6 +12,8 @@ class MIRenderer {
 	public var image 	: MIImageRenderer;
 	public var window   : MIWindowRenderer;
 	public var dropdown : MIDropdownRenderer;
+	public var panel 	: MIPanelRenderer;
+	public var checkbox : MICheckboxRenderer;
 
 	public function new() {
 		//this should stay blank to not needlessly create instances
@@ -94,3 +96,21 @@ class MIDropdownRenderer {
 	public function set_visible( _control:MIDropdown, ?_visible:Bool=true ) { } //set_visible
 	public function set_depth( _control:MIDropdown, ?_depth:Float=0.0 ) { } //set_depth
 } //MIDropdownRenderer
+
+class MIPanelRenderer {
+	public function new(){}
+	public function init( _control:MIPanel, _options:Dynamic ) { } //init
+	public function translate( _control:MIPanel, _x:Float, _y:Float ) { } //translate
+	public function set_clip( _control:MIPanel, ?_clip_rect:MIRectangle=null ) { } //set_clip
+	public function set_visible( _control:MIPanel, ?_visible:Bool=true ) { } //set_visible
+	public function set_depth( _control:MIPanel, ?_depth:Float=0.0 ) { } //set_depth
+} //MIPanelRenderer
+
+class MICheckboxRenderer {
+	public function new(){}
+	public function init( _control:MICheckbox, _options:Dynamic ) { } //init
+	public function translate( _control:MICheckbox, _x:Float, _y:Float ) { } //translate
+	public function set_clip( _control:MICheckbox, ?_clip_rect:MIRectangle=null ) { } //set_clip
+	public function set_visible( _control:MICheckbox, ?_visible:Bool=true ) { } //set_visible
+	public function set_depth( _control:MICheckbox, ?_depth:Float=0.0 ) { } //set_depth
+} //MICheckboxRenderer

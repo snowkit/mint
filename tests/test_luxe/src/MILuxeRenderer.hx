@@ -2,10 +2,6 @@ package ;
 
 import minterface.MIRenderer;
 
-import minterface.MIRenderer.MICanvasRenderer;
-import minterface.MIRenderer.MILabelRenderer;
-import minterface.MIRenderer.MIButtonRenderer;
-
 import minterface.MIControl;
 import minterface.MILabel;
 import minterface.MICanvas;
@@ -15,6 +11,9 @@ import minterface.MIScrollArea;
 import minterface.MIImage;
 import minterface.MIWindow;
 import minterface.MIDropdown;
+import minterface.MIPanel;
+import minterface.MICheckbox;
+
 import minterface.MITypes;
 
 import luxe.Text;
@@ -136,6 +135,8 @@ class MILuxeRenderer extends MIRenderer {
         image = new MIImageLuxeRenderer();
         window = new MIWindowLuxeRenderer();
         dropdown = new MIDropdownLuxeRenderer();
+        panel = new MIPanelLuxeRenderer();
+        checkbox = new MICheckboxLuxeRenderer();
 
     } //new
 
@@ -150,12 +151,12 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
-            color : new Color(1,1,1,1),
+            color : new Color(1,1,1,1).rgb(0x0c0c0c),
             depth : _control.depth
         });
 
-        back.texture = Luxe.loadTexture('assets/transparency.png');
-        back.uv(new Rectangle(0,0,960,640));
+        // back.texture = Luxe.loadTexture('assets/transparency.png');
+        // back.uv(new Rectangle(0,0,960,640));
 
         back.id = _control.name + '.back';
 
@@ -825,4 +826,154 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
 
 } //MIDropdownLuxeRenderer
+
+class MIPanelLuxeRenderer extends MIPanelRenderer {
+
+    public override function init( _control:MIPanel, _options:Dynamic ) {
+        
+        var geom = new NineSlice({
+            texture : Luxe.loadTexture('default_ui_box'),
+            depth : _control.depth,
+            top : 4, left : 16, right : 16, bottom : 16,
+            source_x : 6, source_y : 108, source_w : 64, source_h : 14
+        });
+        
+        geom.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
+        geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y), _control.real_bounds.w, _control.real_bounds.h );
+        
+        geom.color = new Color(1,1,1,1);
+
+        geom._geometry.id = _control.name + '.button';
+
+        // 090909
+
+        _control.render_items.set('geom', geom);
+
+        var bary = _control.real_bounds.y + _control.real_bounds.h;
+
+        if(_options.bar != null) {
+            if(_options.bar == 'top') {
+                bary = _control.real_bounds.y-3;
+            }
+        }
+
+        var bar = new QuadGeometry({
+            depth : _control.depth,
+            x: _control.real_bounds.x, y: bary,
+            w: _control.real_bounds.w, h: 3,
+            color : new Color(1,1,1,1).rgb(0x030303)
+        });
+
+        Luxe.addGeometry( bar );
+
+        _control.render_items.set('bar', bar);        
+
+    } //init
+
+    public override function translate( _control:MIPanel, _x:Float, _y:Float ) {
+        
+        var geom : NineSlice = cast _control.render_items.get('geom');
+        var bar : QuadGeometry = cast _control.render_items.get('bar');
+
+            geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
+            bar.pos = new Vector( bar.pos.x + _x, bar.pos.y + _y );
+
+    } //translate
+
+    public override function set_clip( _control:MIPanel, ?_clip_rect:MIRectangle=null ) {
+        
+        var geom : NineSlice = cast _control.render_items.get('geom');
+        var bar : QuadGeometry = cast _control.render_items.get('bar');
+
+        if(_clip_rect == null) {
+            geom.clip = false;
+            bar.clip = false;
+        } else {
+            if(geom != null) {
+                geom.clip = true;
+                geom.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
+                bar.clip = true;
+                bar.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
+            }
+        }
+
+    } //set_clip
+
+    public override function set_visible( _control:MIPanel, ?_visible:Bool=true ) { 
+        
+        var geom : NineSlice = cast _control.render_items.get('geom');
+        var bar : Geometry = cast _control.render_items.get('bar');
+
+            geom.visible = _visible;
+            bar.enabled = _visible;
+
+    } //set_visible
+
+    public override function set_depth( _control:MIPanel, ?_depth:Float=0.0 ) {
+
+        var geom : NineSlice = cast _control.render_items.get('geom');
+        var bar : NineSlice = cast _control.render_items.get('bar');
+
+            if(geom != null) {
+                geom.depth = _depth;
+            }
+
+            if(bar != null) {
+                bar.depth = _depth;
+            }
+
+    } //set_depth
+
+} //MIPanelRenderer
+
+class MICheckboxLuxeRenderer extends MICheckboxRenderer {
+
+    public override function init( _control:MICheckbox, _options:Dynamic ) {
+        
+        var back = new QuadGeometry({
+            depth : _control.depth,
+            x: _control.real_bounds.x,
+            y: _control.real_bounds.y,
+            w: _control.real_bounds.w,
+            h: _control.real_bounds.h,
+            color : new Color(1,1,1,1).rgb(0x0d0d0d)
+        });
+
+        Luxe.addGeometry( back );
+
+        _control.render_items.set('back', back);
+
+    } //init
+
+    public override function translate( _control:MICheckbox, _x:Float, _y:Float ) {
+        
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
+            back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
+
+    } //translate
+
+    public override function set_clip( _control:MICheckbox, ?_clip_rect:MIRectangle=null ) {
+
+    } //set_clip
+
+    public override function set_visible( _control:MICheckbox, ?_visible:Bool=true ) { 
+
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
+            back.enabled = _visible;
+
+    } //set_visible
+
+    public override function set_depth( _control:MICheckbox, ?_depth:Float=0.0 ) {
+    
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
+            if(back != null) {
+                back.depth = _depth;
+            }
+
+    } //set_depth
+
+} //MICheckboxRenderer
 

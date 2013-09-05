@@ -18,6 +18,8 @@ import minterface.MIScrollArea;
 import minterface.MIList;
 import minterface.MIWindow;
 import minterface.MIDropdown;
+import minterface.MIPanel;
+import minterface.MICheckbox;
 
 import MILuxeRenderer;
 
@@ -35,6 +37,8 @@ class Main extends luxe.Game {
     public var window : MIWindow;
     public var selector : MIDropdown;
     public var selector2 : MIDropdown;
+    public var panel : MIPanel;
+    public var panel2 : MIPanel;
 
     var s : Sprite;
 
@@ -53,7 +57,7 @@ class Main extends luxe.Game {
         button = new MIButton({
             parent : canvas,
             name : 'click',
-            bounds : new MIRectangle( 10, 10, 100, 35 ),
+            bounds : new MIRectangle( 10, 60, 100, 35 ),
             text : 'click me',
             text_size : 15,
             onclick : function(){ trace('hello world'); }
@@ -62,7 +66,7 @@ class Main extends luxe.Game {
         itemlist = new MIList({
             parent : canvas,
             name : 'list1',
-            bounds : new MIRectangle(10,50, 100,380)
+            bounds : new MIRectangle(10, 100, 100,380)
         });
 
         itemlist.add_item('items one');     
@@ -71,23 +75,63 @@ class Main extends luxe.Game {
         scroller = new MIScrollArea({
             parent : canvas,
             name : 'scrollarea',
-            bounds : new MIRectangle( 120, 10, 300, 360 )
+            bounds : new MIRectangle( 120, 60, 300, 360 )
         });        
 
-        scroller1 = new MIScrollArea({
-            parent : canvas,
-            name : 'scrollarea1',
-            bounds : new MIRectangle( 430, 10, 300, 360 )
-        });
 
-        image = new MIImage({
-            parent : scroller1,
-            name : 'image',
-            bounds : new MIRectangle( 0, 0, 1280, 720 ),
-            texture : Luxe.loadTexture('assets/image.png'),
-        });
+        var tt = Luxe.loadTexture('assets/image.png');
 
-        scroller1.scrolly(-360);
+        tt.onload = function(t_) {
+
+            scroller1 = new MIScrollArea({
+                parent : canvas,
+                name : 'scrollarea1',
+                bounds : new MIRectangle( 430, 60, 300, 360 )
+            });
+
+            image = new MIImage({
+                parent : scroller1,
+                name : 'image',
+                bounds : new MIRectangle( 0, 0, 1280, 720 ),
+                texture : tt
+            });
+
+            scroller1.scrolly(-180);
+
+            window = new MIWindow({
+                parent : canvas,
+                name : 'builder',
+                title : 'Export Build',
+                title_size : 15,
+                bounds : new MIRectangle(750, 70, 200, 300)
+            });
+
+            button1 = new MIButton({
+                parent : window,
+                name : 'buildbutton',
+                bounds : new MIRectangle( 20, 245, 160, 35 ),
+                text : 'Make Build',
+                text_size : 15,
+                onclick : function(){ trace('FAKE build'); }
+            });
+
+            selector = new MIDropdown({
+                parent : window,
+                name : 'selector',
+                bounds : new MIRectangle( 20, 40, 160, 30 ),
+                text : 'Select output target'
+            });
+
+            selector2 = new MIDropdown({
+                parent : window,
+                name : 'selector2',
+                bounds : new MIRectangle( 20, 80, 160, 30 ),
+                text : 'Select build format'
+            });
+
+            selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
+            selector2.add_items(['zip', 'folder']);            
+        }        
 
         for(i in 0 ... 5) {
             var l = new MIButton({
@@ -100,39 +144,20 @@ class Main extends luxe.Game {
             });
         }
 
-        window = new MIWindow({
+        
+
+        panel = new MIPanel({
             parent : canvas,
-            name : 'inspector',
-            title : 'inspector',
-            title_size : 15,
-            bounds : new MIRectangle(750, 20, 200, 300)
+            name : 'panel',
+            bounds : new MIRectangle(0, 0, canvas.bounds.w, 48)
         });
 
-        button1 = new MIButton({
-            parent : window,
-            name : 'click1',
-            bounds : new MIRectangle( 10, 30, 100, 35 ),
-            text : 'clicked',
-            text_size : 15,
-            onclick : function(){ trace('window 1'); }
+        panel2 = new MIPanel({
+            parent : canvas,
+            name : 'panel2',
+            bar : 'top',
+            bounds : new MIRectangle(0, canvas.bounds.h-20, canvas.bounds.w, 20)
         });
-
-        selector = new MIDropdown({
-            parent : window,
-            name : 'selector',
-            bounds : new MIRectangle(10, 70, 180, 30),
-            text : 'Select output target'
-        });
-
-        selector2 = new MIDropdown({
-            parent : window,
-            name : 'selector2',
-            bounds : new MIRectangle( 10, 110, 180, 30 ),
-            text : 'Select build format'
-        });
-
-        selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
-        selector2.add_items(['zip', 'folder']);
 
     } //ready
     
