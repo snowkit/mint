@@ -290,9 +290,10 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     public override function set_text( _control:MILabel, ?_text:String='label' ) {
 
-    	var text:Text = cast _control.render_items.get('text');
+    	var text:Text = cast _control.render_items.get('text');            
 
     	if(text != null) {
+            text.pos = new Vector(_control.real_bounds.x, _control.real_bounds.y);
     		text.text = _text;
 	    }
 
@@ -652,7 +653,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
             //clip the geometry
         set_clip( _control, _control.parent.real_bounds );
 
-        image.geometry.id = _control.name + '.image';
+        // image.geometry.id = _control.name + '.image';
 
     } //init
 
@@ -668,12 +669,16 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
         var image:Sprite = cast _control.render_items.get('image');
 
-        if(_clip_rect == null) {
-            image.geometry.clip = false;
-        } else {
-            image.geometry.clip = true;
-            image.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
-        }
+        if(image.texture.loaded) {
+
+            if(_clip_rect == null) {
+                image.geometry.clip = false;
+            } else {
+                image.geometry.clip = true;
+                image.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
+            }
+
+        } 
 
     } //set_clip
 
