@@ -224,7 +224,6 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
         var text = new Text( _options );
 
-
             _control.render_items.set('text', text);
 
         // var bounds = Luxe.draw.rectangle({
@@ -293,7 +292,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
     	var text:Text = cast _control.render_items.get('text');            
 
     	if(text != null) {
-            text.pos = new Vector(_control.real_bounds.x, _control.real_bounds.y);
+            text.text_options.bounds = LuxeMIConverter.rectangle( _control.real_bounds );
     		text.text = _text;
 	    }
 

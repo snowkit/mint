@@ -43,7 +43,7 @@ class MILabel extends MIControl {
 
 	public function set_text(_s:String) : String {
 
-			renderer.label.set_text(this, _s);
+		renderer.label.set_text(this, _s);
 
 		return text = _s;
 
