@@ -51,7 +51,6 @@ class MIList extends MIControl {
 			name : name + '.item.' + _item,
 			bounds : new MIRectangle(0, _childbounds.h, bounds.w, 30),			
 			parent : view,
-			color : new MIColor(0,0,0,1).rgb(0x999999),
 			depth : depth,
 			text_size : 18,
 			align : _options.align

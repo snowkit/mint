@@ -35,14 +35,12 @@ class MIWindow extends MIControl {
 		_options.pos = new MIPoint(real_bounds.x, real_bounds.y);
 			
 			//create the title label
-		// _options = options_plus( _options, { bounds:title_bounds, color:new MIColor().rgb(0x999999) } );
 		title = new MILabel({
 			parent : this,
 			bounds : title_bounds,
 			text:_options.text,
 			text_size:_options.title_size,
-			name : name + '.titlelabel',
-			color : new MIColor().rgb(0x999999)
+			name : name + '.titlelabel'
 		});
 
 			//update

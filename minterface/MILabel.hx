@@ -20,7 +20,6 @@ class MILabel extends MIControl {
 		if(_options.align == null) { _options.align = MITextAlign.center; }
 		if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
 		if(_options.text_size != null) { _options.size = _options.text_size; }	
-		if(_options.color == null) { _options.color = new MIColor().rgb(0x999999); }	
 		if(_options.padding == null) { _options.padding = new MIRectangle(); }
 
 		if(_options.onclick != null) {

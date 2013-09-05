@@ -7,6 +7,7 @@ class MICanvas extends MIControl {
 
 	public var focused : MIControl;
 	public var dragged : MIControl;
+	public var modal   : MIControl;
 
 	public function new( _options:Dynamic ) {
 
@@ -80,6 +81,16 @@ class MICanvas extends MIControl {
 		}
 	} //set_focused
 
+	private function get_focused( _p : MIPoint ) {
+		
+		if( modal != null ) {
+			return modal;
+		} else {
+			return topmost_control_under_point( _p );
+		}
+
+	} //get_focused
+
 	public override function onmousemove( e:MIMouseEvent ) {
 		
 		_mouse_last.set(e.x,e.y);
@@ -110,7 +121,7 @@ class MICanvas extends MIControl {
 				set_control_unfocused(focused, e);
 
 					//find a new one, if any
-				focused = topmost_control_under_point( _mouse_last );
+				focused = get_focused( _mouse_last );
 
 					if(focused != null) {
 						set_control_focused( focused, e );
@@ -123,7 +134,7 @@ class MICanvas extends MIControl {
 				//nothing focused at the moment, check that the mouse is inside our canvas first
 			if( real_bounds.point_inside(_mouse_last) ) {
 
-				focused = topmost_control_under_point( _mouse_last );
+				focused = get_focused( _mouse_last );
 
 					if(focused != null) {
 						set_control_focused( focused, e );
@@ -154,6 +165,7 @@ class MICanvas extends MIControl {
 		if(focused != null && focused.mouse_enabled) {
 			focused.onmouseup(e);
 		} //focused
+
 
 	} //onmouseup
 

@@ -24,6 +24,7 @@ import luxe.Sprite;
 import luxe.Input;
 import luxe.Rectangle;
 
+import phoenix.geometry.Geometry;
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
 
@@ -73,11 +74,6 @@ class LuxeMIConverter {
     public static function vector( _point:MIPoint ) : Vector {
         if(_point == null){ throw "Point passed in as null"; }
         return new Vector( _point.x, _point.y );
-    } //vector
-
-    public static function color( _color:MIColor ) : Color {
-        if(_color == null){ throw "Color passed in as null"; }
-        return new Color( _color.r, _color.g, _color.b, _color.a );
     } //vector
 
     public static function mouse_state( _state:MouseState ) : MIMouseState {
@@ -204,10 +200,6 @@ class MILabelLuxeRenderer extends MILabelRenderer {
             _options.pos = LuxeMIConverter.vector( _options.pos );
         }
 
-        if(_options.color != null) {
-            _options.color = LuxeMIConverter.color( _options.color );
-        }
-
         	//if there is padding, we change the bounds
         if( _options.padding.x != 0 ) { _options.bounds.x += _options.padding.x; }
         if( _options.padding.y != 0 ) { _options.bounds.y += _options.padding.y; }
@@ -221,6 +213,8 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         if( _options.align_vertical != null) {
             _options.align_vertical = LuxeMIConverter.text_align( _options.align_vertical );
         }
+
+        _options.color = new Color(0,0,0,1).rgb(0x999999);
 
         var text = new Text( _options );
 
@@ -528,14 +522,25 @@ class MIListLuxeRenderer extends MIListRenderer {
 class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     
     public override function init( _control:MIScrollArea, _options:Dynamic ) {
+        
         var back = new QuadGeometry({
             depth : _control.depth,
             x: _control.real_bounds.x,
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
-            color : new Color(1,1,1,1).rgb(0x121212)
+            color : new Color(1,1,1,1).rgb(0x101010)
         });
+
+        var box = Luxe.draw.rectangle({
+            depth : _control.depth,
+            x: _control.real_bounds.x,
+            y: _control.real_bounds.y,
+            w: _control.real_bounds.w,
+            h: _control.real_bounds.h,
+            color : new Color(1,1,1,1).rgb(0x0d0d0d)
+        });
+
         var sliderv = new QuadGeometry({
             depth : _control.depth+2,
             x: (_control.real_bounds.x+_control.real_bounds.w - 4),
@@ -556,15 +561,17 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         });
 
         back.id = _control.name + '.back';
+        box.id = _control.name + '.box';
         sliderh.id = _control.name + '.sliderh';
         sliderv.id = _control.name + '.sliderv';
 
-
         Luxe.addGeometry( back );
+        Luxe.addGeometry( box );
         Luxe.addGeometry( sliderh );
         Luxe.addGeometry( sliderv );
 
         _control.render_items.set('back', back);
+        _control.render_items.set('box', box);
         _control.render_items.set('sliderh', sliderh);
         _control.render_items.set('sliderv', sliderv);
 
@@ -573,10 +580,12 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     public override function translate( _control:MIScrollArea, _x:Float, _y:Float ) {
         
         var back:QuadGeometry = cast _control.render_items.get('back');     
+        var box:Geometry = cast _control.render_items.get('box');     
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
         back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
+        box.pos = new Vector( box.pos.x + _x, box.pos.y + _y );
         sliderh.pos = new Vector( sliderh.pos.x + _x, sliderh.pos.y + _y );
         sliderv.pos = new Vector( sliderv.pos.x + _x, sliderv.pos.y + _y );
 
@@ -603,10 +612,12 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     public override function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) { 
 
         var back:QuadGeometry = cast _control.render_items.get('back');      
+        var box:Geometry = cast _control.render_items.get('box');      
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
             back.enabled = _visible;
+            box.enabled = _visible;
             sliderh.enabled = _visible;
             sliderv.enabled = _visible;
 
@@ -615,11 +626,16 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     public override function set_depth( _control:MIScrollArea, ?_depth:Float=0.0 ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');      
+        var box:QuadGeometry = cast _control.render_items.get('box');      
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
             if(back != null) {
                 back.depth = _depth;
+            }
+
+            if(box != null) {
+                box.depth = _depth;
             }
 
             if(sliderh != null) {

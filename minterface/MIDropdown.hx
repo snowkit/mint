@@ -25,7 +25,7 @@ class MIDropdown extends MIControl {
             bounds : new MIRectangle( 0, bounds.h, bounds.w, 110 ),
             align : MITextAlign.left,
             onselect : onselect
-        });        
+        });
 
         selected_label = new MILabel({
 			parent : this,
@@ -33,8 +33,7 @@ class MIDropdown extends MIControl {
 			text:_options.text,
 			text_size: (_options.text_size == null) ? 18 : _options.text_size,
 			name : name + '.selected_label',
-			align : MITextAlign.left,
-			color : new MIColor(0,0,0,1).rgb(0x999999)
+			align : MITextAlign.left
 		});
 
 		renderer.dropdown.init( this, _options );
@@ -86,6 +85,7 @@ class MIDropdown extends MIControl {
 
 	public function close_list() {
 		
+		canvas.modal = null;
 		list.set_visible(false);
 
 			real_bounds.h = bounds.h;
@@ -98,7 +98,8 @@ class MIDropdown extends MIControl {
 
 			//make sure it's always on top
 		list.depth = canvas.depth+5;
-		
+		canvas.modal = list;
+
 			//make it visible
 		list.set_visible(true);
 				//adjust the bounds so we get mouse events still
