@@ -1,19 +1,14 @@
 package minterface;
 
-import luxe.Input.MouseButton;
-import luxe.Input.MouseEvent;
-import luxe.Text.TextAlign;
+import minterface.MITypes;
 import minterface.MIControl;
-
-import luxe.Rectangle;
-import luxe.Color;
 
 class MIList extends MIControl {
 	
 	public var view : MIScrollArea;
 	public var items : Array<MIControl>;
 	public var multiselect : Bool = false;
-	public var onselect : String->MIList->?MouseEvent->Void;
+	public var onselect : String->MIList->?MIMouseEvent->Void;
 	public var _options : Dynamic;
 
 	public function new(__options:Dynamic) {
@@ -26,8 +21,6 @@ class MIList extends MIControl {
 		multiselect = (__options.multiselect == null) ? false : __options.multiselect;
 		onselect = (__options.onselect == null) ? null : __options.onselect;
 
-		
-
 		view = new MIScrollArea({
 			parent : this,
 			bounds : __options.bounds.clone().set(0,0),
@@ -37,7 +30,7 @@ class MIList extends MIControl {
 
 		_options = __options;
 		if(_options.align == null) {
-			_options.align = TextAlign.center;
+			_options.align = MITextAlign.center;
 		}
 
 	} //new
@@ -56,9 +49,9 @@ class MIList extends MIControl {
 			text : _item,
 			onclick : label_selected,
 			name : name + '.item.' + _item,
-			bounds : new Rectangle(0, _childbounds.h, bounds.w, 30),			
+			bounds : new MIRectangle(0, _childbounds.h, bounds.w, 30),			
 			parent : view,
-			color : new Color(0,0,0,1).rgb(0x999999),
+			color : new MIColor(0,0,0,1).rgb(0x999999),
 			depth : depth,
 			text_size : 18,
 			align : _options.align
@@ -82,7 +75,7 @@ class MIList extends MIControl {
 
 	} //translate
 
-	private function label_selected(_control:MIControl, e:MouseEvent) {
+	private function label_selected(_control:MIControl, e:MIMouseEvent) {
 		
 		var _label:MILabel = cast _control;
 		renderer.list.select_item(this, _control);

@@ -1,6 +1,5 @@
 package ;
 
-import luxe.Rectangle;
 import minterface.MIRenderer;
 
 import minterface.MIRenderer.MICanvasRenderer;
@@ -16,11 +15,14 @@ import minterface.MIScrollArea;
 import minterface.MIImage;
 import minterface.MIWindow;
 import minterface.MIDropdown;
+import minterface.MITypes;
 
 import luxe.Text;
 import luxe.Color;
 import luxe.Vector;
 import luxe.Sprite;
+import luxe.Input;
+import luxe.Rectangle;
 
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
@@ -34,6 +36,95 @@ import luxe.NineSlice;
 //  public override function translate( _control:MIREPLACEME, _x:Float, _y:Float ) { } //translate
 //  public override function set_clip( _control:MIREPLACEME, ?_clip_rect:Rectangle=null ) { } //set_clip
 // } //MIREPLACEMELuxeRenderer
+
+class LuxeMIConverter {
+    public static function text_align( _align:MITextAlign ) : TextAlign {
+        
+        if(_align == null) {
+           throw "align passed in as null";
+        }
+
+        switch(_align) {
+            case MITextAlign.left:
+                return TextAlign.left;
+            
+            case MITextAlign.right:
+                return TextAlign.right;
+            
+            case MITextAlign.center:
+                return TextAlign.center;
+            
+            case MITextAlign.top:
+                return TextAlign.top;
+
+            case MITextAlign.bottom:
+                return TextAlign.bottom;
+        }
+
+        return TextAlign.left;
+
+    } //text_align
+
+    public static function rectangle( _rect:MIRectangle ) : Rectangle {
+        if(_rect == null){ throw "Rectangle passed in as null"; }
+        return new Rectangle( _rect.x, _rect.y, _rect.w, _rect.h );
+    } //rectangle
+
+    public static function vector( _point:MIPoint ) : Vector {
+        if(_point == null){ throw "Point passed in as null"; }
+        return new Vector( _point.x, _point.y );
+    } //vector
+
+    public static function color( _color:MIColor ) : Color {
+        if(_color == null){ throw "Color passed in as null"; }
+        return new Color( _color.r, _color.g, _color.b, _color.a );
+    } //vector
+
+    public static function mouse_state( _state:MouseState ) : MIMouseState {
+        switch(_state) {
+            case MouseState.down:
+                return MIMouseState.down;
+            case MouseState.move:
+                return MIMouseState.move;
+            case MouseState.up:
+                return MIMouseState.up;
+        } //state
+    } //mouse_state
+
+    public static function mouse_button( _button:MouseButton ) : MIMouseButton {
+        switch(_button) {
+            case MouseButton.move:
+                return MIMouseButton.move;
+            case MouseButton.left:
+                return MIMouseButton.left;
+            case MouseButton.middle:
+                return MIMouseButton.middle;
+            case MouseButton.right:
+                return MIMouseButton.right;
+            case MouseButton.wheel_up:
+                return MIMouseButton.wheel_up;
+            case MouseButton.wheel_down:
+                return MIMouseButton.wheel_down;
+        } //state
+    } //mouse_state
+
+    public static function mouse_event( _event:MouseEvent ) : MIMouseEvent {
+        return {
+            state : mouse_state(_event.state),
+            flags : _event.flags,
+            button : mouse_button(_event.button),
+            x : _event.x,
+            y : _event.y,
+            deltaX : _event.deltaY,
+            deltaY : _event.deltaX,
+            shift_down : _event.shift_down,
+            ctrl_down : _event.ctrl_down, 
+            alt_down : _event.alt_down,
+            meta_down : _event.meta_down
+        };
+    } //mouse_event
+
+}
 
 class MILuxeRenderer extends MIRenderer {
 
@@ -105,21 +196,30 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     public override function init( _control:MILabel, _options:Dynamic ) {
            
+        if(_options.bounds != null) {
+            _options.bounds = LuxeMIConverter.rectangle( _options.bounds );
+        }
+
+        if(_options.pos != null) {
+            _options.pos = LuxeMIConverter.vector( _options.pos );
+        }
+
+        if(_options.color != null) {
+            _options.color = LuxeMIConverter.color( _options.color );
+        }
+
         	//if there is padding, we change the bounds
-        if( _options.padding.x != 0 ) {
-        	_options.bounds.x += _options.padding.x;
+        if( _options.padding.x != 0 ) { _options.bounds.x += _options.padding.x; }
+        if( _options.padding.y != 0 ) { _options.bounds.y += _options.padding.y; }
+        if( _options.padding.w != 0 ) { _options.bounds.w -= _options.padding.w*2; }
+        if( _options.padding.h != 0 ) { _options.bounds.h -= _options.padding.h*2; }
+
+        if( _options.align != null) {
+            _options.align = LuxeMIConverter.text_align( _options.align );
         }
 
-        if( _options.padding.y != 0 ) {
-        	_options.bounds.y += _options.padding.y;
-        }
-
-        if( _options.padding.w != 0 ) {
-        	_options.bounds.w -= _options.padding.w*2;
-        }
-
-        if( _options.padding.h != 0 ) {
-        	_options.bounds.h -= _options.padding.h*2;
+        if( _options.align_vertical != null) {
+            _options.align_vertical = LuxeMIConverter.text_align( _options.align_vertical );
         }
 
         var text = new Text( _options );
@@ -155,7 +255,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         
     } //translate
 
-    public override function set_clip( _control:MILabel, ?_clip_rect : Rectangle = null ) {
+    public override function set_clip( _control:MILabel, ?_clip_rect : MIRectangle = null ) {
 
         var text:Text = cast _control.render_items.get('text');
 
@@ -164,7 +264,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         } else {
             if(text != null && text.geometry != null) {
                 text.geometry.clip = true;
-                text.geometry.clip_rect = _clip_rect.clone();
+                text.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
             }
         }
 
@@ -176,7 +276,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
             text.visible = _visible;
 
-    } //set_visible   
+    } //set_visible
 
     public override function set_depth( _control:MILabel, ?_depth:Float=0.0 ) {
 
@@ -229,7 +329,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIButton, ?_clip_rect:Rectangle=null ) {
+    public override function set_clip( _control:MIButton, ?_clip_rect:MIRectangle=null ) {
         
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -238,7 +338,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
         } else {
             if(geom != null) {
                 geom.clip = true;
-                geom.clip_rect = _clip_rect.clone();
+                geom.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
             }
         }
 
@@ -274,7 +374,7 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIList, ?_clip_rect:Rectangle=null ) {
+    public override function set_clip( _control:MIList, ?_clip_rect:MIRectangle=null ) {
     } //set_clip
     
     public override function scroll(_control:MIList, _x:Float, _y:Float) {
@@ -335,7 +435,7 @@ class MIListLuxeRenderer extends MIListRenderer {
                 });
 
                 _geom.clip = true;
-                _geom.clip_rect = _control.real_bounds;
+                _geom.clip_rect = new Rectangle( _control.real_bounds.x, _control.real_bounds.y, _control.real_bounds.w, _control.real_bounds.h );
 
                 Luxe.addGeometry( _geom );
 
@@ -367,7 +467,7 @@ class MIListLuxeRenderer extends MIListRenderer {
                 });
 
                 _geom.clip = true;
-                _geom.clip_rect = _control.real_bounds;
+                _geom.clip_rect = new Rectangle( _control.real_bounds.x, _control.real_bounds.y, _control.real_bounds.w, _control.real_bounds.h );
 
                 Luxe.addGeometry( _geom );
 
@@ -481,7 +581,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     } //translate 
 
-    public override function set_clip( _control:MIScrollArea, ?_clip_rect:Rectangle=null ) {
+    public override function set_clip( _control:MIScrollArea, ?_clip_rect:MIRectangle=null ) {
         
         
     } //set_clip
@@ -537,6 +637,14 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
     public override function init( _control:MIImage, _options:Dynamic ) {
 
+        if(_options.pos != null) {
+            _options.pos = LuxeMIConverter.vector( _options.pos );
+        }
+
+        if(_options.size != null) {
+            _options.size = LuxeMIConverter.vector( _options.size );
+        }
+
             //create the image
         var image = new Sprite(_options);
             //store for later
@@ -556,7 +664,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIImage, ?_clip_rect:Rectangle=null ) {
+    public override function set_clip( _control:MIImage, ?_clip_rect:MIRectangle=null ) {
 
         var image:Sprite = cast _control.render_items.get('image');
 
@@ -564,7 +672,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
             image.geometry.clip = false;
         } else {
             image.geometry.clip = true;
-            image.geometry.clip_rect = _clip_rect;
+            image.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
         }
 
     } //set_clip
@@ -621,7 +729,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIWindow, ?_clip_rect:Rectangle=null ) { 
+    public override function set_clip( _control:MIWindow, ?_clip_rect:MIRectangle=null ) { 
 
     } //set_clip
 
@@ -672,7 +780,7 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIDropdown, ?_clip_rect:Rectangle=null ) {
+    public override function set_clip( _control:MIDropdown, ?_clip_rect:MIRectangle=null ) {
 
     } //set_clip
 

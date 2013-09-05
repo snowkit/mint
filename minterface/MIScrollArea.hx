@@ -1,9 +1,6 @@
 package minterface;
 
-import luxe.Vector;
-import luxe.Color;
-import phoenix.geometry.QuadGeometry;
-
+import minterface.MITypes;
 import minterface.MIControl;
 
 class MIScrollArea extends MIControl {
@@ -12,8 +9,8 @@ class MIScrollArea extends MIControl {
 	public var can_scroll_h : Bool = true;
 	public var can_scroll_v : Bool = true;
 
-	public var scroll_amount : Vector;
-	public var scroll_percent : Vector;
+	public var scroll_amount : MIPoint;
+	public var scroll_percent : MIPoint;
 	public var child_bounds : Dynamic;
 
 	public var onscroll : Float -> Float -> Void;
@@ -22,8 +19,8 @@ class MIScrollArea extends MIControl {
 
 		super(_options);
 
-		scroll_amount = new Vector();
-		scroll_percent = new Vector();
+		scroll_amount = new MIPoint();
+		scroll_percent = new MIPoint();
 
 		onscroll = _options.onscroll;
 
@@ -46,13 +43,13 @@ class MIScrollArea extends MIControl {
 			//forward to 
 		super.onmousedown(e);
 		
-		if(e.button == lime.InputHandler.MouseButton.wheel_up) {
+		if(e.button == MIMouseButton.wheel_up) {
 			if(e.ctrl_down) {
             	scrollx(-10);
             } else {
             	scrolly(-10);
             }
-        } else if(e.button == lime.InputHandler.MouseButton.wheel_down) {
+        } else if(e.button == MIMouseButton.wheel_down) {
 			if(e.ctrl_down) {
             	scrollx(10);
             } else {

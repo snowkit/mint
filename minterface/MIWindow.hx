@@ -1,25 +1,19 @@
 package minterface;
 
-import luxe.Input.MouseEvent;
-import luxe.Rectangle;
-import luxe.Text;
-import luxe.Color;
-import luxe.NineSlice;
-import luxe.Vector;
-
+import minterface.MITypes;
 import minterface.MIControl;
 import minterface.MILabel;
 
 class MIWindow extends MIControl {
 	
-	public var title_bounds : Rectangle;
-	public var view_bounds : Rectangle;
+	public var title_bounds : MIRectangle;
+	public var view_bounds : MIRectangle;
 
 	public var title : MILabel;
 
 	public var dragging : Bool = false;
-	public var drag_start : Vector;
-	public var down_start : Vector;
+	public var drag_start : MIPoint;
+	public var down_start : MIPoint;
 
 	public function new(_options:Dynamic) {		
 
@@ -27,28 +21,28 @@ class MIWindow extends MIControl {
 
 		_options.bounds = real_bounds;
 
-		drag_start = new Vector();
-		down_start = new Vector();
+		drag_start = new MIPoint();
+		down_start = new MIPoint();
 
-		if(_options.align == null) { _options.align = TextAlign.center; }
-		if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
+		if(_options.align == null) { _options.align = MITextAlign.center; }
+		if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
 		if(_options.title_size != null) { _options.size = _options.title_size; }		
 		if(_options.title != null) { _options.text = _options.title; }		
 
-		title_bounds = new Rectangle(6, 6, bounds.w-12, 20 );
-		view_bounds = new Rectangle(32, 32, bounds.w - 64, bounds.h - 64 );
+		title_bounds = new MIRectangle(6, 6, bounds.w-12, 20 );
+		view_bounds = new MIRectangle(32, 32, bounds.w - 64, bounds.h - 64 );
 
-		_options.pos = new Vector(real_bounds.x, real_bounds.y);
+		_options.pos = new MIPoint(real_bounds.x, real_bounds.y);
 			
 			//create the title label
-		// _options = options_plus( _options, { bounds:title_bounds, color:new Color().rgb(0x999999) } );
+		// _options = options_plus( _options, { bounds:title_bounds, color:new MIColor().rgb(0x999999) } );
 		title = new MILabel({
 			parent : this,
 			bounds : title_bounds,
 			text:_options.text,
 			text_size:_options.title_size,
 			name : name + '.titlelabel',
-			color : new Color().rgb(0x999999)
+			color : new MIColor().rgb(0x999999)
 		});
 
 			//update
@@ -56,40 +50,45 @@ class MIWindow extends MIControl {
 
 	} //new
  
-	public override function onmousemove(e:MouseEvent)  {
+	public override function onmousemove(e:MIMouseEvent)  {
 		
 		super.onmousemove(e);
 
-		var _m : Vector = new Vector(e.x,e.y);
+		var _m : MIPoint = new MIPoint(e.x,e.y);
 		if(dragging) {
-			var diff = Vector.Subtract( _m , drag_start );			
+
+			var diff_x = _m.x - drag_start.x;
+			var diff_y = _m.y - drag_start.y;
+
 			drag_start = _m.clone();
-			translate(diff.x, diff.y);
+
+			translate(diff_x, diff_y);
+			
 		} //dragging
 	} //onmousemove
 
-	public override function onmousedown(e:MouseEvent)  {
+	public override function onmousedown(e:MIMouseEvent)  {
 
 		super.onmousedown(e);
 
-		var _m : Vector = new Vector(e.x,e.y);
+		var _m : MIPoint = new MIPoint(e.x,e.y);
 
 			if(!dragging) {
 				if( title.real_bounds.point_inside(_m) ) {			
 					dragging = true;		
 					drag_start = _m.clone();
-					down_start = new Vector(real_bounds.x, real_bounds.y);
+					down_start = new MIPoint(real_bounds.x, real_bounds.y);
 					canvas.dragged = this;
 				} //if inside title bounds
 			} //!dragging
 
 	} //onmousedown
 
-	public override function onmouseup(e:MouseEvent)  {
+	public override function onmouseup(e:MIMouseEvent)  {
 
 		super.onmouseup(e);
 
-		var _m : Vector = new Vector(e.x,e.y);
+		var _m : MIPoint = new MIPoint(e.x,e.y);
 		if(dragging) {
 			dragging = false;
 			canvas.dragged = null;
@@ -100,7 +99,7 @@ class MIWindow extends MIControl {
 
 		super.translate(_x,_y);
 		
-		title_bounds = new Rectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );		
+		title_bounds = new MIRectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );		
 		
 		renderer.window.translate( this, _x, _y );
 

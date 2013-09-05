@@ -9,6 +9,7 @@ import luxe.Sprite;
 import phoenix.BitmapFont.TextAlign;
 import phoenix.Rectangle;
 
+import minterface.MITypes;
 import minterface.MIControl;
 import minterface.MICanvas;
 import minterface.MIButton;
@@ -44,7 +45,7 @@ class Main extends luxe.Game {
         renderer = new MILuxeRenderer();
 
         canvas  = new MICanvas({
-            bounds : new Rectangle( 0, 0, Luxe.screen.w, Luxe.screen.h ),
+            bounds : new MIRectangle( 0, 0, Luxe.screen.w, Luxe.screen.h ),
             renderer : renderer,
             depth : 100
         });
@@ -52,7 +53,7 @@ class Main extends luxe.Game {
         button = new MIButton({
             parent : canvas,
             name : 'click',
-            bounds : new Rectangle( 10, 10, 100, 35 ),
+            bounds : new MIRectangle( 10, 10, 100, 35 ),
             text : 'click me',
             text_size : 15,
             onclick : function(){ trace('hello world'); }
@@ -61,7 +62,7 @@ class Main extends luxe.Game {
         itemlist = new MIList({
             parent : canvas,
             name : 'list1',
-            bounds : new Rectangle(10,50, 100,380)
+            bounds : new MIRectangle(10,50, 100,380)
         });
 
         itemlist.add_item('items one');     
@@ -70,19 +71,19 @@ class Main extends luxe.Game {
         scroller = new MIScrollArea({
             parent : canvas,
             name : 'scrollarea',
-            bounds : new Rectangle( 120, 10, 300, 360 )
+            bounds : new MIRectangle( 120, 10, 300, 360 )
         });        
 
         scroller1 = new MIScrollArea({
             parent : canvas,
             name : 'scrollarea1',
-            bounds : new Rectangle( 430, 10, 300, 360 )
+            bounds : new MIRectangle( 430, 10, 300, 360 )
         });
 
         image = new MIImage({
             parent : scroller1,
             name : 'image',
-            bounds : new Rectangle( 0, 0, 1280, 720 ),
+            bounds : new MIRectangle( 0, 0, 1280, 720 ),
             texture : Luxe.loadTexture('assets/image.png'),
         });
 
@@ -92,7 +93,7 @@ class Main extends luxe.Game {
             var l = new MIButton({
                 parent : scroller,
                 name : 'button' + (i+1),
-                bounds : new Rectangle(50, i * 100, 100, 100 ),
+                bounds : new MIRectangle(50, i * 100, 100, 100 ),
                 text : 'click me + '+ (i+1),
                 text_size : 18,
                 onclick : function(){ trace('click me + '+ (i+1)); }
@@ -104,13 +105,13 @@ class Main extends luxe.Game {
             name : 'inspector',
             title : 'inspector',
             title_size : 15,
-            bounds : new Rectangle(750, 20, 200, 300)
+            bounds : new MIRectangle(750, 20, 200, 300)
         });
 
         button1 = new MIButton({
             parent : window,
             name : 'click1',
-            bounds : new Rectangle( 10, 30, 100, 35 ),
+            bounds : new MIRectangle( 10, 30, 100, 35 ),
             text : 'clicked',
             text_size : 15,
             onclick : function(){ trace('window 1'); }
@@ -119,33 +120,35 @@ class Main extends luxe.Game {
         selector = new MIDropdown({
             parent : window,
             name : 'selector',
-            bounds : new Rectangle(10, 70, 180, 30),
+            bounds : new MIRectangle(10, 70, 180, 30),
             text : 'Select output target'
         });
 
         selector2 = new MIDropdown({
             parent : window,
             name : 'selector2',
-            bounds : new Rectangle( 10, 110, 180, 30 ),
+            bounds : new MIRectangle( 10, 110, 180, 30 ),
             text : 'Select build format'
         });
 
         selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
         selector2.add_items(['zip', 'folder']);
 
-
     } //ready
     
     public function onmousemove(e) {
-        canvas.onmousemove(e);
+        var _e = LuxeMIConverter.mouse_event(e);
+        canvas.onmousemove(_e);
     }
 
     public function onmouseup(e) {
-        canvas.onmouseup(e);
+        var _e = LuxeMIConverter.mouse_event(e);
+        canvas.onmouseup(_e);
     }
 
-    public function onmousedown(e) {        
-        canvas.onmousedown(e);
+    public function onmousedown(e) {
+        var _e = LuxeMIConverter.mouse_event(e);
+        canvas.onmousedown(_e);
     }
 
     public function onkeyup(e) {

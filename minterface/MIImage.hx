@@ -1,8 +1,6 @@
 package minterface;
 
-import luxe.Sprite;
-import luxe.Vector;
-
+import minterface.MITypes;
 import minterface.MIControl;
 
 class MIImage extends MIControl {
@@ -13,7 +11,7 @@ class MIImage extends MIControl {
 		super(_options);
 			//image size to the parent,
 		_options.centered = false;
-		_options.pos = new Vector(real_bounds.x, real_bounds.y);
+		_options.pos = new MIPoint(real_bounds.x, real_bounds.y);
 		_options.depth = depth + 0.1;
 
 			//disable mouse input,todo optionify

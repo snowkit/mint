@@ -1,9 +1,6 @@
 package minterface;
 
-import luxe.Rectangle;
-import luxe.Color;
-import luxe.Vector;
-import luxe.Input;
+import minterface.MITypes;
 
 	//base class for all controls
 	//handles propogation of events,
@@ -33,18 +30,18 @@ class MIControl {
 	public var render_items : Map<String, Dynamic>;
 
 		//the relative bounds to the parent 
-	public var bounds : Rectangle;
+	public var bounds : MIRectangle;
 		//the absolute bounds in screen space
-	public var real_bounds : Rectangle;
+	public var real_bounds : MIRectangle;
 		//the clipping rectangle for this control
-	public var clip_rect : Rectangle;
+	public var clip_rect : MIRectangle;
 		//the list of children added to this control
 	public var children : Array<MIControl>;
 
 		//a shortcut to adding multiple mousedown handlers
-	@:isVar public var mousedown(get,set) : MIControl->?MouseEvent->Void;
+	@:isVar public var mousedown(get,set) : MIControl->?MIMouseEvent->Void;
 		//the list of internal handlers, for calling 
-	var mouse_down_handlers : Array<MIControl->?MouseEvent->Void>;
+	var mouse_down_handlers : Array<MIControl->?MIMouseEvent->Void>;
 
 		//if the control is under the mouse
 	public var isfocused : Bool = false;
@@ -62,7 +59,7 @@ class MIControl {
 
 		render_items = new Map<String,Dynamic>();
 		
-		bounds = _options.bounds == null ? new Rectangle(0,0,32,32) : _options.bounds;
+		bounds = _options.bounds == null ? new MIRectangle(0,0,32,32) : _options.bounds;
 		real_bounds = bounds.clone();
 
 		if(_options.name != null) { name = _options.name; }
@@ -90,30 +87,37 @@ class MIControl {
 
 	} //new
 
-	public function topmost_child_under_point(_p:Vector) : MIControl {
+	public function topmost_child_under_point( _p:MIPoint ) : MIControl {
+
+			//if we have no children, we are the topmost child
+		if(children.length == 0) return this;
+
+			//if we have children, we look at each one, looking for the highest one
+			//after we have the highest one, we ask it to return it's own highest child
+
+		var highest_child : MIControl = this;
+		var highest_depth : Float = 0;
 
 		for(_child in children) {
 			if(_child.real_bounds.point_inside(_p) && _child.mouse_enabled && _child.visible) {
-
-				if(_child.children.length == 0) {
-					return _child;
-				} else { //child has no further children, early out with that child
-					var _found = _child.topmost_child_under_point(_p);
-					if(_found == null) {
-						return _child;
-					} else {
-						return _found;
-					}
-				} //child has children, loop them
+				
+				if(_child.depth >= highest_depth) {
+					highest_child = _child;
+					highest_depth = _child.depth;
+				} //highest_depth
 
 			} //child contains point
 		} //child in children
-
-		return null;
+		
+		if(highest_child != this && highest_child.children.length != 0) {
+			return highest_child.topmost_child_under_point(_p);
+		} else {
+			return highest_child;
+		}
 
  	} //topmost_child_under_point
 
-	public function contains_point(_p:Vector) {
+	public function contains_point( _p:MIPoint ) {
 		return real_bounds.point_inside(_p);
 	} //contains point
 
@@ -132,7 +136,7 @@ class MIControl {
 		}
 	} //clip_with
 
-	public function set_clip( ?_clip_rect:Rectangle = null ) {
+	public function set_clip( ?_clip_rect:MIRectangle = null ) {
 		//temporarily, all children clip by their parent clip
 
 		clip_rect = _clip_rect;
@@ -175,7 +179,7 @@ class MIControl {
 		return mouse_down_handlers[0];
 	}
 
-	function set_mousedown( listener: MIControl->?MouseEvent->Void ) {
+	function set_mousedown( listener: MIControl->?MIMouseEvent->Void ) {
 		mouse_down_handlers.push(listener);
 		return listener;
 	}
@@ -196,10 +200,10 @@ class MIControl {
 			child.translate( _x, _y );
 		}
 
-	}
-
+	} //translate
 
 	private function options_plus(options:Dynamic, plus:Dynamic) {
+
 		var _fields = Reflect.fields(plus);
 		
 		for(_field in _fields) {
@@ -207,7 +211,8 @@ class MIControl {
 		}
 
 		return options;
-	}
+		
+	} //options_plus
 
 	public function width() {
 		return bounds.w;
@@ -254,18 +259,18 @@ class MIControl {
 	} //children_bounds
 
 		
-	public function onmousemove( e:MouseEvent ) {
+	public function onmousemove( e:MIMouseEvent ) {
 		
 	} //onmousemove
 
-	public function onmouseup( e:MouseEvent ) {
+	public function onmouseup( e:MIMouseEvent ) {
 		
 	} //onmouseup
 
-	public function onmousedown( e:MouseEvent ) {		
+	public function onmousedown( e:MIMouseEvent ) {		
 
 		if(mousedown != null) {
-			if(e.button == MouseButton.left) {
+			if(e.button == MIMouseButton.left) {
 				for(handler in mouse_down_handlers) {
 					handler(this, e);
 				}
@@ -279,11 +284,11 @@ class MIControl {
 
 	} //onmousedown
 
-	public function onmouseenter( e:MouseEvent ) {
+	public function onmouseenter( e:MIMouseEvent ) {
 		// trace('mouse enter ' + name);
 	}
 
-	public function onmouseleave( e:MouseEvent ) {		
+	public function onmouseleave( e:MIMouseEvent ) {		
 		// trace('mouse leave ' + name);
 	}
 

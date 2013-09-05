@@ -1,16 +1,9 @@
 package minterface;
 
-import luxe.Rectangle;
-import luxe.NineSlice;
-import luxe.Text.TextAlign;
-import luxe.Vector;
-import luxe.Color;
-import luxe.Input;
-
+import minterface.MITypes;
 import minterface.MIControl;
 import minterface.MILabel;
 import minterface.MIList;
-
 
 class MIDropdown extends MIControl {
 	
@@ -29,19 +22,19 @@ class MIDropdown extends MIControl {
 		list = new MIList({
             parent : this,
             name : name + '.list',
-            bounds : new Rectangle( 0, bounds.h, bounds.w, 110 ),
-            align : TextAlign.left,
+            bounds : new MIRectangle( 0, bounds.h, bounds.w, 110 ),
+            align : MITextAlign.left,
             onselect : onselect
         });        
 
         selected_label = new MILabel({
 			parent : this,
-			bounds : new Rectangle(5,0,bounds.w-10, bounds.h),
+			bounds : new MIRectangle(5,0,bounds.w-10, bounds.h),
 			text:_options.text,
 			text_size: (_options.text_size == null) ? 18 : _options.text_size,
 			name : name + '.selected_label',
-			align : TextAlign.left,
-			color : new Color(0,0,0,1).rgb(0x999999)
+			align : MITextAlign.left,
+			color : new MIColor(0,0,0,1).rgb(0x999999)
 		});
 
 		renderer.dropdown.init( this, _options );
@@ -86,7 +79,7 @@ class MIDropdown extends MIControl {
 		renderer.dropdown.set_visible(this,_visible);
 	}
 
-	public override function set_clip( ?_clip_rect:Rectangle = null ) {
+	public override function set_clip( ?_clip_rect:MIRectangle = null ) {
 		super.set_clip(_clip_rect);
 		renderer.dropdown.set_clip(this,_clip_rect);
 	}
@@ -119,14 +112,14 @@ class MIDropdown extends MIControl {
 
 		super.onmousedown(e);
 
-		if(e.button == MouseButton.left) {
+		if(e.button == MIMouseButton.left) {
 
 			if(is_open) {
 				close_list();
 				return;
 			}
 
-			var m = new Vector(e.x, e.y);
+			var m = new MIPoint(e.x, e.y);
 
 			if( selected_label.real_bounds.point_inside(m) ) {
 				open_list();

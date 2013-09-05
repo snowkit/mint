@@ -1,9 +1,6 @@
 package minterface;
 
-import luxe.Rectangle;
-import luxe.Vector;
-import luxe.Color;
-
+import minterface.MITypes;
 import minterface.MIControl;
 
 class MICanvas extends MIControl {
@@ -16,7 +13,7 @@ class MICanvas extends MIControl {
 		if(_options == null) throw "No options given to canvas, at least a MIRenderer is required.";
 		if(_options.renderer == null) throw "No renderer given to MICanvas, cannot create this way.";
 		if(_options.name == null) _options.name = 'canvas';
-		if(_options.bounds == null) _options.bounds = new Rectangle(0, 0, Luxe.screen.w, Luxe.screen.h );
+		if(_options.bounds == null) _options.bounds = new MIRectangle(0, 0, 800, 600 );
 
 		renderer = _options.renderer;
 
@@ -33,7 +30,7 @@ class MICanvas extends MIControl {
 
 		renderer.canvas.init( this, _options );
 
-		_mouse_last = new Vector();
+		_mouse_last = new MIPoint();
 
 	} //new
 
@@ -51,13 +48,15 @@ class MICanvas extends MIControl {
 
 	} //set_depth
 
-	public function topmost_control_under_point(_p:Vector) {
-		return topmost_child_under_point(_p);
+	public function topmost_control_under_point( _p:MIPoint ) {
+		var _control = topmost_child_under_point(_p);
+		if(_control != this) return _control;
+		return null;
 	}
 
-	var _mouse_last:Vector;
+	var _mouse_last:MIPoint;
 
-	private function set_control_unfocused(_control:MIControl, e, ?do_mouseleave:Bool = true) {
+	private function set_control_unfocused(_control:MIControl, e:MIMouseEvent, ?do_mouseleave:Bool = true) {
 		if(_control != null) {
 
 			_control.ishovered = false;
@@ -70,7 +69,7 @@ class MICanvas extends MIControl {
 		} //_control != null
 	} //set_unfocused
 
-	private function set_control_focused(_control:MIControl, e, ?do_mouseenter:Bool = true) {
+	private function set_control_focused(_control:MIControl, e:MIMouseEvent, ?do_mouseenter:Bool = true) {
 		if(_control != null) {
 			_control.ishovered = true;
 			_control.isfocused = true;
@@ -81,7 +80,7 @@ class MICanvas extends MIControl {
 		}
 	} //set_focused
 
-	public override function onmousemove(e) {
+	public override function onmousemove( e:MIMouseEvent ) {
 		
 		_mouse_last.set(e.x,e.y);
 
@@ -138,19 +137,17 @@ class MICanvas extends MIControl {
 
 		} //focused == null
 
-		if(focused != null) {
-
+		if(focused != null && focused != this) {
 			focused.onmousemove(e);
-			
 		} //focused != null
-
-		if(dragged != null && dragged != focused) {
+		
+		if(dragged != null && dragged != focused && dragged != this) {
 			dragged.onmousemove(e);
 		} //dragged ! null and ! focused
 
 	} //onmousemove
 	
-	public override function onmouseup(e) {
+	public override function onmouseup( e:MIMouseEvent ) {
 
 		_mouse_last.set(e.x,e.y);
 		
@@ -160,7 +157,7 @@ class MICanvas extends MIControl {
 
 	} //onmouseup
 
-	public override function onmousedown(e) {
+	public override function onmousedown( e:MIMouseEvent ) {
 		
 		_mouse_last.set(e.x,e.y);
 		
