@@ -46,7 +46,7 @@ class MIDropdown extends MIControl {
 
 	private function onselect(v:String, l:MIList, e:Dynamic) {
 			
-		renderer.list.select_item(l, null);
+		renderer.list.select_item(l, null);		
 		selected_label.text = v;
 
 	} //onselect
@@ -97,7 +97,7 @@ class MIDropdown extends MIControl {
 	public function open_list() {
 
 			//make sure it's always on top
-		list.depth = canvas.depth+1;
+		list.depth = canvas.depth+5;
 		
 			//make it visible
 		list.set_visible(true);

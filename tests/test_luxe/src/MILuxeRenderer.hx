@@ -294,6 +294,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
     	if(text != null) {
             text.text_options.bounds = LuxeMIConverter.rectangle( _control.real_bounds );
     		text.text = _text;
+            text.geometry.depth = _control.depth+1;
 	    }
 
     } //set_text 
