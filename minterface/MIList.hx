@@ -120,12 +120,4 @@ class MIList extends MIControl {
 
 	} //set_depth
 
-	public override function onmousemove(e) {
-		trace('move in list');
-	}
-
-	public override function onmouseup(e) {
-		super.onmouseup(e);
-	} //onmouseup
-
 } //MIList
