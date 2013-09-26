@@ -8,7 +8,7 @@ class MIList extends MIControl {
 	public var view : MIScrollArea;
 	public var items : Array<MIControl>;
 	public var multiselect : Bool = false;
-	public var onselect : String->MIList->?MIMouseEvent->Void;
+	public var onselect : String->MIControl->?MIMouseEvent->Void;
 	public var _options : Dynamic;
 
 	public function new(__options:Dynamic) {
@@ -41,14 +41,14 @@ class MIList extends MIControl {
 
 	} //onscroll
 
-	public function add_item( _item:String ) {
+	public function add_item( _item:String, ?_name:String ) {
 
 		var _childbounds = view.children_bounds();
 
 		var l = new MILabel({
 			text : _item,
 			onclick : label_selected,
-			name : name + '.item.' + _item,
+			name : _name == null ? name + '.item.' + _item : _name,
 			bounds : new MIRectangle(0, _childbounds.h, bounds.w, 30),			
 			parent : view,
 			depth : depth,
@@ -81,7 +81,7 @@ class MIList extends MIControl {
 
 		//call callback
 		if(onselect != null) {
-			onselect(_label.text, this, e);
+			onselect(_label.text, _label, e);
 		} //onselect
 
 	} //label_selected

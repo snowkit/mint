@@ -11,7 +11,9 @@ class MIWindow extends MIControl {
 
 	public var title : MILabel;
 
+	public var moveable : Bool = true;
 	public var dragging : Bool = false;
+	
 	public var drag_start : MIPoint;
 	public var down_start : MIPoint;
 
@@ -28,6 +30,7 @@ class MIWindow extends MIControl {
 		if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
 		if(_options.title_size != null) { _options.size = _options.title_size; }		
 		if(_options.title != null) { _options.text = _options.title; }		
+		if(_options.moveable != null) { moveable = _options.moveable; }
 
 		title_bounds = new MIRectangle(6, 6, bounds.w-12, 20 );
 		view_bounds = new MIRectangle(32, 32, bounds.w - 64, bounds.h - 64 );
@@ -71,7 +74,7 @@ class MIWindow extends MIControl {
 
 		var _m : MIPoint = new MIPoint(e.x,e.y);
 
-			if(!dragging) {
+			if(!dragging && moveable) {
 				if( title.real_bounds.point_inside(_m) ) {			
 					dragging = true;		
 					drag_start = _m.clone();
