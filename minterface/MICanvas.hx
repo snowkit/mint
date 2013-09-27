@@ -191,8 +191,8 @@ class MICanvas extends MIControl {
 	public function update(dt:Float) {
 	} //update
 
-	public function destroy(){
-
+	public override function destroy(){
+		super.destroy();
 	} //destroy
 
 } //MICanvas

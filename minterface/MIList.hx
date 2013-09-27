@@ -41,6 +41,15 @@ class MIList extends MIControl {
 
 	} //onscroll
 
+	public function clear() {
+		for(item in items) {
+			item.destroy();			
+			item = null;
+		}
+		items = null;
+		items = [];
+	}
+
 	public function add_item( _item:String, ?_name:String ) {
 
 		var _childbounds = view.children_bounds();
@@ -67,6 +76,8 @@ class MIList extends MIControl {
 	public override function translate(?_x:Float=0, ?_y:Float=0) {
 		
 		super.translate(_x,_y);
+
+		renderer.list.translate(this,_x,_y);
 
 		for(_item in view.children) {
 			_item.clip_with(view);

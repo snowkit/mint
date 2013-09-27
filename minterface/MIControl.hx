@@ -191,6 +191,12 @@ class MIControl {
 		}
 	}
 
+	public function remove( child:MIControl ) {
+		if(child.parent == this) {
+			children.remove(child);
+		}
+	}
+
 	public function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
 
 		real_bounds.x += _x;
@@ -290,6 +296,12 @@ class MIControl {
 
 	public function onmouseleave( e:MIMouseEvent ) {		
 		// trace('mouse leave ' + name);
+	}
+
+	public function destroy() {
+		if(parent != null) {
+			parent.remove(this);
+		}
 	}
 
 //Properties

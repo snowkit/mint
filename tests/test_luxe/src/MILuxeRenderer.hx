@@ -294,6 +294,13 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //set_text 
 
+    public override function destroy( _control:MILabel ) {
+        var text:Text = cast _control.render_items.get('text');
+            _control.render_items.remove('text');
+            text.destroy();
+            text = null;
+    }
+
 } //MILabelLuxeRenderer
 
 class MIButtonLuxeRenderer extends MIButtonRenderer {
@@ -367,6 +374,21 @@ class MIListLuxeRenderer extends MIListRenderer {
     } //init
     
     public override function translate( _control:MIList, _x:Float, _y:Float ) {
+        if(_control.multiselect) {
+            var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
+            if(_existing_selections != null) {
+                for(_geom in _existing_selections) {
+                    _geom.pos = new Vector(_geom.pos.x + _x, _geom.pos.y + _y);
+                    _geom.clip = false;
+                }
+            }
+        } else {
+            var _select : QuadGeometry = _control.render_items.get('select');
+            if(_select != null) {
+                _select.pos = new Vector(_select.pos.x + _x, _select.pos.y + _y);
+                _select.clip = false;
+            }
+        }
 
     } //translate
 

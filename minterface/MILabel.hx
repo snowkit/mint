@@ -70,6 +70,11 @@ class MILabel extends MIControl {
 		super.onmousemove(e);
 	} //onmousemove
 
+	public override function destroy() {
+		super.destroy();
+		renderer.label.destroy(this);
+	}
+
 	public override function set_visible( ?_visible:Bool = true ) {
 		super.set_visible(_visible);
 		renderer.label.set_visible(this, _visible);
