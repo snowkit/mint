@@ -39,9 +39,19 @@ class MIControl {
 	public var children : Array<MIControl>;
 
 		//a shortcut to adding multiple mousedown handlers
-	@:isVar public var mousedown(get,set) : MIControl->?MIMouseEvent->Void;
+	@:isVar public var mousedown (get,set) : MIControl->?MIMouseEvent->Void;
 		//the list of internal handlers, for calling 
 	var mouse_down_handlers : Array<MIControl->?MIMouseEvent->Void>;
+
+		//a shortcut to adding multiple mouseenter handlers
+	@:isVar public var mouseenter (get,set) : MIControl->?MIMouseEvent->Void;
+		//the list of internal handlers, for calling 
+	var mouse_enter_handlers : Array<MIControl->?MIMouseEvent->Void>;
+
+		//a shortcut to adding multiple mouseenter handlers
+	@:isVar public var mouseleave (get,set) : MIControl->?MIMouseEvent->Void;
+		//the list of internal handlers, for calling 
+	var mouse_leave_handlers : Array<MIControl->?MIMouseEvent->Void>;
 
 		//if the control is under the mouse
 	public var isfocused : Bool = false;
@@ -66,6 +76,8 @@ class MIControl {
 
 		children = [];
 		mouse_down_handlers = [];
+		mouse_leave_handlers = [];
+		mouse_enter_handlers = [];
 
 		if(_options.parent != null) {
 
@@ -175,12 +187,28 @@ class MIControl {
 
 	} //find_top_parent
 
+	function get_mouseenter() {
+		return mouse_enter_handlers[0];
+	}
+
 	function get_mousedown() {
 		return mouse_down_handlers[0];
 	}
 
+	function get_mouseleave() {
+		return mouse_leave_handlers[0];
+	}
+
+	function set_mouseenter( listener: MIControl->?MIMouseEvent->Void ) {
+		mouse_enter_handlers.push(listener);
+		return listener;
+	}
 	function set_mousedown( listener: MIControl->?MIMouseEvent->Void ) {
 		mouse_down_handlers.push(listener);
+		return listener;
+	}
+	function set_mouseleave( listener: MIControl->?MIMouseEvent->Void ) {
+		mouse_leave_handlers.push(listener);
 		return listener;
 	}
 
@@ -292,10 +320,30 @@ class MIControl {
 
 	public function onmouseenter( e:MIMouseEvent ) {
 		// trace('mouse enter ' + name);
+		if(mouseenter != null) {
+			for(handler in mouse_enter_handlers) {
+				handler(this, e);
+			}
+		} //mouseenter != null
+
+			//events bubble upward into the parent
+		// if(parent != null && parent != canvas) {
+		// 	parent.onmouseenter(e);
+		// } //parent not null and parent not canvas
 	}
 
 	public function onmouseleave( e:MIMouseEvent ) {		
 		// trace('mouse leave ' + name);
+		if(mouseleave != null) {
+			for(handler in mouse_leave_handlers) {
+				handler(this, e);
+			}
+		} //mouseleave != null
+
+			//events bubble upward into the parent
+		// if(parent != null && parent != canvas) {
+		// 	parent.onmouseleave(e);
+		// } //parent not null and parent not canvas
 	}
 
 	public function destroy() {

@@ -21,6 +21,10 @@ class MIImage extends MIControl {
 
 	} //new	
 
+	public override function destroy() {
+		renderer.image.destroy(this);
+	}
+
 	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
 
 		super.translate(_x,_y);

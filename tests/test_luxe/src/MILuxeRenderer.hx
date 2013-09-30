@@ -422,11 +422,14 @@ class MIListLuxeRenderer extends MIListRenderer {
 				for(_select in _existing_selections) {
 					_select.drop();
 				}
+                _control.render_items.set('existing_selections', null);
 			} else {
 				var _select : QuadGeometry = _control.render_items.get('select');
 				if(_select != null) {
 					_select.drop();
 				}
+
+                _control.render_items.set('select', null);
 			}
 
 			return;
@@ -739,6 +742,14 @@ class MIImageLuxeRenderer extends MIImageRenderer {
             }
 
     } //set_depth
+
+    public override function destroy( _control:MIImage ) {
+        var image:Sprite = cast _control.render_items.get('image');
+        if(image != null) {
+            image.destroy();
+        }
+    } //destroy
+
 
 } //MIImageLuxeRenderer
 

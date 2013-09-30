@@ -48,6 +48,9 @@ class MIList extends MIControl {
 		}
 		items = null;
 		items = [];
+
+		renderer.list.select_item(this, null);
+
 	}
 
 	public function add_item( _item:String, ?_name:String ) {

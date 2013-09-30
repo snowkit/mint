@@ -20,7 +20,7 @@ class MIButton extends MIControl {
 			bounds : _options.bounds.clone().set(0,0),
 			text:_options.text,
 			text_size:_options.text_size,
-			name : name + '.label'			
+			name : name + '.label'
 		});
 
 		if(_options.onclick != null) {
