@@ -42,6 +42,7 @@ class MILabelRenderer {
 	public function set_text( _control:MILabel, ?_text:String='label' ) { } //set_text
 } //MILabelRenderer
 
+
 class MIButtonRenderer {
 	public function new(){}
 	public function init( _control:MIButton, _options:Dynamic ) { } //init

@@ -20,6 +20,7 @@ import minterface.MIWindow;
 import minterface.MIDropdown;
 import minterface.MIPanel;
 import minterface.MICheckbox;
+import minterface.MINumber;
 
 import MILuxeRenderer;
 
@@ -39,6 +40,7 @@ class Main extends luxe.Game {
     public var selector2 : MIDropdown;
     public var panel : MIPanel;
     public var panel2 : MIPanel;
+    public var number : MINumber;
 
     var s : Sprite;
 
@@ -157,6 +159,13 @@ class Main extends luxe.Game {
             name : 'panel2',
             bar : 'top',
             bounds : new MIRectangle(0, canvas.bounds.h-20, canvas.bounds.w, 20)
+        });
+
+        number = new MINumber({
+            parent : window,
+            name : 'number',
+            bounds : new MIRectangle( 20, 140, 160, 30 ),
+            value : 0.0
         });
 
     } //ready

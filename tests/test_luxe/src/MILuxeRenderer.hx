@@ -13,6 +13,7 @@ import minterface.MIWindow;
 import minterface.MIDropdown;
 import minterface.MIPanel;
 import minterface.MICheckbox;
+import minterface.MINumber;
 
 import minterface.MITypes;
 

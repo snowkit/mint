@@ -166,6 +166,9 @@ class MICanvas extends MIControl {
 			focused.onmouseup(e);
 		} //focused
 
+		if(dragged != null && dragged != focused && dragged != this) {
+			dragged.onmouseup(e);
+		} //dragged ! null and ! focused
 
 	} //onmouseup
 

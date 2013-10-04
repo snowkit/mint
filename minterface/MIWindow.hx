@@ -55,13 +55,12 @@ class MIWindow extends MIControl {
 		
 		super.onmousemove(e);
 
-		var _m : MIPoint = new MIPoint(e.x,e.y);
 		if(dragging) {
 
-			var diff_x = _m.x - drag_start.x;
-			var diff_y = _m.y - drag_start.y;
+			var diff_x = e.x - drag_start.x;
+			var diff_y = e.y - drag_start.y;
 
-			drag_start = _m.clone();
+			drag_start.set(e.x,e.y);
 
 			translate(diff_x, diff_y);
 			
@@ -88,6 +87,7 @@ class MIWindow extends MIControl {
 	public override function onmouseup(e:MIMouseEvent)  {
 
 		super.onmouseup(e);
+		trace("onmouseup");
 
 		var _m : MIPoint = new MIPoint(e.x,e.y);
 		if(dragging) {
