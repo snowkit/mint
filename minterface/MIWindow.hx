@@ -87,7 +87,6 @@ class MIWindow extends MIControl {
 	public override function onmouseup(e:MIMouseEvent)  {
 
 		super.onmouseup(e);
-		trace("onmouseup");
 
 		var _m : MIPoint = new MIPoint(e.x,e.y);
 		if(dragging) {

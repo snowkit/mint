@@ -39,9 +39,10 @@ class MIScrollArea extends MIControl {
 		
 	}
 
-	public override function onmousedown(e) {
+	public override function onmouseup(e) {
+
 			//forward to 
-		super.onmousedown(e);
+		super.onmouseup(e);
 		
 		if(e.button == MIMouseButton.wheel_up) {
 			if(e.ctrl_down) {
@@ -130,7 +131,7 @@ class MIScrollArea extends MIControl {
 
 			var _diff_x = (real_bounds.x - child_bounds.realx);
 			scroll_percent.x = (_diff_x / (child_bounds.w - bounds.w));
-			scroll_percent.x = Luxe.utils.clamp( scroll_percent.x, 0, 1);	
+			scroll_percent.x = MIUtils.clamp( scroll_percent.x, 0, 1);	
 
 		} //can_scroll_h
 
@@ -138,7 +139,7 @@ class MIScrollArea extends MIControl {
 
 			var _diff_y = (real_bounds.y - child_bounds.realy);
 			scroll_percent.y = (_diff_y / (child_bounds.h - bounds.h));
-			scroll_percent.y = Luxe.utils.clamp( scroll_percent.y, 0, 1);
+			scroll_percent.y = MIUtils.clamp( scroll_percent.y, 0, 1);
 
 		} //can_scroll_v
 

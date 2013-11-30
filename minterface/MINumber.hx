@@ -67,7 +67,6 @@ class MINumber extends MIControl {
 		super.onmousedown(e);
 		if(!can_change) {
 			can_change = true;
-			_current = 			
 			canvas.dragged = this;
 		}
 	}
@@ -89,7 +88,7 @@ class MINumber extends MIControl {
 			if(_value <= min) { _value = min; startdrag = Std.int(e.x); }
 			if(_value >= max) { _value = max; startdrag = Std.int(e.x); }
 
-			_value = phoenix.utils.Maths.fixed(_value, precision);
+			// _value = phoenix.utils.Maths.fixed(_value, precision);
 			if(on_change != null) {
 				on_change(this, _value);
 			}

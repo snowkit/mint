@@ -38,6 +38,12 @@ typedef MIMouseEvent = {
     var meta_down : Bool;
 }
 
+class MIUtils {
+    static public function clamp (value:Float, a:Float, b:Float) : Float {
+        return ( value < a ) ? a : ( ( value > b ) ? b : value );
+    }
+}
+
 class MIPoint {
 
 	public var x : Float;
