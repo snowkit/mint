@@ -84,6 +84,8 @@ class LuxeMIConverter {
                 return MIMouseState.move;
             case MouseState.up:
                 return MIMouseState.up;
+            case MouseState.wheel:
+                return MIMouseState.wheel;
         } //state
     } //mouse_state
 

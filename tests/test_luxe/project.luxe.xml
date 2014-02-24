@@ -16,9 +16,8 @@
 
 	<source path="src" />
 	
-	<haxelib name="luxe" />
-	<haxelib name="lime" />
+    <haxelib name="lime" />
+	<haxelib name="luxe" />	
 	<haxelib name="minterface" />
-	<haxelib name="actuate" />
 	
 </project>

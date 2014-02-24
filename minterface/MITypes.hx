@@ -13,6 +13,7 @@ enum MIMouseState {
     down;
     move;
     up;
+    wheel;
 }
 
 enum MIMouseButton {

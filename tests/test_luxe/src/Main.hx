@@ -175,6 +175,11 @@ class Main extends luxe.Game {
         canvas.onmousemove(_e);
     }
 
+    public function onmousewheel(e) {
+        var _e = LuxeMIConverter.mouse_event(e);
+        canvas.onmousewheel(_e);
+    }
+
     public function onmouseup(e) {
         var _e = LuxeMIConverter.mouse_event(e);
         canvas.onmouseup(_e);

@@ -45,7 +45,7 @@ class MIDropdown extends MIControl {
 
 	private function onselect(v:String, l:MIList, e:Dynamic) {
 			
-		renderer.list.select_item(l, null);		
+		renderer.list.select_item(list, null);
 		selected_label.text = v;
 
 	} //onselect

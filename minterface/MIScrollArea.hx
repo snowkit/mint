@@ -39,10 +39,10 @@ class MIScrollArea extends MIControl {
 		
 	}
 
-	public override function onmouseup(e) {
+	public override function onmousewheel(e) {
 
 			//forward to 
-		super.onmouseup(e);
+		super.onmousewheel(e);
 		
 		if(e.button == MIMouseButton.wheel_up) {
 			if(e.ctrl_down) {

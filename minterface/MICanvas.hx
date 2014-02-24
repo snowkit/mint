@@ -172,6 +172,14 @@ class MICanvas extends MIControl {
 
 	} //onmouseup
 
+	public override function onmousewheel( e:MIMouseEvent ) {
+		
+		if(focused != null && focused.mouse_enabled) {
+			focused.onmousewheel(e);
+		} //focused
+
+	} //onmouseup
+
 	public override function onmousedown( e:MIMouseEvent ) {
 		
 		_mouse_last.set(e.x,e.y);

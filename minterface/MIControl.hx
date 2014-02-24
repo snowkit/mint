@@ -305,6 +305,15 @@ class MIControl {
 
 	} //onmouseup
 
+	public function onmousewheel( e:MIMouseEvent ) {
+
+			//events bubble upward into the parent
+		if(parent != null && parent != canvas) {
+			parent.onmousewheel(e);
+		} //parent not null and parent not canvas
+
+	} //onmousewheel
+
 	public function onmousedown( e:MIMouseEvent ) {				
 		if(mousedown != null) {
 			if(e.button == MIMouseButton.left) {
