@@ -174,7 +174,7 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
         
         var back:QuadGeometry = cast _control.render_items.get('back');  
         
-            back.enabled = _visible;
+            back.visible = _visible;
 
     } //set_visible   
 
@@ -234,9 +234,6 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         // });
         // _control.render_items.set('bounds', bounds);
 
-        for(_g in text.geometry.geometry) {
-        	_g.id = _control.name + '.text';
-        } 
 
     } //init
 
@@ -511,14 +508,14 @@ class MIListLuxeRenderer extends MIListRenderer {
 			
 			var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
 			for(_select in _existing_selections) {
-				_select.enabled = _visible;
+				_select.visible = _visible;
 			}
 
     	} else {
     		
     		var _select : QuadGeometry = _control.render_items.get('select');
     		if(_select != null) {
-    			_select.enabled = _visible;
+    			_select.visible = _visible;
     		}
 
     	}
@@ -577,7 +574,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             w: 3,
             h: 10,
             color : new Color().rgb(0x999999),
-            enabled : false
+            visible : false
         });
         var sliderh = new QuadGeometry({
             depth : _control.depth+2,
@@ -586,7 +583,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             w: 10,
             h: 3,
             color : new Color().rgb(0x999999),
-            enabled : false
+            visible : false
         });
 
         back.id = _control.name + '.back';
@@ -633,8 +630,8 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         sliderh.pos = new Vector( shx, shy );
         sliderv.pos = new Vector( svx, svy );
 
-        sliderh.enabled = hv;
-        sliderv.enabled = vv;
+        sliderh.visible = hv;
+        sliderv.visible = vv;
     }
 
 
@@ -645,10 +642,10 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
-            back.enabled = _visible;
-            box.enabled = _visible;
-            sliderh.enabled = _visible;
-            sliderv.enabled = _visible;
+            back.visible = _visible;
+            box.visible = _visible;
+            sliderh.visible = _visible;
+            sliderv.visible = _visible;
 
     } //set_visible
 
@@ -846,7 +843,7 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
-            back.enabled = _visible;
+            back.visible = _visible;
 
     } //set_visible
 
@@ -941,7 +938,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
         var bar : Geometry = cast _control.render_items.get('bar');
 
             geom.visible = _visible;
-            bar.enabled = _visible;
+            bar.visible = _visible;
 
     } //set_visible
 
@@ -997,7 +994,7 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
-            back.enabled = _visible;
+            back.visible = _visible;
 
     } //set_visible
 
