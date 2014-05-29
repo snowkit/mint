@@ -362,7 +362,11 @@ class MIControl {
 		if(parent != null) {
 			parent.remove(this);
 		}
-	}
+	} //destroy
+
+	public function update(dt:Float) {
+
+	} //update
 
 //Properties
 //Depth properties

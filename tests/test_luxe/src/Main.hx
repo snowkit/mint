@@ -22,7 +22,7 @@ import minterface.MIPanel;
 import minterface.MICheckbox;
 import minterface.MINumber;
 
-import MILuxeRenderer;
+import minterface.renderer.MILuxeRenderer;
 
 class Main extends luxe.Game {
 
@@ -98,7 +98,7 @@ class Main extends luxe.Game {
                 texture : tt
             });
 
-            scroller1.scrolly(-180);
+            scroller1.set_scroll_y(180);
 
             window = new MIWindow({
                 parent : canvas,

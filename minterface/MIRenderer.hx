@@ -94,6 +94,7 @@ class MIScrollAreaRenderer {
 	public function refresh_scroll( _control:MIScrollArea, shx:Float, shy:Float, svx:Float, svy:Float, hv:Bool, vv:Bool ) { } //refresh_scroll
 	public function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) { } //set_visible
 	public function set_depth( _control:MIScrollArea, ?_depth:Float=0.0 ) { } //set_depth
+	public function get_handle_bounds( _control:minterface.MIScrollArea, ?vertical:Bool=true ) : MIRectangle { return new MIRectangle(); }
 } //MIScrollAreaRenderer
 
 class MIDropdownRenderer {

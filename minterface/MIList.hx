@@ -42,16 +42,18 @@ class MIList extends MIControl {
 	} //onscroll
 
 	public function clear() {
+
 		for(item in items) {
 			item.destroy();			
 			item = null;
 		}
+
 		items = null;
 		items = [];
 
 		renderer.list.select_item(this, null);
 
-	}
+	} //clear
 
 	public function add_item( _item:String, ?_name:String ) {
 

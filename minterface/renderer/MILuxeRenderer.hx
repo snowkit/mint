@@ -1,4 +1,4 @@
-package ;
+package minterface.renderer;
 
 import minterface.MIRenderer;
 
@@ -576,6 +576,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             color : new Color().rgb(0x999999),
             visible : false
         });
+
         var sliderh = new QuadGeometry({
             depth : _control.depth+2,
             x: _control.real_bounds.x + ((_control.real_bounds.w-10) * _control.scroll_percent.x),
@@ -602,6 +603,23 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         _control.render_items.set('sliderv', sliderv);
 
     } //init
+
+    public override function get_handle_bounds( _control:minterface.MIScrollArea, ?vertical:Bool=true ) : MIRectangle {
+        
+        var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
+        var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
+
+        var res : MIRectangle = null;
+
+        if(vertical) {
+            res = new MIRectangle( sliderv.pos.x, sliderv.pos.y, 5, 10 );
+        } else {
+            res = new MIRectangle( sliderh.pos.x, sliderh.pos.y, 10, 5 );
+        }
+
+        return res;
+
+    } //get_handle_size
 
     public override function translate( _control:MIScrollArea, _x:Float, _y:Float ) {
         
