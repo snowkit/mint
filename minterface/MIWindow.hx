@@ -8,8 +8,10 @@ class MIWindow extends MIControl {
 	
 	public var title_bounds : MIRectangle;
 	public var view_bounds : MIRectangle;
+	public var close_bounds : MIRectangle;
 
 	public var title : MILabel;
+	public var close_button : MILabel;
 
 	public var moveable : Bool = true;
 	public var dragging : Bool = false;
@@ -33,6 +35,7 @@ class MIWindow extends MIControl {
 		if(_options.moveable != null) { moveable = _options.moveable; }
 
 		title_bounds = new MIRectangle(6, 6, bounds.w-12, 20 );
+		close_bounds = new MIRectangle(bounds.w-18, 6, 18, 20 );
 		view_bounds = new MIRectangle(32, 32, bounds.w - 64, bounds.h - 64 );
 
 		_options.pos = new MIPoint(real_bounds.x, real_bounds.y);
@@ -46,10 +49,33 @@ class MIWindow extends MIControl {
 			name : name + '.titlelabel'
 		});
 
+			//create the close label
+		close_button = new MILabel({
+			parent : this,
+			bounds : close_bounds,
+			text:'x',
+			align : MITextAlign.left,
+			text_size:15,
+			name : name + '.closelabel'
+		});
+
+		close_button.mouse_enabled = true;
+		close_button.mousedown = function(c:MIControl, ?e:MIMouseEvent) {
+			close();
+		}
+
 			//update
 		renderer.window.init( this, _options );
 
 	} //new
+
+	public function close() {
+		set_visible(false);
+	}
+
+	public function open() {
+		set_visible(true);
+	}
  
 	public override function onmousemove(e:MIMouseEvent)  {
 		

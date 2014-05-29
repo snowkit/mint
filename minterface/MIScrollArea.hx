@@ -173,7 +173,6 @@ class MIScrollArea extends MIControl {
             can_scroll_h = false;
             slider_h_visible = false;
         } else {
-            trace('can scroll h / ${child_bounds.w} / ${real_bounds.w}' );
             can_scroll_h = true;
             slider_h_visible = true;
         }
