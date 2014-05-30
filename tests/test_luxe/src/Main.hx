@@ -88,8 +88,8 @@ class Main extends luxe.Game {
 
             window1 = new MIWindow({
                 parent : canvas,
-                name : 'builder',
-                title : 'Export Build',
+                name : 'image view',
+                title : 'Image view',
                 title_size : 15,
                 bounds : new MIRectangle(430, 60, 300, 360)
             });
@@ -97,7 +97,7 @@ class Main extends luxe.Game {
             scroller1 = new MIScrollArea({
                 parent : window1,
                 name : 'scrollarea1',
-                bounds : new MIRectangle( 10, 50, 280, 300 )
+                bounds : new MIRectangle( 10, 40, 280, 300 )
             });
 
             image = new MIImage({

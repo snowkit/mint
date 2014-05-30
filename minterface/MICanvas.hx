@@ -98,7 +98,7 @@ class MICanvas extends MIControl {
             //first we check if the mouse is still inside the focused element
         if(focused != null) {
 
-            if(focused.real_bounds.point_inside(_mouse_last)) {
+            if(focused.contains_point(_mouse_last)) {
 
                     //now check if we haven't gone into any of it's children
                 var _child_over = focused.topmost_child_under_point(_mouse_last);

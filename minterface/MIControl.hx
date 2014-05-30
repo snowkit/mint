@@ -111,7 +111,7 @@ class MIControl {
 		var highest_depth : Float = 0;
 
 		for(_child in children) {
-			if(_child.real_bounds.point_inside(_p) && _child.mouse_enabled && _child.visible) {
+			if(_child.contains_point(_p) && _child.mouse_enabled && _child.visible) {
 				
 				if(_child.depth >= highest_depth) {
 					highest_child = _child;
@@ -130,7 +130,17 @@ class MIControl {
  	} //topmost_child_under_point
 
 	public function contains_point( _p:MIPoint ) {
+
+			//if we aren't inside the clip_rect
+			//we aren't going to be reporting true
+		if(clip_rect != null) {
+			if(!clip_rect.point_inside(_p)) {
+				return false;
+			}
+		}
+
 		return real_bounds.point_inside(_p);
+
 	} //contains point
 
 	function clip_with_closest_to_canvas() {

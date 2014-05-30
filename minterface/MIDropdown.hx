@@ -22,7 +22,7 @@ class MIDropdown extends MIControl {
         list = new MIList({
             parent : this,
             name : name + '.list',
-            bounds : new MIRectangle( 0, bounds.h+2, bounds.w, 110 ),
+            bounds : new MIRectangle( 0, bounds.h+1, bounds.w, 110 ),
             align : MITextAlign.left,
             onselect : onselect
         });
@@ -47,6 +47,7 @@ class MIDropdown extends MIControl {
             
         renderer.list.select_item(list, null);
         selected_label.text = v;
+        close_list();
 
     } //onselect
 
@@ -88,7 +89,7 @@ class MIDropdown extends MIControl {
         canvas.modal = null;
         list.set_visible(false);
 
-            // real_bounds.h = bounds.h;
+            real_bounds.h = bounds.h;
 
         is_open = false;
 
@@ -104,7 +105,7 @@ class MIDropdown extends MIControl {
         list.set_visible(true);
             
             //adjust the bounds so we get mouse events still
-        // real_bounds.h = bounds.h + list.bounds.h;
+        real_bounds.h = bounds.h + list.bounds.h;
 
             //and flag it
         is_open = true;
