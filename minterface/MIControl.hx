@@ -294,6 +294,12 @@ class MIControl {
 
 		
 	public function onmousemove( e:MIMouseEvent ) {
+
+			//events bubble upward into the parent
+		if(parent != null && parent != canvas) {
+			parent.onmousemove(e);
+		} //parent not null and parent not canvas
+
 	} //onmousemove
 
 	public function onmouseup( e:MIMouseEvent ) {

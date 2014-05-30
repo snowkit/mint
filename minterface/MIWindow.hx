@@ -19,6 +19,8 @@ class MIWindow extends MIControl {
 	public var drag_start : MIPoint;
 	public var down_start : MIPoint;
 
+	public var onclose : Void->Bool;
+
 	public function new(_options:Dynamic) {		
 
 		super(_options);
@@ -70,12 +72,24 @@ class MIWindow extends MIControl {
 	} //new
 
 	public function close() {
-		set_visible(false);
-	}
+
+		var do_close = true;
+
+		if(onclose != null) {
+			do_close = onclose();
+		}
+
+		if(do_close) {
+			set_visible(false);
+		}
+
+	} //close
 
 	public function open() {
+		
 		set_visible(true);
-	}
+
+	} //open
  
 	public override function onmousemove(e:MIMouseEvent)  {
 		
