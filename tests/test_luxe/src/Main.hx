@@ -35,6 +35,7 @@ class Main extends luxe.Game {
     public var scroller : MIScrollArea;
     public var scroller1 : MIScrollArea;
     public var itemlist : MIList;
+    public var window1 : MIWindow;
     public var window : MIWindow;
     public var selector : MIDropdown;
     public var selector2 : MIDropdown;
@@ -85,10 +86,18 @@ class Main extends luxe.Game {
 
         tt.onload = function(t_) {
 
-            scroller1 = new MIScrollArea({
+            window1 = new MIWindow({
                 parent : canvas,
+                name : 'builder',
+                title : 'Export Build',
+                title_size : 15,
+                bounds : new MIRectangle(430, 60, 300, 360)
+            });
+
+            scroller1 = new MIScrollArea({
+                parent : window1,
                 name : 'scrollarea1',
-                bounds : new MIRectangle( 430, 60, 300, 360 )
+                bounds : new MIRectangle( 10, 50, 280, 300 )
             });
 
             image = new MIImage({

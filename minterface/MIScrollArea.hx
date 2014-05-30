@@ -135,6 +135,16 @@ class MIScrollArea extends MIControl {
     public override function translate(?_x:Float = 0, ?_y:Float = 0) {
     
         super.translate(_x,_y);
+
+        handle_h_bounds.x += _x;
+        handle_h_bounds.y += _y;
+        handle_v_bounds.x += _x;
+        handle_v_bounds.y += _y;
+        sliderh_x += _x;
+        sliderh_y += _y;
+        sliderv_x += _x;
+        sliderv_y += _y;
+
         renderer.scroll.translate(this,_x,_y);
     
     } //translate

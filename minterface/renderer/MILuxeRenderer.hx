@@ -723,6 +723,13 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
             image.pos = image.pos.add( new Vector(_x,_y) );
 
+            if(image.geometry.clip) {
+                image.geometry.clip_rect.x = _control.clip_rect.x;
+                image.geometry.clip_rect.y = _control.clip_rect.y;
+                image.geometry.clip_rect.w = _control.clip_rect.w;
+                image.geometry.clip_rect.h = _control.clip_rect.h;
+            }
+
     } //translate
 
     public override function set_clip( _control:MIImage, ?_clip_rect:MIRectangle=null ) {
