@@ -736,7 +736,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
         var image:Sprite = cast _control.render_items.get('image');
 
-        if(image.texture.loaded) {
+        if(image.texture != null && image.texture.loaded) {
 
             if(_clip_rect == null) {
                 image.geometry.clip = false;
