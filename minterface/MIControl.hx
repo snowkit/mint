@@ -43,6 +43,21 @@ class MIControl {
 		//the list of internal handlers, for calling 
 	var mouse_down_handlers : Array<MIControl->?MIMouseEvent->Void>;
 
+		//a shortcut to adding multiple mouseup handlers
+	@:isVar public var mouseup (get,set) : MIControl->?MIMouseEvent->Void;
+		//the list of internal handlers, for calling 
+	var mouse_up_handlers : Array<MIControl->?MIMouseEvent->Void>;
+
+		//a shortcut to adding multiple mousemove handlers
+	@:isVar public var mousemove (get,set) : MIControl->?MIMouseEvent->Void;
+		//the list of internal handlers, for calling 
+	var mouse_move_handlers : Array<MIControl->?MIMouseEvent->Void>;
+
+		//a shortcut to adding multiple mousewheel handlers
+	@:isVar public var mousewheel (get,set) : MIControl->?MIMouseEvent->Void;
+		//the list of internal handlers, for calling 
+	var mouse_wheel_handlers : Array<MIControl->?MIMouseEvent->Void>;
+
 		//a shortcut to adding multiple mouseenter handlers
 	@:isVar public var mouseenter (get,set) : MIControl->?MIMouseEvent->Void;
 		//the list of internal handlers, for calling 
@@ -76,6 +91,9 @@ class MIControl {
 
 		children = [];
 		mouse_down_handlers = [];
+		mouse_up_handlers = [];
+		mouse_move_handlers = [];
+		mouse_wheel_handlers = [];
 		mouse_leave_handlers = [];
 		mouse_enter_handlers = [];
 
@@ -205,6 +223,18 @@ class MIControl {
 		return mouse_down_handlers[0];
 	}
 
+	function get_mouseup() {
+		return mouse_up_handlers[0];
+	}
+
+	function get_mousewheel() {
+		return mouse_wheel_handlers[0];
+	}
+
+	function get_mousemove() {
+		return mouse_move_handlers[0];
+	}
+
 	function get_mouseleave() {
 		return mouse_leave_handlers[0];
 	}
@@ -215,6 +245,18 @@ class MIControl {
 	}
 	function set_mousedown( listener: MIControl->?MIMouseEvent->Void ) {
 		mouse_down_handlers.push(listener);
+		return listener;
+	}
+	function set_mouseup( listener: MIControl->?MIMouseEvent->Void ) {
+		mouse_up_handlers.push(listener);
+		return listener;
+	}
+	function set_mousemove( listener: MIControl->?MIMouseEvent->Void ) {
+		mouse_move_handlers.push(listener);
+		return listener;
+	}
+	function set_mousewheel( listener: MIControl->?MIMouseEvent->Void ) {
+		mouse_wheel_handlers.push(listener);
 		return listener;
 	}
 	function set_mouseleave( listener: MIControl->?MIMouseEvent->Void ) {
@@ -305,6 +347,12 @@ class MIControl {
 		
 	public function onmousemove( e:MIMouseEvent ) {
 
+		if(mousemove != null) {
+			for(handler in mouse_move_handlers) {
+				handler(this, e);
+			}
+		} //mousemove != null
+
 			//events bubble upward into the parent
 		if(parent != null && parent != canvas) {
 			parent.onmousemove(e);
@@ -313,6 +361,12 @@ class MIControl {
 	} //onmousemove
 
 	public function onmouseup( e:MIMouseEvent ) {
+		
+		if(mouseup != null) {
+			for(handler in mouse_up_handlers) {
+				handler(this, e);
+			}
+		} //mouseup != null
 
 			//events bubble upward into the parent
 		if(parent != null && parent != canvas) {
@@ -323,6 +377,12 @@ class MIControl {
 
 	public function onmousewheel( e:MIMouseEvent ) {
 
+		if(mousewheel != null) {
+			for(handler in mouse_wheel_handlers) {
+				handler(this, e);
+			}
+		} //mousewheel != null
+
 			//events bubble upward into the parent
 		if(parent != null && parent != canvas) {
 			parent.onmousewheel(e);
@@ -331,12 +391,11 @@ class MIControl {
 	} //onmousewheel
 
 	public function onmousedown( e:MIMouseEvent ) {				
+		
 		if(mousedown != null) {
-			if(e.button == MIMouseButton.left) {
-				for(handler in mouse_down_handlers) {
-					handler(this, e);
-				}
-			}//left down
+			for(handler in mouse_down_handlers) {
+				handler(this, e);
+			}
 		} //mousedown != null
 
 			//events bubble upward into the parent
@@ -348,6 +407,7 @@ class MIControl {
 
 	public function onmouseenter( e:MIMouseEvent ) {
 		// trace('mouse enter ' + name);
+		
 		if(mouseenter != null) {
 			for(handler in mouse_enter_handlers) {
 				handler(this, e);
