@@ -109,12 +109,15 @@ class MIWindow extends MIControl {
 
 	public override function onmousedown(e:MIMouseEvent)  {
 
-		super.onmousedown(e);
-
 		var _m : MIPoint = new MIPoint(e.x,e.y);
+		var in_title = title.real_bounds.point_inside(_m);
+
+		if(!in_title) {
+			super.onmousedown(e);
+		}		
 
 			if(!dragging && moveable) {
-				if( title.real_bounds.point_inside(_m) ) {			
+				if( in_title ) {			
 					dragging = true;		
 					drag_start = _m.clone();
 					down_start = new MIPoint(real_bounds.x, real_bounds.y);
