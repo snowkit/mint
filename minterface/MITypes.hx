@@ -37,6 +37,7 @@ typedef MIMouseEvent = {
     var ctrl_down : Bool;
     var alt_down : Bool;
     var meta_down : Bool;
+    var bubble : Bool;
 }
 
 class MIUtils {

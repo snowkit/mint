@@ -359,7 +359,7 @@ class MIControl {
 		} //mousemove != null
 
 			//events bubble upward into the parent
-		if(parent != null && parent != canvas) {
+		if(parent != null && parent != canvas && e.bubble) {
 			parent.onmousemove(e);
 		} //parent not null and parent not canvas
 
@@ -374,7 +374,7 @@ class MIControl {
 		} //mouseup != null
 
 			//events bubble upward into the parent
-		if(parent != null && parent != canvas) {
+		if(parent != null && parent != canvas && e.bubble) {
 			parent.onmouseup(e);
 		} //parent not null and parent not canvas
 
@@ -389,7 +389,7 @@ class MIControl {
 		} //mousewheel != null
 
 			//events bubble upward into the parent
-		if(parent != null && parent != canvas) {
+		if(parent != null && parent != canvas && e.bubble) {
 			parent.onmousewheel(e);
 		} //parent not null and parent not canvas
 
@@ -404,7 +404,7 @@ class MIControl {
 		} //mousedown != null
 
 			//events bubble upward into the parent
-		if(parent != null && parent != canvas) {
+		if(parent != null && parent != canvas && e.bubble) {
 			parent.onmousedown(e);
 		} //parent not null and parent not canvas
 

@@ -118,7 +118,8 @@ class LuxeMIConverter {
             shift_down : _event.shift_down,
             ctrl_down : _event.ctrl_down, 
             alt_down : _event.alt_down,
-            meta_down : _event.meta_down
+            meta_down : _event.meta_down,
+            bubble : true
         };
     } //mouse_event
 
