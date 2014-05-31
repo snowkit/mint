@@ -69,6 +69,8 @@ class MIScrollArea extends MIControl {
 
     public override function onmousedown(e : MIMouseEvent) {
 
+        super.onmousedown(e);
+
         if(can_scroll_h || can_scroll_v) {
 
             var m = new MIPoint(e.x, e.y);
@@ -91,6 +93,8 @@ class MIScrollArea extends MIControl {
 
     public override function onmouseup(e : MIMouseEvent) {
         
+        super.onmouseup(e);
+
         if(handle_drag_vertical || handle_drag_horizontal) {
             handle_drag_vertical = false;
             handle_drag_horizontal = false;
@@ -100,6 +104,8 @@ class MIScrollArea extends MIControl {
     } //onmouseup
 
     public override function onmousemove(e : MIMouseEvent) {
+        
+        super.onmousemove(e);
         
         if(handle_drag_vertical) {
             set_scroll_y( e.y-real_bounds.y );
