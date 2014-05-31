@@ -31,7 +31,11 @@ class MIScrollArea extends MIControl {
     public var handle_h_bounds : MIRectangle;
     public var handle_v_bounds : MIRectangle;
 
-    public var scroll_dir : Int = -1;
+    #if mac
+        public var scroll_dir : Int = -1;
+    #else
+        public var scroll_dir : Int = 1;
+    #end
     
     public function new(_options:Dynamic) {
 
@@ -106,7 +110,7 @@ class MIScrollArea extends MIControl {
     public override function onmousemove(e : MIMouseEvent) {
         
         super.onmousemove(e);
-        
+
         if(handle_drag_vertical) {
             set_scroll_y( e.y-real_bounds.y );
         }
