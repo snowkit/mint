@@ -282,6 +282,11 @@ class MIControl {
 		real_bounds.x += _x;
 		real_bounds.y += _y;
 
+		if(parent != null) {
+			bounds.x = real_bounds.x - parent.real_bounds.x;
+			bounds.y = real_bounds.y - parent.real_bounds.y;
+		}
+
 		for(child in children) {
 			child.translate( _x, _y );
 		}
