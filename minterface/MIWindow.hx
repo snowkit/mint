@@ -63,7 +63,7 @@ class MIWindow extends MIControl {
 
 		close_button.mouse_enabled = true;
 		close_button.mousedown = function(c:MIControl, ?e:MIMouseEvent) {
-			close();
+			on_close();
 		}
 
 			//update
@@ -71,7 +71,7 @@ class MIWindow extends MIControl {
 
 	} //new
 
-	public function close() {
+	function on_close() {
 
 		var do_close = true;
 
@@ -80,8 +80,14 @@ class MIWindow extends MIControl {
 		}
 
 		if(do_close) {
-			set_visible(false);
+			close();
 		}
+		
+	} //on_close
+
+	public function close() {
+
+		set_visible(false);
 
 	} //close
 
@@ -136,6 +142,7 @@ class MIWindow extends MIControl {
 			dragging = false;
 			canvas.dragged = null;
 		} //dragging
+
 	} //onmouseup
 
 	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
