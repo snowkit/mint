@@ -107,6 +107,11 @@ class Main extends luxe.Game {
                 texture : tt
             });
 
+            image.mouse_enabled = true;
+            image.mousedown = function(c,?e) {
+                trace(" Mouse down on image " + e.x + ' / ' + e.y);
+            }
+
             scroller1.set_scroll_y(180);
             scroller1.mouse_enabled = true;
             scroller1.mousedown = function(c,?e){
