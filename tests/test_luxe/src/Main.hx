@@ -108,6 +108,10 @@ class Main extends luxe.Game {
             });
 
             scroller1.set_scroll_y(180);
+            scroller1.mouse_enabled = true;
+            scroller1.mousedown = function(c,?e){
+                trace(" Mouse down on scroll area " + e.x + ' / ' + e.y);
+            }
 
             window = new MIWindow({
                 parent : canvas,
