@@ -22,6 +22,7 @@ class MIImage extends MIControl {
 	} //new	
 
 	public override function destroy() {
+		super.destroy();
 		renderer.image.destroy(this);
 	}
 

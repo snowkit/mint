@@ -103,7 +103,7 @@ class Main extends luxe.Game {
             image = new MIImage({
                 parent : scroller1,
                 name : 'image',
-                bounds : new MIRectangle( 0, 0, 1280, 720 ),
+                bounds : new MIRectangle( 0, 0, tt.width, tt.height ),
                 texture : tt
             });
 
@@ -112,7 +112,7 @@ class Main extends luxe.Game {
                 trace(" Mouse down on image " + e.x + ' / ' + e.y);
             }
 
-            scroller1.set_scroll_y(180);
+            // scroller1.set_scroll_y(180);
             scroller1.mouse_enabled = true;
             scroller1.mousedown = function(c,?e){
                 trace(" Mouse down on scroll area " + e.x + ' / ' + e.y);

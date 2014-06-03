@@ -770,10 +770,17 @@ class MIImageLuxeRenderer extends MIImageRenderer {
     } //set_depth
 
     public override function destroy( _control:MIImage ) {
+        
         var image:Sprite = cast _control.render_items.get('image');
+        
         if(image != null) {
             image.destroy();
         }
+
+        image = null;
+
+        _control.render_items.remove('image');
+
     } //destroy
 
 

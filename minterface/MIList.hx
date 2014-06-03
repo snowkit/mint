@@ -55,6 +55,14 @@ class MIList extends MIControl {
 
 	} //clear
 
+	public function select( _index:Int ) {
+
+		if(_index < items.length) {
+			label_selected(items[_index], null);
+		}
+
+	} //select
+
 	public function add_item( _item:String, ?_name:String ) {
 
 		var _childbounds = view.children_bounds();
