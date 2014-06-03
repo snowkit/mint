@@ -329,7 +329,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
         
         var geom : NineSlice = cast _control.render_items.get('geom');
 
-            geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
+            geom.pos = new Vector( geom.transform.pos.x + _x, geom.transform.pos.y + _y );
 
     } //translate
 
@@ -379,14 +379,14 @@ class MIListLuxeRenderer extends MIListRenderer {
             var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
             if(_existing_selections != null) {
                 for(_geom in _existing_selections) {
-                    _geom.pos = new Vector(_geom.pos.x + _x, _geom.pos.y + _y);
+                    _geom.transform.pos = new Vector(_geom.transform.pos.x + _x, _geom.transform.pos.y + _y);
                     _geom.clip = false;
                 }
             }
         } else {
             var _select : QuadGeometry = _control.render_items.get('select');
             if(_select != null) {
-                _select.pos = new Vector(_select.pos.x + _x, _select.pos.y + _y);
+                _select.transform.pos = new Vector(_select.transform.pos.x + _x, _select.transform.pos.y + _y);
                 _select.clip = false;
             }
         }
@@ -402,13 +402,13 @@ class MIListLuxeRenderer extends MIListRenderer {
             var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
             if(_existing_selections != null) {
                 for(_geom in _existing_selections) {
-                    _geom.pos = new Vector(_geom.pos.x + _x, _geom.pos.y + _y);
+                    _geom.transform.pos = new Vector(_geom.transform.pos.x + _x, _geom.transform.pos.y + _y);
                 }
             }
         } else {
             var _select : QuadGeometry = _control.render_items.get('select');
             if(_select != null) {
-                _select.pos = new Vector(_select.pos.x + _x, _select.pos.y + _y);
+                _select.transform.pos = new Vector(_select.transform.pos.x + _x, _select.transform.pos.y + _y);
             }
         }   
 
@@ -442,7 +442,7 @@ class MIListLuxeRenderer extends MIListRenderer {
             var _select : QuadGeometry = _control.render_items.get('select');
             if(_select != null) {
 
-                _select.pos = new Vector(_selected.real_bounds.x, _selected.real_bounds.y);
+                _select.transform.pos = new Vector(_selected.real_bounds.x, _selected.real_bounds.y);
                 _control.render_items.set('select', _select);
 
             } else {
@@ -613,9 +613,9 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         var res : MIRectangle = null;
 
         if(vertical) {
-            res = new MIRectangle( sliderv.pos.x, sliderv.pos.y, 5, 10 );
+            res = new MIRectangle( sliderv.transform.pos.x, sliderv.transform.pos.y, 5, 10 );
         } else {
-            res = new MIRectangle( sliderh.pos.x, sliderh.pos.y, 10, 5 );
+            res = new MIRectangle( sliderh.transform.pos.x, sliderh.transform.pos.y, 10, 5 );
         }
 
         return res;
@@ -629,10 +629,10 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
-        back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
-        box.pos = new Vector( box.pos.x + _x, box.pos.y + _y );
-        sliderh.pos = new Vector( sliderh.pos.x + _x, sliderh.pos.y + _y );
-        sliderv.pos = new Vector( sliderv.pos.x + _x, sliderv.pos.y + _y );
+        back.transform.pos = new Vector( back.transform.pos.x + _x, back.transform.pos.y + _y );
+        box.transform.pos = new Vector( box.transform.pos.x + _x, box.transform.pos.y + _y );
+        sliderh.transform.pos = new Vector( sliderh.transform.pos.x + _x, sliderh.transform.pos.y + _y );
+        sliderv.transform.pos = new Vector( sliderv.transform.pos.x + _x, sliderv.transform.pos.y + _y );
 
     } //translate 
 
@@ -646,8 +646,8 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
-        sliderh.pos = new Vector( shx, shy );
-        sliderv.pos = new Vector( svx, svy );
+        sliderh.transform.pos = new Vector( shx, shy );
+        sliderv.transform.pos = new Vector( svx, svy );
 
         sliderh.visible = hv;
         sliderv.visible = vv;
@@ -864,7 +864,7 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
         
         var back:QuadGeometry = cast _control.render_items.get('back');
 
-            back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
+            back.transform.pos = new Vector( back.transform.pos.x + _x, back.transform.pos.y + _y );
 
     } //translate
 
@@ -904,7 +904,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
             source_x : 6, source_y : 108, source_w : 64, source_h : 14
         });
         
-        geom.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
+        geom.transform.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
         geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y), _control.real_bounds.w, _control.real_bounds.h );
         
         geom.color = new Color(1,1,1,1);
@@ -942,7 +942,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
         var bar : QuadGeometry = cast _control.render_items.get('bar');
 
             geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
-            bar.pos = new Vector( bar.pos.x + _x, bar.pos.y + _y );
+            bar.transform.pos = new Vector( bar.transform.pos.x + _x, bar.transform.pos.y + _y );
 
     } //translate
 
@@ -1015,7 +1015,7 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
         
         var back:QuadGeometry = cast _control.render_items.get('back');
 
-            back.pos = new Vector( back.pos.x + _x, back.pos.y + _y );
+            back.transform.pos = new Vector( back.transform.pos.x + _x, back.transform.pos.y + _y );
 
     } //translate
 
