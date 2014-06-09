@@ -31,7 +31,7 @@ class MIDropdown extends MIControl {
             parent : this,
             bounds : new MIRectangle(5,0,bounds.w-10, bounds.h),
             text:_options.text,
-            text_size: (_options.text_size == null) ? 18 : _options.text_size,
+            text_size: (_options.text_size == null) ? 14 : _options.text_size,
             name : name + '.selected_label',
             align : MITextAlign.left
         });

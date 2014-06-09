@@ -74,7 +74,7 @@ class MIList extends MIControl {
 			bounds : new MIRectangle(0, _childbounds.h, bounds.w, 30),			
 			parent : view,
 			depth : depth,
-			text_size : 18,
+			text_size : 14,
 			align : _options.align
 		});
 

@@ -240,7 +240,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     public override function translate( _control:MILabel, _x:Float, _y:Float ) {
 
-        var text:Text = cast _control.render_items.get('text');
+        var text : Text = cast _control.render_items.get('text');
 
             text.pos = new Vector( text.pos.x + _x, text.pos.y + _y );
 
@@ -309,7 +309,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
     public override function init( _control:MIButton, _options:Dynamic ) {
         
         var geom = new NineSlice({
-            texture : Luxe.loadTexture('default_ui_button'),
+            texture : Luxe.loadTexture('tiny.button.png'),
             depth : _control.depth,
             top : 8, left : 8, right : 8, bottom : 8,
         });
@@ -791,7 +791,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
     public override function init( _control:MIWindow, _options:Dynamic ) {
 
         var geom = new NineSlice({
-            texture : Luxe.loadTexture('default_ui_box'),
+            texture : Luxe.loadTexture('tiny.ui.png'),
             depth : _control.depth,
             top : 32, left : 32, right : 32, bottom : 32,
         });
@@ -898,7 +898,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
     public override function init( _control:MIPanel, _options:Dynamic ) {
         
         var geom = new NineSlice({
-            texture : Luxe.loadTexture('default_ui_box'),
+            texture : Luxe.loadTexture('tiny.ui.png'),
             depth : _control.depth,
             top : 4, left : 16, right : 16, bottom : 16,
             source_x : 6, source_y : 108, source_w : 64, source_h : 14
