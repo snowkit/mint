@@ -468,16 +468,21 @@ class MIControl {
 //Depth properties
 
     private function get_depth() : Float {
+
         return depth;
+        
     } //get_depth
 
     private function set_depth( _d:Float ) : Float {
+
         return depth = _d;
+
     } //set_depth
 
 //Parent properties
 
     private function set_parent(p:MIControl) {
+
         if(p != null) {
             real_bounds.set( p.real_bounds.x+bounds.x, p.real_bounds.y+bounds.y, bounds.w, bounds.h);
         } else {
@@ -485,10 +490,13 @@ class MIControl {
         }
 
         return parent = p;
+
     } //set_parent
 
     private function get_parent() {
+
         return parent;
+
     } //get_parent
 
 } //MIControl
