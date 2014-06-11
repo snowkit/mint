@@ -25,7 +25,7 @@ class MIDropdown extends MIControl {
         list = new MIList({
             parent : this,
             name : name + '.list',
-            bounds : new MIRectangle( 0, bounds.h, bounds.w+1, 110 ),
+            bounds : new MIRectangle( 0, bounds.h, bounds.w, 110 ),
             align : MITextAlign.left,
             onselect : onselected
         });
