@@ -473,9 +473,13 @@ class MIControl {
     }
 
     public function destroy() {
+
+        canvas.focus_invalid = true;
+
         if(parent != null) {
             parent.remove(this);
         }
+
     } //destroy
 
     public function update(dt:Float) {
