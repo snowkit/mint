@@ -9,8 +9,11 @@ class MIDropdown extends MIControl {
 
     public var list : MIList;
     public var selected_label : MILabel;
+    public var selected : String = '';
 
     public var is_open : Bool = false;
+
+    public var onselect : String->MIControl->?MIMouseEvent->Void;
 
     public function new(_options:Dynamic) {
 
@@ -22,9 +25,9 @@ class MIDropdown extends MIControl {
         list = new MIList({
             parent : this,
             name : name + '.list',
-            bounds : new MIRectangle( 0, bounds.h, bounds.w, 110 ),
+            bounds : new MIRectangle( 0, bounds.h, bounds.w+1, 110 ),
             align : MITextAlign.left,
-            onselect : onselect
+            onselect : onselected
         });
 
         selected_label = new MILabel({
@@ -43,11 +46,21 @@ class MIDropdown extends MIControl {
 
     } //new
 
-    private function onselect(v:String, l:MIList, e:Dynamic) {
+    public function select(index:Int) {
 
-        renderer.list.select_item(list, null);
-        selected_label.text = v;
+        list.select(index);
+
+    }
+
+    private function onselected(v:String, l:MIList, e:MIMouseEvent) {
+
+        selected = v;
+        selected_label.text = selected;
         close_list();
+
+        if(onselect != null) {
+            onselect(selected, this, e);
+        }
 
     } //onselect
 
@@ -68,9 +81,11 @@ class MIDropdown extends MIControl {
 
     private override function set_depth( _depth:Float ) : Float {
 
+        super.set_depth(_depth);
+
         renderer.dropdown.set_depth(this, _depth);
 
-        return super.set_depth(_depth);
+        return depth;
 
     } //set_depth
 
@@ -90,7 +105,7 @@ class MIDropdown extends MIControl {
         real_bounds.h = bounds.h;
 
         list.set_visible(false);
-        list.depth = depth;
+        list.depth = depth+0.001;
         is_open = false;
 
     } //close_list

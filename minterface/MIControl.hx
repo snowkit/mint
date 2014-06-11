@@ -493,13 +493,15 @@ class MIControl {
 
     private function set_depth( _depth:Float ) : Float {
 
+        depth = _depth;
+
         if(canvas != this) {
             for(child in children) {
                 child.depth = _depth+0.001;
             }
         }
 
-        return depth = _depth;
+        return depth;
 
     } //set_depth
 

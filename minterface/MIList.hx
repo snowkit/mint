@@ -40,7 +40,7 @@ class MIList extends MIControl {
 
     } //new
 
-    private function onscroll(_x:Float=0, _y:Float=0) {
+    private function onscroll( _x:Float = 0, _y:Float = 0 ) {
 
         renderer.list.scroll(this, _x, _y);
 
@@ -132,9 +132,11 @@ class MIList extends MIControl {
 
     private override function set_depth( _depth:Float ) : Float {
 
+        super.set_depth(_depth);
+
         renderer.list.set_depth(this, _depth);
 
-        return super.set_depth(_depth);
+        return depth;
 
     } //set_depth
 

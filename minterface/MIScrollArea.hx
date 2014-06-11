@@ -74,7 +74,7 @@ class MIScrollArea extends MIControl {
 
     public override function onmousedown(e : MIMouseEvent) {
 
-        super.onmousedown(e);
+        var forward = true;
 
         if(can_scroll_h || can_scroll_v) {
 
@@ -84,15 +84,21 @@ class MIScrollArea extends MIControl {
                 handle_drag_horizontal = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
+                forward = false;
             }
 
             if(can_scroll_v && handle_v_bounds.point_inside(m)) {
                 handle_drag_vertical = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
+                forward = false;
             }
 
         } //can_scroll at all
+
+        if(forward) {
+            super.onmousedown(e);
+        }
 
     } //onmousedown
 

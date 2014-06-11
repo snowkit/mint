@@ -380,14 +380,22 @@ class MIListLuxeRenderer extends MIListRenderer {
             if(_existing_selections != null) {
                 for(_geom in _existing_selections) {
                     _geom.transform.pos = new Vector(_geom.transform.pos.x + _x, _geom.transform.pos.y + _y);
-                    _geom.clip = false;
+                    if(_geom.clip_rect != null) {
+                        _geom.clip_rect.x = _control.clip_rect.x;
+                        _geom.clip_rect.y = _control.clip_rect.y;
+                        _geom.clip_rect.w = _control.clip_rect.w;
+                        _geom.clip_rect.h = _control.clip_rect.h;
+                    }
                 }
             }
         } else {
             var _select : QuadGeometry = _control.render_items.get('select');
             if(_select != null) {
                 _select.transform.pos = new Vector(_select.transform.pos.x + _x, _select.transform.pos.y + _y);
-                _select.clip = false;
+                if(_select.clip_rect != null) {
+                    _select.clip_rect.x = _select.clip_rect.x + _x;
+                    _select.clip_rect.y = _select.clip_rect.y + _y;
+                }
             }
         }
 
@@ -444,7 +452,6 @@ class MIListLuxeRenderer extends MIListRenderer {
             if(_select != null) {
 
                 _select.transform.pos = new Vector(_selected.real_bounds.x, _selected.real_bounds.y);
-                _control.render_items.set('select', _select);
 
             } else {
 
@@ -521,6 +528,7 @@ class MIListLuxeRenderer extends MIListRenderer {
             }
 
         }
+
     } //set_visible
 
     public override function set_depth( _control:MIList, ?_depth:Float=0.0 ) {
@@ -565,7 +573,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
-            color : new Color(1,1,1,1).rgb(0x1d1d1d)
+            color : new Color(1,1,1,1).rgb(0x181818)
         });
 
         var sliderv = new QuadGeometry({
@@ -671,7 +679,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     public override function set_depth( _control:MIScrollArea, ?_depth:Float=0.0 ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
-        var box:QuadGeometry = cast _control.render_items.get('box');
+        var box:Geometry = cast _control.render_items.get('box');
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
