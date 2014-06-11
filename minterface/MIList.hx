@@ -11,6 +11,8 @@ class MIList extends MIControl {
     public var onselect : String->MIControl->?MIMouseEvent->Void;
     public var _options : Dynamic;
 
+    var _text_size : Float = 14;
+
     public function new(__options:Dynamic) {
 
         items = [];
@@ -20,6 +22,8 @@ class MIList extends MIControl {
             //
         multiselect = (__options.multiselect == null) ? false : __options.multiselect;
         onselect = (__options.onselect == null) ? null : __options.onselect;
+            //set the text size from the default or the options
+        if(__options.text_size != null) _text_size = __options.text_size;
 
         var _bounds = __options.bounds.clone();
 
@@ -79,7 +83,7 @@ class MIList extends MIControl {
             bounds : new MIRectangle(0, _childbounds.bottom, bounds.w, 30),
             parent : view,
             depth : depth,
-            text_size : 14,
+            text_size : _text_size,
             align : _options.align
         });
 

@@ -15,18 +15,26 @@ class MIDropdown extends MIControl {
 
     public var onselect : String->MIControl->?MIMouseEvent->Void;
 
+    var _text_size : Float = 14;
+    var _height : Float = 110;
+
     public function new(_options:Dynamic) {
 
             //create the base control
         super(_options);
             //dropdowns can be clicked
         mouse_enabled = true;
+            //set the text size from the default or the options
+        if(_options.text_size != null) _text_size = _options.text_size;
+        if(_options.height != null) _height = _options.height;
+
             //create the list
         list = new MIList({
             parent : this,
             name : name + '.list',
-            bounds : new MIRectangle( 0, bounds.h, bounds.w, 110 ),
+            bounds : new MIRectangle( 0, bounds.h, bounds.w, _height ),
             align : MITextAlign.left,
+            text_size : _text_size,
             onselect : onselected
         });
 
@@ -34,7 +42,7 @@ class MIDropdown extends MIControl {
             parent : this,
             bounds : new MIRectangle(5,0,bounds.w-10, bounds.h),
             text:_options.text,
-            text_size: (_options.text_size == null) ? 14 : _options.text_size,
+            text_size: _text_size,
             name : name + '.selected_label',
             align : MITextAlign.left
         });
