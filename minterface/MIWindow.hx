@@ -5,168 +5,178 @@ import minterface.MIControl;
 import minterface.MILabel;
 
 class MIWindow extends MIControl {
-	
-	public var title_bounds : MIRectangle;
-	public var view_bounds : MIRectangle;
-	public var close_bounds : MIRectangle;
 
-	public var title : MILabel;
-	public var close_button : MILabel;
+    public var title_bounds : MIRectangle;
+    public var view_bounds : MIRectangle;
+    public var close_bounds : MIRectangle;
 
-	public var moveable : Bool = true;
-	public var dragging : Bool = false;
-	
-	public var drag_start : MIPoint;
-	public var down_start : MIPoint;
+    public var title : MILabel;
+    public var close_button : MILabel;
 
-	public var onclose : Void->Bool;
+    public var moveable : Bool = true;
+    public var dragging : Bool = false;
 
-	public function new(_options:Dynamic) {		
+    public var drag_start : MIPoint;
+    public var down_start : MIPoint;
 
-		super(_options);
+    public var onclose : Void->Bool;
 
-		_options.bounds = real_bounds;
+    public function new(_options:Dynamic) {
 
-		drag_start = new MIPoint();
-		down_start = new MIPoint();
+        super(_options);
 
-		if(_options.align == null) { _options.align = MITextAlign.center; }
-		if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
-		if(_options.title_size != null) { _options.size = _options.title_size; }		
-		if(_options.title != null) { _options.text = _options.title; }		
-		if(_options.moveable != null) { moveable = _options.moveable; }
+        _options.bounds = real_bounds;
 
-		title_bounds = new MIRectangle(6, 6, bounds.w-12, 20 );
-		close_bounds = new MIRectangle(bounds.w-18, 6, 18, 20 );
-		view_bounds = new MIRectangle(32, 32, bounds.w - 64, bounds.h - 64 );
+        drag_start = new MIPoint();
+        down_start = new MIPoint();
 
-		_options.pos = new MIPoint(real_bounds.x, real_bounds.y);
-			
-			//create the title label
-		title = new MILabel({
-			parent : this,
-			bounds : title_bounds,
-			text:_options.text,
-			text_size:_options.title_size,
-			name : name + '.titlelabel'
-		});
+        if(_options.align == null) { _options.align = MITextAlign.center; }
+        if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
+        if(_options.title_size != null) { _options.size = _options.title_size; }
+        if(_options.title != null) { _options.text = _options.title; }
+        if(_options.moveable != null) { moveable = _options.moveable; }
 
-			//create the close label
-		close_button = new MILabel({
-			parent : this,
-			bounds : close_bounds,
-			text:'x',
-			align : MITextAlign.left,
-			text_size:15,
-			name : name + '.closelabel'
-		});
+        title_bounds = new MIRectangle(6, 6, bounds.w-12, 20 );
+        close_bounds = new MIRectangle(bounds.w-18, 5, 18, 20 );
+        view_bounds = new MIRectangle(32, 32, bounds.w - 64, bounds.h - 64 );
 
-		close_button.mouse_enabled = true;
-		close_button.mousedown = function(c:MIControl, ?e:MIMouseEvent) {
-			on_close();
-		}
+        _options.pos = new MIPoint(real_bounds.x, real_bounds.y);
 
-			//update
-		renderer.window.init( this, _options );
+            //create the title label
+        title = new MILabel({
+            parent : this,
+            bounds : title_bounds,
+            text:_options.text,
+            text_size:_options.title_size,
+            name : name + '.titlelabel'
+        });
 
-	} //new
+            //create the close label
+        close_button = new MILabel({
+            parent : this,
+            bounds : close_bounds,
+            text:'x',
+            align : MITextAlign.left,
+            text_size:13,
+            name : name + '.closelabel'
+        });
 
-	function on_close() {
+        close_button.mouse_enabled = true;
+        close_button.mousedown = function(c:MIControl, ?e:MIMouseEvent) {
+            on_close();
+        }
 
-		var do_close = true;
+            //update
+        renderer.window.init( this, _options );
 
-		if(onclose != null) {
-			do_close = onclose();
-		}
+    } //new
 
-		if(do_close) {
-			close();
-		}
-		
-	} //on_close
+    function on_close() {
 
-	public function close() {
+        var do_close = true;
 
-		set_visible(false);
+        if(onclose != null) {
+            do_close = onclose();
+        }
 
-	} //close
+        if(do_close) {
+            close();
+        }
 
-	public function open() {
-		
-		set_visible(true);
+    } //on_close
 
-	} //open
- 
-	public override function onmousemove(e:MIMouseEvent)  {
-		
-		super.onmousemove(e);
+    public function close() {
 
-		if(dragging) {
+        set_visible(false);
 
-			var diff_x = e.x - drag_start.x;
-			var diff_y = e.y - drag_start.y;
+    } //close
 
-			drag_start.set(e.x,e.y);
+    public function open() {
 
-			translate(diff_x, diff_y);
-			
-		} //dragging
-	} //onmousemove
+        set_visible(true);
 
-	public override function onmousedown(e:MIMouseEvent)  {
+    } //open
 
-		var _m : MIPoint = new MIPoint(e.x,e.y);
-		var in_title = title.real_bounds.point_inside(_m);
+    public override function onmousemove(e:MIMouseEvent)  {
 
-		if(!in_title) {
-			super.onmousedown(e);
-		}		
+        super.onmousemove(e);
 
-			if(!dragging && moveable) {
-				if( in_title ) {			
-					dragging = true;		
-					drag_start = _m.clone();
-					down_start = new MIPoint(real_bounds.x, real_bounds.y);
-					canvas.dragged = this;
-				} //if inside title bounds
-			} //!dragging
+        if(dragging) {
 
-	} //onmousedown
+            var diff_x = e.x - drag_start.x;
+            var diff_y = e.y - drag_start.y;
 
-	public override function onmouseup(e:MIMouseEvent)  {
+            drag_start.set(e.x,e.y);
 
-		super.onmouseup(e);
+            translate(diff_x, diff_y);
 
-		var _m : MIPoint = new MIPoint(e.x,e.y);
-		if(dragging) {
-			dragging = false;
-			canvas.dragged = null;
-		} //dragging
+        } //dragging
+    } //onmousemove
 
-	} //onmouseup
+    function bring_to_front() {
+        if(depth != canvas.depth) {
+            depth = canvas.next_depth();
+        }
+    }
 
-	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
+    public override function onmousedown(e:MIMouseEvent)  {
 
-		super.translate(_x,_y);
-		
-		title_bounds = new MIRectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );		
-		
-		renderer.window.translate( this, _x, _y );
+        var _m : MIPoint = new MIPoint(e.x,e.y);
+        var in_title = title.real_bounds.point_inside(_m);
 
-	} //translate
+        if(!in_title) {
+            super.onmousedown(e);
+        }
 
-	public override function set_visible( ?_visible:Bool = true ) {
-		super.set_visible(_visible);
-		renderer.window.set_visible(this, _visible);
-	} //set_visible
+        bring_to_front();
+
+            if(!dragging && moveable) {
+                if( in_title ) {
+                    dragging = true;
+                    drag_start = _m.clone();
+                    down_start = new MIPoint(real_bounds.x, real_bounds.y);
+                    canvas.dragged = this;
+                } //if inside title bounds
+            } //!dragging
+
+    } //onmousedown
+
+    public override function onmouseup(e:MIMouseEvent) {
+
+        super.onmouseup(e);
+
+        var _m : MIPoint = new MIPoint(e.x,e.y);
+        if(dragging) {
+            dragging = false;
+            canvas.dragged = null;
+        } //dragging
+
+    } //onmouseup
+
+    public override function translate( ?_x : Float = 0, ?_y : Float = 0, ?_offset:Bool = false ) {
+
+        super.translate( _x, _y, _offset );
+
+        title_bounds = new MIRectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );
+
+        renderer.window.translate( this, _x, _y, _offset );
+
+    } //translate
+
+    public override function set_visible( ?_visible:Bool = true ) {
+        super.set_visible(_visible);
+        renderer.window.set_visible(this, _visible);
+    } //set_visible
 
 
-	private override function set_depth( _depth:Float ) : Float {
+    private override function set_depth( _depth:Float ) : Float {
 
-		renderer.window.set_depth(this, _depth);
+        super.set_depth(_depth);
 
-		return depth = _depth;
+        renderer.window.set_depth(this, _depth);
 
-	} //set_depth	
+        return depth;
+
+    } //set_depth
 
 }

@@ -5,100 +5,100 @@ import minterface.MITypes;
 import minterface.MIControl;
 
 class MINumber extends MIControl {
-	
-	@:isVar public var value(get,set) : Float;
 
-	public var max : Float = 1;
-	public var min : Float = 0;
+    @:isVar public var value(get,set) : Float;
 
-	public var precision : Int = 4;
-	public var steps : Int = 200;
+    public var max : Float = 1;
+    public var min : Float = 0;
 
-	public var label : MILabel;
+    public var precision : Int = 4;
+    public var steps : Int = 200;
 
-	var can_change : Bool = false;
-	var _current : Float = 0.0;
-	var startdrag : Int = 0;
+    public var label : MILabel;
 
-	public var on_change : MIControl->Float->Void;
+    var can_change : Bool = false;
+    var _current : Float = 0.0;
+    var startdrag : Int = 0;
 
-	public function new(_options:Dynamic) {
-		
-		super(_options);
+    public var on_change : MIControl->Float->Void;
 
-		mouse_enabled = true;
+    public function new(_options:Dynamic) {
 
-		if(_options.value == null) { _options.value = 0.0; }
-		if(_options.align == null) { _options.align = MITextAlign.center; }
-		if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
-		if(_options.text_size != null) { _options.size = _options.text_size; }
-		if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
+        super(_options);
 
-		var _value = _options.value;
+        mouse_enabled = true;
 
-		label = new MILabel({
-			parent : this,
-			bounds : _options.bounds.clone().set(0,0),
-			text: Std.string(_value),
-			text_size:_options.text_size,
-			name : name + '.label'
-		});
+        if(_options.value == null) { _options.value = 0.0; }
+        if(_options.align == null) { _options.align = MITextAlign.center; }
+        if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
+        if(_options.text_size != null) { _options.size = _options.text_size; }
+        if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
 
-		// mouse_enabled = true;
-		label.mouse_enabled = mouse_enabled;
+        var _value = _options.value;
 
-	} //new
+        label = new MILabel({
+            parent : this,
+            bounds : _options.bounds.clone().set(0,0),
+            text: Std.string(_value),
+            text_size:_options.text_size,
+            name : name + '.label'
+        });
 
-	public function set_value(_v:Float) : Float {
+        // mouse_enabled = true;
+        label.mouse_enabled = mouse_enabled;
 
-		value = _v;
+    } //new
 
-		label.set_text( Std.string(_v) );
+    public function set_value(_v:Float) : Float {
 
-		return value;
+        value = _v;
 
-	} //set_text
+        label.set_text( Std.string(_v) );
 
-	public function get_value() : Float {
-		return value;
-	}
+        return value;
 
-	public override function onmousedown(e:MIMouseEvent) {
-		super.onmousedown(e);
-		if(!can_change) {
-			can_change = true;
-			canvas.dragged = this;
-		}
-	}
+    } //set_text
 
-	public override function onmouseup(e:MIMouseEvent) {
-		super.onmouseup(e);
-		if(can_change) {
-			can_change = false;
-			canvas.dragged = null;
-		}
-	}
+    public function get_value() : Float {
+        return value;
+    }
 
-	public override function onmousemove(e:MIMouseEvent) {
-		super.onmousemove(e);
-		if(can_change) {
-			var diff = Std.int(e.x) - startdrag;
-			var d = diff*0.0001;
-			var _value = value + d;
-			if(_value <= min) { _value = min; startdrag = Std.int(e.x); }
-			if(_value >= max) { _value = max; startdrag = Std.int(e.x); }
+    public override function onmousedown(e:MIMouseEvent) {
+        super.onmousedown(e);
+        if(!can_change) {
+            can_change = true;
+            canvas.dragged = this;
+        }
+    }
 
-			// _value = phoenix.utils.Maths.fixed(_value, precision);
-			if(on_change != null) {
-				on_change(this, _value);
-			}
+    public override function onmouseup(e:MIMouseEvent) {
+        super.onmouseup(e);
+        if(can_change) {
+            can_change = false;
+            canvas.dragged = null;
+        }
+    }
 
-			value = _value;
-		}
-	} //onmousemove
+    public override function onmousemove(e:MIMouseEvent) {
+        super.onmousemove(e);
+        if(can_change) {
+            var diff = Std.int(e.x) - startdrag;
+            var d = diff*0.0001;
+            var _value = value + d;
+            if(_value <= min) { _value = min; startdrag = Std.int(e.x); }
+            if(_value >= max) { _value = max; startdrag = Std.int(e.x); }
 
-	public override function destroy() {
-		super.destroy();
-	}
+            // _value = phoenix.utils.Maths.fixed(_value, precision);
+            if(on_change != null) {
+                on_change(this, _value);
+            }
+
+            value = _value;
+        }
+    } //onmousemove
+
+    public override function destroy() {
+        super.destroy();
+    }
 
 }

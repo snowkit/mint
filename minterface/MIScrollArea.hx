@@ -4,20 +4,20 @@ import minterface.MITypes;
 import minterface.MIControl;
 
 class MIScrollArea extends MIControl {
-    
+
 
     public var can_scroll_h : Bool = false;
     public var can_scroll_v : Bool = false;
 
     public var scroll_amount : MIPoint;
     public var scroll_percent : MIPoint;
-    public var child_bounds : Dynamic;
+    public var child_bounds : ChildBounds;
 
     public var onscroll : Float -> Float -> Void;
 
     public var handle_drag_vertical = false;
     public var handle_drag_horizontal = false;
-    
+
     var sliderh_x : Float = 0;
     var sliderh_y : Float = 0;
     var sliderv_x : Float = 0;
@@ -36,7 +36,7 @@ class MIScrollArea extends MIControl {
     #else
         public var scroll_dir : Int = 1;
     #end
-    
+
     public function new(_options:Dynamic) {
 
         super(_options);
@@ -58,16 +58,17 @@ class MIScrollArea extends MIControl {
         sliderv_y = handle_v_bounds.y;
 
         on_internal_scroll(0, 0);
-        
+
     } //new
 
     public override function add(child:MIControl) {
-        
+
         super.add(child);
         on_internal_scroll(0,0);
 
-        child.clip_with( this );    
-        
+        child.clip_with( this );
+        depth = depth;
+
     } //add
 
 
@@ -92,11 +93,11 @@ class MIScrollArea extends MIControl {
             }
 
         } //can_scroll at all
-    
+
     } //onmousedown
 
     public override function onmouseup(e : MIMouseEvent) {
-        
+
         super.onmouseup(e);
 
         if(handle_drag_vertical || handle_drag_horizontal) {
@@ -108,7 +109,7 @@ class MIScrollArea extends MIControl {
     } //onmouseup
 
     public override function onmousemove(e : MIMouseEvent) {
-        
+
         super.onmousemove(e);
 
         if(handle_drag_vertical) {
@@ -123,9 +124,9 @@ class MIScrollArea extends MIControl {
 
     public override function onmousewheel(e) {
 
-            //forward to 
+            //forward to
         super.onmousewheel(e);
-        
+
         if(e.button == MIMouseButton.wheel_up) {
             if(e.ctrl_down && can_scroll_h) {
                 set_scroll_x(scroll_amount.x-(real_bounds.w*0.05*scroll_dir));
@@ -142,9 +143,9 @@ class MIScrollArea extends MIControl {
 
     } //onmousewheel
 
-    public override function translate(?_x:Float = 0, ?_y:Float = 0) {
-    
-        super.translate(_x,_y);
+    public override function translate(?_x:Float = 0, ?_y:Float = 0, ?_offset:Bool = false ) {
+
+        super.translate( _x, _y, _offset);
 
             handle_h_bounds.x += _x;
             handle_h_bounds.y += _y;
@@ -155,8 +156,8 @@ class MIScrollArea extends MIControl {
             sliderv_x += _x;
             sliderv_y += _y;
 
-        renderer.scroll.translate(this,_x,_y);
-    
+        renderer.scroll.translate( this, _x, _y, _offset );
+
     } //translate
 
     function on_internal_scroll(_dx:Float, _dy:Float) {
@@ -165,7 +166,7 @@ class MIScrollArea extends MIControl {
 
                 //tell the children to scroll the delta
             for(child in children) {
-                child.translate(_dx, _dy);
+                child.translate(_dx, _dy, true);
             }
 
                 //call the handler if any
@@ -180,7 +181,7 @@ class MIScrollArea extends MIControl {
         handle_h_bounds.x = sliderh_x;
 
             //make sure the child bounds are up to date
-        child_bounds = children_bounds();
+        child_bounds = children_bounds;
 
             //make sure the scroll goes away when too small
         slider_h_visible = false;
@@ -189,7 +190,7 @@ class MIScrollArea extends MIControl {
         can_scroll_v = false;
 
             //if the children bounds are < our size, it can't scroll
-        if(child_bounds.w <= real_bounds.w) {
+        if(child_bounds.real_w <= real_bounds.w) {
             can_scroll_h = false;
             slider_h_visible = false;
         } else {
@@ -197,20 +198,20 @@ class MIScrollArea extends MIControl {
             slider_h_visible = true;
         }
 
-        if(child_bounds.h <= real_bounds.h) {
+        if(child_bounds.real_h <= real_bounds.h) {
             can_scroll_v = false;
             slider_v_visible = false;
         } else {
             can_scroll_v = true;
             slider_v_visible = true;
-        } 
+        }
 
             //refresh the rendering state
         renderer.scroll.refresh_scroll( this, sliderh_x, sliderh_y, sliderv_x, sliderv_y, slider_h_visible, slider_v_visible );
 
     } //on_internal_scroll
 
-        //set the scroll value directly in pixels, between 0 and bounds.h 
+        //set the scroll value directly in pixels, between 0 and bounds.h
     public function set_scroll_y(exact:Float) {
 
         if(!can_scroll_v) return;
@@ -224,7 +225,7 @@ class MIScrollArea extends MIControl {
         scroll_percent.y = MIUtils.clamp(exact / (real_bounds.h-handle_v_bounds.h), 0, 1);
         scroll_amount.y = exact;
             //we need the difference in scroll amount in pixels
-        var pdiff = (last_p_y - scroll_percent.y) * (child_bounds.h - real_bounds.h);
+        var pdiff = (last_p_y - scroll_percent.y) * (child_bounds.real_h - real_bounds.h);
             //update the real slider y value
         sliderv_y = MIUtils.clamp( real_bounds.y + exact, real_bounds.y, real_bounds.y+real_bounds.h-handle_v_bounds.h );
 
@@ -245,7 +246,7 @@ class MIScrollArea extends MIControl {
         scroll_percent.x = MIUtils.clamp(exact / real_bounds.w, 0, 1);
         scroll_amount.x = exact;
             //we need the difference in scroll amount in pixels
-        var pdiff = (last_p_x - scroll_percent.x) * (child_bounds.w - real_bounds.w);
+        var pdiff = (last_p_x - scroll_percent.x) * (child_bounds.real_w - real_bounds.w);
             //update the real slider x value
         sliderh_x = MIUtils.clamp( real_bounds.x + exact, real_bounds.x, real_bounds.x+real_bounds.w-handle_h_bounds.w );
 
@@ -266,9 +267,11 @@ class MIScrollArea extends MIControl {
 
     private override function set_depth( _depth:Float ) : Float {
 
+        super.set_depth(_depth);
+
         renderer.scroll.set_depth(this, _depth);
 
-        return depth = _depth;
+        return depth;
 
     } //set_depth
 }

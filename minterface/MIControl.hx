@@ -9,16 +9,17 @@ import minterface.MITypes;
 typedef ChildBounds = {
     var x : Float;
     var y : Float;
-    var w : Float;
-    var h : Float;
-    var realy : Float;
-    var realx : Float;
-    var maxw : Float;
-    var maxh : Float;
+    var bottom : Float;
+    var right : Float;
+
+    var real_y : Float;
+    var real_x : Float;
+    var real_w : Float;
+    var real_h : Float;
 }
 
 class MIControl {
-    
+
     public var name : String = 'control';
 
         //parent canvas that this element belongs to
@@ -31,7 +32,7 @@ class MIControl {
         //the items specific to rendering this item
     public var render_items : Map<String, Dynamic>;
 
-        //the relative bounds to the parent 
+        //the relative bounds to the parent
     public var bounds : MIRectangle;
         //the absolute bounds in screen space
     public var real_bounds : MIRectangle;
@@ -39,37 +40,6 @@ class MIControl {
     public var clip_rect : MIRectangle;
         //the list of children added to this control
     public var children : Array<MIControl>;
-
-        //a shortcut to adding multiple mousedown handlers
-    @:isVar public var mousedown (get,set) : MIControl->?MIMouseEvent->Void;
-        //the list of internal handlers, for calling 
-    var mouse_down_handlers : Array<MIControl->?MIMouseEvent->Void>;
-
-        //a shortcut to adding multiple mouseup handlers
-    @:isVar public var mouseup (get,set) : MIControl->?MIMouseEvent->Void;
-        //the list of internal handlers, for calling 
-    var mouse_up_handlers : Array<MIControl->?MIMouseEvent->Void>;
-
-        //a shortcut to adding multiple mousemove handlers
-    @:isVar public var mousemove (get,set) : MIControl->?MIMouseEvent->Void;
-        //the list of internal handlers, for calling 
-    var mouse_move_handlers : Array<MIControl->?MIMouseEvent->Void>;
-
-        //a shortcut to adding multiple mousewheel handlers
-    @:isVar public var mousewheel (get,set) : MIControl->?MIMouseEvent->Void;
-        //the list of internal handlers, for calling 
-    var mouse_wheel_handlers : Array<MIControl->?MIMouseEvent->Void>;
-
-        //a shortcut to adding multiple mouseenter handlers
-    @:isVar public var mouseenter (get,set) : MIControl->?MIMouseEvent->Void;
-        //the list of internal handlers, for calling 
-    var mouse_enter_handlers : Array<MIControl->?MIMouseEvent->Void>;
-
-        //a shortcut to adding multiple mouseenter handlers
-    @:isVar public var mouseleave (get,set) : MIControl->?MIMouseEvent->Void;
-        //the list of internal handlers, for calling 
-    var mouse_leave_handlers : Array<MIControl->?MIMouseEvent->Void>;
-
         //if the control is under the mouse
     public var isfocused : Bool = false;
         //if the control is under the mouse
@@ -79,13 +49,43 @@ class MIControl {
         //if the control accepts mouse events
     public var mouse_enabled : Bool = true;
 
+        //a getter for the bounds information about the children and their children in this control
+    @:isVar public var children_bounds (get,null) : ChildBounds;
+
+        //a shortcut to adding multiple mousedown handlers
+    @:isVar public var mousedown (get,set) : MIControl->?MIMouseEvent->Void;
+        //a shortcut to adding multiple mouseup handlers
+    @:isVar public var mouseup (get,set) : MIControl->?MIMouseEvent->Void;
+        //a shortcut to adding multiple mousemove handlers
+    @:isVar public var mousemove (get,set) : MIControl->?MIMouseEvent->Void;
+        //a shortcut to adding multiple mousewheel handlers
+    @:isVar public var mousewheel (get,set) : MIControl->?MIMouseEvent->Void;
+        //a shortcut to adding multiple mouseenter handlers
+    @:isVar public var mouseenter (get,set) : MIControl->?MIMouseEvent->Void;
+        //a shortcut to adding multiple mouseenter handlers
+    @:isVar public var mouseleave (get,set) : MIControl->?MIMouseEvent->Void;
+        //the parent control, null if no parent
     @:isVar public var parent(get,set) : MIControl;
+        //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
+
+        //the list of internal handlers, for calling
+    var mouse_down_handlers : Array<MIControl->?MIMouseEvent->Void>;
+        //the list of internal handlers, for calling
+    var mouse_up_handlers : Array<MIControl->?MIMouseEvent->Void>;
+        //the list of internal handlers, for calling
+    var mouse_move_handlers : Array<MIControl->?MIMouseEvent->Void>;
+        //the list of internal handlers, for calling
+    var mouse_wheel_handlers : Array<MIControl->?MIMouseEvent->Void>;
+        //the list of internal handlers, for calling
+    var mouse_enter_handlers : Array<MIControl->?MIMouseEvent->Void>;
+        //the list of internal handlers, for calling
+    var mouse_leave_handlers : Array<MIControl->?MIMouseEvent->Void>;
 
     public function new(_options:Dynamic) {
 
         render_items = new Map<String,Dynamic>();
-        
+
         bounds = _options.bounds == null ? new MIRectangle(0,0,32,32) : _options.bounds;
         real_bounds = bounds.clone();
 
@@ -99,13 +99,23 @@ class MIControl {
         mouse_leave_handlers = [];
         mouse_enter_handlers = [];
 
+        children_bounds = {
+            x:0,
+            y:0,
+            right:0,
+            bottom:0,
+            real_x : 0,
+            real_y : 0,
+            real_w : 0,
+            real_h : 0
+        };
+
         if(_options.parent != null) {
 
             renderer = _options.parent.renderer;
             canvas = _options.parent.canvas;
-            _options.parent.add(this);          
             depth = canvas.next_depth();
-            // trace('depth : ' + name + ' ' + depth);
+            _options.parent.add(this);
 
         } else { //parent != null
 
@@ -132,7 +142,7 @@ class MIControl {
 
         for(_child in children) {
             if(_child.contains_point(_p) && _child.mouse_enabled && _child.visible) {
-                
+
                 if(_child.depth >= highest_depth) {
                     highest_child = _child;
                     highest_depth = _child.depth;
@@ -140,7 +150,7 @@ class MIControl {
 
             } //child contains point
         } //child in children
-        
+
         if(highest_child != this && highest_child.children.length != 0) {
             return highest_child.topmost_child_under_point(_p);
         } else {
@@ -172,7 +182,8 @@ class MIControl {
 
     public function clip_with( ?_control:MIControl ) {
         if(_control != null) {
-            set_clip( _control.real_bounds );
+            var _b = _control.real_bounds;
+            set_clip( new MIRectangle(_b.x, _b.y, _b.w-1, _b.h-1) );
         } else {
             set_clip();
         }
@@ -182,7 +193,7 @@ class MIControl {
         //temporarily, all children clip by their parent clip
 
         clip_rect = _clip_rect;
-        
+
         // for(_child in children) {
         //  _child.set_clip( _clip_rect );
         // }
@@ -192,6 +203,8 @@ class MIControl {
     public function set_visible( ?_visible:Bool = true ) {
 
         visible = _visible;
+
+        canvas.focus_invalid = true;
 
         for(_child in children) {
             _child.set_visible( _visible );
@@ -207,13 +220,13 @@ class MIControl {
             return null;
         }
 
-            //if the parent of the target is not canvas, 
+            //if the parent of the target is not canvas,
             //keep escalating until it is
         if( Std.is( _target.parent, MICanvas ) ) {
             return _target;
         } else { //is
             return parent.find_top_parent( this );
-        } 
+        }
 
     } //find_top_parent
 
@@ -279,7 +292,10 @@ class MIControl {
         }
     }
 
-    public function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
+        //if translating in offset mode, we don't update the clip rect and other stuff
+        //this happens for example when moving children around from a scroll view, just
+        //offseting their positions, not moving them as a whole
+    public function translate( ?_x : Float = 0, ?_y : Float = 0, ?_offset:Bool = false ) {
 
         real_bounds.x += _x;
         real_bounds.y += _y;
@@ -289,82 +305,92 @@ class MIControl {
             bounds.y = real_bounds.y - parent.real_bounds.y;
         }
 
-        for(child in children) {
-            child.translate( _x, _y );
+        if(clip_rect != null && !_offset) {
+            clip_rect.x += _x;
+            clip_rect.y += _y;
         }
+
+        for(child in children) {
+            child.translate( _x, _y, _offset );
+        }
+
+        canvas.focus_invalid = true;
 
     } //translate
 
     private function options_plus(options:Dynamic, plus:Dynamic) {
 
         var _fields = Reflect.fields(plus);
-        
+
         for(_field in _fields) {
             Reflect.setField(options, _field, Reflect.field( plus, _field ) );
         }
 
         return options;
-        
-    } //options_plus
 
-    public function width() {
-        return bounds.w;
-    }
-    public function height() {
-        return bounds.h;
-    }
+    } //options_plus
 
     public function right() {
         return bounds.x + bounds.w;
-    }
+    } //right
+
     public function bottom() {
         return bounds.y + bounds.h;
-    }
+    } //bottom
 
-    public function children_bounds() : ChildBounds {
+    function get_children_bounds() : ChildBounds {
 
         if(children.length == 0) {
-            return { 
-                x:0, y:0, w:0, h:0,
-                realx : real_bounds.x,
-                realy : real_bounds.y, 
-                maxw : real_bounds.w, 
-                maxh : real_bounds.h 
-            };
+
+            children_bounds.x = 0;
+            children_bounds.y = 0;
+            children_bounds.right = 0;
+            children_bounds.bottom = 0;
+            children_bounds.real_x = 0;
+            children_bounds.real_y = 0;
+            children_bounds.real_w = 0;
+            children_bounds.real_h = 0;
+
+            return children_bounds;
+
         } //no children
 
         var _first_child = children[0];
 
-        var _current_x : Float = _first_child.bounds.x; 
+        var _current_x : Float = _first_child.bounds.x;
         var _current_y : Float = _first_child.bounds.y;
-        var _current_w : Float = _first_child.right();
-        var _current_h : Float = _first_child.bottom();
+        var _current_r : Float = _first_child.right();
+        var _current_b : Float = _first_child.bottom();
+
         var _real_x : Float = _first_child.real_bounds.x;
         var _real_y : Float = _first_child.real_bounds.y;
-
-        var _max_w : Float = _first_child.bounds.w;
-        var _max_h : Float = _first_child.bounds.h;
 
         for(child in children) {
 
             _current_x = Math.min( child.bounds.x, _current_x );
             _current_y = Math.min( child.bounds.y, _current_y );
-            _current_w = Math.max( _current_w, child.right() );
-            _current_h = Math.max( _current_h, child.bottom() );
-
-            _max_w = Math.max( _max_w, child.bounds.w );
-            _max_h = Math.max( _max_h, child.bounds.h );
+            _current_r = Math.max( _current_r, child.right() );
+            _current_b = Math.max( _current_b, child.bottom() );
 
             _real_x = Math.min( child.real_bounds.x, _real_x );
             _real_y = Math.min( child.real_bounds.y, _real_y );
-            
+
         } //child in children
 
-        return { x:_current_x, y:_current_y, w:_current_w, h:_current_h, realx:_real_x, realy:_real_y, maxw:_max_w, maxh:_max_h };
+        children_bounds.x = _current_x;
+        children_bounds.y = _current_y;
+        children_bounds.right = _current_r;
+        children_bounds.bottom = _current_b;
+        children_bounds.real_x = _real_x;
+        children_bounds.real_y = _real_y;
+        children_bounds.real_w = _current_r - _first_child.bounds.x;
+        children_bounds.real_h = _current_b - _first_child.bounds.y;
+
+        return children_bounds;
 
     } //children_bounds
 
-        
+
     public function onmousemove( e:MIMouseEvent ) {
 
         if(mousemove != null) {
@@ -381,7 +407,7 @@ class MIControl {
     } //onmousemove
 
     public function onmouseup( e:MIMouseEvent ) {
-        
+
         if(mouseup != null) {
             for(handler in mouse_up_handlers) {
                 handler(this, e);
@@ -410,8 +436,8 @@ class MIControl {
 
     } //onmousewheel
 
-    public function onmousedown( e:MIMouseEvent ) {             
-        
+    public function onmousedown( e:MIMouseEvent ) {
+
         if(mousedown != null) {
             for(handler in mouse_down_handlers) {
                 handler(this, e);
@@ -427,20 +453,16 @@ class MIControl {
 
     public function onmouseenter( e:MIMouseEvent ) {
         // trace('mouse enter ' + name);
-        
+
         if(mouseenter != null) {
             for(handler in mouse_enter_handlers) {
                 handler(this, e);
             }
         } //mouseenter != null
 
-            //events bubble upward into the parent
-        // if(parent != null && parent != canvas) {
-        //  parent.onmouseenter(e);
-        // } //parent not null and parent not canvas
     }
 
-    public function onmouseleave( e:MIMouseEvent ) {        
+    public function onmouseleave( e:MIMouseEvent ) {
         // trace('mouse leave ' + name);
         if(mouseleave != null) {
             for(handler in mouse_leave_handlers) {
@@ -448,10 +470,6 @@ class MIControl {
             }
         } //mouseleave != null
 
-            //events bubble upward into the parent
-        // if(parent != null && parent != canvas) {
-        //  parent.onmouseleave(e);
-        // } //parent not null and parent not canvas
     }
 
     public function destroy() {
@@ -470,12 +488,18 @@ class MIControl {
     private function get_depth() : Float {
 
         return depth;
-        
+
     } //get_depth
 
-    private function set_depth( _d:Float ) : Float {
+    private function set_depth( _depth:Float ) : Float {
 
-        return depth = _d;
+        if(canvas != this) {
+            for(child in children) {
+                child.depth = _depth+0.001;
+            }
+        }
+
+        return depth = _depth;
 
     } //set_depth
 

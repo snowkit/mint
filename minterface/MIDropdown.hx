@@ -6,14 +6,14 @@ import minterface.MILabel;
 import minterface.MIList;
 
 class MIDropdown extends MIControl {
-    
-    public var list : MIList;   
-    public var selected_label : MILabel;    
+
+    public var list : MIList;
+    public var selected_label : MILabel;
 
     public var is_open : Bool = false;
 
     public function new(_options:Dynamic) {
-            
+
             //create the base control
         super(_options);
             //dropdowns can be clicked
@@ -22,7 +22,7 @@ class MIDropdown extends MIControl {
         list = new MIList({
             parent : this,
             name : name + '.list',
-            bounds : new MIRectangle( 0, bounds.h+1, bounds.w, 110 ),
+            bounds : new MIRectangle( 0, bounds.h, bounds.w, 110 ),
             align : MITextAlign.left,
             onselect : onselect
         });
@@ -44,7 +44,7 @@ class MIDropdown extends MIControl {
     } //new
 
     private function onselect(v:String, l:MIList, e:Dynamic) {
-            
+
         renderer.list.select_item(list, null);
         selected_label.text = v;
         close_list();
@@ -61,16 +61,16 @@ class MIDropdown extends MIControl {
         list.set_visible(is_open);
     }
 
-    public override function translate(?_x:Float = 0, ?_y:Float = 0) {
-        super.translate(_x,_y);     
-        renderer.dropdown.translate( this, _x, _y );
+    public override function translate(?_x:Float = 0, ?_y:Float = 0, ?_offset:Bool = false ) {
+        super.translate( _x, _y, _offset);
+        renderer.dropdown.translate( this, _x, _y, _offset );
     }
 
     private override function set_depth( _depth:Float ) : Float {
 
         renderer.dropdown.set_depth(this, _depth);
 
-        return depth = _depth;
+        return super.set_depth(_depth);
 
     } //set_depth
 
@@ -85,12 +85,12 @@ class MIDropdown extends MIControl {
     }
 
     public function close_list() {
-        
+
         canvas.modal = null;
+        real_bounds.h = bounds.h;
+
         list.set_visible(false);
-
-            real_bounds.h = bounds.h;
-
+        list.depth = depth;
         is_open = false;
 
     } //close_list
@@ -98,12 +98,12 @@ class MIDropdown extends MIControl {
     public function open_list() {
 
             //make sure it's always on top
-        list.depth = canvas.depth+5;
+        list.depth = canvas.depth+1;
         canvas.modal = list;
 
             //make it visible
         list.set_visible(true);
-            
+
             //adjust the bounds so we get mouse events still
         real_bounds.h = bounds.h + list.bounds.h;
 
@@ -132,7 +132,7 @@ class MIDropdown extends MIControl {
         }//mouse left
 
     } //onmousedown
-    
+
     public override function onmouseup(e) {
         super.onmouseup(e);
     }

@@ -4,47 +4,47 @@ import minterface.MITypes;
 import minterface.MIControl;
 
 class MIImage extends MIControl {
-	
-	public function new(_options:Dynamic) {
-			
-			//create the base control
-		super(_options);
-			//image size to the parent,
-		_options.centered = false;
-		_options.pos = new MIPoint(real_bounds.x, real_bounds.y);
-		_options.depth = depth + 0.1;
 
-			//disable mouse input,todo optionify
-		mouse_enabled = false;
+    public function new(_options:Dynamic) {
 
-		renderer.image.init(this, _options);	
+            //create the base control
+        super(_options);
+            //image size to the parent,
+        _options.centered = false;
+        _options.pos = new MIPoint(real_bounds.x, real_bounds.y);
+        _options.depth = depth + 0.1;
 
-	} //new	
+            //disable mouse input,todo optionify
+        mouse_enabled = false;
 
-	public override function destroy() {
-		super.destroy();
-		renderer.image.destroy(this);
-	}
+        renderer.image.init(this, _options);
 
-	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
+    } //new
 
-		super.translate(_x,_y);
-		renderer.image.translate(this, _x, _y);
+    public override function destroy() {
+        super.destroy();
+        renderer.image.destroy(this);
+    }
 
-	} //translate
+    public override function translate( ?_x : Float = 0, ?_y : Float = 0, ?_offset:Bool = false  ) {
 
-	public override function set_visible( ?_visible:Bool = true ) {
-		super.set_visible(_visible);
-		renderer.image.set_visible(this,_visible);
-	} //set_visible
+        super.translate( _x, _y, _offset);
+        renderer.image.translate( this, _x, _y, _offset );
+
+    } //translate
+
+    public override function set_visible( ?_visible:Bool = true ) {
+        super.set_visible(_visible);
+        renderer.image.set_visible(this,_visible);
+    } //set_visible
 
 
-	private override function set_depth( _depth:Float ) : Float {
+    private override function set_depth( _depth:Float ) : Float {
 
-		renderer.image.set_depth(this, _depth);
+        renderer.image.set_depth(this, _depth);
 
-		return depth = _depth;
+        return super.set_depth(_depth);
 
-	} //set_depth
+    } //set_depth
 
 }

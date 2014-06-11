@@ -4,88 +4,88 @@ import minterface.MITypes;
 import minterface.MIControl;
 
 class MILabel extends MIControl {
-	
-	@:isVar public var text(get,set) : String;
 
-	public function new(_options:Dynamic) {		
+    @:isVar public var text(get,set) : String;
 
-		super(_options);
+    public function new(_options:Dynamic) {
 
-		_options.bounds = real_bounds;
+        super(_options);
 
-			//disable mouse input by default
-		mouse_enabled = false;
+        _options.bounds = real_bounds;
 
-		if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
-		if(_options.align == null) { _options.align = MITextAlign.center; }
-		if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
-		if(_options.text_size != null) { _options.size = _options.text_size; }	
-		if(_options.padding == null) { _options.padding = new MIRectangle(); }
+            //disable mouse input by default
+        mouse_enabled = false;
 
-		if(_options.onclick != null) {
-			mouse_enabled = true;
-			mousedown = _options.onclick;
-		}	
+        if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
+        if(_options.align == null) { _options.align = MITextAlign.center; }
+        if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
+        if(_options.text_size != null) { _options.size = _options.text_size; }
+        if(_options.padding == null) { _options.padding = new MIRectangle(); }
 
-		_options.pos = new MIPoint(real_bounds.x, real_bounds.y);
-			//store the text
-		text = _options.text;
-			
-			//adjust for label
-		_options.depth = depth;
-			//create it
-		renderer.label.init(this,_options);
+        if(_options.onclick != null) {
+            mouse_enabled = true;
+            mousedown = _options.onclick;
+        }
 
-		set_clip( clip_rect );
+        _options.pos = new MIPoint(real_bounds.x, real_bounds.y);
+            //store the text
+        text = _options.text;
 
-	} //new
+            //adjust for label
+        _options.depth = depth;
+            //create it
+        renderer.label.init(this,_options);
 
-	public function set_text(_s:String) : String {
+        set_clip( clip_rect );
 
-		renderer.label.set_text(this, _s);
+    } //new
 
-		return text = _s;
+    public function set_text(_s:String) : String {
 
-	} //set_text
+        renderer.label.set_text(this, _s);
 
-	public function get_text() : String {
+        return text = _s;
 
-		return text;
+    } //set_text
 
-	} //get_text
+    public function get_text() : String {
 
-	public override function translate( ?_x : Float = 0, ?_y : Float = 0 ) {
-		super.translate(_x,_y);		
-		renderer.label.translate(this, _x, _y);		
-	}
+        return text;
 
-	public override function set_clip( ?_clip_rect:MIRectangle = null ) {
+    } //get_text
 
-		super.set_clip( _clip_rect );
-		renderer.label.set_clip( this, _clip_rect );
-		
-	} // 
+    public override function translate( ?_x : Float = 0, ?_y : Float = 0, ?_offset:Bool = false ) {
+        super.translate( _x, _y, _offset );
+        renderer.label.translate( this, _x, _y, _offset );
+    }
 
-	public override function onmousemove(e) {
-		super.onmousemove(e);
-	} //onmousemove
+    public override function set_clip( ?_clip_rect:MIRectangle = null ) {
 
-	public override function destroy() {
-		super.destroy();
-		renderer.label.destroy(this);
-	}
+        super.set_clip( _clip_rect );
+        renderer.label.set_clip( this, _clip_rect );
 
-	public override function set_visible( ?_visible:Bool = true ) {
-		super.set_visible(_visible);
-		renderer.label.set_visible(this, _visible);
-	} //set_visible
+    } //
 
-	private override function set_depth( _depth:Float ) : Float {
+    public override function onmousemove(e) {
+        super.onmousemove(e);
+    } //onmousemove
 
-		renderer.label.set_depth(this, _depth);
+    public override function destroy() {
+        super.destroy();
+        renderer.label.destroy(this);
+    }
 
-		return depth = _depth;
+    public override function set_visible( ?_visible:Bool = true ) {
+        super.set_visible(_visible);
+        renderer.label.set_visible(this, _visible);
+    } //set_visible
 
-	} //set_depth
+    private override function set_depth( _depth:Float ) : Float {
+
+        renderer.label.set_depth(this, _depth);
+
+        return super.set_depth(_depth);
+
+    } //set_depth
 
 }

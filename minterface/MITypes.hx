@@ -25,7 +25,7 @@ enum MIMouseButton {
     wheel_down;
 }
 
-typedef MIMouseEvent = { 
+typedef MIMouseEvent = {
     var state : MIMouseState;
     var flags : Int;
     var button : MIMouseButton;
@@ -57,12 +57,12 @@ class MIPoint {
 		y = _y;
 
 	} //new
-	
+
 	public function set( ?_x:Float, ?_y:Float ) : MIPoint {
-		
+
 		var _setx = x;
 		var _sety = y;
-			
+
 				//assign new values
 			if(_x != null) _setx = _x;
 			if(_y != null) _sety = _y;
@@ -97,10 +97,10 @@ class MIRectangle {
 
     public function new( ?_x:Float = 0,?_y:Float = 0,?_w:Float = 0,?_h : Float = 0 ) {
 
-        x = _x; 
-        y = _y; 
-        w = _w; 
-        h = _h; 
+        x = _x;
+        y = _y;
+        w = _w;
+        h = _h;
 
     } //new
 
@@ -110,7 +110,7 @@ class MIRectangle {
         var _sety = y;
         var _setw = w;
         var _seth = h;
-            
+
 	            //assign new values
 	        if(_x != null) _setx = _x;
 	        if(_y != null) _sety = _y;

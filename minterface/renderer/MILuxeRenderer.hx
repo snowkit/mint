@@ -34,13 +34,13 @@ import luxe.NineSlice;
 //temp copy paste base
 // class MIREPLACEMELuxeRenderer extends MIREPLACEMERenderer {
 //  public override function init( _control:MIREPLACEME, _options:Dynamic ) { } //init
-//  public override function translate( _control:MIREPLACEME, _x:Float, _y:Float ) { } //translate
+//  public override function translate( _control:MIREPLACEME, _x:Float, _y:Float ) { } //translate, ?_offset:Bool = false
 //  public override function set_clip( _control:MIREPLACEME, ?_clip_rect:Rectangle=null ) { } //set_clip
 // } //MIREPLACEMELuxeRenderer
 
 class LuxeMIConverter {
     public static function text_align( _align:MITextAlign ) : TextAlign {
-        
+
         if(_align == null) {
            throw "align passed in as null";
         }
@@ -48,13 +48,13 @@ class LuxeMIConverter {
         switch(_align) {
             case MITextAlign.left:
                 return TextAlign.left;
-            
+
             case MITextAlign.right:
                 return TextAlign.right;
-            
+
             case MITextAlign.center:
                 return TextAlign.center;
-            
+
             case MITextAlign.top:
                 return TextAlign.top;
 
@@ -116,7 +116,7 @@ class LuxeMIConverter {
             deltaX : _event.deltaY,
             deltaY : _event.deltaX,
             shift_down : _event.shift_down,
-            ctrl_down : _event.ctrl_down, 
+            ctrl_down : _event.ctrl_down,
             alt_down : _event.alt_down,
             meta_down : _event.meta_down,
             bubble : true
@@ -128,7 +128,7 @@ class LuxeMIConverter {
 class MILuxeRenderer extends MIRenderer {
 
     public function new() {
-        
+
         super();
 
         canvas = new MICanvasLuxeRenderer();
@@ -147,10 +147,10 @@ class MILuxeRenderer extends MIRenderer {
 } //MIRenderer
 
 class MICanvasLuxeRenderer extends MICanvasRenderer {
-    
+
     public override function init( _control:MICanvas, _options:Dynamic ) {
 
-        var back = new QuadGeometry({           
+        var back = new QuadGeometry({
             x: _control.real_bounds.x,
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
@@ -166,18 +166,18 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
 
         Luxe.addGeometry( back );
 
-            //store inside the element  
+            //store inside the element
         _control.render_items.set('back', back);
 
     } //init
 
-    public override function set_visible( _control:MICanvas, ?_visible:Bool=true ) { 
-        
-        var back:QuadGeometry = cast _control.render_items.get('back');  
-        
+    public override function set_visible( _control:MICanvas, ?_visible:Bool=true ) {
+
+        var back:QuadGeometry = cast _control.render_items.get('back');
+
             back.visible = _visible;
 
-    } //set_visible   
+    } //set_visible
 
     public override function set_depth( _control:MICanvas, ?_depth:Float=0.0 ) {
 
@@ -196,7 +196,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
 
     public override function init( _control:MILabel, _options:Dynamic ) {
-           
+
         if(_options.bounds != null) {
             _options.bounds = LuxeMIConverter.rectangle( _options.bounds );
         }
@@ -205,7 +205,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
             _options.pos = LuxeMIConverter.vector( _options.pos );
         }
 
-        	//if there is padding, we change the bounds
+            //if there is padding, we change the bounds
         if( _options.padding.x != 0 ) { _options.bounds.x += _options.padding.x; }
         if( _options.padding.y != 0 ) { _options.bounds.y += _options.padding.y; }
         if( _options.padding.w != 0 ) { _options.bounds.w -= _options.padding.w*2; }
@@ -238,16 +238,16 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //init
 
-    public override function translate( _control:MILabel, _x:Float, _y:Float ) {
+    public override function translate( _control:MILabel, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var text : Text = cast _control.render_items.get('text');
 
             text.pos = new Vector( text.pos.x + _x, text.pos.y + _y );
 
         // var bounds:RectangleGeometry = cast _control.render_items.get('bounds');
-        
+
             // bounds.pos = new Vector( bounds.pos.x + _x, bounds.pos.y + _y );
-        
+
     } //translate
 
     public override function set_clip( _control:MILabel, ?_clip_rect : MIRectangle = null ) {
@@ -265,9 +265,9 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //set clip
 
-    public override function set_visible( _control:MILabel, ?_visible:Bool=true ) { 
-        
-        var text:Text = cast _control.render_items.get('text');  
+    public override function set_visible( _control:MILabel, ?_visible:Bool=true ) {
+
+        var text:Text = cast _control.render_items.get('text');
 
             text.visible = _visible;
 
@@ -275,7 +275,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     public override function set_depth( _control:MILabel, ?_depth:Float=0.0 ) {
 
-        var text:Text = cast _control.render_items.get('text'); 
+        var text:Text = cast _control.render_items.get('text');
 
             if(text != null) {
                 text.geometry.depth = _depth;
@@ -285,15 +285,15 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     public override function set_text( _control:MILabel, ?_text:String='label' ) {
 
-    	var text:Text = cast _control.render_items.get('text');            
+        var text:Text = cast _control.render_items.get('text');
 
-    	if(text != null) {
+        if(text != null) {
             text.text_options.bounds = LuxeMIConverter.rectangle( _control.real_bounds );
-    		text.text = _text;
-            text.geometry.depth = _control.depth+1;
-	    }
+            text.text = _text;
+            text.geometry.depth = _control.depth+0.1;
+        }
 
-    } //set_text 
+    } //set_text
 
     public override function destroy( _control:MILabel ) {
         var text:Text = cast _control.render_items.get('text');
@@ -307,16 +307,16 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     public override function init( _control:MIButton, _options:Dynamic ) {
-        
+
         var geom = new NineSlice({
             texture : Luxe.loadTexture('tiny.button.png'),
             depth : _control.depth,
             top : 8, left : 8, right : 8, bottom : 8,
         });
-        
+
         geom.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
         geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y), _control.real_bounds.w, _control.real_bounds.h );
-        
+
         geom.color = new Color(1,1,1,1);
 
         geom._geometry.id = _control.name + '.button';
@@ -325,8 +325,8 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     } //init
 
-    public override function translate( _control:MIButton, _x:Float, _y:Float ) {
-        
+    public override function translate( _control:MIButton, _x:Float, _y:Float, ?_offset:Bool = false ) {
+
         var geom : NineSlice = cast _control.render_items.get('geom');
 
             geom.pos = new Vector( geom.transform.pos.x + _x, geom.transform.pos.y + _y );
@@ -334,7 +334,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
     } //translate
 
     public override function set_clip( _control:MIButton, ?_clip_rect:MIRectangle=null ) {
-        
+
         var geom : NineSlice = cast _control.render_items.get('geom');
 
         if(_clip_rect == null) {
@@ -349,13 +349,13 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
     } //set_clip
 
 
-    public override function set_visible( _control:MIButton, ?_visible:Bool=true ) { 
-        
+    public override function set_visible( _control:MIButton, ?_visible:Bool=true ) {
+
         var geom : NineSlice = cast _control.render_items.get('geom');
 
             geom.visible = _visible;
 
-    } //set_visible    
+    } //set_visible
 
     public override function set_depth( _control:MIButton, ?_depth:Float=0.0 ) {
 
@@ -373,8 +373,8 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     public override function init( _control:MIList, _options:Dynamic ) {
     } //init
-    
-    public override function translate( _control:MIList, _x:Float, _y:Float ) {
+
+    public override function translate( _control:MIList, _x:Float, _y:Float, ?_offset:Bool = false ) {
         if(_control.multiselect) {
             var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
             if(_existing_selections != null) {
@@ -394,10 +394,11 @@ class MIListLuxeRenderer extends MIListRenderer {
     } //translate
 
     public override function set_clip( _control:MIList, ?_clip_rect:MIRectangle=null ) {
+
     } //set_clip
-    
+
     public override function scroll(_control:MIList, _x:Float, _y:Float) {
-        
+
         if(_control.multiselect) {
             var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
             if(_existing_selections != null) {
@@ -410,31 +411,31 @@ class MIListLuxeRenderer extends MIListRenderer {
             if(_select != null) {
                 _select.transform.pos = new Vector(_select.transform.pos.x + _x, _select.transform.pos.y + _y);
             }
-        }   
+        }
 
     } //
 
     public override function select_item( _control:MIList, _selected:MIControl ) {
 
-		if(_selected == null) {
+        if(_selected == null) {
 
-			if(_control.multiselect) {
-				var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
-				for(_select in _existing_selections) {
-					_select.drop();
-				}
+            if(_control.multiselect) {
+                var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
+                for(_select in _existing_selections) {
+                    _select.drop();
+                }
                 _control.render_items.set('existing_selections', null);
-			} else {
-				var _select : QuadGeometry = _control.render_items.get('select');
-				if(_select != null) {
-					_select.drop();
-				}
+            } else {
+                var _select : QuadGeometry = _control.render_items.get('select');
+                if(_select != null) {
+                    _select.drop();
+                }
 
                 _control.render_items.set('select', null);
-			}
+            }
 
-			return;
-		}
+            return;
+        }
 
         if(!_control.multiselect) {
 
@@ -448,7 +449,7 @@ class MIListLuxeRenderer extends MIListRenderer {
             } else {
 
                 var _geom = new QuadGeometry({
-                    depth : _control.depth+1.1,
+                    depth : _control.view.depth+0.001,
                     x: _selected.real_bounds.x,
                     y: _selected.real_bounds.y,
                     w: _selected.real_bounds.w,
@@ -457,7 +458,7 @@ class MIListLuxeRenderer extends MIListRenderer {
                 });
 
                 _geom.clip = true;
-                _geom.clip_rect = new Rectangle( _control.real_bounds.x, _control.real_bounds.y, _control.real_bounds.w, _control.real_bounds.h );
+                _geom.clip_rect = new Rectangle( _control.real_bounds.x, _control.real_bounds.y, _control.real_bounds.w-1, _control.real_bounds.h-1 );
 
                 Luxe.addGeometry( _geom );
 
@@ -480,7 +481,7 @@ class MIListLuxeRenderer extends MIListRenderer {
             } else { //if disabling all selections
 
                 var _geom = new QuadGeometry({
-                    depth : _control.depth+1.1,
+                    depth : _control.view.depth+0.001,
                     x: _selected.real_bounds.x,
                     y: _selected.real_bounds.y,
                     w: _selected.real_bounds.w,
@@ -503,40 +504,39 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //select item
 
-    public override function set_visible( _control:MIList, ?_visible:Bool=true ) { 
-
-    	if(_control.multiselect) {
-			
-			var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
-			for(_select in _existing_selections) {
-				_select.visible = _visible;
-			}
-
-    	} else {
-    		
-    		var _select : QuadGeometry = _control.render_items.get('select');
-    		if(_select != null) {
-    			_select.visible = _visible;
-    		}
-
-    	}
-    } //set_visible  
-
-    public override function set_depth( _control:MIList, ?_depth:Float=0.0 ) {
-
+    public override function set_visible( _control:MIList, ?_visible:Bool=true ) {
 
         if(_control.multiselect) {
-            
+
             var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
             for(_select in _existing_selections) {
-                _select.depth = _depth;
+                _select.visible = _visible;
             }
 
         } else {
-            
+
             var _select : QuadGeometry = _control.render_items.get('select');
             if(_select != null) {
-                _select.depth = _depth;
+                _select.visible = _visible;
+            }
+
+        }
+    } //set_visible
+
+    public override function set_depth( _control:MIList, ?_depth:Float=0.0 ) {
+
+        if(_control.multiselect) {
+
+            var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
+            for(_select in _existing_selections) {
+                _select.depth = _control.view.depth+0.001;
+            }
+
+        } else {
+
+            var _select : QuadGeometry = _control.render_items.get('select');
+            if(_select != null) {
+                _select.depth = _control.view.depth+0.001;
             }
 
         }
@@ -547,19 +547,10 @@ class MIListLuxeRenderer extends MIListRenderer {
 
 
 class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
-    
-    public override function init( _control:MIScrollArea, _options:Dynamic ) {
-        
-        var back = new QuadGeometry({
-            depth : _control.depth,
-            x: _control.real_bounds.x,
-            y: _control.real_bounds.y,
-            w: _control.real_bounds.w,
-            h: _control.real_bounds.h,
-            color : new Color(1,1,1,1).rgb(0x101010)
-        });
 
-        var box = Luxe.draw.rectangle({
+    public override function init( _control:MIScrollArea, _options:Dynamic ) {
+
+        var back = new QuadGeometry({
             depth : _control.depth,
             x: _control.real_bounds.x,
             y: _control.real_bounds.y,
@@ -568,8 +559,17 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             color : new Color(1,1,1,1).rgb(0x0d0d0d)
         });
 
+        var box = Luxe.draw.rectangle({
+            depth : _control.depth+(0.01+_control.children.length*0.001),
+            x: _control.real_bounds.x,
+            y: _control.real_bounds.y,
+            w: _control.real_bounds.w,
+            h: _control.real_bounds.h,
+            color : new Color(1,1,1,1).rgb(0x1d1d1d)
+        });
+
         var sliderv = new QuadGeometry({
-            depth : _control.depth+2,
+            depth : _control.depth+(0.01+_control.children.length*0.001),
             x: (_control.real_bounds.x+_control.real_bounds.w - 4),
             y: _control.real_bounds.y + ((_control.real_bounds.h-10) * _control.scroll_percent.y),
             w: 3,
@@ -579,7 +579,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         });
 
         var sliderh = new QuadGeometry({
-            depth : _control.depth+2,
+            depth : _control.depth+(0.01+_control.children.length*0.001),
             x: _control.real_bounds.x + ((_control.real_bounds.w-10) * _control.scroll_percent.x),
             y: (_control.real_bounds.y+_control.real_bounds.h - 4),
             w: 10,
@@ -606,7 +606,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     } //init
 
     public override function get_handle_bounds( _control:minterface.MIScrollArea, ?vertical:Bool=true ) : MIRectangle {
-        
+
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
@@ -622,10 +622,10 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     } //get_handle_size
 
-    public override function translate( _control:MIScrollArea, _x:Float, _y:Float ) {
-        
-        var back:QuadGeometry = cast _control.render_items.get('back');     
-        var box:Geometry = cast _control.render_items.get('box');     
+    public override function translate( _control:MIScrollArea, _x:Float, _y:Float, ?_offset:Bool = false ) {
+
+        var back:QuadGeometry = cast _control.render_items.get('back');
+        var box:Geometry = cast _control.render_items.get('box');
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
@@ -634,11 +634,11 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
         sliderh.transform.pos = new Vector( sliderh.transform.pos.x + _x, sliderh.transform.pos.y + _y );
         sliderv.transform.pos = new Vector( sliderv.transform.pos.x + _x, sliderv.transform.pos.y + _y );
 
-    } //translate 
+    } //translate
 
     public override function set_clip( _control:MIScrollArea, ?_clip_rect:MIRectangle=null ) {
-        
-        
+
+
     } //set_clip
 
     public override function refresh_scroll( _control:MIScrollArea, shx:Float, shy:Float, svx:Float, svy:Float, hv:Bool, vv:Bool ) {
@@ -654,10 +654,10 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     }
 
 
-    public override function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) { 
+    public override function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) {
 
-        var back:QuadGeometry = cast _control.render_items.get('back');      
-        var box:Geometry = cast _control.render_items.get('box');      
+        var back:QuadGeometry = cast _control.render_items.get('back');
+        var box:Geometry = cast _control.render_items.get('box');
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
@@ -670,8 +670,8 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     public override function set_depth( _control:MIScrollArea, ?_depth:Float=0.0 ) {
 
-        var back:QuadGeometry = cast _control.render_items.get('back');      
-        var box:QuadGeometry = cast _control.render_items.get('box');      
+        var back:QuadGeometry = cast _control.render_items.get('back');
+        var box:QuadGeometry = cast _control.render_items.get('box');
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
@@ -680,15 +680,15 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             }
 
             if(box != null) {
-                box.depth = _depth;
+                box.depth = _depth+(0.001+_control.children.length*0.001);
             }
 
             if(sliderh != null) {
-                sliderh.depth = _depth+2;
+                sliderh.depth = _depth+(0.001+_control.children.length*0.001);
             }
 
             if(sliderv != null) {
-                sliderv.depth = _depth+2;
+                sliderv.depth = _depth+(0.001+_control.children.length*0.001);
             }
 
     } //set_depth
@@ -718,8 +718,8 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
     } //init
 
-    public override function translate( _control:MIImage, _x:Float, _y:Float ) {
-        
+    public override function translate( _control:MIImage, _x:Float, _y:Float, ?_offset:Bool = false ) {
+
         var image:Sprite = cast _control.render_items.get('image');
 
             image.pos = image.pos.add( new Vector(_x,_y) );
@@ -743,24 +743,24 @@ class MIImageLuxeRenderer extends MIImageRenderer {
                 image.geometry.clip = false;
             } else {
                 image.geometry.clip = true;
-                image.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
+                image.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w-1,_clip_rect.h-1);
             }
 
-        } 
+        }
 
     } //set_clip
 
 
-    public override function set_visible( _control:MIImage, ?_visible:Bool=true ) { 
+    public override function set_visible( _control:MIImage, ?_visible:Bool=true ) {
 
         var image:Sprite = cast _control.render_items.get('image');
 
             image.visible = _visible;
 
-    } //set_visible 
+    } //set_visible
 
     public override function set_depth( _control:MIImage, ?_depth:Float=0.0 ) {
-    
+
         var image:Sprite = cast _control.render_items.get('image');
 
             if(image != null) {
@@ -770,9 +770,9 @@ class MIImageLuxeRenderer extends MIImageRenderer {
     } //set_depth
 
     public override function destroy( _control:MIImage ) {
-        
+
         var image:Sprite = cast _control.render_items.get('image');
-        
+
         if(image != null) {
             image.destroy();
         }
@@ -799,31 +799,31 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
         geom.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
         geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y ), _control.real_bounds.w, _control.real_bounds.h );
 
-        _options.depth = _control.depth+0.01;
+        _options.depth = _control.depth;
 
         geom.color = new Color(1,1,1,1);
 
         geom._geometry.id = _control.name + '.window';
 
         _control.render_items.set('geom', geom);
-        
+
     } //init
 
-    public override function translate( _control:MIWindow, _x:Float, _y:Float ) {
-        
-        var geom : NineSlice = cast _control.render_items.get('geom'); 
+    public override function translate( _control:MIWindow, _x:Float, _y:Float, ?_offset:Bool = false ) {
+
+        var geom : NineSlice = cast _control.render_items.get('geom');
 
         geom.pos = new Vector( geom.pos.x + _x, geom.pos.y + _y );
 
     } //translate
 
-    public override function set_clip( _control:MIWindow, ?_clip_rect:MIRectangle=null ) { 
+    public override function set_clip( _control:MIWindow, ?_clip_rect:MIRectangle=null ) {
 
     } //set_clip
 
-    public override function set_visible( _control:MIWindow, ?_visible:Bool=true ) { 
+    public override function set_visible( _control:MIWindow, ?_visible:Bool=true ) {
 
-        var geom : NineSlice = cast _control.render_items.get('geom'); 
+        var geom : NineSlice = cast _control.render_items.get('geom');
 
             geom.visible = _visible;
 
@@ -831,7 +831,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     public override function set_depth( _control:MIWindow, ?_depth:Float=0.0 ) {
 
-        var geom : NineSlice = cast _control.render_items.get('geom'); 
+        var geom : NineSlice = cast _control.render_items.get('geom');
 
             if(geom != null) {
                 geom.depth = _depth;
@@ -844,7 +844,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
     public override function init( _control:MIDropdown, _options:Dynamic ) {
-        
+
         var back = new QuadGeometry({
             depth : _control.depth,
             x: _control.real_bounds.x,
@@ -860,8 +860,8 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
     } //init
 
-    public override function translate( _control:MIDropdown, _x:Float, _y:Float ) {
-        
+    public override function translate( _control:MIDropdown, _x:Float, _y:Float, ?_offset:Bool = false ) {
+
         var back:QuadGeometry = cast _control.render_items.get('back');
 
             back.transform.pos = new Vector( back.transform.pos.x + _x, back.transform.pos.y + _y );
@@ -872,7 +872,7 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
     } //set_clip
 
-    public override function set_visible( _control:MIDropdown, ?_visible:Bool=true ) { 
+    public override function set_visible( _control:MIDropdown, ?_visible:Bool=true ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -881,7 +881,7 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
     } //set_visible
 
     public override function set_depth( _control:MIDropdown, ?_depth:Float=0.0 ) {
-    
+
         var back:QuadGeometry = cast _control.render_items.get('back');
 
             if(back != null) {
@@ -896,17 +896,17 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     public override function init( _control:MIPanel, _options:Dynamic ) {
-        
+
         var geom = new NineSlice({
             texture : Luxe.loadTexture('tiny.ui.png'),
             depth : _control.depth,
             top : 4, left : 16, right : 16, bottom : 16,
             source_x : 6, source_y : 108, source_w : 64, source_h : 14
         });
-        
+
         geom.transform.pos = new Vector( _control.real_bounds.x, _control.real_bounds.y );
         geom.create( new Vector( _control.real_bounds.x, _control.real_bounds.y), _control.real_bounds.w, _control.real_bounds.h );
-        
+
         geom.color = new Color(1,1,1,1);
 
         geom._geometry.id = _control.name + '.button';
@@ -932,12 +932,12 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
         Luxe.addGeometry( bar );
 
-        _control.render_items.set('bar', bar);        
+        _control.render_items.set('bar', bar);
 
     } //init
 
-    public override function translate( _control:MIPanel, _x:Float, _y:Float ) {
-        
+    public override function translate( _control:MIPanel, _x:Float, _y:Float, ?_offset:Bool = false ) {
+
         var geom : NineSlice = cast _control.render_items.get('geom');
         var bar : QuadGeometry = cast _control.render_items.get('bar');
 
@@ -947,7 +947,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
     } //translate
 
     public override function set_clip( _control:MIPanel, ?_clip_rect:MIRectangle=null ) {
-        
+
         var geom : NineSlice = cast _control.render_items.get('geom');
         var bar : QuadGeometry = cast _control.render_items.get('bar');
 
@@ -965,8 +965,8 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     } //set_clip
 
-    public override function set_visible( _control:MIPanel, ?_visible:Bool=true ) { 
-        
+    public override function set_visible( _control:MIPanel, ?_visible:Bool=true ) {
+
         var geom : NineSlice = cast _control.render_items.get('geom');
         var bar : Geometry = cast _control.render_items.get('bar');
 
@@ -995,7 +995,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
     public override function init( _control:MICheckbox, _options:Dynamic ) {
-        
+
         var back = new QuadGeometry({
             depth : _control.depth,
             x: _control.real_bounds.x,
@@ -1011,8 +1011,8 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
     } //init
 
-    public override function translate( _control:MICheckbox, _x:Float, _y:Float ) {
-        
+    public override function translate( _control:MICheckbox, _x:Float, _y:Float, ?_offset:Bool = false ) {
+
         var back:QuadGeometry = cast _control.render_items.get('back');
 
             back.transform.pos = new Vector( back.transform.pos.x + _x, back.transform.pos.y + _y );
@@ -1023,7 +1023,7 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
     } //set_clip
 
-    public override function set_visible( _control:MICheckbox, ?_visible:Bool=true ) { 
+    public override function set_visible( _control:MICheckbox, ?_visible:Bool=true ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -1032,7 +1032,7 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
     } //set_visible
 
     public override function set_depth( _control:MICheckbox, ?_depth:Float=0.0 ) {
-    
+
         var back:QuadGeometry = cast _control.render_items.get('back');
 
             if(back != null) {

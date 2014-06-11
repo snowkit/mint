@@ -4,144 +4,138 @@ import minterface.MITypes;
 import minterface.MIControl;
 
 class MIList extends MIControl {
-	
-	public var view : MIScrollArea;
-	public var items : Array<MIControl>;
-	public var multiselect : Bool = false;
-	public var onselect : String->MIControl->?MIMouseEvent->Void;
-	public var _options : Dynamic;
 
-	public function new(__options:Dynamic) {
-		
-		items = [];
+    public var view : MIScrollArea;
+    public var items : Array<MIControl>;
+    public var multiselect : Bool = false;
+    public var onselect : String->MIControl->?MIMouseEvent->Void;
+    public var _options : Dynamic;
 
-			//create the base control
-		super(__options);
-			//
-		multiselect = (__options.multiselect == null) ? false : __options.multiselect;
-		onselect = (__options.onselect == null) ? null : __options.onselect;
+    public function new(__options:Dynamic) {
 
-		view = new MIScrollArea({
-			parent : this,
-			bounds : __options.bounds.clone().set(0,0),
-			name : name + '.view',
-			onscroll : onscroll
-		});
+        items = [];
 
-		_options = __options;
-		if(_options.align == null) {
-			_options.align = MITextAlign.center;
-		}
+            //create the base control
+        super(__options);
+            //
+        multiselect = (__options.multiselect == null) ? false : __options.multiselect;
+        onselect = (__options.onselect == null) ? null : __options.onselect;
 
-	} //new
+        var _bounds = __options.bounds.clone();
 
-	private function onscroll(_x:Float=0, _y:Float=0) {
-		
-		renderer.list.scroll(this, _x, _y);
+            _bounds.x = 0;
+            _bounds.y = 0;
 
-	} //onscroll
+        view = new MIScrollArea({
+            parent : this,
+            bounds : _bounds,
+            name : name + '.view',
+            onscroll : onscroll
+        });
 
-	public function clear() {
+        _options = __options;
+        if(_options.align == null) {
+            _options.align = MITextAlign.center;
+        }
 
-		for(item in items) {
-			item.destroy();			
-			item = null;
-		}
+    } //new
 
-		items = null;
-		items = [];
+    private function onscroll(_x:Float=0, _y:Float=0) {
 
-		renderer.list.select_item(this, null);
+        renderer.list.scroll(this, _x, _y);
 
-	} //clear
+    } //onscroll
 
-	public function select( _index:Int ) {
+    public function clear() {
 
-		if(_index < items.length) {
-			label_selected(items[_index], null);
-		}
+        for(item in items) {
+            item.destroy();
+            item = null;
+        }
 
-	} //select
+        items = null;
+        items = [];
 
-	public function add_item( _item:String, ?_name:String ) {
+        renderer.list.select_item(this, null);
 
-		var _childbounds = view.children_bounds();
+    } //clear
 
-		var l = new MILabel({
-			text : _item,
-			onclick : label_selected,
-			name : _name == null ? name + '.item.' + _item : _name,
-			bounds : new MIRectangle(0, _childbounds.h, bounds.w, 30),			
-			parent : view,
-			depth : depth,
-			text_size : 14,
-			align : _options.align
-		});
+    public function select( _index:Int ) {
 
-			//clip the label by the scroll view's bounds
-		l.clip_with(view);
-		l.mouse_enabled = true;
+        if(_index < items.length) {
+            label_selected(items[_index], null);
+        }
 
-		items.push(l);
-		
-	} //add_item
+    } //select
 
-	public override function translate(?_x:Float=0, ?_y:Float=0) {
-		
-		super.translate(_x,_y);
+    public function add_item( _item:String, ?_name:String ) {
 
-		renderer.list.translate(this,_x,_y);
+        var _childbounds = view.children_bounds;
 
-		for(_item in view.children) {
-			_item.clip_with(view);
-		} //_item in children
+        var l = new MILabel({
+            text : _item,
+            onclick : label_selected,
+            name : _name == null ? name + '.item.' + _item : _name,
+            bounds : new MIRectangle(0, _childbounds.bottom, bounds.w, 30),
+            parent : view,
+            depth : depth,
+            text_size : 14,
+            align : _options.align
+        });
 
-	} //translate
+            //clip the label by the scroll view's bounds
+        l.clip_with(view);
+        l.mouse_enabled = true;
 
-	private function label_selected(_control:MIControl, e:MIMouseEvent) {
-		
-		var _label:MILabel = cast _control;
-		renderer.list.select_item(this, _control);
+        items.push(l);
 
-		//call callback
-		if(onselect != null) {
-			onselect(_label.text, _label, e);
-		} //onselect
+    } //add_item
 
-	} //label_selected
+    public override function translate(?_x:Float=0, ?_y:Float=0, ?_offset:Bool = false ) {
 
-	public function add_items( _items:Array<String> ) {
-		for(_item in _items) {
-			add_item(_item);
-		} //item
-	} //add_items
+        super.translate( _x,_y, _offset );
 
-	public override function set_visible( ?_visible:Bool = true ) {
-		
-		super.set_visible(_visible);
+        renderer.list.translate( this, _x, _y, _offset );
 
-		renderer.list.set_visible(this,_visible);
+        for(_item in view.children) {
+            _item.clip_with(view);
+        } //_item in children
 
-	} //set_visible
+    } //translate
+
+    private function label_selected(_control:MIControl, e:MIMouseEvent) {
+
+        var _label:MILabel = cast _control;
+        renderer.list.select_item(this, _control);
+
+        //call callback
+        if(onselect != null) {
+            onselect(_label.text, _label, e);
+        } //onselect
+
+    } //label_selected
+
+    public function add_items( _items:Array<String> ) {
+        for(_item in _items) {
+            add_item(_item);
+        } //item
+    } //add_items
+
+    public override function set_visible( ?_visible:Bool = true ) {
+
+        super.set_visible(_visible);
+
+        renderer.list.set_visible(this,_visible);
+
+    } //set_visible
 
 
-	private override function set_depth( _depth:Float ) : Float {
+    private override function set_depth( _depth:Float ) : Float {
 
-		super.set_depth(_depth);
+        renderer.list.set_depth(this, _depth);
 
-		renderer.list.set_depth(this, _depth);
+        return super.set_depth(_depth);
 
-		if(view != null) {	
-			view.depth = _depth;
-		}
-
-		for(_item in items) {
-				//children are +1
-			_item.depth = _depth+1;
-		}
-
-		return depth = _depth;
-
-	} //set_depth
+    } //set_depth
 
 } //MIList

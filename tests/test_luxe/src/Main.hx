@@ -46,7 +46,7 @@ class Main extends luxe.Game {
     var s : Sprite;
 
     public function ready() {
-        
+
         Luxe.renderer.clear_color.set(1,1,1);
 
         renderer = new MILuxeRenderer();
@@ -72,15 +72,8 @@ class Main extends luxe.Game {
             bounds : new MIRectangle(10, 100, 100,380)
         });
 
-        itemlist.add_item('items one');     
+        itemlist.add_item('items one');
         itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);
-
-        scroller = new MIScrollArea({
-            parent : canvas,
-            name : 'scrollarea',
-            bounds : new MIRectangle( 120, 60, 300, 360 )
-        });        
-
 
         var tt = Luxe.loadTexture('assets/image.png');
 
@@ -90,7 +83,7 @@ class Main extends luxe.Game {
                 parent : canvas,
                 name : 'image view',
                 title : 'Image view',
-                title_size : 15,
+                title_size : 13,
                 bounds : new MIRectangle(430, 60, 300, 360)
             });
 
@@ -107,22 +100,11 @@ class Main extends luxe.Game {
                 texture : tt
             });
 
-            image.mouse_enabled = true;
-            image.mousedown = function(c,?e) {
-                trace(" Mouse down on image " + e.x + ' / ' + e.y);
-            }
-
-            // scroller1.set_scroll_y(180);
-            scroller1.mouse_enabled = true;
-            scroller1.mousedown = function(c,?e){
-                trace(" Mouse down on scroll area " + e.x + ' / ' + e.y);
-            }
-
             window = new MIWindow({
                 parent : canvas,
                 name : 'builder',
                 title : 'Export Build',
-                title_size : 15,
+                title_size : 13,
                 bounds : new MIRectangle(750, 70, 200, 300)
             });
 
@@ -131,7 +113,7 @@ class Main extends luxe.Game {
                 name : 'buildbutton',
                 bounds : new MIRectangle( 20, 245, 160, 35 ),
                 text : 'Make Build',
-                text_size : 15,
+                text_size : 13,
                 onclick : function(){ trace('FAKE build'); }
             });
 
@@ -150,8 +132,14 @@ class Main extends luxe.Game {
             });
 
             selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
-            selector2.add_items(['zip', 'folder']);            
-        }        
+            selector2.add_items(['zip', 'folder']);
+        }
+
+        scroller = new MIScrollArea({
+            parent : canvas,
+            name : 'scrollarea',
+            bounds : new MIRectangle( 120, 60, 300, 360 )
+        });
 
         for(i in 0 ... 5) {
             var l = new MIButton({
@@ -159,12 +147,10 @@ class Main extends luxe.Game {
                 name : 'button' + (i+1),
                 bounds : new MIRectangle(50, i * 100, 100, 100 ),
                 text : 'click me + '+ (i+1),
-                text_size : 18,
+                text_size : 15,
                 onclick : function(){ trace('click me + '+ (i+1)); }
             });
         }
-
-        
 
         panel = new MIPanel({
             parent : canvas,
@@ -187,7 +173,7 @@ class Main extends luxe.Game {
         });
 
     } //ready
-    
+
     public function onmousemove(e) {
         var _e = LuxeMIConverter.mouse_event(e);
         canvas.onmousemove(_e);
@@ -209,6 +195,7 @@ class Main extends luxe.Game {
     }
 
     public function onkeyup(e) {
+
         if(e.value == Input.Keys.escape) {
             Luxe.shutdown();
         }

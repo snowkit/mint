@@ -9,6 +9,8 @@ class MICanvas extends MIControl {
     public var dragged : MIControl;
     public var modal   : MIControl;
 
+    public var focus_invalid : Bool = true;
+
     public function new( _options:Dynamic ) {
 
         if(_options == null) throw "No options given to canvas, at least a MIRenderer is required.";
@@ -41,11 +43,11 @@ class MICanvas extends MIControl {
     } //set_visible
 
 
-    private override function set_depth( _d:Float ) : Float {
+    private override function set_depth( _depth:Float ) : Float {
 
-        renderer.canvas.set_depth(this, _d);
+        renderer.canvas.set_depth(this, _depth);
 
-        return depth = _d;
+        return super.set_depth(_depth);
 
     } //set_depth
 
@@ -82,7 +84,7 @@ class MICanvas extends MIControl {
     } //set_focused
 
     private function get_focused( _p : MIPoint ) {
-        
+
         if( modal != null ) {
             return modal;
         } else {
@@ -91,8 +93,32 @@ class MICanvas extends MIControl {
 
     } //get_focused
 
+    public function reset_focus( ?_control:MIControl, ?e:MIMouseEvent ) {
+
+        //this happens in children want to invalidate their focus
+
+        if(_control != null && focused == _control) {
+            set_control_unfocused(_control, e);
+        }
+
+        focused = null;
+
+    } //reset_focus
+
+    public function find_focus( ?e:MIMouseEvent ) {
+
+        focused = get_focused( _mouse_last );
+
+        if(focused != null) {
+            set_control_focused( focused, e );
+        }
+
+        focus_invalid = false;
+
+    } //find_focus
+
     public override function onmousemove( e:MIMouseEvent ) {
-        
+
         _mouse_last.set(e.x,e.y);
 
             //first we check if the mouse is still inside the focused element
@@ -103,7 +129,7 @@ class MICanvas extends MIControl {
                     //now check if we haven't gone into any of it's children
                 var _child_over = focused.topmost_child_under_point(_mouse_last);
                 if(_child_over != null && _child_over != focused) {
-    
+
                         //if we don't want mouseleave when the child takes focus, set to false
                     var _mouseleave_parent = true;
                         //unfocus the parent
@@ -121,12 +147,8 @@ class MICanvas extends MIControl {
                 set_control_unfocused(focused, e);
 
                     //find a new one, if any
-                focused = get_focused( _mouse_last );
+                find_focus(e);
 
-                    if(focused != null) {
-                        set_control_focused( focused, e );
-                    } //focused != null
-            
             } //focused inside
 
         } else { //focused != null
@@ -134,15 +156,11 @@ class MICanvas extends MIControl {
                 //nothing focused at the moment, check that the mouse is inside our canvas first
             if( real_bounds.point_inside(_mouse_last) ) {
 
-                focused = get_focused( _mouse_last );
-
-                    if(focused != null) {
-                        set_control_focused( focused, e );
-                    }
+                find_focus(e);
 
             } else { //mouse is inside canvas at all?
 
-                focused = null;
+                reset_focus(e);
 
             } //inside canvas
 
@@ -151,17 +169,21 @@ class MICanvas extends MIControl {
         if(focused != null && focused != this) {
             focused.onmousemove(e);
         } //focused != null
-        
+
         if(dragged != null && dragged != focused && dragged != this) {
             dragged.onmousemove(e);
         } //dragged ! null and ! focused
 
     } //onmousemove
-    
+
     public override function onmouseup( e:MIMouseEvent ) {
 
         _mouse_last.set(e.x,e.y);
-        
+
+        if(focus_invalid) {
+            find_focus(e);
+        }
+
         if(focused != null && focused.mouse_enabled) {
             focused.onmouseup(e);
         } //focused
@@ -173,7 +195,7 @@ class MICanvas extends MIControl {
     } //onmouseup
 
     public override function onmousewheel( e:MIMouseEvent ) {
-        
+
         if(focused != null && focused.mouse_enabled) {
             focused.onmousewheel(e);
         } //focused
@@ -181,9 +203,13 @@ class MICanvas extends MIControl {
     } //onmouseup
 
     public override function onmousedown( e:MIMouseEvent ) {
-        
+
         _mouse_last.set(e.x,e.y);
-        
+
+        if(focus_invalid) {
+            find_focus(e);
+        }
+
         if(focused != null && focused.mouse_enabled) {
             focused.onmousedown(e);
         } //focused
@@ -191,12 +217,12 @@ class MICanvas extends MIControl {
     } //onmousedown
 
     public function next_depth() {
-        depth++;
+        depth+=1;
         return depth;
     } //next_depth
 
     public override function add( child:MIControl ) {
-        super.add(child);       
+        super.add(child);
     } //add
 
     public override function update(dt:Float) {
