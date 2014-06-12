@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	
-	<meta 
-          title="test MI luxe renderer" 
-          package="com.underscorediscovery.mitestluxe" 
-          version="1.0.0" 
-          company="underscorediscovery" 
-	/>
 
-	<app main="Main" path="bin" file="MI_test_luxe" />
+    <meta
+          title="test MI luxe renderer"
+          package="com.underscorediscovery.mitestluxe"
+          version="1.0.0"
+          company="underscorediscovery"
+    />
 
-	<window width="960" height="640" orientation="landscape" fps="60" vsync="true" resizable="true" />
-	
+    <app main="Main" path="bin" file="MI_test_luxe" />
+
+    <window width="960" height="640" orientation="landscape" fps="60" vsync="true" resizable="true" />
+
      <assets path="Assets" rename="assets" include="*"/>
 
-	<source path="src" />
-	
+    <source path="src" />
+
     <haxelib name="lime" />
-	<haxelib name="luxe" />	
-	<haxelib name="minterface" />
-	
+    <haxelib name="luxe" />
+    <haxelib name="minterface" />
+
 </project>

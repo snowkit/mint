@@ -156,15 +156,14 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
             color : new Color(1,1,1,1).rgb(0x0c0c0c),
-            depth : _control.depth
+            depth : _control.depth,
+            batcher : Luxe.renderer.batcher
         });
 
         // back.texture = Luxe.loadTexture('assets/transparency.png');
         // back.uv(new Rectangle(0,0,960,640));
 
         back.id = _control.name + '.back';
-
-        Luxe.addGeometry( back );
 
             //store inside the element
         _control.render_items.set('back', back);
@@ -255,10 +254,9 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         var text:Text = cast _control.render_items.get('text');
 
         if(_clip_rect == null) {
-            text.geometry.clip = false;
+            text.geometry.clip_rect = null;
         } else {
             if(text != null && text.geometry != null) {
-                text.geometry.clip = true;
                 text.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
             }
         }
@@ -338,10 +336,9 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
         var geom : NineSlice = cast _control.render_items.get('geom');
 
         if(_clip_rect == null) {
-            geom.clip = false;
+            geom.clip_rect = null;
         } else {
             if(geom != null) {
-                geom.clip = true;
                 geom.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
             }
         }
@@ -461,13 +458,11 @@ class MIListLuxeRenderer extends MIListRenderer {
                     y: _selected.real_bounds.y,
                     w: _selected.real_bounds.w,
                     h: _selected.real_bounds.h,
-                    color : new Color().rgb(0x262626)
+                    color : new Color().rgb(0x262626),
+                    batcher : Luxe.renderer.batcher
                 });
 
-                _geom.clip = true;
                 _geom.clip_rect = new Rectangle( _control.real_bounds.x, _control.real_bounds.y, _control.real_bounds.w-1, _control.real_bounds.h-1 );
-
-                Luxe.addGeometry( _geom );
 
                 _control.render_items.set('select', _geom);
             }
@@ -493,13 +488,11 @@ class MIListLuxeRenderer extends MIListRenderer {
                     y: _selected.real_bounds.y,
                     w: _selected.real_bounds.w,
                     h: _selected.real_bounds.h,
-                    color : new Color().rgb(0x262626)
+                    color : new Color().rgb(0x262626),
+                    batcher : Luxe.renderer.batcher
                 });
 
-                _geom.clip = true;
                 _geom.clip_rect = new Rectangle( _control.real_bounds.x, _control.real_bounds.y, _control.real_bounds.w, _control.real_bounds.h );
-
-                Luxe.addGeometry( _geom );
 
                 _existing_selections.push(_geom);
 
@@ -564,7 +557,8 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
-            color : new Color(1,1,1,1).rgb(0x0d0d0d)
+            color : new Color(1,1,1,1).rgb(0x0d0d0d),
+            batcher : Luxe.renderer.batcher
         });
 
         var box = Luxe.draw.rectangle({
@@ -573,7 +567,8 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
-            color : new Color(1,1,1,1).rgb(0x181818)
+            color : new Color(1,1,1,1).rgb(0x181818),
+            batcher : Luxe.renderer.batcher
         });
 
         var sliderv = new QuadGeometry({
@@ -583,7 +578,8 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             w: 3,
             h: 10,
             color : new Color().rgb(0x999999),
-            visible : false
+            visible : false,
+            batcher : Luxe.renderer.batcher
         });
 
         var sliderh = new QuadGeometry({
@@ -593,18 +589,14 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
             w: 10,
             h: 3,
             color : new Color().rgb(0x999999),
-            visible : false
+            visible : false,
+            batcher : Luxe.renderer.batcher
         });
 
         back.id = _control.name + '.back';
         box.id = _control.name + '.box';
         sliderh.id = _control.name + '.sliderh';
         sliderv.id = _control.name + '.sliderv';
-
-        Luxe.addGeometry( back );
-        Luxe.addGeometry( box );
-        Luxe.addGeometry( sliderh );
-        Luxe.addGeometry( sliderv );
 
         _control.render_items.set('back', back);
         _control.render_items.set('box', box);
@@ -748,9 +740,8 @@ class MIImageLuxeRenderer extends MIImageRenderer {
         if(image.texture != null && image.texture.loaded) {
 
             if(_clip_rect == null) {
-                image.geometry.clip = false;
+                image.geometry.clip_rect = null;
             } else {
-                image.geometry.clip = true;
                 image.geometry.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w-1,_clip_rect.h-1);
             }
 
@@ -859,10 +850,9 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
-            color : new Color(1,1,1,1).rgb(0x0d0d0d)
+            color : new Color(1,1,1,1).rgb(0x0d0d0d),
+            batcher : Luxe.renderer.batcher
         });
-
-        Luxe.addGeometry( back );
 
         _control.render_items.set('back', back);
 
@@ -935,10 +925,9 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
             depth : _control.depth,
             x: _control.real_bounds.x, y: bary,
             w: _control.real_bounds.w, h: 3,
-            color : new Color(1,1,1,1).rgb(0x030303)
+            color : new Color(1,1,1,1).rgb(0x030303),
+            batcher : Luxe.renderer.batcher
         });
-
-        Luxe.addGeometry( bar );
 
         _control.render_items.set('bar', bar);
 
@@ -960,13 +949,11 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
         var bar : QuadGeometry = cast _control.render_items.get('bar');
 
         if(_clip_rect == null) {
-            geom.clip = false;
-            bar.clip = false;
+            geom.clip_rect = null;
+            bar.clip_rect = null;
         } else {
             if(geom != null) {
-                geom.clip = true;
                 geom.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
-                bar.clip = true;
                 bar.clip_rect = new Rectangle(_clip_rect.x,_clip_rect.y,_clip_rect.w,_clip_rect.h);
             }
         }
@@ -1010,10 +997,9 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
             y: _control.real_bounds.y,
             w: _control.real_bounds.w,
             h: _control.real_bounds.h,
-            color : new Color(1,1,1,1).rgb(0x0d0d0d)
+            color : new Color(1,1,1,1).rgb(0x0d0d0d),
+            batcher : Luxe.renderer.batcher
         });
-
-        Luxe.addGeometry( back );
 
         _control.render_items.set('back', back);
 
