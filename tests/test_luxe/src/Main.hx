@@ -133,6 +133,13 @@ class Main extends luxe.Game {
 
             selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
             selector2.add_items(['zip', 'folder']);
+
+             number = new MINumber({
+                parent : window,
+                name : 'number',
+                bounds : new MIRectangle( 20, 140, 160, 30 ),
+                value : 0.0
+            });
         }
 
         scroller = new MIScrollArea({
@@ -165,12 +172,7 @@ class Main extends luxe.Game {
             bounds : new MIRectangle(0, canvas.bounds.h-20, canvas.bounds.w, 20)
         });
 
-        number = new MINumber({
-            parent : window,
-            name : 'number',
-            bounds : new MIRectangle( 20, 140, 160, 30 ),
-            value : 0.0
-        });
+       
 
     } //ready
 
