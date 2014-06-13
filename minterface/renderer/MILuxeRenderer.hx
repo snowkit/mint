@@ -707,12 +707,18 @@ class MIImageLuxeRenderer extends MIImageRenderer {
             _options.size = LuxeMIConverter.vector( _options.size );
         }
 
+            //store the old parent as Sprite will think we want it to be using parenting
+        var _oldp = _options.parent;
+            _options.parent = null;
+
             //create the image
         var image = new Sprite(_options);
             //store for later
         _control.render_items.set('image', image);
             //clip the geometry
         set_clip( _control, _control.parent.real_bounds );
+            //reassign
+        _options.parent = _oldp;
 
         // image.geometry.id = _control.name + '.image';
 
