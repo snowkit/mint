@@ -76,49 +76,61 @@ class LuxeMIConverter {
         return new Vector( _point.x, _point.y );
     } //vector
 
-    public static function mouse_state( _state:MouseState ) : MIMouseState {
+/*
+    unknown;
+    none;
+    down;
+    up;
+    move;
+    wheel;
+    axis;
+*/
+    public static function interact_state( _state:InteractState ) : MIInteractState {
         switch(_state) {
-            case MouseState.down:
-                return MIMouseState.down;
-            case MouseState.move:
-                return MIMouseState.move;
-            case MouseState.up:
-                return MIMouseState.up;
-            case MouseState.wheel:
-                return MIMouseState.wheel;
+            case InteractState.unknown:
+                return MIInteractState.unknown;
+            case InteractState.none:
+                return MIInteractState.none;
+            case InteractState.down:
+                return MIInteractState.down;
+            case InteractState.up:
+                return MIInteractState.up;
+            case InteractState.move:
+                return MIInteractState.move;
+            case InteractState.wheel:
+                return MIInteractState.wheel;
+            case InteractState.axis:
+                return MIInteractState.axis;
         } //state
-    } //mouse_state
+    } //interact_state
 
     public static function mouse_button( _button:MouseButton ) : MIMouseButton {
         switch(_button) {
-            case MouseButton.move:
-                return MIMouseButton.move;
+            case MouseButton.none:
+                return MIMouseButton.none;
             case MouseButton.left:
                 return MIMouseButton.left;
             case MouseButton.middle:
                 return MIMouseButton.middle;
             case MouseButton.right:
                 return MIMouseButton.right;
-            case MouseButton.wheel_up:
-                return MIMouseButton.wheel_up;
-            case MouseButton.wheel_down:
-                return MIMouseButton.wheel_down;
+            case MouseButton.extra1:
+                return MIMouseButton.extra1;
+            case MouseButton.extra2:
+                return MIMouseButton.extra2;
         } //state
-    } //mouse_state
+    } //mouse_button
 
     public static function mouse_event( _event:MouseEvent ) : MIMouseEvent {
         return {
-            state : mouse_state(_event.state),
-            flags : _event.flags,
+            state : interact_state(_event.state),
             button : mouse_button(_event.button),
+            window_id : _event.window_id,
+            timestamp : _event.timestamp,
             x : _event.x,
             y : _event.y,
-            deltaX : _event.deltaY,
-            deltaY : _event.deltaX,
-            shift_down : _event.shift_down,
-            ctrl_down : _event.ctrl_down,
-            alt_down : _event.alt_down,
-            meta_down : _event.meta_down,
+            xrel : _event.xrel,
+            yrel : _event.yrel,
             bubble : true
         };
     } //mouse_event

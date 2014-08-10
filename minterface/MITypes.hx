@@ -9,36 +9,67 @@ enum MITextAlign {
     bottom;
 }
 
-enum MIMouseState {
-    down;
-    move;
-    up;
-    wheel;
-}
+/** A typed state for mouse, touch, or pressed/similar */
+enum MIInteractState {
 
-enum MIMouseButton {
+/** An unknown state */
+    unknown;
+/** An none state */
+    none;
+/** In a pressed state */
+    down;
+/** In a released state */
+    up;
+/** In a moving state */
     move;
+/** A mouse wheel state */
+    wheel;
+/** A gamepad axis state */
+    axis;
+
+} //InteractState
+
+/** A typed mouse button id */
+enum MIMouseButton {
+
+/** no mouse buttons */
+    none;
+/** left mouse button */
     left;
+/** middle mouse button */
     middle;
+/** right mouse button */
     right;
-    wheel_up;
-    wheel_down;
-}
+/** extra button pressed (4) */
+    extra1;
+/** extra button pressed (5) */
+    extra2;
+
+} //MouseButton
 
 typedef MIMouseEvent = {
-    var state : MIMouseState;
-    var flags : Int;
+
+        /** The time in seconds when this touch event occurred, use for deltas */
+    var timestamp : Float;
+        /** The window id this event originated from */
+    var window_id : Int;
+        /** The state this event is in */
+    var state : MIInteractState;
+        /** The button id, if the event `state` is `down` or `up` */
     var button : MIMouseButton;
-    var x : Float;
-    var y : Float;
-    var deltaX : Float;
-    var deltaY : Float;
-    var shift_down : Bool;
-    var ctrl_down : Bool;
-    var alt_down : Bool;
-    var meta_down : Bool;
+        /** The x position in the window of the mouse event */
+    var x : Int;
+        /** The y position in the window of the mouse event */
+    var y : Int;
+        /** The relative x position if `state` is `move` or a window has grabbed state */
+    var xrel : Int;
+        /** The relative y position if `state` is `move` or a window has grabbed state */
+    var yrel : Int;
+        /** Whether or not the event should bubble further. set to false to stop propagation */
     var bubble : Bool;
-}
+
+} //MouseEvent
+
 
 class MIUtils {
     static public function clamp (value:Float, a:Float, b:Float) : Float {

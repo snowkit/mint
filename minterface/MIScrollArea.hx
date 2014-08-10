@@ -128,23 +128,17 @@ class MIScrollArea extends MIControl {
 
     } //onmousemove
 
-    public override function onmousewheel(e) {
+    public override function onmousewheel(e:MIMouseEvent) {
 
             //forward to
         super.onmousewheel(e);
 
-        if(e.button == MIMouseButton.wheel_up) {
-            if(e.ctrl_down && can_scroll_h) {
-                set_scroll_x(scroll_amount.x-(real_bounds.w*0.05*scroll_dir));
-            } else if(can_scroll_v) {
-                set_scroll_y(scroll_amount.y-(real_bounds.h*0.05*scroll_dir));
-            }
-        } else if(e.button == MIMouseButton.wheel_down) {
-            if(e.ctrl_down && can_scroll_h) {
-                set_scroll_x(scroll_amount.x+(real_bounds.w*0.05*scroll_dir));
-            } else if(can_scroll_v) {
-                set_scroll_y(scroll_amount.y+(real_bounds.h*0.05*scroll_dir));
-            }
+        if(e.x != 0 && can_scroll_h) {
+            set_scroll_x((e.x * scroll_amount.x)-(real_bounds.w*0.05*scroll_dir));
+        }
+
+        if(e.y != 0 && can_scroll_v) {
+            set_scroll_y((e.y * scroll_amount.y)-(real_bounds.h*0.05*scroll_dir));
         }
 
     } //onmousewheel
