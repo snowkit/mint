@@ -216,6 +216,10 @@ class MILabelLuxeRenderer extends MILabelRenderer {
             _options.pos = LuxeMIConverter.vector( _options.pos );
         }
 
+                    //store the old parent as Sprite will think we want it to be using parenting
+        var _oldp = _options.parent;
+            _options.parent = null;
+
             //if there is padding, we change the bounds
         if( _options.padding.x != 0 ) { _options.bounds.x += _options.padding.x; }
         if( _options.padding.y != 0 ) { _options.bounds.y += _options.padding.y; }
@@ -246,6 +250,8 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         // });
         // _control.render_items.set('bounds', bounds);
 
+
+        _options.parent = _oldp;
 
     } //init
 
@@ -318,6 +324,11 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     public override function init( _control:MIButton, _options:Dynamic ) {
 
+
+            //store the old parent as NineSlice will think we want it to be using parenting
+        var _oldp = _options.parent;
+            _options.parent = null;
+
         var geom = new NineSlice({
             texture : Luxe.loadTexture('tiny.button.png'),
             depth : _control.depth,
@@ -332,6 +343,8 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
         geom._geometry.id = _control.name + '.button';
 
         _control.render_items.set('geom', geom);
+
+        _options.parent = _oldp;
 
     } //init
 
@@ -807,6 +820,11 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     public override function init( _control:MIWindow, _options:Dynamic ) {
 
+
+            //store the old parent as Sprite will think we want it to be using parenting
+        var _oldp = _options.parent;
+            _options.parent = null;
+
         var geom = new NineSlice({
             texture : Luxe.loadTexture('tiny.ui.png'),
             depth : _control.depth,
@@ -823,6 +841,8 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
         geom._geometry.id = _control.name + '.window';
 
         _control.render_items.set('geom', geom);
+
+        _options.parent = _oldp;
 
     } //init
 
@@ -913,6 +933,10 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     public override function init( _control:MIPanel, _options:Dynamic ) {
 
+                    //store the old parent as Sprite will think we want it to be using parenting
+        var _oldp = _options.parent;
+            _options.parent = null;
+
         var geom = new NineSlice({
             texture : Luxe.loadTexture('tiny.ui.png'),
             depth : _control.depth,
@@ -948,6 +972,8 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
         });
 
         _control.render_items.set('bar', bar);
+
+        _options.parent = _oldp;
 
     } //init
 

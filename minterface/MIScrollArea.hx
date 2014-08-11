@@ -31,11 +31,6 @@ class MIScrollArea extends MIControl {
     public var handle_h_bounds : MIRectangle;
     public var handle_v_bounds : MIRectangle;
 
-    #if mac
-        public var scroll_dir : Int = -1;
-    #else
-        public var scroll_dir : Int = 1;
-    #end
 
     public function new(_options:Dynamic) {
 
@@ -134,11 +129,13 @@ class MIScrollArea extends MIControl {
         super.onmousewheel(e);
 
         if(e.x != 0 && can_scroll_h) {
-            set_scroll_x((e.x * scroll_amount.x)-(real_bounds.w*0.05*scroll_dir));
+            set_scroll_x((scroll_amount.x)-(real_bounds.w*0.03*e.x));
         }
 
+        trace(e.y);
+
         if(e.y != 0 && can_scroll_v) {
-            set_scroll_y((e.y * scroll_amount.y)-(real_bounds.h*0.05*scroll_dir));
+            set_scroll_y((scroll_amount.y)-(real_bounds.h*0.01*e.y));
         }
 
     } //onmousewheel

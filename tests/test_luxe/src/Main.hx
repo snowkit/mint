@@ -45,7 +45,7 @@ class Main extends luxe.Game {
 
     var s : Sprite;
 
-    public function ready() {
+    override function ready() {
 
         Luxe.renderer.clear_color.set(1,1,1);
 
@@ -176,38 +176,38 @@ class Main extends luxe.Game {
 
     } //ready
 
-    public function onmousemove(e) {
+    override function onmousemove(e) {
         var _e = LuxeMIConverter.mouse_event(e);
         canvas.onmousemove(_e);
     }
 
-    public function onmousewheel(e) {
+    override function onmousewheel(e) {
         var _e = LuxeMIConverter.mouse_event(e);
         canvas.onmousewheel(_e);
     }
 
-    public function onmouseup(e) {
+    override function onmouseup(e) {
         var _e = LuxeMIConverter.mouse_event(e);
         canvas.onmouseup(_e);
     }
 
-    public function onmousedown(e) {
+    override function onmousedown(e) {
         var _e = LuxeMIConverter.mouse_event(e);
         canvas.onmousedown(_e);
     }
 
-    public function onkeyup(e) {
+    override function onkeyup(e:KeyEvent) {
 
-        if(e.value == Input.Keys.escape) {
+        if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }
     } //onkeyup
 
-    public function update(dt:Float) {
+    override function update(dt:Float) {
         canvas.update(dt);
     } //update
 
-    public function shutdown() {
+    override function destroyed() {
 
     } //shutdown
 }
