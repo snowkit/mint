@@ -20,6 +20,8 @@ class MIList extends MIControl {
             //create the base control
         super(__options);
             //
+        renderer.list.init(this, __options);
+            //
         multiselect = (__options.multiselect == null) ? false : __options.multiselect;
         onselect = (__options.onselect == null) ? null : __options.onselect;
             //set the text size from the default or the options
