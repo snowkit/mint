@@ -207,7 +207,7 @@ class Main extends luxe.Game {
         canvas.update(dt);
     } //update
 
-    override function destroyed() {
+    override function ondestroy() {
 
     } //shutdown
 }
