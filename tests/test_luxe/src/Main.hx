@@ -53,7 +53,7 @@ class Main extends luxe.Game {
         renderer = new LuxeRenderer();
 
         canvas  = new Canvas({
-            bounds : new Rectangle( 0, 0, Luxe.screen.w, Luxe.screen.h ),
+            bounds : new Rect( 0, 0, Luxe.screen.w, Luxe.screen.h ),
             renderer : renderer,
             depth : 100
         });
@@ -61,7 +61,7 @@ class Main extends luxe.Game {
         button = new Button({
             parent : canvas,
             name : 'click',
-            bounds : new Rectangle( 10, 60, 100, 35 ),
+            bounds : new Rect( 10, 60, 100, 35 ),
             text : 'click me',
             text_size : 15,
             onclick : function(){ trace('hello world'); }
@@ -70,7 +70,7 @@ class Main extends luxe.Game {
         itemlist = new List({
             parent : canvas,
             name : 'list1',
-            bounds : new Rectangle(10, 100, 100,380)
+            bounds : new Rect(10, 100, 100,380)
         });
 
         itemlist.add_item('items one');
@@ -85,19 +85,19 @@ class Main extends luxe.Game {
                 name : 'image view',
                 title : 'Image view',
                 title_size : 13,
-                bounds : new Rectangle(430, 60, 300, 360)
+                bounds : new Rect(430, 60, 300, 360)
             });
 
             scroller1 = new ScrollArea({
                 parent : window1,
                 name : 'scrollarea1',
-                bounds : new Rectangle( 10, 40, 280, 300 )
+                bounds : new Rect( 10, 40, 280, 300 )
             });
 
             image = new Image({
                 parent : scroller1,
                 name : 'image',
-                bounds : new Rectangle( 0, 0, tt.width, tt.height ),
+                bounds : new Rect( 0, 0, tt.width, tt.height ),
                 texture : tt
             });
 
@@ -106,13 +106,13 @@ class Main extends luxe.Game {
                 name : 'builder',
                 title : 'Export Build',
                 title_size : 13,
-                bounds : new Rectangle(750, 70, 200, 300)
+                bounds : new Rect(750, 70, 200, 300)
             });
 
             button1 = new Button({
                 parent : window,
                 name : 'buildbutton',
-                bounds : new Rectangle( 20, 245, 160, 35 ),
+                bounds : new Rect( 20, 245, 160, 35 ),
                 text : 'Make Build',
                 text_size : 13,
                 onclick : function(){ trace('FAKE build'); }
@@ -121,14 +121,14 @@ class Main extends luxe.Game {
             selector = new Dropdown({
                 parent : window,
                 name : 'selector',
-                bounds : new Rectangle( 20, 40, 160, 30 ),
+                bounds : new Rect( 20, 40, 160, 30 ),
                 text : 'Select output target'
             });
 
             selector2 = new Dropdown({
                 parent : window,
                 name : 'selector2',
-                bounds : new Rectangle( 20, 80, 160, 30 ),
+                bounds : new Rect( 20, 80, 160, 30 ),
                 text : 'Select build format'
             });
 
@@ -138,7 +138,7 @@ class Main extends luxe.Game {
              number = new Number({
                 parent : window,
                 name : 'number',
-                bounds : new Rectangle( 20, 140, 160, 30 ),
+                bounds : new Rect( 20, 140, 160, 30 ),
                 value : 0.0
             });
         }
@@ -146,14 +146,14 @@ class Main extends luxe.Game {
         scroller = new ScrollArea({
             parent : canvas,
             name : 'scrollarea',
-            bounds : new Rectangle( 120, 60, 300, 360 )
+            bounds : new Rect( 120, 60, 300, 360 )
         });
 
         for(i in 0 ... 5) {
             var l = new Button({
                 parent : scroller,
                 name : 'button' + (i+1),
-                bounds : new Rectangle(50, i * 100, 100, 100 ),
+                bounds : new Rect(50, i * 100, 100, 100 ),
                 text : 'click me + '+ (i+1),
                 text_size : 15,
                 onclick : function(){ trace('click me + '+ (i+1)); }
@@ -163,17 +163,16 @@ class Main extends luxe.Game {
         panel = new Panel({
             parent : canvas,
             name : 'panel',
-            bounds : new Rectangle(0, 0, canvas.bounds.w, 48)
+            bounds : new Rect(0, 0, canvas.bounds.w, 48)
         });
 
         panel2 = new Panel({
             parent : canvas,
             name : 'panel2',
             bar : 'top',
-            bounds : new Rectangle(0, canvas.bounds.h-20, canvas.bounds.w, 20)
+            bounds : new Rect(0, canvas.bounds.h-20, canvas.bounds.w, 20)
         });
 
-       
 
     } //ready
 
