@@ -9,39 +9,40 @@ import luxe.Sprite;
 import phoenix.BitmapFont.TextAlign;
 import phoenix.Rectangle;
 
-import minterface.MITypes;
-import minterface.MIControl;
-import minterface.MICanvas;
-import minterface.MIButton;
-import minterface.MIImage;
-import minterface.MIScrollArea;
-import minterface.MIList;
-import minterface.MIWindow;
-import minterface.MIDropdown;
-import minterface.MIPanel;
-import minterface.MICheckbox;
-import minterface.MINumber;
+import mint.Types;
+import mint.Control;
+import mint.Canvas;
+import mint.Button;
+import mint.Image;
+import mint.ScrollArea;
+import mint.List;
+import mint.Window;
+import mint.Dropdown;
+import mint.Panel;
+import mint.Checkbox;
+import mint.Number;
 
-import minterface.renderer.MILuxeRenderer;
+import mint.renderer.LuxeRenderer;
+
 
 class Main extends luxe.Game {
 
-    public var renderer : MILuxeRenderer;
+    public var renderer : LuxeRenderer;
 
-    public var canvas : MICanvas;
-    public var button : MIButton;
-    public var button1 : MIButton;
-    public var image : MIImage;
-    public var scroller : MIScrollArea;
-    public var scroller1 : MIScrollArea;
-    public var itemlist : MIList;
-    public var window1 : MIWindow;
-    public var window : MIWindow;
-    public var selector : MIDropdown;
-    public var selector2 : MIDropdown;
-    public var panel : MIPanel;
-    public var panel2 : MIPanel;
-    public var number : MINumber;
+    public var canvas : Canvas;
+    public var button : Button;
+    public var button1 : Button;
+    public var image : Image;
+    public var scroller : ScrollArea;
+    public var scroller1 : ScrollArea;
+    public var itemlist : List;
+    public var window1 : Window;
+    public var window : Window;
+    public var selector : Dropdown;
+    public var selector2 : Dropdown;
+    public var panel : Panel;
+    public var panel2 : Panel;
+    public var number : Number;
 
     var s : Sprite;
 
@@ -49,27 +50,27 @@ class Main extends luxe.Game {
 
         Luxe.renderer.clear_color.set(1,1,1);
 
-        renderer = new MILuxeRenderer();
+        renderer = new LuxeRenderer();
 
-        canvas  = new MICanvas({
-            bounds : new MIRectangle( 0, 0, Luxe.screen.w, Luxe.screen.h ),
+        canvas  = new Canvas({
+            bounds : new Rectangle( 0, 0, Luxe.screen.w, Luxe.screen.h ),
             renderer : renderer,
             depth : 100
         });
 
-        button = new MIButton({
+        button = new Button({
             parent : canvas,
             name : 'click',
-            bounds : new MIRectangle( 10, 60, 100, 35 ),
+            bounds : new Rectangle( 10, 60, 100, 35 ),
             text : 'click me',
             text_size : 15,
             onclick : function(){ trace('hello world'); }
         });
 
-        itemlist = new MIList({
+        itemlist = new List({
             parent : canvas,
             name : 'list1',
-            bounds : new MIRectangle(10, 100, 100,380)
+            bounds : new Rectangle(10, 100, 100,380)
         });
 
         itemlist.add_item('items one');
@@ -79,97 +80,97 @@ class Main extends luxe.Game {
 
         tt.onload = function(t_) {
 
-            window1 = new MIWindow({
+            window1 = new Window({
                 parent : canvas,
                 name : 'image view',
                 title : 'Image view',
                 title_size : 13,
-                bounds : new MIRectangle(430, 60, 300, 360)
+                bounds : new Rectangle(430, 60, 300, 360)
             });
 
-            scroller1 = new MIScrollArea({
+            scroller1 = new ScrollArea({
                 parent : window1,
                 name : 'scrollarea1',
-                bounds : new MIRectangle( 10, 40, 280, 300 )
+                bounds : new Rectangle( 10, 40, 280, 300 )
             });
 
-            image = new MIImage({
+            image = new Image({
                 parent : scroller1,
                 name : 'image',
-                bounds : new MIRectangle( 0, 0, tt.width, tt.height ),
+                bounds : new Rectangle( 0, 0, tt.width, tt.height ),
                 texture : tt
             });
 
-            window = new MIWindow({
+            window = new Window({
                 parent : canvas,
                 name : 'builder',
                 title : 'Export Build',
                 title_size : 13,
-                bounds : new MIRectangle(750, 70, 200, 300)
+                bounds : new Rectangle(750, 70, 200, 300)
             });
 
-            button1 = new MIButton({
+            button1 = new Button({
                 parent : window,
                 name : 'buildbutton',
-                bounds : new MIRectangle( 20, 245, 160, 35 ),
+                bounds : new Rectangle( 20, 245, 160, 35 ),
                 text : 'Make Build',
                 text_size : 13,
                 onclick : function(){ trace('FAKE build'); }
             });
 
-            selector = new MIDropdown({
+            selector = new Dropdown({
                 parent : window,
                 name : 'selector',
-                bounds : new MIRectangle( 20, 40, 160, 30 ),
+                bounds : new Rectangle( 20, 40, 160, 30 ),
                 text : 'Select output target'
             });
 
-            selector2 = new MIDropdown({
+            selector2 = new Dropdown({
                 parent : window,
                 name : 'selector2',
-                bounds : new MIRectangle( 20, 80, 160, 30 ),
+                bounds : new Rectangle( 20, 80, 160, 30 ),
                 text : 'Select build format'
             });
 
             selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
             selector2.add_items(['zip', 'folder']);
 
-             number = new MINumber({
+             number = new Number({
                 parent : window,
                 name : 'number',
-                bounds : new MIRectangle( 20, 140, 160, 30 ),
+                bounds : new Rectangle( 20, 140, 160, 30 ),
                 value : 0.0
             });
         }
 
-        scroller = new MIScrollArea({
+        scroller = new ScrollArea({
             parent : canvas,
             name : 'scrollarea',
-            bounds : new MIRectangle( 120, 60, 300, 360 )
+            bounds : new Rectangle( 120, 60, 300, 360 )
         });
 
         for(i in 0 ... 5) {
-            var l = new MIButton({
+            var l = new Button({
                 parent : scroller,
                 name : 'button' + (i+1),
-                bounds : new MIRectangle(50, i * 100, 100, 100 ),
+                bounds : new Rectangle(50, i * 100, 100, 100 ),
                 text : 'click me + '+ (i+1),
                 text_size : 15,
                 onclick : function(){ trace('click me + '+ (i+1)); }
             });
         }
 
-        panel = new MIPanel({
+        panel = new Panel({
             parent : canvas,
             name : 'panel',
-            bounds : new MIRectangle(0, 0, canvas.bounds.w, 48)
+            bounds : new Rectangle(0, 0, canvas.bounds.w, 48)
         });
 
-        panel2 = new MIPanel({
+        panel2 = new Panel({
             parent : canvas,
             name : 'panel2',
             bar : 'top',
-            bounds : new MIRectangle(0, canvas.bounds.h-20, canvas.bounds.w, 20)
+            bounds : new Rectangle(0, canvas.bounds.h-20, canvas.bounds.w, 20)
         });
 
        
@@ -177,22 +178,22 @@ class Main extends luxe.Game {
     } //ready
 
     override function onmousemove(e) {
-        var _e = LuxeMIConverter.mouse_event(e);
+        var _e = Convert.mouse_event(e);
         canvas.onmousemove(_e);
     }
 
     override function onmousewheel(e) {
-        var _e = LuxeMIConverter.mouse_event(e);
+        var _e = Convert.mouse_event(e);
         canvas.onmousewheel(_e);
     }
 
     override function onmouseup(e) {
-        var _e = LuxeMIConverter.mouse_event(e);
+        var _e = Convert.mouse_event(e);
         canvas.onmouseup(_e);
     }
 
     override function onmousedown(e) {
-        var _e = LuxeMIConverter.mouse_event(e);
+        var _e = Convert.mouse_event(e);
         canvas.onmousedown(_e);
     }
 

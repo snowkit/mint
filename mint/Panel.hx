@@ -1,9 +1,9 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
-class MIPanel extends MIControl {
+class Panel extends Control {
 
 	public function new(_options:Dynamic) {
 
@@ -22,7 +22,7 @@ class MIPanel extends MIControl {
 		renderer.panel.translate( this, _x, _y, _offset );
 	}
 
-	public override function set_clip( ?_clip_rect:MIRectangle = null ) {
+	public override function set_clip( ?_clip_rect:Rect = null ) {
 
 		super.set_clip(_clip_rect);
 		renderer.panel.set_clip(this,_clip_rect);
@@ -44,4 +44,4 @@ class MIPanel extends MIControl {
 
 	} //set_depth
 
-} //MIPanel
+} //Panel

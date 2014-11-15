@@ -1,9 +1,9 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
-class MIImage extends MIControl {
+class Image extends Control {
 
     public function new(_options:Dynamic) {
 
@@ -11,7 +11,7 @@ class MIImage extends MIControl {
         super(_options);
             //image size to the parent,
         _options.centered = false;
-        _options.pos = new MIPoint(real_bounds.x, real_bounds.y);
+        _options.pos = new Point(real_bounds.x, real_bounds.y);
         _options.depth = depth + 0.1;
 
             //disable mouse input,todo optionify

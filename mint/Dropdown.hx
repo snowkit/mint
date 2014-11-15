@@ -1,19 +1,19 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
-import minterface.MILabel;
-import minterface.MIList;
+import mint.Types;
+import mint.Control;
+import mint.Label;
+import mint.List;
 
-class MIDropdown extends MIControl {
+class Dropdown extends Control {
 
-    public var list : MIList;
-    public var selected_label : MILabel;
+    public var list : List;
+    public var selected_label : Label;
     public var selected : String = '';
 
     public var is_open : Bool = false;
 
-    public var onselect : String->MIControl->?MIMouseEvent->Void;
+    public var onselect : String->Control->?MouseEvent->Void;
 
     var _text_size : Float = 14;
     var _height : Float = 110;
@@ -29,22 +29,22 @@ class MIDropdown extends MIControl {
         if(_options.height != null) _height = _options.height;
 
             //create the list
-        list = new MIList({
+        list = new List({
             parent : this,
             name : name + '.list',
-            bounds : new MIRectangle( 0, bounds.h, bounds.w, _height ),
-            align : MITextAlign.left,
+            bounds : new Rect( 0, bounds.h, bounds.w, _height ),
+            align : TextAlign.left,
             text_size : _text_size,
             onselect : onselected
         });
 
-        selected_label = new MILabel({
+        selected_label = new Label({
             parent : this,
-            bounds : new MIRectangle(5,0,bounds.w-10, bounds.h),
+            bounds : new Rect(5,0,bounds.w-10, bounds.h),
             text:_options.text,
             text_size: _text_size,
             name : name + '.selected_label',
-            align : MITextAlign.left
+            align : TextAlign.left
         });
 
         renderer.dropdown.init( this, _options );
@@ -60,7 +60,7 @@ class MIDropdown extends MIControl {
 
     }
 
-    private function onselected(v:String, l:MIList, e:MIMouseEvent) {
+    private function onselected(v:String, l:List, e:MouseEvent) {
 
         selected = v;
         selected_label.text = selected;
@@ -102,7 +102,7 @@ class MIDropdown extends MIControl {
         renderer.dropdown.set_visible(this,_visible);
     }
 
-    public override function set_clip( ?_clip_rect:MIRectangle = null ) {
+    public override function set_clip( ?_clip_rect:Rect = null ) {
         super.set_clip(_clip_rect);
         renderer.dropdown.set_clip(this,_clip_rect);
     }
@@ -139,14 +139,14 @@ class MIDropdown extends MIControl {
 
         super.onmousedown(e);
 
-        if(e.button == MIMouseButton.left) {
+        if(e.button == MouseButton.left) {
 
             if(is_open) {
                 close_list();
                 return;
             }
 
-            var m = new MIPoint(e.x, e.y);
+            var m = new Point(e.x, e.y);
 
             if( selected_label.real_bounds.point_inside(m) ) {
                 open_list();

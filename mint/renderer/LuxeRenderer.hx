@@ -1,21 +1,21 @@
-package minterface.renderer;
+package mint.renderer;
 
-import minterface.MIRenderer;
+import mint.Renderer;
 
-import minterface.MIControl;
-import minterface.MILabel;
-import minterface.MICanvas;
-import minterface.MIButton;
-import minterface.MIList;
-import minterface.MIScrollArea;
-import minterface.MIImage;
-import minterface.MIWindow;
-import minterface.MIDropdown;
-import minterface.MIPanel;
-import minterface.MICheckbox;
-import minterface.MINumber;
+import mint.Control;
+import mint.Label;
+import mint.Canvas;
+import mint.Button;
+import mint.List;
+import mint.ScrollArea;
+import mint.Image;
+import mint.Window;
+import mint.Dropdown;
+import mint.Panel;
+import mint.Checkbox;
+import mint.Number;
 
-import minterface.MITypes;
+import mint.Types;
 
 import luxe.Text;
 import luxe.Color;
@@ -32,96 +32,81 @@ import luxe.NineSlice;
 
 
 //temp copy paste base
-// class MIREPLACEMELuxeRenderer extends MIREPLACEMERenderer {
-//  public override function init( _control:MIREPLACEME, _options:Dynamic ) { } //init
-//  public override function translate( _control:MIREPLACEME, _x:Float, _y:Float ) { } //translate, ?_offset:Bool = false
-//  public override function set_clip( _control:MIREPLACEME, ?_clip_rect:Rectangle=null ) { } //set_clip
-// } //MIREPLACEMELuxeRenderer
+// class REPLACEMELuxeRenderer extends REPLACEMERenderer {
+//  public override function init( _control:REPLACEME, _options:Dynamic ) { } //init
+//  public override function translate( _control:REPLACEME, _x:Float, _y:Float ) { } //translate, ?_offset:Bool = false
+//  public override function set_clip( _control:REPLACEME, ?_clip_rect:Rectangle=null ) { } //set_clip
+// } //REPLACEMELuxeRenderer
 
-class LuxeMIConverter {
-    public static function text_align( _align:MITextAlign ) : TextAlign {
+class Convert {
 
-        if(_align == null) {
-           throw "align passed in as null";
-        }
+    public static function text_align( _align:mint.TextAlign ) : TextAlign {
 
         switch(_align) {
-            case MITextAlign.left:
+            case mint.TextAlign.left:
                 return TextAlign.left;
-
-            case MITextAlign.right:
+            case mint.TextAlign.right:
                 return TextAlign.right;
-
-            case MITextAlign.center:
+            case mint.TextAlign.center:
                 return TextAlign.center;
-
-            case MITextAlign.top:
+            case mint.TextAlign.top:
                 return TextAlign.top;
-
-            case MITextAlign.bottom:
+            case mint.TextAlign.bottom:
                 return TextAlign.bottom;
+            case _:
         }
 
         return TextAlign.left;
 
     } //text_align
 
-    public static function rectangle( _rect:MIRectangle ) : Rectangle {
+    public static function rect( _rect:Rect ) : Rectangle {
         if(_rect == null){ throw "Rectangle passed in as null"; }
         return new Rectangle( _rect.x, _rect.y, _rect.w, _rect.h );
-    } //rectangle
+    } //rect
 
-    public static function vector( _point:MIPoint ) : Vector {
+    public static function point( _point:Point ) : Vector {
         if(_point == null){ throw "Point passed in as null"; }
         return new Vector( _point.x, _point.y );
-    } //vector
+    } //point
 
-/*
-    unknown;
-    none;
-    down;
-    up;
-    move;
-    wheel;
-    axis;
-*/
-    public static function interact_state( _state:InteractState ) : MIInteractState {
+    public static function interact_state( _state:InteractState ) : mint.InteractState {
         switch(_state) {
             case InteractState.unknown:
-                return MIInteractState.unknown;
+                return mint.InteractState.unknown;
             case InteractState.none:
-                return MIInteractState.none;
+                return mint.InteractState.none;
             case InteractState.down:
-                return MIInteractState.down;
+                return mint.InteractState.down;
             case InteractState.up:
-                return MIInteractState.up;
+                return mint.InteractState.up;
             case InteractState.move:
-                return MIInteractState.move;
+                return mint.InteractState.move;
             case InteractState.wheel:
-                return MIInteractState.wheel;
+                return mint.InteractState.wheel;
             case InteractState.axis:
-                return MIInteractState.axis;
+                return mint.InteractState.axis;
         } //state
     } //interact_state
 
-    public static function mouse_button( _button:MouseButton ) : MIMouseButton {
+    public static function mouse_button( _button:MouseButton ) : mint.MouseButton {
         switch(_button) {
             case MouseButton.none:
-                return MIMouseButton.none;
+                return mint.MouseButton.none;
             case MouseButton.left:
-                return MIMouseButton.left;
+                return mint.MouseButton.left;
             case MouseButton.middle:
-                return MIMouseButton.middle;
+                return mint.MouseButton.middle;
             case MouseButton.right:
-                return MIMouseButton.right;
+                return mint.MouseButton.right;
             case MouseButton.extra1:
-                return MIMouseButton.extra1;
+                return mint.MouseButton.extra1;
             case MouseButton.extra2:
-                return MIMouseButton.extra2;
+                return mint.MouseButton.extra2;
         } //state
     } //mouse_button
 
-    public static function mouse_event( _event:MouseEvent ) : MIMouseEvent {
+    public static function mouse_event( _event:MouseEvent ) : mint.MouseEvent {
         return {
             state : interact_state(_event.state),
             button : mouse_button(_event.button),
@@ -135,34 +120,34 @@ class LuxeMIConverter {
         };
     } //mouse_event
 
-}
+} //Convert
 
-class MILuxeRenderer extends MIRenderer {
+class LuxeRenderer extends Renderer {
 
     public function new() {
 
         super();
 
-        canvas = new MICanvasLuxeRenderer();
-        label = new MILabelLuxeRenderer();
-        button = new MIButtonLuxeRenderer();
-        list = new MIListLuxeRenderer();
-        scroll = new MIScrollAreaLuxeRenderer();
-        image = new MIImageLuxeRenderer();
-        window = new MIWindowLuxeRenderer();
-        dropdown = new MIDropdownLuxeRenderer();
-        panel = new MIPanelLuxeRenderer();
-        checkbox = new MICheckboxLuxeRenderer();
+        canvas = new CanvasLuxeRenderer();
+        label = new LabelLuxeRenderer();
+        button = new ButtonLuxeRenderer();
+        list = new ListLuxeRenderer();
+        scroll = new ScrollAreaLuxeRenderer();
+        image = new ImageLuxeRenderer();
+        window = new WindowLuxeRenderer();
+        dropdown = new DropdownLuxeRenderer();
+        panel = new PanelLuxeRenderer();
+        checkbox = new CheckboxLuxeRenderer();
 
     } //new
 
-} //MIRenderer
+} //Renderer
 
-class MICanvasLuxeRenderer extends MICanvasRenderer {
+class CanvasLuxeRenderer extends CanvasRenderer {
 
     var back : QuadGeometry;
 
-    public override function init( _control:MICanvas, _options:Dynamic ) {
+    public override function init( _control:Canvas, _options:Dynamic ) {
 
         back = new QuadGeometry({
             x: _control.real_bounds.x,
@@ -181,13 +166,13 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
 
     } //init
 
-    public override function set_visible( _control:MICanvas, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Canvas, ?_visible:Bool=true ) {
 
         back.visible = _visible;
 
     } //set_visible
 
-    public override function set_depth( _control:MICanvas, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Canvas, ?_depth:Float=0.0 ) {
 
         if(back != null) {
             // back.depth = _depth;
@@ -196,19 +181,19 @@ class MICanvasLuxeRenderer extends MICanvasRenderer {
     } //set_depth
 
 
-} //MICanvasLuxeRenderer
+} //CanvasLuxeRenderer
 
-class MILabelLuxeRenderer extends MILabelRenderer {
+class LabelLuxeRenderer extends LabelRenderer {
 
 
-    public override function init( _control:MILabel, _options:Dynamic ) {
+    public override function init( _control:Label, _options:Dynamic ) {
 
         if(_options.bounds != null) {
-            _options.bounds = LuxeMIConverter.rectangle( _options.bounds );
+            _options.bounds = Convert.rect( _options.bounds );
         }
 
         if(_options.pos != null) {
-            _options.pos = LuxeMIConverter.vector( _options.pos );
+            _options.pos = Convert.point( _options.pos );
         }
 
                     //store the old parent as Text will think we want it to be using parenting
@@ -222,11 +207,11 @@ class MILabelLuxeRenderer extends MILabelRenderer {
         if( _options.padding.h != 0 ) { _options.bounds.h -= _options.padding.h*2; }
 
         if( _options.align != null) {
-            _options.align = LuxeMIConverter.text_align( _options.align );
+            _options.align = Convert.text_align( _options.align );
         }
 
         if( _options.align_vertical != null) {
-            _options.align_vertical = LuxeMIConverter.text_align( _options.align_vertical );
+            _options.align_vertical = Convert.text_align( _options.align_vertical );
         }
 
         _options.color = new Color(0,0,0,1).rgb(0x999999);
@@ -250,7 +235,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //init
 
-    public override function translate( _control:MILabel, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:Label, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var text : Text = cast _control.render_items.get('text');
 
@@ -262,7 +247,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MILabel, ?_clip_rect : MIRectangle = null ) {
+    public override function set_clip( _control:Label, ?_clip_rect : Rect = null ) {
 
         var text:Text = cast _control.render_items.get('text');
 
@@ -276,7 +261,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //set clip
 
-    public override function set_visible( _control:MILabel, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Label, ?_visible:Bool=true ) {
 
         var text:Text = cast _control.render_items.get('text');
 
@@ -284,7 +269,7 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MILabel, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Label, ?_depth:Float=0.0 ) {
 
         var text:Text = cast _control.render_items.get('text');
 
@@ -294,30 +279,30 @@ class MILabelLuxeRenderer extends MILabelRenderer {
 
     } //set_depth
 
-    public override function set_text( _control:MILabel, ?_text:String='label' ) {
+    public override function set_text( _control:Label, ?_text:String='label' ) {
 
         var text:Text = cast _control.render_items.get('text');
 
         if(text != null) {
-            text.text_options.bounds = LuxeMIConverter.rectangle( _control.real_bounds );
+            text.text_options.bounds = Convert.rect( _control.real_bounds );
             text.text = _text;
             text.geometry.depth = _control.depth+0.1;
         }
 
     } //set_text
 
-    public override function destroy( _control:MILabel ) {
+    public override function destroy( _control:Label ) {
         var text:Text = cast _control.render_items.get('text');
             _control.render_items.remove('text');
             text.destroy();
             text = null;
     }
 
-} //MILabelLuxeRenderer
+} //LabelLuxeRenderer
 
-class MIButtonLuxeRenderer extends MIButtonRenderer {
+class ButtonLuxeRenderer extends ButtonRenderer {
 
-    public override function init( _control:MIButton, _options:Dynamic ) {
+    public override function init( _control:Button, _options:Dynamic ) {
 
 
             //store the old parent as NineSlice will think we want it to be using parenting
@@ -343,7 +328,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     } //init
 
-    public override function translate( _control:MIButton, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:Button, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -351,7 +336,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIButton, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:Button, ?_clip_rect:Rect=null ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -366,7 +351,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
     } //set_clip
 
 
-    public override function set_visible( _control:MIButton, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Button, ?_visible:Bool=true ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -374,7 +359,7 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MIButton, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Button, ?_depth:Float=0.0 ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -384,14 +369,14 @@ class MIButtonLuxeRenderer extends MIButtonRenderer {
 
     } //set_depth
 
-} //MIButtonLuxeRenderer
+} //ButtonLuxeRenderer
 
-class MIListLuxeRenderer extends MIListRenderer {
+class ListLuxeRenderer extends ListRenderer {
 
-    public override function init( _control:MIList, _options:Dynamic ) {
+    public override function init( _control:List, _options:Dynamic ) {
     } //init
 
-    public override function translate( _control:MIList, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:List, _x:Float, _y:Float, ?_offset:Bool = false ) {
         if(_control.multiselect) {
             var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
             if(_existing_selections != null) {
@@ -418,11 +403,11 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIList, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:List, ?_clip_rect:Rect=null ) {
 
     } //set_clip
 
-    public override function scroll(_control:MIList, _x:Float, _y:Float) {
+    public override function scroll(_control:List, _x:Float, _y:Float) {
 
         if(_control.multiselect) {
             var _existing_selections : Array<QuadGeometry> = _control.render_items.get('existing_selections');
@@ -440,7 +425,7 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //
 
-    public override function select_item( _control:MIList, _selected:MIControl ) {
+    public override function select_item( _control:List, _selected:Control ) {
 
         if(_selected == null) {
 
@@ -524,7 +509,7 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //select item
 
-    public override function set_visible( _control:MIList, ?_visible:Bool=true ) {
+    public override function set_visible( _control:List, ?_visible:Bool=true ) {
 
         if(_control.multiselect) {
 
@@ -544,7 +529,7 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MIList, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:List, ?_depth:Float=0.0 ) {
 
         if(_control.multiselect) {
 
@@ -564,12 +549,12 @@ class MIListLuxeRenderer extends MIListRenderer {
 
     } //set_depth
 
-} //MIListLuxeRenderer
+} //ListLuxeRenderer
 
 
-class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
+class ScrollAreaLuxeRenderer extends ScrollAreaRenderer {
 
-    public override function init( _control:MIScrollArea, _options:Dynamic ) {
+    public override function init( _control:ScrollArea, _options:Dynamic ) {
 
         var back = new QuadGeometry({
             depth : _control.depth,
@@ -625,24 +610,24 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     } //init
 
-    public override function get_handle_bounds( _control:minterface.MIScrollArea, ?vertical:Bool=true ) : MIRectangle {
+    public override function get_handle_bounds( _control:mint.ScrollArea, ?vertical:Bool=true ) : Rect {
 
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
 
-        var res : MIRectangle = null;
+        var res : Rect = null;
 
         if(vertical) {
-            res = new MIRectangle( sliderv.transform.pos.x, sliderv.transform.pos.y, 5, 10 );
+            res = new Rect( sliderv.transform.pos.x, sliderv.transform.pos.y, 5, 10 );
         } else {
-            res = new MIRectangle( sliderh.transform.pos.x, sliderh.transform.pos.y, 10, 5 );
+            res = new Rect( sliderh.transform.pos.x, sliderh.transform.pos.y, 10, 5 );
         }
 
         return res;
 
     } //get_handle_size
 
-    public override function translate( _control:MIScrollArea, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:ScrollArea, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
         var box:Geometry = cast _control.render_items.get('box');
@@ -656,12 +641,12 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIScrollArea, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:ScrollArea, ?_clip_rect:Rect=null ) {
 
 
     } //set_clip
 
-    public override function refresh_scroll( _control:MIScrollArea, shx:Float, shy:Float, svx:Float, svy:Float, hv:Bool, vv:Bool ) {
+    public override function refresh_scroll( _control:ScrollArea, shx:Float, shy:Float, svx:Float, svy:Float, hv:Bool, vv:Bool ) {
 
         var sliderh:QuadGeometry = cast _control.render_items.get('sliderh');
         var sliderv:QuadGeometry = cast _control.render_items.get('sliderv');
@@ -674,7 +659,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
     }
 
 
-    public override function set_visible( _control:MIScrollArea, ?_visible:Bool=true ) {
+    public override function set_visible( _control:ScrollArea, ?_visible:Bool=true ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
         var box:Geometry = cast _control.render_items.get('box');
@@ -688,7 +673,7 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MIScrollArea, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:ScrollArea, ?_depth:Float=0.0 ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
         var box:Geometry = cast _control.render_items.get('box');
@@ -713,18 +698,18 @@ class MIScrollAreaLuxeRenderer extends MIScrollAreaRenderer {
 
     } //set_depth
 
-} //MIScrollAreaLuxeRenderer
+} //ScrollAreaLuxeRenderer
 
-class MIImageLuxeRenderer extends MIImageRenderer {
+class ImageLuxeRenderer extends ImageRenderer {
 
-    public override function init( _control:MIImage, _options:Dynamic ) {
+    public override function init( _control:Image, _options:Dynamic ) {
 
         if(_options.pos != null) {
-            _options.pos = LuxeMIConverter.vector( _options.pos );
+            _options.pos = Convert.point( _options.pos );
         }
 
         if(_options.size != null) {
-            _options.size = LuxeMIConverter.vector( _options.size );
+            _options.size = Convert.point( _options.size );
         }
 
             //store the old parent as Sprite will think we want it to be using parenting
@@ -744,7 +729,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
     } //init
 
-    public override function translate( _control:MIImage, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:Image, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var image:Sprite = cast _control.render_items.get('image');
 
@@ -759,7 +744,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIImage, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:Image, ?_clip_rect:Rect=null ) {
 
         var image:Sprite = cast _control.render_items.get('image');
 
@@ -776,7 +761,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
     } //set_clip
 
 
-    public override function set_visible( _control:MIImage, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Image, ?_visible:Bool=true ) {
 
         var image:Sprite = cast _control.render_items.get('image');
 
@@ -784,7 +769,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MIImage, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Image, ?_depth:Float=0.0 ) {
 
         var image:Sprite = cast _control.render_items.get('image');
 
@@ -794,7 +779,7 @@ class MIImageLuxeRenderer extends MIImageRenderer {
 
     } //set_depth
 
-    public override function destroy( _control:MIImage ) {
+    public override function destroy( _control:Image ) {
 
         var image:Sprite = cast _control.render_items.get('image');
 
@@ -809,11 +794,11 @@ class MIImageLuxeRenderer extends MIImageRenderer {
     } //destroy
 
 
-} //MIImageLuxeRenderer
+} //ImageLuxeRenderer
 
-class MIWindowLuxeRenderer extends MIWindowRenderer {
+class WindowLuxeRenderer extends WindowRenderer {
 
-    public override function init( _control:MIWindow, _options:Dynamic ) {
+    public override function init( _control:Window, _options:Dynamic ) {
 
 
             //store the old parent as Sprite will think we want it to be using parenting
@@ -841,7 +826,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     } //init
 
-    public override function translate( _control:MIWindow, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:Window, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -849,11 +834,11 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIWindow, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:Window, ?_clip_rect:Rect=null ) {
 
     } //set_clip
 
-    public override function set_visible( _control:MIWindow, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Window, ?_visible:Bool=true ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -861,7 +846,7 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MIWindow, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Window, ?_depth:Float=0.0 ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
 
@@ -871,11 +856,11 @@ class MIWindowLuxeRenderer extends MIWindowRenderer {
 
     } //set_depth
 
-} //MIWindowLuxeRenderer
+} //WindowLuxeRenderer
 
-class MIDropdownLuxeRenderer extends MIDropdownRenderer {
+class DropdownLuxeRenderer extends DropdownRenderer {
 
-    public override function init( _control:MIDropdown, _options:Dynamic ) {
+    public override function init( _control:Dropdown, _options:Dynamic ) {
 
         var back = new QuadGeometry({
             depth : _control.depth,
@@ -891,7 +876,7 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
     } //init
 
-    public override function translate( _control:MIDropdown, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:Dropdown, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -899,11 +884,11 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIDropdown, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:Dropdown, ?_clip_rect:Rect=null ) {
 
     } //set_clip
 
-    public override function set_visible( _control:MIDropdown, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Dropdown, ?_visible:Bool=true ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -911,7 +896,7 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MIDropdown, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Dropdown, ?_depth:Float=0.0 ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -922,11 +907,11 @@ class MIDropdownLuxeRenderer extends MIDropdownRenderer {
     } //set_depth
 
 
-} //MIDropdownLuxeRenderer
+} //DropdownLuxeRenderer
 
-class MIPanelLuxeRenderer extends MIPanelRenderer {
+class PanelLuxeRenderer extends PanelRenderer {
 
-    public override function init( _control:MIPanel, _options:Dynamic ) {
+    public override function init( _control:Panel, _options:Dynamic ) {
 
                     //store the old parent as Sprite will think we want it to be using parenting
         var _oldp = _options.parent;
@@ -972,7 +957,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     } //init
 
-    public override function translate( _control:MIPanel, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:Panel, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
         var bar : QuadGeometry = cast _control.render_items.get('bar');
@@ -982,7 +967,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MIPanel, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:Panel, ?_clip_rect:Rect=null ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
         var bar : QuadGeometry = cast _control.render_items.get('bar');
@@ -999,7 +984,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     } //set_clip
 
-    public override function set_visible( _control:MIPanel, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Panel, ?_visible:Bool=true ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
         var bar : Geometry = cast _control.render_items.get('bar');
@@ -1009,7 +994,7 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MIPanel, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Panel, ?_depth:Float=0.0 ) {
 
         var geom : NineSlice = cast _control.render_items.get('geom');
         var bar : NineSlice = cast _control.render_items.get('bar');
@@ -1024,11 +1009,11 @@ class MIPanelLuxeRenderer extends MIPanelRenderer {
 
     } //set_depth
 
-} //MIPanelRenderer
+} //PanelRenderer
 
-class MICheckboxLuxeRenderer extends MICheckboxRenderer {
+class CheckboxLuxeRenderer extends CheckboxRenderer {
 
-    public override function init( _control:MICheckbox, _options:Dynamic ) {
+    public override function init( _control:Checkbox, _options:Dynamic ) {
 
         var back = new QuadGeometry({
             depth : _control.depth,
@@ -1044,7 +1029,7 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
     } //init
 
-    public override function translate( _control:MICheckbox, _x:Float, _y:Float, ?_offset:Bool = false ) {
+    public override function translate( _control:Checkbox, _x:Float, _y:Float, ?_offset:Bool = false ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -1052,11 +1037,11 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
     } //translate
 
-    public override function set_clip( _control:MICheckbox, ?_clip_rect:MIRectangle=null ) {
+    public override function set_clip( _control:Checkbox, ?_clip_rect:Rect=null ) {
 
     } //set_clip
 
-    public override function set_visible( _control:MICheckbox, ?_visible:Bool=true ) {
+    public override function set_visible( _control:Checkbox, ?_visible:Bool=true ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -1064,7 +1049,7 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
     } //set_visible
 
-    public override function set_depth( _control:MICheckbox, ?_depth:Float=0.0 ) {
+    public override function set_depth( _control:Checkbox, ?_depth:Float=0.0 ) {
 
         var back:QuadGeometry = cast _control.render_items.get('back');
 
@@ -1074,5 +1059,5 @@ class MICheckboxLuxeRenderer extends MICheckboxRenderer {
 
     } //set_depth
 
-} //MICheckboxRenderer
+} //CheckboxRenderer
 

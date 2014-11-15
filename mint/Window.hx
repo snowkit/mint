@@ -1,23 +1,23 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
-import minterface.MILabel;
+import mint.Types;
+import mint.Control;
+import mint.Label;
 
-class MIWindow extends MIControl {
+class Window extends Control {
 
-    public var title_bounds : MIRectangle;
-    public var view_bounds : MIRectangle;
-    public var close_bounds : MIRectangle;
+    public var title_bounds : Rect;
+    public var view_bounds : Rect;
+    public var close_bounds : Rect;
 
-    public var title : MILabel;
-    public var close_button : MILabel;
+    public var title : Label;
+    public var close_button : Label;
 
     public var moveable : Bool = true;
     public var dragging : Bool = false;
 
-    public var drag_start : MIPoint;
-    public var down_start : MIPoint;
+    public var drag_start : Point;
+    public var down_start : Point;
 
     public var onclose : Void->Bool;
 
@@ -27,23 +27,23 @@ class MIWindow extends MIControl {
 
         _options.bounds = real_bounds;
 
-        drag_start = new MIPoint();
-        down_start = new MIPoint();
+        drag_start = new Point();
+        down_start = new Point();
 
-        if(_options.align == null) { _options.align = MITextAlign.center; }
-        if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
+        if(_options.align == null) { _options.align = TextAlign.center; }
+        if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
         if(_options.title_size != null) { _options.size = _options.title_size; }
         if(_options.title != null) { _options.text = _options.title; }
         if(_options.moveable != null) { moveable = _options.moveable; }
 
-        title_bounds = new MIRectangle(6, 6, bounds.w-12, 20 );
-        close_bounds = new MIRectangle(bounds.w-18, 5, 18, 20 );
-        view_bounds = new MIRectangle(32, 32, bounds.w - 64, bounds.h - 64 );
+        title_bounds = new Rect(6, 6, bounds.w-12, 20 );
+        close_bounds = new Rect(bounds.w-18, 5, 18, 20 );
+        view_bounds = new Rect(32, 32, bounds.w - 64, bounds.h - 64 );
 
-        _options.pos = new MIPoint(real_bounds.x, real_bounds.y);
+        _options.pos = new Point(real_bounds.x, real_bounds.y);
 
             //create the title label
-        title = new MILabel({
+        title = new Label({
             parent : this,
             bounds : title_bounds,
             text:_options.text,
@@ -52,17 +52,17 @@ class MIWindow extends MIControl {
         });
 
             //create the close label
-        close_button = new MILabel({
+        close_button = new Label({
             parent : this,
             bounds : close_bounds,
             text:'x',
-            align : MITextAlign.left,
+            align : TextAlign.left,
             text_size:13,
             name : name + '.closelabel'
         });
 
         close_button.mouse_enabled = true;
-        close_button.mousedown = function(c:MIControl, ?e:MIMouseEvent) {
+        close_button.mousedown = function(c:Control, ?e:MouseEvent) {
             on_close();
         }
 
@@ -97,7 +97,7 @@ class MIWindow extends MIControl {
 
     } //open
 
-    public override function onmousemove(e:MIMouseEvent)  {
+    public override function onmousemove(e:MouseEvent)  {
 
         super.onmousemove(e);
 
@@ -119,9 +119,9 @@ class MIWindow extends MIControl {
         }
     }
 
-    public override function onmousedown(e:MIMouseEvent)  {
+    public override function onmousedown(e:MouseEvent)  {
 
-        var _m : MIPoint = new MIPoint(e.x,e.y);
+        var _m : Point = new Point(e.x,e.y);
         var in_title = title.real_bounds.point_inside(_m);
 
         if(!in_title) {
@@ -134,18 +134,18 @@ class MIWindow extends MIControl {
                 if( in_title ) {
                     dragging = true;
                     drag_start = _m.clone();
-                    down_start = new MIPoint(real_bounds.x, real_bounds.y);
+                    down_start = new Point(real_bounds.x, real_bounds.y);
                     canvas.dragged = this;
                 } //if inside title bounds
             } //!dragging
 
     } //onmousedown
 
-    public override function onmouseup(e:MIMouseEvent) {
+    public override function onmouseup(e:MouseEvent) {
 
         super.onmouseup(e);
 
-        var _m : MIPoint = new MIPoint(e.x,e.y);
+        var _m : Point = new Point(e.x,e.y);
         if(dragging) {
             dragging = false;
             canvas.dragged = null;
@@ -157,7 +157,7 @@ class MIWindow extends MIControl {
 
         super.translate( _x, _y, _offset );
 
-        title_bounds = new MIRectangle(real_bounds.x, real_bounds.y, bounds.w, 30 );
+        title_bounds = new Rect(real_bounds.x, real_bounds.y, bounds.w, 30 );
 
         renderer.window.translate( this, _x, _y, _offset );
 

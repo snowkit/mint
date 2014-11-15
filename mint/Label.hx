@@ -1,9 +1,9 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
-class MILabel extends MIControl {
+class Label extends Control {
 
     @:isVar public var text(get,set) : String;
 
@@ -17,17 +17,17 @@ class MILabel extends MIControl {
         mouse_enabled = false;
 
         if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
-        if(_options.align == null) { _options.align = MITextAlign.center; }
-        if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
+        if(_options.align == null) { _options.align = TextAlign.center; }
+        if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
         if(_options.text_size != null) { _options.size = _options.text_size; }
-        if(_options.padding == null) { _options.padding = new MIRectangle(); }
+        if(_options.padding == null) { _options.padding = new Rect(); }
 
         if(_options.onclick != null) {
             mouse_enabled = true;
             mousedown = _options.onclick;
         }
 
-        _options.pos = new MIPoint(real_bounds.x, real_bounds.y);
+        _options.pos = new Point(real_bounds.x, real_bounds.y);
             //store the text
         text = _options.text;
 
@@ -59,7 +59,7 @@ class MILabel extends MIControl {
         renderer.label.translate( this, _x, _y, _offset );
     }
 
-    public override function set_clip( ?_clip_rect:MIRectangle = null ) {
+    public override function set_clip( ?_clip_rect:Rect = null ) {
 
         super.set_clip( _clip_rect );
         renderer.label.set_clip( this, _clip_rect );

@@ -1,16 +1,16 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
-class MIScrollArea extends MIControl {
+class ScrollArea extends Control {
 
 
     public var can_scroll_h : Bool = false;
     public var can_scroll_v : Bool = false;
 
-    public var scroll_amount : MIPoint;
-    public var scroll_percent : MIPoint;
+    public var scroll_amount : Point;
+    public var scroll_percent : Point;
     public var child_bounds : ChildBounds;
 
     public var onscroll : Float -> Float -> Void;
@@ -26,18 +26,18 @@ class MIScrollArea extends MIControl {
     var slider_v_visible : Bool = false;
     var slider_h_visible : Bool = false;
 
-    var last_modal : MIControl;
+    var last_modal : Control;
 
-    public var handle_h_bounds : MIRectangle;
-    public var handle_v_bounds : MIRectangle;
+    public var handle_h_bounds : Rect;
+    public var handle_v_bounds : Rect;
 
 
     public function new(_options:Dynamic) {
 
         super(_options);
 
-        scroll_amount = new MIPoint();
-        scroll_percent = new MIPoint();
+        scroll_amount = new Point();
+        scroll_percent = new Point();
 
         onscroll = _options.onscroll;
 
@@ -56,7 +56,7 @@ class MIScrollArea extends MIControl {
 
     } //new
 
-    public override function add(child:MIControl) {
+    public override function add(child:Control) {
 
         super.add(child);
         on_internal_scroll(0,0);
@@ -67,13 +67,13 @@ class MIScrollArea extends MIControl {
     } //add
 
 
-    public override function onmousedown(e : MIMouseEvent) {
+    public override function onmousedown(e : MouseEvent) {
 
         var forward = true;
 
         if(can_scroll_h || can_scroll_v) {
 
-            var m = new MIPoint(e.x, e.y);
+            var m = new Point(e.x, e.y);
 
             if(can_scroll_h && handle_h_bounds.point_inside(m)) {
                 handle_drag_horizontal = true;
@@ -97,7 +97,7 @@ class MIScrollArea extends MIControl {
 
     } //onmousedown
 
-    public override function onmouseup(e : MIMouseEvent) {
+    public override function onmouseup(e : MouseEvent) {
 
         super.onmouseup(e);
 
@@ -109,7 +109,7 @@ class MIScrollArea extends MIControl {
 
     } //onmouseup
 
-    public override function onmousemove(e : MIMouseEvent) {
+    public override function onmousemove(e : MouseEvent) {
 
         super.onmousemove(e);
 
@@ -123,7 +123,7 @@ class MIScrollArea extends MIControl {
 
     } //onmousemove
 
-    public override function onmousewheel(e:MIMouseEvent) {
+    public override function onmousewheel(e:MouseEvent) {
 
             //forward to
         super.onmousewheel(e);
@@ -214,17 +214,17 @@ class MIScrollArea extends MIControl {
         if(!can_scroll_v) return;
 
             //can't go outside the bounds
-        exact = MIUtils.clamp( exact, 0, real_bounds.h );
+        exact = Utils.clamp( exact, 0, real_bounds.h );
 
             //for a delta
         var last_p_y = scroll_percent.y;
             //the new percent is based on the size of the control
-        scroll_percent.y = MIUtils.clamp(exact / (real_bounds.h-handle_v_bounds.h), 0, 1);
+        scroll_percent.y = Utils.clamp(exact / (real_bounds.h-handle_v_bounds.h), 0, 1);
         scroll_amount.y = exact;
             //we need the difference in scroll amount in pixels
         var pdiff = (last_p_y - scroll_percent.y) * (child_bounds.real_h - real_bounds.h);
             //update the real slider y value
-        sliderv_y = MIUtils.clamp( real_bounds.y + exact, real_bounds.y, real_bounds.y+real_bounds.h-handle_v_bounds.h );
+        sliderv_y = Utils.clamp( real_bounds.y + exact, real_bounds.y, real_bounds.y+real_bounds.h-handle_v_bounds.h );
 
         on_internal_scroll(0, pdiff);
 
@@ -235,17 +235,17 @@ class MIScrollArea extends MIControl {
         if(!can_scroll_h) return;
 
             //limit to the size of the control
-        exact = MIUtils.clamp( exact, 0, real_bounds.w );
+        exact = Utils.clamp( exact, 0, real_bounds.w );
 
             //for a delta
         var last_p_x = scroll_percent.x;
             //the new percent is based on the size of the control
-        scroll_percent.x = MIUtils.clamp(exact / real_bounds.w, 0, 1);
+        scroll_percent.x = Utils.clamp(exact / real_bounds.w, 0, 1);
         scroll_amount.x = exact;
             //we need the difference in scroll amount in pixels
         var pdiff = (last_p_x - scroll_percent.x) * (child_bounds.real_w - real_bounds.w);
             //update the real slider x value
-        sliderh_x = MIUtils.clamp( real_bounds.x + exact, real_bounds.x, real_bounds.x+real_bounds.w-handle_h_bounds.w );
+        sliderh_x = Utils.clamp( real_bounds.x + exact, real_bounds.x, real_bounds.x+real_bounds.w-handle_h_bounds.w );
 
         on_internal_scroll(pdiff, 0);
 

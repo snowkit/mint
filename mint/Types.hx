@@ -1,62 +1,66 @@
-package minterface;
+package mint;
 
 
-enum MITextAlign {
-    left;
-    right;
-    center;
-    top;
-    bottom;
+@:enum
+abstract TextAlign(Int) from Int to Int {
+    var unknown = 0;
+    var left = 1;
+    var right = 2;
+    var center = 3;
+    var top = 4;
+    var bottom = 5;
 }
 
 /** A typed state for mouse, touch, or pressed/similar */
-enum MIInteractState {
+@:enum
+abstract InteractState(Int) from Int to Int {
 
 /** An unknown state */
-    unknown;
+    var unknown = 0;
 /** An none state */
-    none;
+    var none = 1;
 /** In a pressed state */
-    down;
+    var down = 2;
 /** In a released state */
-    up;
+    var up = 3;
 /** In a moving state */
-    move;
+    var move = 4;
 /** A mouse wheel state */
-    wheel;
+    var wheel = 5;
 /** A gamepad axis state */
-    axis;
+    var axis = 6;
 
 } //InteractState
 
 /** A typed mouse button id */
-enum MIMouseButton {
+@:enum
+abstract MouseButton(Int) from Int to Int {
 
 /** no mouse buttons */
-    none;
+    var none = -1;
 /** left mouse button */
-    left;
+    var left = 0;
 /** middle mouse button */
-    middle;
+    var middle = 1;
 /** right mouse button */
-    right;
-/** extra button pressed (4) */
-    extra1;
-/** extra button pressed (5) */
-    extra2;
+    var right = 2;
+/** extra button pressed  */
+    var extra1 = 3;
+/** extra button pressed  */
+    var extra2 = 4;
 
 } //MouseButton
 
-typedef MIMouseEvent = {
+typedef MouseEvent = {
 
         /** The time in seconds when this touch event occurred, use for deltas */
     var timestamp : Float;
         /** The window id this event originated from */
     var window_id : Int;
         /** The state this event is in */
-    var state : MIInteractState;
+    var state : InteractState;
         /** The button id, if the event `state` is `down` or `up` */
-    var button : MIMouseButton;
+    var button : MouseButton;
         /** The x position in the window of the mouse event */
     var x : Int;
         /** The y position in the window of the mouse event */
@@ -71,13 +75,13 @@ typedef MIMouseEvent = {
 } //MouseEvent
 
 
-class MIUtils {
+class Utils {
     static public function clamp (value:Float, a:Float, b:Float) : Float {
         return ( value < a ) ? a : ( ( value > b ) ? b : value );
     }
 }
 
-class MIPoint {
+class Point {
 
 	public var x : Float;
 	public var y : Float;
@@ -89,7 +93,7 @@ class MIPoint {
 
 	} //new
 
-	public function set( ?_x:Float, ?_y:Float ) : MIPoint {
+	public function set( ?_x:Float, ?_y:Float ) : Point {
 
 		var _setx = x;
 		var _sety = y;
@@ -105,9 +109,9 @@ class MIPoint {
 
 	} //set
 
-	public function clone() : MIPoint {
+	public function clone() : Point {
 
-		return new MIPoint(x,y);
+		return new Point(x,y);
 
 	} //clone
 
@@ -117,9 +121,9 @@ class MIPoint {
 
 	} //toString
 
-} //MIPoint
+} //Point
 
-class MIRectangle {
+class Rect {
 
     public var x:Float;
     public var y:Float;
@@ -135,7 +139,7 @@ class MIRectangle {
 
     } //new
 
-    public function set( ?_x:Float, ?_y:Float, ?_w:Float, ?_h:Float ) : MIRectangle  {
+    public function set( ?_x:Float, ?_y:Float, ?_w:Float, ?_h:Float ) : Rect  {
 
         var _setx = x;
         var _sety = y;
@@ -158,13 +162,13 @@ class MIRectangle {
     } //set
 
 
-    public function clone() : MIRectangle {
+    public function clone() : Rect {
 
-        return new MIRectangle(x,y,w,h);
+        return new Rect(x,y,w,h);
 
     } //clone
 
-    public function point_inside( _p:MIPoint ) : Bool {
+    public function point_inside( _p:Point ) : Bool {
 
 	        if(_p.x < x) return false;
 	        if(_p.y < y) return false;

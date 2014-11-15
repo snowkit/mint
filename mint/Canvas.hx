@@ -1,22 +1,22 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
-class MICanvas extends MIControl {
+class Canvas extends Control {
 
-    public var focused : MIControl;
-    public var dragged : MIControl;
-    public var modal   : MIControl;
+    public var focused : Control;
+    public var dragged : Control;
+    public var modal   : Control;
 
     public var focus_invalid : Bool = true;
 
     public function new( _options:Dynamic ) {
 
-        if(_options == null) throw "No options given to canvas, at least a MIRenderer is required.";
-        if(_options.renderer == null) throw "No renderer given to MICanvas, cannot create this way.";
+        if(_options == null) throw "No options given to canvas, at least a Renderer is required.";
+        if(_options.renderer == null) throw "No renderer given to Canvas, cannot create this way.";
         if(_options.name == null) _options.name = 'canvas';
-        if(_options.bounds == null) _options.bounds = new MIRectangle(0, 0, 800, 600 );
+        if(_options.bounds == null) _options.bounds = new Rect(0, 0, 800, 600 );
 
         renderer = _options.renderer;
 
@@ -33,7 +33,7 @@ class MICanvas extends MIControl {
 
         renderer.canvas.init( this, _options );
 
-        _mouse_last = new MIPoint();
+        _mouse_last = new Point();
 
     } //new
 
@@ -53,15 +53,15 @@ class MICanvas extends MIControl {
 
     } //set_depth
 
-    public function topmost_control_under_point( _p:MIPoint ) {
+    public function topmost_control_under_point( _p:Point ) {
         var _control = topmost_child_under_point(_p);
         if(_control != this) return _control;
         return null;
     }
 
-    var _mouse_last:MIPoint;
+    var _mouse_last:Point;
 
-    private function set_control_unfocused(_control:MIControl, e:MIMouseEvent, ?do_mouseleave:Bool = true) {
+    private function set_control_unfocused(_control:Control, e:MouseEvent, ?do_mouseleave:Bool = true) {
         if(_control != null) {
 
             _control.ishovered = false;
@@ -74,7 +74,7 @@ class MICanvas extends MIControl {
         } //_control != null
     } //set_unfocused
 
-    private function set_control_focused(_control:MIControl, e:MIMouseEvent, ?do_mouseenter:Bool = true) {
+    private function set_control_focused(_control:Control, e:MouseEvent, ?do_mouseenter:Bool = true) {
         if(_control != null) {
             _control.ishovered = true;
             _control.isfocused = true;
@@ -85,7 +85,7 @@ class MICanvas extends MIControl {
         }
     } //set_focused
 
-    private function get_focused( _p : MIPoint ) {
+    private function get_focused( _p : Point ) {
 
         if( modal != null ) {
             return modal;
@@ -95,7 +95,7 @@ class MICanvas extends MIControl {
 
     } //get_focused
 
-    public function reset_focus( ?_control:MIControl, ?e:MIMouseEvent ) {
+    public function reset_focus( ?_control:Control, ?e:MouseEvent ) {
 
         //this happens in children want to invalidate their focus
 
@@ -107,7 +107,7 @@ class MICanvas extends MIControl {
 
     } //reset_focus
 
-    public function find_focus( ?e:MIMouseEvent ) {
+    public function find_focus( ?e:MouseEvent ) {
 
         focused = get_focused( _mouse_last );
 
@@ -119,7 +119,7 @@ class MICanvas extends MIControl {
 
     } //find_focus
 
-    public override function onmousemove( e:MIMouseEvent ) {
+    public override function onmousemove( e:MouseEvent ) {
 
         _mouse_last.set(e.x,e.y);
 
@@ -178,7 +178,7 @@ class MICanvas extends MIControl {
 
     } //onmousemove
 
-    public override function onmouseup( e:MIMouseEvent ) {
+    public override function onmouseup( e:MouseEvent ) {
 
         _mouse_last.set(e.x,e.y);
 
@@ -196,7 +196,7 @@ class MICanvas extends MIControl {
 
     } //onmouseup
 
-    public override function onmousewheel( e:MIMouseEvent ) {
+    public override function onmousewheel( e:MouseEvent ) {
 
         if(focused != null && focused.mouse_enabled) {
             focused.onmousewheel(e);
@@ -204,7 +204,7 @@ class MICanvas extends MIControl {
 
     } //onmouseup
 
-    public override function onmousedown( e:MIMouseEvent ) {
+    public override function onmousedown( e:MouseEvent ) {
 
         _mouse_last.set(e.x,e.y);
 
@@ -223,7 +223,7 @@ class MICanvas extends MIControl {
         return depth;
     } //next_depth
 
-    public override function add( child:MIControl ) {
+    public override function add( child:Control ) {
         super.add(child);
     } //add
 
@@ -239,4 +239,4 @@ class MICanvas extends MIControl {
         super.destroy();
     } //destroy
 
-} //MICanvas
+} //Canvas

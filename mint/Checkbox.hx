@@ -1,9 +1,9 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
-class MICheckbox extends MIControl {
+class Checkbox extends Control {
 
     public function new(_options:Dynamic) {
 
@@ -22,7 +22,7 @@ class MICheckbox extends MIControl {
         renderer.checkbox.translate( this, _x, _y, _offset );
     }
 
-    public override function set_clip( ?_clip_rect:MIRectangle = null ) {
+    public override function set_clip( ?_clip_rect:Rect = null ) {
 
         super.set_clip(_clip_rect);
         renderer.checkbox.set_clip(this,_clip_rect);
@@ -44,4 +44,4 @@ class MICheckbox extends MIControl {
 
     } //set_depth
 
-} //MIPanel
+} //Panel

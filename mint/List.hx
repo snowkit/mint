@@ -1,14 +1,14 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
-class MIList extends MIControl {
+class List extends Control {
 
-    public var view : MIScrollArea;
-    public var items : Array<MIControl>;
+    public var view : ScrollArea;
+    public var items : Array<Control>;
     public var multiselect : Bool = false;
-    public var onselect : String->MIControl->?MIMouseEvent->Void;
+    public var onselect : String->Control->?MouseEvent->Void;
     public var _options : Dynamic;
 
     var _text_size : Float = 14;
@@ -32,7 +32,7 @@ class MIList extends MIControl {
             _bounds.x = 0;
             _bounds.y = 0;
 
-        view = new MIScrollArea({
+        view = new ScrollArea({
             parent : this,
             bounds : _bounds,
             name : name + '.view',
@@ -41,7 +41,7 @@ class MIList extends MIControl {
 
         _options = __options;
         if(_options.align == null) {
-            _options.align = MITextAlign.center;
+            _options.align = TextAlign.center;
         }
 
     } //new
@@ -78,11 +78,11 @@ class MIList extends MIControl {
 
         var _childbounds = view.children_bounds;
 
-        var l = new MILabel({
+        var l = new Label({
             text : _item,
             onclick : label_selected,
             name : _name == null ? name + '.item.' + _item : _name,
-            bounds : new MIRectangle(0, _childbounds.bottom, bounds.w, 30),
+            bounds : new Rect(0, _childbounds.bottom, bounds.w, 30),
             parent : view,
             depth : depth,
             text_size : _text_size,
@@ -109,9 +109,9 @@ class MIList extends MIControl {
 
     } //translate
 
-    private function label_selected(_control:MIControl, e:MIMouseEvent) {
+    private function label_selected(_control:Control, e:MouseEvent) {
 
-        var _label:MILabel = cast _control;
+        var _label:Label = cast _control;
         renderer.list.select_item(this, _control);
 
         //call callback
@@ -146,4 +146,4 @@ class MIList extends MIControl {
 
     } //set_depth
 
-} //MIList
+} //List

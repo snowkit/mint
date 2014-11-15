@@ -1,10 +1,10 @@
-package minterface;
+package mint;
 
-import minterface.MILabel;
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Label;
+import mint.Types;
+import mint.Control;
 
-class MINumber extends MIControl {
+class Number extends Control {
 
     @:isVar public var value(get,set) : Float;
 
@@ -14,13 +14,13 @@ class MINumber extends MIControl {
     public var precision : Int = 4;
     public var steps : Int = 200;
 
-    public var label : MILabel;
+    public var label : Label;
 
     var can_change : Bool = false;
     var _current : Float = 0.0;
     var startdrag : Int = 0;
 
-    public var on_change : MIControl->Float->Void;
+    public var on_change : Control->Float->Void;
 
     public function new(_options:Dynamic) {
 
@@ -29,14 +29,14 @@ class MINumber extends MIControl {
         mouse_enabled = true;
 
         if(_options.value == null) { _options.value = 0.0; }
-        if(_options.align == null) { _options.align = MITextAlign.center; }
-        if(_options.align_vertical == null) { _options.align_vertical = MITextAlign.center; }
+        if(_options.align == null) { _options.align = TextAlign.center; }
+        if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
         if(_options.text_size != null) { _options.size = _options.text_size; }
         if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
 
         var _value = _options.value;
 
-        label = new MILabel({
+        label = new Label({
             parent : this,
             bounds : _options.bounds.clone().set(0,0),
             text: Std.string(_value),
@@ -63,7 +63,7 @@ class MINumber extends MIControl {
         return value;
     }
 
-    public override function onmousedown(e:MIMouseEvent) {
+    public override function onmousedown(e:MouseEvent) {
         super.onmousedown(e);
         if(!can_change) {
             can_change = true;
@@ -71,7 +71,7 @@ class MINumber extends MIControl {
         }
     }
 
-    public override function onmouseup(e:MIMouseEvent) {
+    public override function onmouseup(e:MouseEvent) {
         super.onmouseup(e);
         if(can_change) {
             can_change = false;
@@ -79,7 +79,7 @@ class MINumber extends MIControl {
         }
     }
 
-    public override function onmousemove(e:MIMouseEvent) {
+    public override function onmousemove(e:MouseEvent) {
         super.onmousemove(e);
         if(can_change) {
             var diff = Std.int(e.x) - startdrag;

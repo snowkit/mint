@@ -1,12 +1,12 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
-import minterface.MIControl;
+import mint.Types;
+import mint.Control;
 
 
-class MIButton extends MIControl {
+class Button extends Control {
 
-    public var label : MILabel;
+    public var label : Label;
 
     public function new(_options:Dynamic) {
 
@@ -15,7 +15,7 @@ class MIButton extends MIControl {
             //buttons can be clicked
         mouse_enabled = true;
             //create the label
-        label = new MILabel({
+        label = new Label({
             parent : this,
             bounds : _options.bounds.clone().set(0,0),
             text:_options.text,
@@ -39,7 +39,7 @@ class MIButton extends MIControl {
         renderer.button.translate( this, _x, _y, _offset );
     }
 
-    public override function set_clip( ?_clip_rect:MIRectangle = null ) {
+    public override function set_clip( ?_clip_rect:Rect = null ) {
 
         super.set_clip(_clip_rect);
         renderer.button.set_clip(this,_clip_rect);

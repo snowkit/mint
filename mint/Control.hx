@@ -1,6 +1,6 @@
-package minterface;
+package mint;
 
-import minterface.MITypes;
+import mint.Types;
 
     //base class for all controls
     //handles propogation of events,
@@ -18,28 +18,28 @@ typedef ChildBounds = {
     var real_h : Float;
 }
 
-class MIControl {
+class Control {
 
     public var name : String = 'control';
 
         //parent canvas that this element belongs to
-    public var canvas : MICanvas;
+    public var canvas : Canvas;
         //the renderer that is handling the canvas
-    public var renderer : MIRenderer;
+    public var renderer : Renderer;
         //the top most control below the canvas that holds us
-    public var closest_to_canvas : MIControl;
+    public var closest_to_canvas : Control;
 
         //the items specific to rendering this item
     public var render_items : Map<String, Dynamic>;
 
         //the relative bounds to the parent
-    public var bounds : MIRectangle;
+    public var bounds : Rect;
         //the absolute bounds in screen space
-    public var real_bounds : MIRectangle;
+    public var real_bounds : Rect;
         //the clipping rectangle for this control
-    public var clip_rect : MIRectangle;
+    public var clip_rect : Rect;
         //the list of children added to this control
-    public var children : Array<MIControl>;
+    public var children : Array<Control>;
         //if the control is under the mouse
     public var isfocused : Bool = false;
         //if the control is under the mouse
@@ -53,40 +53,40 @@ class MIControl {
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
         //a shortcut to adding multiple mousedown handlers
-    @:isVar public var mousedown (get,set) : MIControl->?MIMouseEvent->Void;
+    @:isVar public var mousedown (get,set) : Control->?MouseEvent->Void;
         //a shortcut to adding multiple mouseup handlers
-    @:isVar public var mouseup (get,set) : MIControl->?MIMouseEvent->Void;
+    @:isVar public var mouseup (get,set) : Control->?MouseEvent->Void;
         //a shortcut to adding multiple mousemove handlers
-    @:isVar public var mousemove (get,set) : MIControl->?MIMouseEvent->Void;
+    @:isVar public var mousemove (get,set) : Control->?MouseEvent->Void;
         //a shortcut to adding multiple mousewheel handlers
-    @:isVar public var mousewheel (get,set) : MIControl->?MIMouseEvent->Void;
+    @:isVar public var mousewheel (get,set) : Control->?MouseEvent->Void;
         //a shortcut to adding multiple mouseenter handlers
-    @:isVar public var mouseenter (get,set) : MIControl->?MIMouseEvent->Void;
+    @:isVar public var mouseenter (get,set) : Control->?MouseEvent->Void;
         //a shortcut to adding multiple mouseenter handlers
-    @:isVar public var mouseleave (get,set) : MIControl->?MIMouseEvent->Void;
+    @:isVar public var mouseleave (get,set) : Control->?MouseEvent->Void;
         //the parent control, null if no parent
-    @:isVar public var parent(get,set) : MIControl;
+    @:isVar public var parent(get,set) : Control;
         //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
 
         //the list of internal handlers, for calling
-    var mouse_down_handlers : Array<MIControl->?MIMouseEvent->Void>;
+    var mouse_down_handlers : Array<Control->?MouseEvent->Void>;
         //the list of internal handlers, for calling
-    var mouse_up_handlers : Array<MIControl->?MIMouseEvent->Void>;
+    var mouse_up_handlers : Array<Control->?MouseEvent->Void>;
         //the list of internal handlers, for calling
-    var mouse_move_handlers : Array<MIControl->?MIMouseEvent->Void>;
+    var mouse_move_handlers : Array<Control->?MouseEvent->Void>;
         //the list of internal handlers, for calling
-    var mouse_wheel_handlers : Array<MIControl->?MIMouseEvent->Void>;
+    var mouse_wheel_handlers : Array<Control->?MouseEvent->Void>;
         //the list of internal handlers, for calling
-    var mouse_enter_handlers : Array<MIControl->?MIMouseEvent->Void>;
+    var mouse_enter_handlers : Array<Control->?MouseEvent->Void>;
         //the list of internal handlers, for calling
-    var mouse_leave_handlers : Array<MIControl->?MIMouseEvent->Void>;
+    var mouse_leave_handlers : Array<Control->?MouseEvent->Void>;
 
     public function new(_options:Dynamic) {
 
         render_items = new Map<String,Dynamic>();
 
-        bounds = _options.bounds == null ? new MIRectangle(0,0,32,32) : _options.bounds;
+        bounds = _options.bounds == null ? new Rect(0,0,32,32) : _options.bounds;
         real_bounds = bounds.clone();
 
         if(_options.name != null) { name = _options.name; }
@@ -119,7 +119,7 @@ class MIControl {
 
         } else { //parent != null
 
-            if( !Std.is(this, MICanvas) && canvas == null) {
+            if( !Std.is(this, Canvas) && canvas == null) {
                 throw "Control without a canvas " + _options;
             } //canvas
         }
@@ -129,7 +129,7 @@ class MIControl {
 
     } //new
 
-    public function topmost_child_under_point( _p:MIPoint ) : MIControl {
+    public function topmost_child_under_point( _p:Point ) : Control {
 
             //if we have no children, we are the topmost child
         if(children.length == 0) return this;
@@ -137,7 +137,7 @@ class MIControl {
             //if we have children, we look at each one, looking for the highest one
             //after we have the highest one, we ask it to return it's own highest child
 
-        var highest_child : MIControl = this;
+        var highest_child : Control = this;
         var highest_depth : Float = 0;
 
         for(_child in children) {
@@ -159,7 +159,7 @@ class MIControl {
 
     } //topmost_child_under_point
 
-    public function contains_point( _p:MIPoint ) {
+    public function contains_point( _p:Point ) {
 
             //if we aren't inside the clip_rect
             //we aren't going to be reporting true
@@ -180,16 +180,16 @@ class MIControl {
     } //clip_with_closest_to_canvas
 
 
-    public function clip_with( ?_control:MIControl ) {
+    public function clip_with( ?_control:Control ) {
         if(_control != null) {
             var _b = _control.real_bounds;
-            set_clip( new MIRectangle(_b.x, _b.y, _b.w-1, _b.h-1) );
+            set_clip( new Rect(_b.x, _b.y, _b.w-1, _b.h-1) );
         } else {
             set_clip();
         }
     } //clip_with
 
-    public function set_clip( ?_clip_rect:MIRectangle = null ) {
+    public function set_clip( ?_clip_rect:Rect = null ) {
         //temporarily, all children clip by their parent clip
 
         clip_rect = _clip_rect;
@@ -212,7 +212,7 @@ class MIControl {
 
     } //set visible
 
-    function find_top_parent( ?_from:MIControl = null ) {
+    function find_top_parent( ?_from:Control = null ) {
 
         var _target = (_from == null) ? this : _from;
 
@@ -222,7 +222,7 @@ class MIControl {
 
             //if the parent of the target is not canvas,
             //keep escalating until it is
-        if( Std.is( _target.parent, MICanvas ) ) {
+        if( Std.is( _target.parent, Canvas ) ) {
             return _target;
         } else { //is
             return parent.find_top_parent( this );
@@ -254,39 +254,39 @@ class MIControl {
         return mouse_leave_handlers[0];
     }
 
-    function set_mouseenter( listener: MIControl->?MIMouseEvent->Void ) {
+    function set_mouseenter( listener: Control->?MouseEvent->Void ) {
         mouse_enter_handlers.push(listener);
         return listener;
     }
-    function set_mousedown( listener: MIControl->?MIMouseEvent->Void ) {
+    function set_mousedown( listener: Control->?MouseEvent->Void ) {
         mouse_down_handlers.push(listener);
         return listener;
     }
-    function set_mouseup( listener: MIControl->?MIMouseEvent->Void ) {
+    function set_mouseup( listener: Control->?MouseEvent->Void ) {
         mouse_up_handlers.push(listener);
         return listener;
     }
-    function set_mousemove( listener: MIControl->?MIMouseEvent->Void ) {
+    function set_mousemove( listener: Control->?MouseEvent->Void ) {
         mouse_move_handlers.push(listener);
         return listener;
     }
-    function set_mousewheel( listener: MIControl->?MIMouseEvent->Void ) {
+    function set_mousewheel( listener: Control->?MouseEvent->Void ) {
         mouse_wheel_handlers.push(listener);
         return listener;
     }
-    function set_mouseleave( listener: MIControl->?MIMouseEvent->Void ) {
+    function set_mouseleave( listener: Control->?MouseEvent->Void ) {
         mouse_leave_handlers.push(listener);
         return listener;
     }
 
-    public function add( child:MIControl ) {
+    public function add( child:Control ) {
         if(child.parent != this) {
             child.parent = this;
             children.push(child);
         }
     }
 
-    public function remove( child:MIControl ) {
+    public function remove( child:Control ) {
         if(child.parent == this) {
             children.remove(child);
         }
@@ -391,7 +391,7 @@ class MIControl {
     } //children_bounds
 
 
-    public function onmousemove( e:MIMouseEvent ) {
+    public function onmousemove( e:MouseEvent ) {
 
         if(mousemove != null) {
             for(handler in mouse_move_handlers) {
@@ -406,7 +406,7 @@ class MIControl {
 
     } //onmousemove
 
-    public function onmouseup( e:MIMouseEvent ) {
+    public function onmouseup( e:MouseEvent ) {
 
         if(mouseup != null) {
             for(handler in mouse_up_handlers) {
@@ -421,7 +421,7 @@ class MIControl {
 
     } //onmouseup
 
-    public function onmousewheel( e:MIMouseEvent ) {
+    public function onmousewheel( e:MouseEvent ) {
 
         if(mousewheel != null) {
             for(handler in mouse_wheel_handlers) {
@@ -436,7 +436,7 @@ class MIControl {
 
     } //onmousewheel
 
-    public function onmousedown( e:MIMouseEvent ) {
+    public function onmousedown( e:MouseEvent ) {
 
         if(mousedown != null) {
             for(handler in mouse_down_handlers) {
@@ -451,7 +451,7 @@ class MIControl {
 
     } //onmousedown
 
-    public function onmouseenter( e:MIMouseEvent ) {
+    public function onmouseenter( e:MouseEvent ) {
         // trace('mouse enter ' + name);
 
         if(mouseenter != null) {
@@ -462,7 +462,7 @@ class MIControl {
 
     }
 
-    public function onmouseleave( e:MIMouseEvent ) {
+    public function onmouseleave( e:MouseEvent ) {
         // trace('mouse leave ' + name);
         if(mouseleave != null) {
             for(handler in mouse_leave_handlers) {
@@ -511,7 +511,7 @@ class MIControl {
 
 //Parent properties
 
-    private function set_parent(p:MIControl) {
+    private function set_parent(p:Control) {
 
         if(p != null) {
             real_bounds.set( p.real_bounds.x+bounds.x, p.real_bounds.y+bounds.y, bounds.w, bounds.h);
@@ -529,5 +529,5 @@ class MIControl {
 
     } //get_parent
 
-} //MIControl
+} //Control
 
