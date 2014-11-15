@@ -1,13 +1,13 @@
 {
 
   project : {
-    name : 'minterface test',
+    name : 'mint test',
     version : '1.0.0-alpha',
     author : 'underscorediscovery',
 
     app : {
-      name : 'minterfacetest',
-      package : 'com.underscorediscovery.minterface'
+      name : 'minttest',
+      package : 'org.snowkit.mint'
     },
 
     build : {

@@ -30,14 +30,6 @@ import phoenix.geometry.RectangleGeometry;
 
 import luxe.NineSlice;
 
-
-//temp copy paste base
-// class REPLACEMELuxeRenderer extends REPLACEMERenderer {
-//  public override function init( _control:REPLACEME, _options:Dynamic ) { } //init
-//  public override function translate( _control:REPLACEME, _x:Float, _y:Float ) { } //translate, ?_offset:Bool = false
-//  public override function set_clip( _control:REPLACEME, ?_clip_rect:Rectangle=null ) { } //set_clip
-// } //REPLACEMELuxeRenderer
-
 class Convert {
 
     public static function text_align( _align:mint.TextAlign ) : TextAlign {
