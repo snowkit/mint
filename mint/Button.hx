@@ -19,12 +19,12 @@ class Button extends Control {
             parent : this,
             bounds : _options.bounds.clone().set(0,0),
             text:_options.text,
-            text_size:_options.text_size,
+            point_size:_options.point_size,
             name : name + '.label'
         });
 
         if(_options.onclick != null) {
-            mousedown = _options.onclick;
+            mousedown.listen(_options.onclick);
         }
 
         renderer.button.init( this, _options );

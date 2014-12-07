@@ -15,7 +15,7 @@ class Dropdown extends Control {
 
     public var onselect : String->Control->?MouseEvent->Void;
 
-    var _text_size : Float = 14;
+    var _point_size : Float = 14;
     var _height : Float = 110;
 
     public function new(_options:Dynamic) {
@@ -25,7 +25,7 @@ class Dropdown extends Control {
             //dropdowns can be clicked
         mouse_enabled = true;
             //set the text size from the default or the options
-        if(_options.text_size != null) _text_size = _options.text_size;
+        if(_options.point_size != null) _point_size = _options.point_size;
         if(_options.height != null) _height = _options.height;
 
             //create the list
@@ -34,7 +34,7 @@ class Dropdown extends Control {
             name : name + '.list',
             bounds : new Rect( 0, bounds.h, bounds.w, _height ),
             align : TextAlign.left,
-            text_size : _text_size,
+            point_size : _point_size,
             onselect : onselected
         });
 
@@ -42,7 +42,7 @@ class Dropdown extends Control {
             parent : this,
             bounds : new Rect(5,0,bounds.w-10, bounds.h),
             text:_options.text,
-            text_size: _text_size,
+            point_size: _point_size,
             name : name + '.selected_label',
             align : TextAlign.left
         });

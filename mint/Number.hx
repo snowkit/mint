@@ -31,7 +31,7 @@ class Number extends Control {
         if(_options.value == null) { _options.value = 0.0; }
         if(_options.align == null) { _options.align = TextAlign.center; }
         if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
-        if(_options.text_size != null) { _options.size = _options.text_size; }
+        if(_options.point_size != null) { _options.size = _options.point_size; }
         if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
 
         var _value = _options.value;
@@ -40,7 +40,7 @@ class Number extends Control {
             parent : this,
             bounds : _options.bounds.clone().set(0,0),
             text: Std.string(_value),
-            text_size:_options.text_size,
+            point_size:_options.point_size,
             name : name + '.label'
         });
 

@@ -44,8 +44,6 @@ class Main extends luxe.Game {
     public var panel2 : Panel;
     public var number : Number;
 
-    var s : Sprite;
-
     override function ready() {
 
         Luxe.renderer.clear_color.set(1,1,1);
@@ -58,12 +56,14 @@ class Main extends luxe.Game {
             depth : 100
         });
 
+        canvas.mousedown.listen(function(e,_){ trace(e); });
+
         button = new Button({
             parent : canvas,
             name : 'click',
             bounds : new Rect( 10, 60, 100, 35 ),
             text : 'click me',
-            text_size : 15,
+            point_size : 15,
             onclick : function(){ trace('hello world'); }
         });
 
@@ -114,7 +114,7 @@ class Main extends luxe.Game {
                 name : 'buildbutton',
                 bounds : new Rect( 20, 245, 160, 35 ),
                 text : 'Make Build',
-                text_size : 13,
+                point_size : 13,
                 onclick : function(){ trace('FAKE build'); }
             });
 
@@ -155,7 +155,7 @@ class Main extends luxe.Game {
                 name : 'button' + (i+1),
                 bounds : new Rect(50, i * 100, 100, 100 ),
                 text : 'click me + '+ (i+1),
-                text_size : 15,
+                point_size : 15,
                 onclick : function(){ trace('click me + '+ (i+1)); }
             });
         }

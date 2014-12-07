@@ -47,7 +47,7 @@ class Window extends Control {
             parent : this,
             bounds : title_bounds,
             text:_options.text,
-            text_size:_options.title_size,
+            point_size:_options.title_size,
             name : name + '.titlelabel'
         });
 
@@ -57,14 +57,14 @@ class Window extends Control {
             bounds : close_bounds,
             text:'x',
             align : TextAlign.left,
-            text_size:13,
+            point_size:13,
             name : name + '.closelabel'
         });
 
         close_button.mouse_enabled = true;
-        close_button.mousedown = function(c:Control, ?e:MouseEvent) {
+        close_button.mousedown.listen(function(e:MouseEvent, _) {
             on_close();
-        }
+        });
 
             //update
         renderer.window.init( this, _options );

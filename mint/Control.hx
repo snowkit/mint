@@ -1,6 +1,7 @@
 package mint;
 
 import mint.Types;
+import mint.utils.Signal;
 
     //base class for all controls
     //handles propogation of events,
@@ -17,6 +18,8 @@ typedef ChildBounds = {
     var real_w : Float;
     var real_h : Float;
 }
+
+typedef MouseSignal = MouseEvent->Control->Void;
 
 class Control {
 
@@ -53,34 +56,22 @@ class Control {
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
         //a shortcut to adding multiple mousedown handlers
-    @:isVar public var mousedown (get,set) : Control->?MouseEvent->Void;
+    public var mousedown : Signal<MouseSignal>;
         //a shortcut to adding multiple mouseup handlers
-    @:isVar public var mouseup (get,set) : Control->?MouseEvent->Void;
+    public var mouseup : Signal<MouseSignal>;
         //a shortcut to adding multiple mousemove handlers
-    @:isVar public var mousemove (get,set) : Control->?MouseEvent->Void;
+    public var mousemove : Signal<MouseSignal>;
         //a shortcut to adding multiple mousewheel handlers
-    @:isVar public var mousewheel (get,set) : Control->?MouseEvent->Void;
+    public var mousewheel : Signal<MouseSignal>;
         //a shortcut to adding multiple mouseenter handlers
-    @:isVar public var mouseenter (get,set) : Control->?MouseEvent->Void;
+    public var mouseenter : Signal<MouseSignal>;
         //a shortcut to adding multiple mouseenter handlers
-    @:isVar public var mouseleave (get,set) : Control->?MouseEvent->Void;
+    public var mouseleave : Signal<MouseSignal>;
+
         //the parent control, null if no parent
     @:isVar public var parent(get,set) : Control;
         //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
-
-        //the list of internal handlers, for calling
-    var mouse_down_handlers : Array<Control->?MouseEvent->Void>;
-        //the list of internal handlers, for calling
-    var mouse_up_handlers : Array<Control->?MouseEvent->Void>;
-        //the list of internal handlers, for calling
-    var mouse_move_handlers : Array<Control->?MouseEvent->Void>;
-        //the list of internal handlers, for calling
-    var mouse_wheel_handlers : Array<Control->?MouseEvent->Void>;
-        //the list of internal handlers, for calling
-    var mouse_enter_handlers : Array<Control->?MouseEvent->Void>;
-        //the list of internal handlers, for calling
-    var mouse_leave_handlers : Array<Control->?MouseEvent->Void>;
 
     public function new(_options:Dynamic) {
 
@@ -92,12 +83,13 @@ class Control {
         if(_options.name != null) { name = _options.name; }
 
         children = [];
-        mouse_down_handlers = [];
-        mouse_up_handlers = [];
-        mouse_move_handlers = [];
-        mouse_wheel_handlers = [];
-        mouse_leave_handlers = [];
-        mouse_enter_handlers = [];
+
+        mousedown = new Signal();
+        mouseup = new Signal();
+        mousemove = new Signal();
+        mousewheel = new Signal();
+        mouseleave = new Signal();
+        mouseenter = new Signal();
 
         children_bounds = {
             x:0,
@@ -230,54 +222,6 @@ class Control {
 
     } //find_top_parent
 
-    function get_mouseenter() {
-        return mouse_enter_handlers[0];
-    }
-
-    function get_mousedown() {
-        return mouse_down_handlers[0];
-    }
-
-    function get_mouseup() {
-        return mouse_up_handlers[0];
-    }
-
-    function get_mousewheel() {
-        return mouse_wheel_handlers[0];
-    }
-
-    function get_mousemove() {
-        return mouse_move_handlers[0];
-    }
-
-    function get_mouseleave() {
-        return mouse_leave_handlers[0];
-    }
-
-    function set_mouseenter( listener: Control->?MouseEvent->Void ) {
-        mouse_enter_handlers.push(listener);
-        return listener;
-    }
-    function set_mousedown( listener: Control->?MouseEvent->Void ) {
-        mouse_down_handlers.push(listener);
-        return listener;
-    }
-    function set_mouseup( listener: Control->?MouseEvent->Void ) {
-        mouse_up_handlers.push(listener);
-        return listener;
-    }
-    function set_mousemove( listener: Control->?MouseEvent->Void ) {
-        mouse_move_handlers.push(listener);
-        return listener;
-    }
-    function set_mousewheel( listener: Control->?MouseEvent->Void ) {
-        mouse_wheel_handlers.push(listener);
-        return listener;
-    }
-    function set_mouseleave( listener: Control->?MouseEvent->Void ) {
-        mouse_leave_handlers.push(listener);
-        return listener;
-    }
 
     public function add( child:Control ) {
         if(child.parent != this) {
@@ -393,11 +337,7 @@ class Control {
 
     public function onmousemove( e:MouseEvent ) {
 
-        if(mousemove != null) {
-            for(handler in mouse_move_handlers) {
-                handler(this, e);
-            }
-        } //mousemove != null
+        mousemove.emit(e, this);
 
             //events bubble upward into the parent
         if(parent != null && parent != canvas && e.bubble) {
@@ -408,11 +348,7 @@ class Control {
 
     public function onmouseup( e:MouseEvent ) {
 
-        if(mouseup != null) {
-            for(handler in mouse_up_handlers) {
-                handler(this, e);
-            }
-        } //mouseup != null
+        mouseup.emit(e, this);
 
             //events bubble upward into the parent
         if(parent != null && parent != canvas && e.bubble) {
@@ -423,11 +359,7 @@ class Control {
 
     public function onmousewheel( e:MouseEvent ) {
 
-        if(mousewheel != null) {
-            for(handler in mouse_wheel_handlers) {
-                handler(this, e);
-            }
-        } //mousewheel != null
+        mousewheel.emit(e, this);
 
             //events bubble upward into the parent
         if(parent != null && parent != canvas && e.bubble) {
@@ -438,14 +370,14 @@ class Control {
 
     public function onmousedown( e:MouseEvent ) {
 
-        if(mousedown != null) {
-            for(handler in mouse_down_handlers) {
-                handler(this, e);
-            }
-        } //mousedown != null
+        mousedown.emit(e, this);
 
             //events bubble upward into the parent
-        if(parent != null && parent != canvas && e.bubble) {
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
             parent.onmousedown(e);
         } //parent not null and parent not canvas
 
@@ -454,22 +386,12 @@ class Control {
     public function onmouseenter( e:MouseEvent ) {
         // trace('mouse enter ' + name);
 
-        if(mouseenter != null) {
-            for(handler in mouse_enter_handlers) {
-                handler(this, e);
-            }
-        } //mouseenter != null
+        mouseenter.emit(e, this);
 
     }
 
     public function onmouseleave( e:MouseEvent ) {
-        // trace('mouse leave ' + name);
-        if(mouseleave != null) {
-            for(handler in mouse_leave_handlers) {
-                handler(this, e);
-            }
-        } //mouseleave != null
-
+        mouseleave.emit(e, this);
     }
 
     public function destroy() {

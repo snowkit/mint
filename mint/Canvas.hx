@@ -206,6 +206,8 @@ class Canvas extends Control {
 
     public override function onmousedown( e:MouseEvent ) {
 
+        super.onmousedown(e);
+
         _mouse_last.set(e.x,e.y);
 
         if(focus_invalid) {

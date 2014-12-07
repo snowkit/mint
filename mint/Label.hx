@@ -19,7 +19,7 @@ class Label extends Control {
         if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
         if(_options.align == null) { _options.align = TextAlign.center; }
         if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
-        if(_options.text_size != null) { _options.size = _options.text_size; }
+        if(_options.point_size != null) { _options.point_size = _options.point_size; }
         if(_options.padding == null) { _options.padding = new Rect(); }
 
         if(_options.onclick != null) {
@@ -27,10 +27,8 @@ class Label extends Control {
             mousedown = _options.onclick;
         }
 
-        _options.pos = new Point(real_bounds.x, real_bounds.y);
             //store the text
         text = _options.text;
-
             //adjust for label
         _options.depth = depth;
             //create it

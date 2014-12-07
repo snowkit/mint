@@ -11,7 +11,7 @@ class List extends Control {
     public var onselect : String->Control->?MouseEvent->Void;
     public var _options : Dynamic;
 
-    var _text_size : Float = 14;
+    var _point_size : Float = 14;
 
     public function new(__options:Dynamic) {
 
@@ -25,7 +25,7 @@ class List extends Control {
         multiselect = (__options.multiselect == null) ? false : __options.multiselect;
         onselect = (__options.onselect == null) ? null : __options.onselect;
             //set the text size from the default or the options
-        if(__options.text_size != null) _text_size = __options.text_size;
+        if(__options.point_size != null) _point_size = __options.point_size;
 
         var _bounds = __options.bounds.clone();
 
@@ -85,7 +85,7 @@ class List extends Control {
             bounds : new Rect(0, _childbounds.bottom, bounds.w, 30),
             parent : view,
             depth : depth,
-            text_size : _text_size,
+            point_size : _point_size,
             align : _options.align
         });
 
