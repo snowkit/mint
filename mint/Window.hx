@@ -5,6 +5,7 @@ import mint.Control;
 import mint.Label;
 
 class Window extends Control {
+#if no
 
     public var title_bounds : Rect;
     public var view_bounds : Rect;
@@ -179,4 +180,5 @@ class Window extends Control {
 
     } //set_depth
 
+#end
 }

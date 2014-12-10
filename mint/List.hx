@@ -4,6 +4,7 @@ import mint.Types;
 import mint.Control;
 
 class List extends Control {
+#if no
 
     public var view : ScrollArea;
     public var items : Array<Control>;
@@ -146,4 +147,5 @@ class List extends Control {
 
     } //set_depth
 
+#end
 } //List

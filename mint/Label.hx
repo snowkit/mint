@@ -2,90 +2,59 @@ package mint;
 
 import mint.Types;
 import mint.Control;
+import mint.utils.Signal;
+
+typedef LabelOptions = {
+    > ControlOptions,
+    text: String,
+    ? align: mint.Types.TextAlign,
+    ? align_vertical: mint.Types.TextAlign,
+    ? point_size: Float,
+    ? onclick: MouseSignal
+}
 
 class Label extends Control {
 
-    @:isVar public var text(get,set) : String;
+    @:isVar public var text(default, set) : String;
 
-    public function new(_options:Dynamic) {
+    @:allow(mint.ControlRenderer)
+        var ontext : Signal<String->Void>;
+    @:allow(mint.ControlRenderer)
+        var label_options : LabelOptions;
 
-        super(_options);
+    public function new( _options:LabelOptions ) {
 
-        _options.bounds = real_bounds;
+        ontext = new Signal();
+        label_options = _options;
 
             //disable mouse input by default
         mouse_enabled = false;
 
-        if(_options.mouse_enabled != null) { mouse_enabled = _options.mouse_enabled; }
-        if(_options.align == null) { _options.align = TextAlign.center; }
-        if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
-        if(_options.point_size != null) { _options.point_size = _options.point_size; }
-        if(_options.padding == null) { _options.padding = new Rect(); }
+        super(label_options);
 
-        if(_options.onclick != null) {
+            //assign any potential options
+        if(label_options.align == null)          { label_options.align = TextAlign.center; }
+        if(label_options.align_vertical == null) { label_options.align_vertical = TextAlign.center; }
+
+        if(label_options.onclick != null) {
+            trace('label on click added');
             mouse_enabled = true;
-            mousedown = _options.onclick;
+            mousedown.listen(label_options.onclick);
         }
 
             //store the text
-        text = _options.text;
-            //adjust for label
-        _options.depth = depth;
+        text = label_options.text;
             //create it
-        renderer.label.init(this,_options);
-
-        set_clip( clip_rect );
+        canvas.renderer.render(Label, this);
 
     } //new
 
     public function set_text(_s:String) : String {
 
-        renderer.label.set_text(this, _s);
-
-        return text = _s;
+        text = _s;
+        ontext.emit( text );
+        return text;
 
     } //set_text
 
-    public function get_text() : String {
-
-        return text;
-
-    } //get_text
-
-    public override function translate( ?_x : Float = 0, ?_y : Float = 0, ?_offset:Bool = false ) {
-        super.translate( _x, _y, _offset );
-        renderer.label.translate( this, _x, _y, _offset );
-    }
-
-    public override function set_clip( ?_clip_rect:Rect = null ) {
-
-        super.set_clip( _clip_rect );
-        renderer.label.set_clip( this, _clip_rect );
-
-    } //
-
-    public override function onmousemove(e) {
-        super.onmousemove(e);
-    } //onmousemove
-
-    public override function destroy() {
-        super.destroy();
-        renderer.label.destroy(this);
-    }
-
-    public override function set_visible( ?_visible:Bool = true ) {
-        super.set_visible(_visible);
-        renderer.label.set_visible(this, _visible);
-    } //set_visible
-
-    private override function set_depth( _depth:Float ) : Float {
-
-        super.set_depth(_depth);
-
-        renderer.label.set_depth(this, _depth);
-
-        return depth;
-
-    } //set_depth
-
-}
+} //Label

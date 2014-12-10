@@ -4,6 +4,7 @@ import mint.Types;
 import mint.Control;
 
 class ScrollArea extends Control {
+#if no
 
 
     public var can_scroll_h : Bool = false;
@@ -271,4 +272,6 @@ class ScrollArea extends Control {
         return depth;
 
     } //set_depth
+
+#end
 }

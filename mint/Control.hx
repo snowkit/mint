@@ -2,24 +2,24 @@ package mint;
 
 import mint.Types;
 import mint.utils.Signal;
+import mint.Renderer;
 
-    //base class for all controls
-    //handles propogation of events,
-    //mouse handling, alignment, so on
 
-typedef ChildBounds = {
-    var x : Float;
-    var y : Float;
-    var bottom : Float;
-    var right : Float;
+typedef ControlOptions = {
+    ?name:String,
+    ?bounds : Rect,
+    ?parent: Control,
+    ?depth: Float,
 
-    var real_y : Float;
-    var real_x : Float;
-    var real_w : Float;
-    var real_h : Float;
+    ?mouse_enabled : Bool,
 }
 
 typedef MouseSignal = MouseEvent->Control->Void;
+
+
+//base class for all controls
+//handles propogation of events,
+//mouse handling, alignment, so on
 
 class Control {
 
@@ -27,13 +27,8 @@ class Control {
 
         //parent canvas that this element belongs to
     public var canvas : Canvas;
-        //the renderer that is handling the canvas
-    public var renderer : Renderer;
         //the top most control below the canvas that holds us
     public var closest_to_canvas : Control;
-
-        //the items specific to rendering this item
-    public var render_items : Map<String, Dynamic>;
 
         //the relative bounds to the parent
     public var bounds : Rect;
@@ -47,11 +42,11 @@ class Control {
     public var isfocused : Bool = false;
         //if the control is under the mouse
     public var ishovered : Bool = false;
-        //if the control is visible
-    public var visible : Bool = true;
         //if the control accepts mouse events
-    public var mouse_enabled : Bool = true;
+    public var mouse_enabled : Bool = false;
 
+        //if the control is visible
+    @:isVar public var visible (default, set) : Bool = true;
         //a getter for the bounds information about the children and their children in this control
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
@@ -73,14 +68,36 @@ class Control {
         //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
 
-    public function new(_options:Dynamic) {
+    @:allow(mint.ControlRenderer)
+        var options : ControlOptions;
 
-        render_items = new Map<String,Dynamic>();
+        //shared render event signals
+    @:allow(mint.ControlRenderer)
+        var ondestroy : Signal<Void->Void>;
+    @:allow(mint.ControlRenderer)
+        var onvisible : Signal<Bool->Void>;
+    @:allow(mint.ControlRenderer)
+        var ondepth : Signal<Float->Void>;
+    @:allow(mint.ControlRenderer)
+        var ontranslate : Signal<Float->Float->Bool->Void>;
+    @:allow(mint.ControlRenderer)
+        var onclip : Signal<Rect->Void>;
 
-        bounds = _options.bounds == null ? new Rect(0,0,32,32) : _options.bounds;
+    public function new( _options:ControlOptions ) {
+
+        options = _options;
+        ondestroy = new Signal();
+        onvisible = new Signal();
+        ondepth = new Signal();
+        ontranslate = new Signal();
+        onclip = new Signal();
+
+        bounds = options.bounds == null ? new Rect(0,0,32,32) : options.bounds;
         real_bounds = bounds.clone();
 
-        if(_options.name != null) { name = _options.name; }
+        if(options.name != null)            { name = options.name; }
+        if(options.mouse_enabled != null)   { trace('set me');mouse_enabled = options.mouse_enabled; }
+        // if(options.padding == null)         { options.padding = new Rect(); }
 
         children = [];
 
@@ -102,17 +119,16 @@ class Control {
             real_h : 0
         };
 
-        if(_options.parent != null) {
+        if(options.parent != null) {
 
-            renderer = _options.parent.renderer;
-            canvas = _options.parent.canvas;
+            canvas = options.parent.canvas;
             depth = canvas.next_depth();
-            _options.parent.add(this);
+            options.parent.add(this);
 
         } else { //parent != null
 
             if( !Std.is(this, Canvas) && canvas == null) {
-                throw "Control without a canvas " + _options;
+                throw "Control without a canvas " + options;
             } //canvas
         }
 
@@ -185,6 +201,7 @@ class Control {
         //temporarily, all children clip by their parent clip
 
         clip_rect = _clip_rect;
+        onclip.emit(clip_rect);
 
         // for(_child in children) {
         //  _child.set_clip( _clip_rect );
@@ -192,15 +209,18 @@ class Control {
 
     } //set clip
 
-    public function set_visible( ?_visible:Bool = true ) {
+    function set_visible( _visible:Bool) {
 
         visible = _visible;
+        onvisible.emit(visible);
 
         canvas.focus_invalid = true;
 
         for(_child in children) {
-            _child.set_visible( _visible );
+            _child.visible = visible;
         }
+
+        return visible;
 
     } //set visible
 
@@ -253,6 +273,8 @@ class Control {
             clip_rect.x += _x;
             clip_rect.y += _y;
         }
+
+        ontranslate.emit(_x, _y, _offset);
 
         for(child in children) {
             child.translate( _x, _y, _offset );
@@ -402,6 +424,8 @@ class Control {
             parent.remove(this);
         }
 
+        ondestroy.emit();
+
     } //destroy
 
     public function update(dt:Float) {
@@ -420,6 +444,7 @@ class Control {
     private function set_depth( _depth:Float ) : Float {
 
         depth = _depth;
+        ondepth.emit(depth);
 
         if(canvas != this) {
             for(child in children) {
@@ -453,3 +478,15 @@ class Control {
 
 } //Control
 
+
+typedef ChildBounds = {
+    var x : Float;
+    var y : Float;
+    var bottom : Float;
+    var right : Float;
+
+    var real_y : Float;
+    var real_x : Float;
+    var real_w : Float;
+    var real_h : Float;
+}

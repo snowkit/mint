@@ -30,89 +30,6 @@ import phoenix.geometry.RectangleGeometry;
 
 import luxe.NineSlice;
 
-class Convert {
-
-    public static function text_align( _align:mint.TextAlign ) : TextAlign {
-
-        switch(_align) {
-            case mint.TextAlign.left:
-                return TextAlign.left;
-            case mint.TextAlign.right:
-                return TextAlign.right;
-            case mint.TextAlign.center:
-                return TextAlign.center;
-            case mint.TextAlign.top:
-                return TextAlign.top;
-            case mint.TextAlign.bottom:
-                return TextAlign.bottom;
-            case _:
-        }
-
-        return TextAlign.left;
-
-    } //text_align
-
-    public static function rect( _rect:Rect ) : Rectangle {
-        if(_rect == null){ throw "Rectangle passed in as null"; }
-        return new Rectangle( _rect.x, _rect.y, _rect.w, _rect.h );
-    } //rect
-
-    public static function point( _point:Point ) : Vector {
-        if(_point == null){ throw "Point passed in as null"; }
-        return new Vector( _point.x, _point.y );
-    } //point
-
-    public static function interact_state( _state:InteractState ) : mint.InteractState {
-        switch(_state) {
-            case InteractState.unknown:
-                return mint.InteractState.unknown;
-            case InteractState.none:
-                return mint.InteractState.none;
-            case InteractState.down:
-                return mint.InteractState.down;
-            case InteractState.up:
-                return mint.InteractState.up;
-            case InteractState.move:
-                return mint.InteractState.move;
-            case InteractState.wheel:
-                return mint.InteractState.wheel;
-            case InteractState.axis:
-                return mint.InteractState.axis;
-        } //state
-    } //interact_state
-
-    public static function mouse_button( _button:MouseButton ) : mint.MouseButton {
-        switch(_button) {
-            case MouseButton.none:
-                return mint.MouseButton.none;
-            case MouseButton.left:
-                return mint.MouseButton.left;
-            case MouseButton.middle:
-                return mint.MouseButton.middle;
-            case MouseButton.right:
-                return mint.MouseButton.right;
-            case MouseButton.extra1:
-                return mint.MouseButton.extra1;
-            case MouseButton.extra2:
-                return mint.MouseButton.extra2;
-        } //state
-    } //mouse_button
-
-    public static function mouse_event( _event:MouseEvent ) : mint.MouseEvent {
-        return {
-            state : interact_state(_event.state),
-            button : mouse_button(_event.button),
-            window_id : _event.window_id,
-            timestamp : _event.timestamp,
-            x : _event.x,
-            y : _event.y,
-            xrel : _event.xrel,
-            yrel : _event.yrel,
-            bubble : true
-        };
-    } //mouse_event
-
-} //Convert
 
 class LuxeRenderer extends Renderer {
 
@@ -297,7 +214,7 @@ class ButtonLuxeRenderer extends ButtonRenderer {
     public override function init( _control:Button, _options:Dynamic ) {
 
 
-            //store the old parent as NineSlice will think we want it to be using parenting
+        //store the old parent as NineSlice will think we want it to be using parenting
         var _oldp = _options.parent;
             _options.parent = null;
 

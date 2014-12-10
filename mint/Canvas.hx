@@ -2,6 +2,12 @@ package mint;
 
 import mint.Types;
 import mint.Control;
+import mint.Renderer;
+
+typedef CanvasOptions = {
+    > ControlOptions,
+    renderer : Renderer
+}
 
 class Canvas extends Control {
 
@@ -9,49 +15,34 @@ class Canvas extends Control {
     public var dragged : Control;
     public var modal   : Control;
 
+    public var renderer : Renderer;
     public var focus_invalid : Bool = true;
 
-    public function new( _options:Dynamic ) {
+    var canvas_options: CanvasOptions;
+
+    public function new( _options:CanvasOptions ) {
 
         if(_options == null) throw "No options given to canvas, at least a Renderer is required.";
         if(_options.renderer == null) throw "No renderer given to Canvas, cannot create this way.";
         if(_options.name == null) _options.name = 'canvas';
         if(_options.bounds == null) _options.bounds = new Rect(0, 0, 800, 600 );
 
+        canvas_options = _options;
         renderer = _options.renderer;
 
         super(_options);
-        if(_options.parent == null) {
-            canvas = this;
-        } else {
-            canvas = _options.parent;
-        } //parent null
+        canvas = this;
 
         mouse_enabled = true;
         focused = null;
         depth = _options.depth;
+        depths = depth;
 
-        renderer.canvas.init( this, _options );
+        renderer.render( Canvas, this );
 
         _mouse_last = new Point();
 
     } //new
-
-    public override function set_visible( ?_visible:Bool = true ) {
-        super.set_visible(_visible);
-        renderer.canvas.set_visible(this, _visible);
-    } //set_visible
-
-
-    private override function set_depth( _depth:Float ) : Float {
-
-        super.set_depth(_depth);
-
-        renderer.canvas.set_depth(this, _depth);
-
-        return depth;
-
-    } //set_depth
 
     public function topmost_control_under_point( _p:Point ) {
         var _control = topmost_child_under_point(_p);
@@ -220,9 +211,10 @@ class Canvas extends Control {
 
     } //onmousedown
 
+    var depths:Float = 0;
     public function next_depth() {
-        depth+=1;
-        return depth;
+        depths += 1;
+        return depths;
     } //next_depth
 
     public override function add( child:Control ) {

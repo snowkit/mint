@@ -1,0 +1,11 @@
+{
+    "folders":
+    [
+        {
+            "path": ".",
+            "folder_exclude_patterns": ["bin","assets_src"],
+            "file_exclude_patterns": [".gitignore"],
+            "follow_symlinks": true
+        }
+    ]
+}

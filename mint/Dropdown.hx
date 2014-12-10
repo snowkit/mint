@@ -6,6 +6,7 @@ import mint.Label;
 import mint.List;
 
 class Dropdown extends Control {
+#if no
 
     public var list : List;
     public var selected_label : Label;
@@ -160,4 +161,5 @@ class Dropdown extends Control {
         super.onmouseup(e);
     }
 
+#end
 }

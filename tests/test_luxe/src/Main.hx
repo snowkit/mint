@@ -1,206 +1,91 @@
 
 import luxe.Color;
-import luxe.Rectangle;
-import luxe.Text;
 import luxe.Vector;
 import luxe.Input;
-import luxe.Sprite;
-
-import phoenix.BitmapFont.TextAlign;
-import phoenix.Rectangle;
 
 import mint.Types;
-import mint.Control;
-import mint.Canvas;
-import mint.Button;
-import mint.Image;
-import mint.ScrollArea;
-import mint.List;
-import mint.Window;
-import mint.Dropdown;
-import mint.Panel;
-import mint.Checkbox;
-import mint.Number;
-
-import mint.renderer.LuxeRenderer;
-
+import mint.render.LuxeMintRender;
 
 class Main extends luxe.Game {
 
-    public var renderer : LuxeRenderer;
+    var canvas: mint.Canvas;
+    var label: mint.Label;
+    var button: mint.Button;
+    var image: mint.Image;
 
-    public var canvas : Canvas;
-    public var button : Button;
-    public var button1 : Button;
-    public var image : Image;
-    public var scroller : ScrollArea;
-    public var scroller1 : ScrollArea;
-    public var itemlist : List;
-    public var window1 : Window;
-    public var window : Window;
-    public var selector : Dropdown;
-    public var selector2 : Dropdown;
-    public var panel : Panel;
-    public var panel2 : Panel;
-    public var number : Number;
+    var render: LuxeMintRenderer;
 
     override function ready() {
 
-        Luxe.renderer.clear_color.set(1,1,1);
+        Luxe.renderer.clear_color.rgb(0x373737);
 
-        renderer = new LuxeRenderer();
-
-        canvas  = new Canvas({
-            bounds : new Rect( 0, 0, Luxe.screen.w, Luxe.screen.h ),
-            renderer : renderer,
-            depth : 100
+        render = new LuxeMintRenderer();
+        canvas = new mint.Canvas({
+            renderer: render,
+            bounds: new Rect(10,10,500,300)
         });
 
-        canvas.mousedown.listen(function(e,_){ trace(e); });
-
-        button = new Button({
-            parent : canvas,
-            name : 'click',
-            bounds : new Rect( 10, 60, 100, 35 ),
-            text : 'click me',
-            point_size : 15,
-            onclick : function(){ trace('hello world'); }
+        label = new mint.Label({
+            parent: canvas,
+            name: 'label1',
+            bounds: new Rect(10,10,100,32),
+            text: 'hello mint',
+            point_size: 14,
+            onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
         });
 
-        itemlist = new List({
-            parent : canvas,
-            name : 'list1',
-            bounds : new Rect(10, 100, 100,380)
+        button = new mint.Button({
+            parent: canvas,
+            name: 'button1',
+            bounds: new Rect(10,52,100,32),
+            text: 'mint button',
+            point_size: 14,
+            onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
 
-        itemlist.add_item('items one');
-        itemlist.add_items(['item','blah','some more','longer item','short','when do','iam','one','two','three','four','five','six','seven','eight','nine']);
-
-        var tt = Luxe.loadTexture('assets/image.png');
-
-        tt.onload = function(t_) {
-
-            window1 = new Window({
-                parent : canvas,
-                name : 'image view',
-                title : 'Image view',
-                title_size : 13,
-                bounds : new Rect(430, 60, 300, 360)
-            });
-
-            scroller1 = new ScrollArea({
-                parent : window1,
-                name : 'scrollarea1',
-                bounds : new Rect( 10, 40, 280, 300 )
-            });
-
-            image = new Image({
-                parent : scroller1,
-                name : 'image',
-                bounds : new Rect( 0, 0, tt.width, tt.height ),
-                texture : tt
-            });
-
-            window = new Window({
-                parent : canvas,
-                name : 'builder',
-                title : 'Export Build',
-                title_size : 13,
-                bounds : new Rect(750, 70, 200, 300)
-            });
-
-            button1 = new Button({
-                parent : window,
-                name : 'buildbutton',
-                bounds : new Rect( 20, 245, 160, 35 ),
-                text : 'Make Build',
-                point_size : 13,
-                onclick : function(){ trace('FAKE build'); }
-            });
-
-            selector = new Dropdown({
-                parent : window,
-                name : 'selector',
-                bounds : new Rect( 20, 40, 160, 30 ),
-                text : 'Select output target'
-            });
-
-            selector2 = new Dropdown({
-                parent : window,
-                name : 'selector2',
-                bounds : new Rect( 20, 80, 160, 30 ),
-                text : 'Select build format'
-            });
-
-            selector.add_items(['Mac', 'Windows', 'Linux', 'HTML5', 'Android', 'iOS']);
-            selector2.add_items(['zip', 'folder']);
-
-             number = new Number({
-                parent : window,
-                name : 'number',
-                bounds : new Rect( 20, 140, 160, 30 ),
-                value : 0.0
-            });
-        }
-
-        scroller = new ScrollArea({
-            parent : canvas,
-            name : 'scrollarea',
-            bounds : new Rect( 120, 60, 300, 360 )
-        });
-
-        for(i in 0 ... 5) {
-            var l = new Button({
-                parent : scroller,
-                name : 'button' + (i+1),
-                bounds : new Rect(50, i * 100, 100, 100 ),
-                text : 'click me + '+ (i+1),
-                point_size : 15,
-                onclick : function(){ trace('click me + '+ (i+1)); }
-            });
-        }
-
-        panel = new Panel({
-            parent : canvas,
-            name : 'panel',
-            bounds : new Rect(0, 0, canvas.bounds.w, 48)
-        });
-
-        panel2 = new Panel({
-            parent : canvas,
-            name : 'panel2',
-            bar : 'top',
-            bounds : new Rect(0, canvas.bounds.h-20, canvas.bounds.w, 20)
+        image = new mint.Image({
+            parent: canvas,
+            name: 'image1',
+            bounds: new Rect(10,102,64,64),
+            path: 'assets/transparency.png'
         });
 
 
     } //ready
 
     override function onmousemove(e) {
-        var _e = Convert.mouse_event(e);
-        canvas.onmousemove(_e);
+        canvas.onmousemove( Convert.mouse_event(e) );
     }
 
     override function onmousewheel(e) {
-        var _e = Convert.mouse_event(e);
-        canvas.onmousewheel(_e);
+        canvas.onmousewheel( Convert.mouse_event(e) );
     }
 
     override function onmouseup(e) {
-        var _e = Convert.mouse_event(e);
-        canvas.onmouseup(_e);
+        canvas.onmouseup( Convert.mouse_event(e) );
     }
 
     override function onmousedown(e) {
-        var _e = Convert.mouse_event(e);
-        canvas.onmousedown(_e);
+        canvas.onmousedown( Convert.mouse_event(e) );
     }
 
     override function onkeyup(e:KeyEvent) {
 
+        if(e.keycode == Key.right) {
+            canvas.translate(100,0);
+        }
+        if(e.keycode == Key.left) {
+            canvas.translate(-100,0);
+        }
+
+        if(e.keycode == Key.key_v) {
+            canvas.visible = !canvas.visible;
+        }
+
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }
+
     } //onkeyup
 
     override function update(dt:Float) {
@@ -208,8 +93,8 @@ class Main extends luxe.Game {
     } //update
 
     override function ondestroy() {
-
     } //shutdown
-}
+
+} //Main
 
 

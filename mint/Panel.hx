@@ -4,6 +4,7 @@ import mint.Types;
 import mint.Control;
 
 class Panel extends Control {
+#if no
 
 	public function new(_options:Dynamic) {
 
@@ -44,4 +45,5 @@ class Panel extends Control {
 
 	} //set_depth
 
+#end
 } //Panel
