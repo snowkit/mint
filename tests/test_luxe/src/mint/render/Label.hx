@@ -26,6 +26,7 @@ class Label extends mint.render.Base {
             bounds: Convert.rect(control.real_bounds),
             color: new Color(),
             text: label.text,
+            bounds_wrap: label.label_options.bounds_wrap,
             align: Convert.text_align(label.label_options.align),
             align_vertical: Convert.text_align(label.label_options.align),
             point_size: label.label_options.point_size,

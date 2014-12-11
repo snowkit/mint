@@ -114,6 +114,12 @@ class Canvas extends Control {
 
         _mouse_last.set(e.x,e.y);
 
+        var _inside = real_bounds.point_inside(_mouse_last);
+
+        if(!_inside) {
+            onmouseup(e);
+        }
+
             //first we check if the mouse is still inside the focused element
         if(focused != null) {
 
@@ -147,7 +153,7 @@ class Canvas extends Control {
         } else { //focused != null
 
                 //nothing focused at the moment, check that the mouse is inside our canvas first
-            if( real_bounds.point_inside(_mouse_last) ) {
+            if( _inside ) {
 
                 find_focus(e);
 

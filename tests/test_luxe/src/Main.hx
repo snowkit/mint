@@ -79,31 +79,11 @@ class Main extends luxe.Game {
             list = new mint.List({
                 parent: canvas,
                 name: 'list1',
-                bounds: new Rect(160,10,128,256)
+                bounds: new Rect(160,10,256,400)
             });
 
-            for(i in 0 ... 3) {
-                list.add_item(
-                    new mint.Button({
-                        name: 'list_item_${i*2}',
-                        text: 'list_item_${i*2}',
-                        parent: list,
-                        mouse_enabled:true,
-                        point_size: 16,
-                        bounds: new Rect(0,10,128,32),
-                        path: 'assets/transparency.png'
-                    })
-                );
-
-                list.add_item(
-                    new mint.Image({
-                        name: 'list_item_${i*2+1}',
-                        parent: list,
-                        mouse_enabled:true,
-                        bounds: new Rect(0,10,128,128),
-                        path: 'assets/transparency.png'
-                    })
-                );
+            for(i in 0 ... 5) {
+                list.add_item( create_block(i) );
             } //for
 
             trace(canvas.nodes);
@@ -112,6 +92,53 @@ class Main extends luxe.Game {
 
 
     } //ready
+
+    function create_block(idx:Int) {
+
+        var titles = ['Sword of Extraction', 'Fortitude', 'Wisdom stone', 'Cursed Blade', 'Risen Staff' ];
+        var desc = ['Steals 30% life of every hit from the target',
+                    '3 second Invulnerability', 'Passive: intelligence +5',
+                    'Each attack deals 1 damage to the weilder', 'Undead staff deals 3x damage to human enemies' ];
+
+        var _panel = new mint.Panel({
+            parent: list,
+            name: 'panel_${idx}',
+            bounds: new Rect(10,4,236,96),
+        });
+
+        new mint.Image({
+            name: 'icon_${idx}',
+            parent: _panel,
+            mouse_enabled:true,
+            bounds: new Rect(8,8,80,80),
+            path: 'assets/transparency.png'
+        });
+
+        new mint.Label({
+            name: 'label_${idx}',
+            parent: _panel,
+            mouse_enabled:true,
+            bounds: new Rect(96,8,148,18),
+            point_size: 16,
+            align: TextAlign.left,
+            align_vertical: TextAlign.top,
+            text: titles[idx]
+        });
+
+        new mint.Label({
+            name: 'desc_${idx}',
+            parent: _panel,
+            mouse_enabled:true,
+            bounds_wrap: true,
+            bounds: new Rect(96,30,132,18),
+            point_size: 12,
+            align: TextAlign.left,
+            align_vertical: TextAlign.top,
+            text: desc[idx]
+        });
+
+        return _panel;
+    }
 
     override function onmousemove(e) {
         if(canvas!=null) canvas.onmousemove( Convert.mouse_event(e) );

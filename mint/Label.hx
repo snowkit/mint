@@ -9,6 +9,7 @@ typedef LabelOptions = {
     text: String,
     ? align: mint.Types.TextAlign,
     ? align_vertical: mint.Types.TextAlign,
+    ? bounds_wrap: Bool,
     ? point_size: Float,
     ? onclick: MouseSignal
 }

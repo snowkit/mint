@@ -155,6 +155,24 @@ class ScrollArea extends Control {
 
     } //onmousewheel
 
+    override function set_bounds( _b:Rect ) {
+
+        var setup = bounds == null;
+
+        super.set_bounds(_b);
+
+        if(!setup) {
+            scroll.v.bounds = new Rect( real_bounds.x+real_bounds.w-8, real_bounds.y+scroll.v.amount, 8,16);
+            scroll.h.bounds = new Rect( real_bounds.x+scroll.h.amount, real_bounds.y+real_bounds.h-8, 16,8);
+                //make sure the scroll bits are refreshed,
+                //todo: less than ideal ofc
+            onbounds.emit();
+        }
+
+        return bounds;
+
+    } //set_bounds
+
     public override function translate(?_x:Float = 0, ?_y:Float = 0, ?_offset:Bool = false ) {
 
         scroll.h.bounds.x += _x;

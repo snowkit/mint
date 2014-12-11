@@ -69,6 +69,14 @@ class Scroll extends mint.render.Base {
         destroy();
     } //ondestroy
 
+    override function onbounds() {
+        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
+        visual.geometry_quad.resize( new Vector(control.real_bounds.w, control.real_bounds.h) );
+        //
+        scrollh.pos.set_xy(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y);
+        scrollv.pos.set_xy(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y);
+    }
+
     function onscroll(_dx:Float=0.0, _dy:Float=0.0) {
         _debug('scroll / $_dx / $_dy');
         scrollh.pos.x = scroll.scroll.h.bounds.x;
