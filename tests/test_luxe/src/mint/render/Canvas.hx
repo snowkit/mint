@@ -4,8 +4,12 @@ import mint.Types;
 import mint.Renderer;
 
 import mint.render.LuxeMintRender;
+import mint.render.Convert;
+
 import phoenix.geometry.QuadGeometry;
 import luxe.Color;
+import luxe.Log.log;
+import luxe.Log._debug;
 
 class Canvas extends mint.render.Base {
 
@@ -17,7 +21,7 @@ class Canvas extends mint.render.Base {
         super(_render, _control);
         canvas = _control;
 
-        trace('canvas create / ${control.name}');
+        _debug('create / ${control.name}');
         back = Luxe.draw.box({
             x:control.real_bounds.x,
             y:control.real_bounds.y,
@@ -34,7 +38,7 @@ class Canvas extends mint.render.Base {
     } //new
 
     override function ondestroy() {
-        trace('canvas / destroy');
+        _debug('destroy');
 
         disconnect();
 
@@ -45,7 +49,7 @@ class Canvas extends mint.render.Base {
     }
 
     override function onclip( _rect:Rect ) {
-        trace('canvas / clip / $_rect');
+        _debug('clip / $_rect');
         if(_rect == null) {
             back.clip_rect = null;
         } else {
@@ -54,17 +58,17 @@ class Canvas extends mint.render.Base {
     } //onclip
 
     override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        trace('canvas / translate / $_x / $_y / $_offset');
+        _debug('translate / $_x / $_y / $_offset');
         back.transform.pos.add_xyz(_x, _y);
     } //ontranslate
 
     override function onvisible( _visible:Bool ) {
-        trace('canvas / visible / $_visible');
+        _debug('visible / $_visible');
         back.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        trace('canvas / depth / $_depth');
+        _debug('depth / $_depth');
         back.depth = _depth;
     } //ondepth
 

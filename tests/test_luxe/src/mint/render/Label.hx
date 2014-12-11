@@ -4,8 +4,12 @@ import mint.Types;
 import mint.Renderer;
 
 import mint.render.LuxeMintRender;
+import mint.render.Convert;
+
 import luxe.Text;
 import luxe.Color;
+import luxe.Log.log;
+import luxe.Log._debug;
 
 class Label extends mint.render.Base {
 
@@ -17,7 +21,7 @@ class Label extends mint.render.Base {
         super(_render, _control);
         label = _control;
 
-        trace('label create / ${control.name}');
+        _debug('create / ${control.name}');
         text = new luxe.Text({
             bounds: Convert.rect(control.real_bounds),
             color: new Color(),
@@ -56,23 +60,23 @@ class Label extends mint.render.Base {
     }
 
     override function onclip( _rect:Rect ) {
-        trace('label / clip / $_rect');
+        _debug('clip / $_rect');
         if(_rect == null) text.clip_rect = null;
         else text.clip_rect = Convert.rect(_rect);
     } //onclip
 
     override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        trace('label / translate / $_x / $_y / $_offset');
+        _debug('translate / $_x / $_y / $_offset');
         text.pos.add_xyz(_x, _y);
     } //ontranslate
 
     override function onvisible( _visible:Bool ) {
-        trace('label / visible / $_visible');
+        _debug('visible / $_visible');
         text.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        trace('label / depth / $_depth');
+        _debug('depth / $_depth');
         text.depth = _depth;
     } //ondepth
 

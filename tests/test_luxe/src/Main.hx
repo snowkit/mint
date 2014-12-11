@@ -5,6 +5,7 @@ import luxe.Input;
 
 import mint.Types;
 import mint.render.LuxeMintRender;
+import mint.render.Convert;
 
 class Main extends luxe.Game {
 
@@ -12,6 +13,8 @@ class Main extends luxe.Game {
     var label: mint.Label;
     var button: mint.Button;
     var image: mint.Image;
+    var image2: mint.Image;
+    var scroll: mint.ScrollArea;
 
     var render: LuxeMintRenderer;
 
@@ -22,7 +25,7 @@ class Main extends luxe.Game {
         render = new LuxeMintRenderer();
         canvas = new mint.Canvas({
             renderer: render,
-            bounds: new Rect(10,10,500,300)
+            bounds: new Rect(10,10,512,512)
         });
 
         label = new mint.Label({
@@ -50,6 +53,20 @@ class Main extends luxe.Game {
             path: 'assets/transparency.png'
         });
 
+        scroll = new mint.ScrollArea({
+            parent: canvas,
+            name: 'scroll1',
+            bounds: new Rect(10, 180, 128, 128),
+        });
+
+        image = new mint.Image({
+            parent: scroll,
+            name: 'image2',
+            bounds: new Rect(0,0,256,256),
+            path: 'assets/transparency.png'
+        });
+
+        trace(canvas.nodes);
 
     } //ready
 

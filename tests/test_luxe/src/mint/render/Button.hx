@@ -4,9 +4,13 @@ import mint.Types;
 import mint.Renderer;
 
 import mint.render.LuxeMintRender;
+import mint.render.Convert;
+
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
+import luxe.Log.log;
+import luxe.Log._debug;
 
 class Button extends mint.render.Base {
 
@@ -18,7 +22,7 @@ class Button extends mint.render.Base {
         super(_render, _control);
         button = _control;
 
-        trace('button create / ${control.name}');
+        _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
             pos: new Vector(control.real_bounds.x, control.real_bounds.y),
@@ -43,23 +47,23 @@ class Button extends mint.render.Base {
     }
 
     override function onclip( _rect:Rect ) {
-        trace('button / clip / $_rect');
+        _debug('clip / $_rect');
         if(_rect == null) visual.clip_rect = null;
         else visual.clip_rect = Convert.rect(_rect);
     } //onclip
 
     override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        trace('button / translate / $_x / $_y / $_offset');
+        _debug('translate / $_x / $_y / $_offset');
         visual.pos.add_xyz(_x, _y);
     } //ontranslate
 
     override function onvisible( _visible:Bool ) {
-        trace('button / visible / $_visible');
+        _debug('visible / $_visible');
         visual.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        trace('button / depth / $_depth');
+        _debug('depth / $_depth');
         visual.depth = _depth;
     } //ondepth
 

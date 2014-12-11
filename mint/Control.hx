@@ -82,6 +82,8 @@ class Control {
         var ontranslate : Signal<Float->Float->Bool->Void>;
     @:allow(mint.ControlRenderer)
         var onclip : Signal<Rect->Void>;
+    @:allow(mint.ControlRenderer)
+        var onchild : Signal<Control->Void>;
 
     public function new( _options:ControlOptions ) {
 
@@ -91,12 +93,13 @@ class Control {
         ondepth = new Signal();
         ontranslate = new Signal();
         onclip = new Signal();
+        onchild = new Signal();
 
         bounds = options.bounds == null ? new Rect(0,0,32,32) : options.bounds;
         real_bounds = bounds.clone();
 
         if(options.name != null)            { name = options.name; }
-        if(options.mouse_enabled != null)   { trace('set me');mouse_enabled = options.mouse_enabled; }
+        if(options.mouse_enabled != null)   { mouse_enabled = options.mouse_enabled; }
         // if(options.padding == null)         { options.padding = new Rect(); }
 
         children = [];
@@ -191,7 +194,7 @@ class Control {
     public function clip_with( ?_control:Control ) {
         if(_control != null) {
             var _b = _control.real_bounds;
-            set_clip( new Rect(_b.x, _b.y, _b.w-1, _b.h-1) );
+            set_clip( new Rect(_b.x, _b.y, _b.w, _b.h) );
         } else {
             set_clip();
         }
@@ -242,17 +245,33 @@ class Control {
 
     } //find_top_parent
 
-
+    public var nodes : Int = 0;
     public function add( child:Control ) {
         if(child.parent != this) {
             child.parent = this;
             children.push(child);
+
+            if(parent != null || canvas == this) {
+                var _nodes = child.nodes + 1;
+                nodes += _nodes;
+                if(parent != null) parent.nodes += _nodes;
+            }
+
+            onchild.emit(child);
         }
     }
 
     public function remove( child:Control ) {
         if(child.parent == this) {
             children.remove(child);
+
+            if(parent != null || canvas == this) {
+                var _nodes = child.nodes + 1;
+                nodes -= _nodes;
+                if(parent != null) parent.nodes -= _nodes;
+            }
+
+            onchild.emit(child);
         }
     }
 
@@ -272,6 +291,7 @@ class Control {
         if(clip_rect != null && !_offset) {
             clip_rect.x += _x;
             clip_rect.y += _y;
+            onclip.emit(clip_rect);
         }
 
         ontranslate.emit(_x, _y, _offset);

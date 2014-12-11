@@ -4,9 +4,13 @@ import mint.Types;
 import mint.Renderer;
 
 import mint.render.LuxeMintRender;
+import mint.render.Convert;
+
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
+import luxe.Log.log;
+import luxe.Log._debug;
 
 class Image extends mint.render.Base {
 
@@ -18,7 +22,7 @@ class Image extends mint.render.Base {
         super(_render, _control);
         image = _control;
 
-        trace('image create / ${control.name}');
+        _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
             texture: Luxe.loadTexture(image.image_options.path),
@@ -43,23 +47,23 @@ class Image extends mint.render.Base {
     }
 
     override function onclip( _rect:Rect ) {
-        trace('image / clip / $_rect');
+        _debug('clip / $_rect');
         if(_rect == null) visual.clip_rect = null;
         else visual.clip_rect = Convert.rect(_rect);
     } //onclip
 
     override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        trace('image / translate / $_x / $_y / $_offset');
+        _debug('translate / $_x / $_y / $_offset');
         visual.pos.add_xyz(_x, _y);
     } //ontranslate
 
     override function onvisible( _visible:Bool ) {
-        trace('image / visible / $_visible');
+        _debug('visible / $_visible');
         visual.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        trace('image / depth / $_depth');
+        _debug('depth / $_depth');
         visual.depth = _depth;
     } //ondepth
 
