@@ -304,7 +304,7 @@ class Control {
 
     } //translate
 
-    private function options_plus(options:Dynamic, plus:Dynamic) {
+    function options_plus(options:Dynamic, plus:Dynamic) {
 
         var _fields = Reflect.fields(plus);
 
@@ -455,13 +455,15 @@ class Control {
 //Properties
 //Depth properties
 
-    private function get_depth() : Float {
+    inline function get_depth() : Float {
 
         return depth;
 
     } //get_depth
 
-    private function set_depth( _depth:Float ) : Float {
+    function set_depth( _depth:Float ) : Float {
+
+        trace('set depth / $name / $_depth');
 
         depth = _depth;
         ondepth.emit(depth);
@@ -478,7 +480,7 @@ class Control {
 
 //Parent properties
 
-    private function set_parent(p:Control) {
+    function set_parent(p:Control) {
 
         if(p != null) {
             real_bounds.set( p.real_bounds.x+bounds.x, p.real_bounds.y+bounds.y, bounds.w, bounds.h);
@@ -490,7 +492,7 @@ class Control {
 
     } //set_parent
 
-    private function get_parent() {
+    inline function get_parent() {
 
         return parent;
 

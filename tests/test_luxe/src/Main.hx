@@ -23,87 +23,95 @@ class Main extends luxe.Game {
 
         Luxe.renderer.clear_color.rgb(0x373737);
 
-        render = new LuxeMintRenderer();
-        canvas = new mint.Canvas({
-            renderer: render,
-            bounds: new Rect(10,10,512,512)
-        });
+        var t = Luxe.loadTexture('assets/transparency.png');
+        t.onload = function(_) {
 
-        label = new mint.Label({
-            parent: canvas,
-            name: 'label1',
-            bounds: new Rect(10,10,100,32),
-            text: 'hello mint',
-            point_size: 14,
-            onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
-        });
+            render = new LuxeMintRenderer();
+            canvas = new mint.Canvas({
+                renderer: render,
+                bounds: new Rect(10,10,512,512)
+            });
 
-        button = new mint.Button({
-            parent: canvas,
-            name: 'button1',
-            bounds: new Rect(10,52,100,32),
-            text: 'mint button',
-            point_size: 14,
-            onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
-        });
+            label = new mint.Label({
+                parent: canvas,
+                name: 'label1',
+                bounds: new Rect(10,10,100,32),
+                text: 'hello mint',
+                point_size: 14,
+                onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
+            });
 
-        image = new mint.Image({
-            parent: canvas,
-            name: 'image1',
-            bounds: new Rect(10,102,64,64),
-            path: 'assets/transparency.png'
-        });
+            button = new mint.Button({
+                parent: canvas,
+                name: 'button1',
+                bounds: new Rect(10,52,100,32),
+                text: 'mint button',
+                point_size: 14,
+                onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
+            });
 
-        panel = new mint.Panel({
-            parent: canvas,
-            name: 'panel1',
-            bounds: new Rect(84,102,64,64),
-        });
+            image = new mint.Image({
+                parent: canvas,
+                name: 'image1',
+                bounds: new Rect(10,102,64,64),
+                path: 'assets/transparency.png'
+            });
 
-        scroll = new mint.ScrollArea({
-            parent: canvas,
-            name: 'scroll1',
-            bounds: new Rect(10, 180, 128, 128),
-        });
+            panel = new mint.Panel({
+                parent: canvas,
+                name: 'panel1',
+                bounds: new Rect(84,102,64,64),
+            });
 
-        image = new mint.Image({
-            parent: scroll,
-            name: 'image2',
-            bounds: new Rect(0,0,256,256),
-            path: 'assets/transparency.png'
-        });
+            scroll = new mint.ScrollArea({
+                parent: canvas,
+                name: 'scroll1',
+                bounds: new Rect(10, 180, 128, 128),
+            });
 
-        trace(canvas.nodes);
+            image = new mint.Image({
+                parent: scroll,
+                name: 'image2',
+                bounds: new Rect(0,0,256,256),
+                path: 'assets/transparency.png'
+            });
+
+            trace(canvas.nodes);
+
+        }
+
 
     } //ready
 
     override function onmousemove(e) {
-        canvas.onmousemove( Convert.mouse_event(e) );
+        if(canvas!=null) canvas.onmousemove( Convert.mouse_event(e) );
     }
 
     override function onmousewheel(e) {
-        canvas.onmousewheel( Convert.mouse_event(e) );
+        trace(e.y);
+        if(canvas!=null) canvas.onmousewheel( Convert.mouse_event(e) );
     }
 
     override function onmouseup(e) {
-        canvas.onmouseup( Convert.mouse_event(e) );
+        trace(e);
+        if(canvas!=null) canvas.onmouseup( Convert.mouse_event(e) );
     }
 
     override function onmousedown(e) {
-        canvas.onmousedown( Convert.mouse_event(e) );
+        if(canvas!=null) canvas.onmousedown( Convert.mouse_event(e) );
     }
 
     override function onkeyup(e:KeyEvent) {
 
         if(e.keycode == Key.right) {
-            canvas.translate(100,0);
+            if(canvas!=null) canvas.translate(100,0);
         }
         if(e.keycode == Key.left) {
-            canvas.translate(-100,0);
+            if(canvas!=null) canvas.translate(-100,0);
         }
 
         if(e.keycode == Key.key_v) {
-            canvas.visible = !canvas.visible;
+            if(canvas!=null) canvas.visible = !canvas.visible;
         }
 
         if(e.keycode == Key.escape) {
@@ -113,7 +121,7 @@ class Main extends luxe.Game {
     } //onkeyup
 
     override function update(dt:Float) {
-        canvas.update(dt);
+        if(canvas!=null) canvas.update(dt);
     } //update
 
     override function ondestroy() {

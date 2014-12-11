@@ -35,7 +35,7 @@ class Canvas extends Control {
 
         mouse_enabled = true;
         focused = null;
-        depth = _options.depth;
+        depth = (_options.depth == null) ? 0.0 : _options.depth;
         depths = depth;
 
         renderer.render( Canvas, this );
