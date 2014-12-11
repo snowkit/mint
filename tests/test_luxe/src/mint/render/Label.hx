@@ -45,6 +45,10 @@ class Label extends mint.render.Base {
         });
     }
 
+    override function onbounds() {
+        text.bounds = new luxe.Rectangle(control.real_bounds.x, control.real_bounds.y, control.real_bounds.w, control.real_bounds.h );
+    }
+
     function ontext(_text:String) {
         text.text = _text;
     }

@@ -164,21 +164,5 @@ class Window extends Control {
 
     } //translate
 
-    public override function set_visible( ?_visible:Bool = true ) {
-        super.set_visible(_visible);
-        renderer.window.set_visible(this, _visible);
-    } //set_visible
-
-
-    private override function set_depth( _depth:Float ) : Float {
-
-        super.set_depth(_depth);
-
-        renderer.window.set_depth(this, _depth);
-
-        return depth;
-
-    } //set_depth
-
 #end
 }

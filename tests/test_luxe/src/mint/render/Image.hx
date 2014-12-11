@@ -25,6 +25,7 @@ class Image extends mint.render.Base {
         _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
+            color: Color.random(),
             texture: Luxe.loadTexture(image.image_options.path),
             pos: new Vector(control.real_bounds.x, control.real_bounds.y),
             size: new Vector(control.real_bounds.w, control.real_bounds.h),
@@ -35,6 +36,11 @@ class Image extends mint.render.Base {
         visual.clip_rect = Convert.rect(control.clip_rect);
 
         connect();
+    }
+
+    override function onbounds() {
+        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
+        visual.geometry_quad.resize( new Vector(control.real_bounds.w, control.real_bounds.h) );
     }
 
     override function ondestroy() {

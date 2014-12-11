@@ -61,7 +61,7 @@ class Dropdown extends Control {
 
     }
 
-    private function onselected(v:String, l:List, e:MouseEvent) {
+    function onselected(v:String, l:List, e:MouseEvent) {
 
         selected = v;
         selected_label.text = selected;
@@ -88,7 +88,7 @@ class Dropdown extends Control {
         renderer.dropdown.translate( this, _x, _y, _offset );
     }
 
-    private override function set_depth( _depth:Float ) : Float {
+    override function set_depth( _depth:Float ) : Float {
 
         super.set_depth(_depth);
 

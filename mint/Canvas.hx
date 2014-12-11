@@ -52,7 +52,7 @@ class Canvas extends Control {
 
     var _mouse_last:Point;
 
-    private function set_control_unfocused(_control:Control, e:MouseEvent, ?do_mouseleave:Bool = true) {
+    function set_control_unfocused(_control:Control, e:MouseEvent, ?do_mouseleave:Bool = true) {
         if(_control != null) {
 
             _control.ishovered = false;
@@ -65,7 +65,7 @@ class Canvas extends Control {
         } //_control != null
     } //set_unfocused
 
-    private function set_control_focused(_control:Control, e:MouseEvent, ?do_mouseenter:Bool = true) {
+    function set_control_focused(_control:Control, e:MouseEvent, ?do_mouseenter:Bool = true) {
         if(_control != null) {
             _control.ishovered = true;
             _control.isfocused = true;
@@ -76,7 +76,7 @@ class Canvas extends Control {
         }
     } //set_focused
 
-    private function get_focused( _p : Point ) {
+    function get_focused( _p : Point ) {
 
         if( modal != null ) {
             return modal;

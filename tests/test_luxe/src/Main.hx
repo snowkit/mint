@@ -13,9 +13,9 @@ class Main extends luxe.Game {
     var label: mint.Label;
     var button: mint.Button;
     var image: mint.Image;
-    var image2: mint.Image;
     var scroll: mint.ScrollArea;
     var panel: mint.Panel;
+    var list: mint.List;
 
     var render: LuxeMintRenderer;
 
@@ -69,12 +69,42 @@ class Main extends luxe.Game {
                 bounds: new Rect(10, 180, 128, 128),
             });
 
-            image = new mint.Image({
+            new mint.Image({
                 parent: scroll,
                 name: 'image2',
                 bounds: new Rect(0,0,256,256),
                 path: 'assets/transparency.png'
             });
+
+            list = new mint.List({
+                parent: canvas,
+                name: 'list1',
+                bounds: new Rect(160,10,128,256)
+            });
+
+            for(i in 0 ... 3) {
+                list.add_item(
+                    new mint.Button({
+                        name: 'list_item_${i*2}',
+                        text: 'list_item_${i*2}',
+                        parent: list,
+                        mouse_enabled:true,
+                        point_size: 16,
+                        bounds: new Rect(0,0,128,32),
+                        path: 'assets/transparency.png'
+                    })
+                );
+
+                list.add_item(
+                    new mint.Image({
+                        name: 'list_item_${i*2+1}',
+                        parent: list,
+                        mouse_enabled:true,
+                        bounds: new Rect(0,0,128,128),
+                        path: 'assets/transparency.png'
+                    })
+                );
+            } //for
 
             trace(canvas.nodes);
 
@@ -88,12 +118,10 @@ class Main extends luxe.Game {
     }
 
     override function onmousewheel(e) {
-        trace(e.y);
         if(canvas!=null) canvas.onmousewheel( Convert.mouse_event(e) );
     }
 
     override function onmouseup(e) {
-        trace(e);
         if(canvas!=null) canvas.onmouseup( Convert.mouse_event(e) );
     }
 

@@ -34,12 +34,18 @@ class Button extends mint.render.Base {
 
         visual.clip_rect = Convert.rect(control.clip_rect);
 
-        button.mouseenter.listen(function(e,c) { visual.color.rgb(0xf6007b); });
+        button.mouseenter.listen(function(e,c) { visual.color.rgb(0x445158); });
         button.mouseleave.listen(function(e,c) { visual.color.rgb(0x373737); });
         button.mousedown.listen(function(e,c) { visual.color.rgb(0x444444); });
-        button.mouseup.listen(function(e,c) { visual.color.rgb(0xf6007b); });
+        button.mouseup.listen(function(e,c) { visual.color.rgb(0x445158); });
 
         connect();
+    }
+
+
+    override function onbounds() {
+        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
+        visual.geometry_quad.resize( new Vector(control.real_bounds.w, control.real_bounds.h) );
     }
 
     override function ondestroy() {

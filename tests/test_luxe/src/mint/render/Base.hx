@@ -21,6 +21,7 @@ class Base implements ControlRenderer {
         control.onclip.listen(onclip);
         control.ontranslate.listen(ontranslate);
         control.onchild.listen(onchild);
+        control.onbounds.listen(onbounds);
     }
 
     function disconnect() {
@@ -29,6 +30,7 @@ class Base implements ControlRenderer {
         control.ondestroy.remove(ondestroy);
         control.onclip.remove(onclip);
         control.onchild.remove(onchild);
+        control.onbounds.remove(onbounds);
     }
 
     function destroy() {
@@ -38,6 +40,7 @@ class Base implements ControlRenderer {
     function onvisible(_v:Bool){}
     function ondepth(_d:Float){}
     function ondestroy(){}
+    function onbounds(){}
     function onclip(_r:Rect){}
     function onchild(_c:Control){}
     function ontranslate(_x:Float=0.0,_y:Float=0.0,_o:Bool=false){}

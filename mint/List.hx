@@ -2,150 +2,125 @@ package mint;
 
 import mint.Types;
 import mint.Control;
+import mint.utils.Signal;
+
+typedef ListOptions = {
+    > ControlOptions,
+    ? multiselect: Bool,
+    ? onselect: Int->MouseEvent->Void,
+}
 
 class List extends Control {
-#if no
 
     public var view : ScrollArea;
     public var items : Array<Control>;
     public var multiselect : Bool = false;
-    public var onselect : String->Control->?MouseEvent->Void;
-    public var _options : Dynamic;
+    public var onselect : Signal<Int->MouseEvent->Void>;
+    public var list_options : ListOptions;
 
-    var _point_size : Float = 14;
-
-    public function new(__options:Dynamic) {
+    public function new( _options:ListOptions ) {
 
         items = [];
+        list_options = _options;
 
-            //create the base control
-        super(__options);
-            //
-        renderer.list.init(this, __options);
-            //
-        multiselect = (__options.multiselect == null) ? false : __options.multiselect;
-        onselect = (__options.onselect == null) ? null : __options.onselect;
-            //set the text size from the default or the options
-        if(__options.point_size != null) _point_size = __options.point_size;
+        super(list_options);
 
-        var _bounds = __options.bounds.clone();
+        if(list_options.mouse_enabled == null){
+            mouse_enabled = true;
+        }
 
-            _bounds.x = 0;
-            _bounds.y = 0;
+        if(list_options.multiselect != null) {
+            multiselect = list_options.multiselect;
+        }
+
+        var view_bounds = list_options.bounds.clone();
+            view_bounds.x = 0; view_bounds.y = 0;
 
         view = new ScrollArea({
             parent : this,
-            bounds : _bounds,
+            bounds : view_bounds,
             name : name + '.view',
             onscroll : onscroll
         });
 
-        _options = __options;
-        if(_options.align == null) {
-            _options.align = TextAlign.center;
-        }
+        // _options = __options;
+        // if(_options.align == null) {
+        //     _options.align = TextAlign.center;
+        // }
 
     } //new
 
-    private function onscroll( _x:Float = 0, _y:Float = 0 ) {
-
-        renderer.list.scroll(this, _x, _y);
-
-    } //onscroll
-
-    public function clear() {
-
-        for(item in items) {
-            item.destroy();
-            item = null;
-        }
-
-        items = null;
-        items = [];
-
-        renderer.list.select_item(this, null);
-
-    } //clear
-
-    public function select( _index:Int ) {
-
-        if(_index < items.length) {
-            label_selected(items[_index], null);
-        }
-
-    } //select
-
-    public function add_item( _item:String, ?_name:String ) {
+    public function add_item( item:Control ) {
 
         var _childbounds = view.children_bounds;
 
-        var l = new Label({
-            text : _item,
-            onclick : label_selected,
-            name : _name == null ? name + '.item.' + _item : _name,
-            bounds : new Rect(0, _childbounds.bottom, bounds.w, 30),
-            parent : view,
-            depth : depth,
-            point_size : _point_size,
-            align : _options.align
-        });
+        item.bounds = new Rect(item.bounds.x, item.bounds.y+_childbounds.bottom, item.bounds.w, item.bounds.h);
+        view.add(item);
 
-            //clip the label by the scroll view's bounds
-        l.clip_with(view);
-        l.mouse_enabled = true;
+        item.clip_with(view);
 
-        items.push(l);
+        items.push(item);
 
     } //add_item
 
-    public override function translate(?_x:Float=0, ?_y:Float=0, ?_offset:Bool = false ) {
+    function onscroll( _dx:Float = 0, _dy:Float = 0 ) {
 
-        super.translate( _x,_y, _offset );
+        // renderer.list.scroll(this, _x, _y);
 
-        renderer.list.translate( this, _x, _y, _offset );
+    } //onscroll
 
-        for(_item in view.children) {
-            _item.clip_with(view);
-        } //_item in children
+    // public function clear() {
 
-    } //translate
+        //     for(item in items) {
+        //         item.destroy();
+        //         item = null;
+        //     }
 
-    private function label_selected(_control:Control, e:MouseEvent) {
+        //     items = null;
+        //     items = [];
 
-        var _label:Label = cast _control;
-        renderer.list.select_item(this, _control);
+        //     renderer.list.select_item(this, null);
 
-        //call callback
-        if(onselect != null) {
-            onselect(_label.text, _label, e);
-        } //onselect
+        // } //clear
 
-    } //label_selected
+        // public function select( _index:Int ) {
 
-    public function add_items( _items:Array<String> ) {
-        for(_item in _items) {
-            add_item(_item);
-        } //item
-    } //add_items
+        //     if(_index < items.length) {
+        //         label_selected(items[_index], null);
+        //     }
 
-    public override function set_visible( ?_visible:Bool = true ) {
+        // } //select
 
-        super.set_visible(_visible);
+   
 
-        renderer.list.set_visible(this,_visible);
+        // public override function translate(?_x:Float=0, ?_y:Float=0, ?_offset:Bool = false ) {
 
-    } //set_visible
+        //     super.translate( _x,_y, _offset );
 
+        //     renderer.list.translate( this, _x, _y, _offset );
 
-    private override function set_depth( _depth:Float ) : Float {
+        //     for(_item in view.children) {
+        //         _item.clip_with(view);
+        //     } //_item in children
 
-        super.set_depth(_depth);
+        // } //translate
 
-        renderer.list.set_depth(this, _depth);
+        // function label_selected(_control:Control, e:MouseEvent) {
 
-        return depth;
+        //     var _label:Label = cast _control;
+        //     renderer.list.select_item(this, _control);
 
-    } //set_depth
+        //     //call callback
+        //     if(onselect != null) {
+        //         onselect(_label.text, _label, e);
+        //     } //onselect
 
-#end
+        // } //label_selected
+
+        // public function add_items( _items:Array<String> ) {
+        //     for(_item in _items) {
+        //         add_item(_item);
+        //     } //item
+        // } //add_items
+
 } //List

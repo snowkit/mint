@@ -31,7 +31,7 @@ class Control {
     public var closest_to_canvas : Control;
 
         //the relative bounds to the parent
-    public var bounds : Rect;
+    @:isVar public var bounds (default, set): Rect;
         //the absolute bounds in screen space
     public var real_bounds : Rect;
         //the clipping rectangle for this control
@@ -63,6 +63,9 @@ class Control {
         //a shortcut to adding multiple mouseenter handlers
     public var mouseleave : Signal<MouseSignal>;
 
+        //a shortcut to adding multiple mouseenter handlers
+    public var onbounds : Signal<Void->Void>;
+
         //the parent control, null if no parent
     @:isVar public var parent(get,set) : Control;
         //the depth of this control
@@ -88,6 +91,8 @@ class Control {
     public function new( _options:ControlOptions ) {
 
         options = _options;
+
+        onbounds = new Signal();
         ondestroy = new Signal();
         onvisible = new Signal();
         ondepth = new Signal();
@@ -184,6 +189,33 @@ class Control {
 
     } //contains point
 
+
+    function set_bounds( _b:Rect ) {
+
+        var setup = bounds == null;
+
+        if(!setup) {
+            if(parent != null) {
+                real_bounds.set( parent.real_bounds.x+_b.x, parent.real_bounds.y+_b.y, _b.w, _b.h );
+            } else {
+                real_bounds.set( _b.x, _b.y, _b.w, _b.h );
+            }
+        }
+
+        bounds = _b;
+
+        if(!setup) {
+            for(_child in children) {
+                _child.bounds = _child.bounds.clone();
+            }
+        }
+
+        onbounds.emit();
+
+        return bounds;
+
+    } //set_bounds
+
     function clip_with_closest_to_canvas() {
         if(closest_to_canvas != null) {
             set_clip( closest_to_canvas.real_bounds );
@@ -206,9 +238,9 @@ class Control {
         clip_rect = _clip_rect;
         onclip.emit(clip_rect);
 
-        // for(_child in children) {
-        //  _child.set_clip( _clip_rect );
-        // }
+        for(_child in children) {
+            _child.set_clip( _clip_rect );
+        }
 
     } //set clip
 
@@ -426,7 +458,6 @@ class Control {
     } //onmousedown
 
     public function onmouseenter( e:MouseEvent ) {
-        // trace('mouse enter ' + name);
 
         mouseenter.emit(e, this);
 
@@ -462,8 +493,6 @@ class Control {
     } //get_depth
 
     function set_depth( _depth:Float ) : Float {
-
-        trace('set depth / $name / $_depth');
 
         depth = _depth;
         ondepth.emit(depth);

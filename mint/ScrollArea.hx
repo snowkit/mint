@@ -116,6 +116,8 @@ class ScrollArea extends Control {
 
         super.onmouseup(e);
 
+        drag_offset.set(0,0);
+
         if(handle_drag_v || handle_drag_h) {
             handle_drag_v = false;
             handle_drag_h = false;
