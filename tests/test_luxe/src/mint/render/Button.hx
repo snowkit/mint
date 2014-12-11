@@ -27,12 +27,15 @@ class Button extends mint.render.Base {
             centered: false,
             pos: new Vector(control.real_bounds.x, control.real_bounds.y),
             size: new Vector(control.real_bounds.w, control.real_bounds.h),
-            color: new Color().rgb(0x242424),
+            color: new Color().rgb(0x373737),
             depth: control.depth,
             visible: control.visible,
         });
 
         visual.clip_rect = Convert.rect(control.clip_rect);
+
+        button.mouseenter.listen(function(e,c) { visual.color.rgb(0x444444); });
+        button.mouseleave.listen(function(e,c) { visual.color.rgb(0x373737); });
 
         connect();
     }

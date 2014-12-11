@@ -30,7 +30,7 @@ class Button extends Control {
             text: button_options.text,
             point_size: button_options.point_size,
             name : name + '.label',
-            mouse_enabled: mouse_enabled
+            mouse_enabled: false
         });
 
         if(button_options.onclick != null) {

@@ -15,6 +15,7 @@ class Main extends luxe.Game {
     var image: mint.Image;
     var image2: mint.Image;
     var scroll: mint.ScrollArea;
+    var panel: mint.Panel;
 
     var render: LuxeMintRenderer;
 
@@ -51,6 +52,12 @@ class Main extends luxe.Game {
             name: 'image1',
             bounds: new Rect(10,102,64,64),
             path: 'assets/transparency.png'
+        });
+
+        panel = new mint.Panel({
+            parent: canvas,
+            name: 'panel1',
+            bounds: new Rect(84,102,64,64),
         });
 
         scroll = new mint.ScrollArea({
