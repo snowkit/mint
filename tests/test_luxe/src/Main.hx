@@ -11,6 +11,7 @@ class Main extends luxe.Game {
 
     var canvas: mint.Canvas;
     var label: mint.Label;
+    var check: mint.Checkbox;
     var button: mint.Button;
     var image: mint.Image;
     var scroll: mint.ScrollArea;
@@ -39,6 +40,12 @@ class Main extends luxe.Game {
                 text: 'hello mint',
                 point_size: 14,
                 onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
+            });
+
+            check = new mint.Checkbox({
+                parent: canvas,
+                name: 'check1',
+                bounds: new Rect(110,16,24,24)
             });
 
             button = new mint.Button({
@@ -79,7 +86,7 @@ class Main extends luxe.Game {
             list = new mint.List({
                 parent: canvas,
                 name: 'list1',
-                bounds: new Rect(160,10,256,400)
+                bounds: new Rect(200,10,256,400)
             });
 
             for(i in 0 ... 5) {

@@ -40,7 +40,7 @@ class List extends Control {
             parent : this,
             bounds : view_bounds,
             name : name + '.view',
-            onscroll : onscroll
+            // onscroll : onscroll
         });
 
         // _options = __options;
@@ -57,17 +57,9 @@ class List extends Control {
         item.bounds = new Rect(item.bounds.x, item.bounds.y+_childbounds.bottom, item.bounds.w, item.bounds.h);
         view.add(item);
 
-        // item.clip_with(view);
-
         items.push(item);
 
     } //add_item
-
-    function onscroll( _dx:Float = 0, _dy:Float = 0 ) {
-
-        // renderer.list.scroll(this, _x, _y);
-
-    } //onscroll
 
     // public function clear() {
 

@@ -64,7 +64,7 @@ class Canvas extends mint.render.Base {
     } //onclip
 
     override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset');
+        _debug('translate / $_x / $_y / $_offset / ${control.real_bounds}');
         visual.transform.pos.add_xyz(_x, _y);
     } //ontranslate
 

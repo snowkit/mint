@@ -55,7 +55,7 @@ class Panel extends mint.render.Base {
     }
 
     override function onclip( _rect:Rect ) {
-        _debug('clip / $_rect');
+        _debug('clip / ${control.name} / $_rect');
         if(_rect == null) {
             visual.clip_rect = null;
         } else {
@@ -64,7 +64,7 @@ class Panel extends mint.render.Base {
     } //onclip
 
     override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset');
+        _debug('translate / ${control.name} / $_x / $_y / $_offset');
         visual.transform.pos.add_xyz(_x, _y);
     } //ontranslate
 

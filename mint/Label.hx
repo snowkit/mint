@@ -38,7 +38,6 @@ class Label extends Control {
         if(label_options.align_vertical == null) { label_options.align_vertical = TextAlign.center; }
 
         if(label_options.onclick != null) {
-            trace('label on click added');
             mouse_enabled = true;
             mousedown.listen(label_options.onclick);
         }

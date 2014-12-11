@@ -253,11 +253,11 @@ class Control {
     public function set_clip( ?_clip_rect:Rect = null ) {
         //temporarily, all children clip by their parent clip
 
-        clip_rect = _clip_rect;
+        clip_rect = _clip_rect.clone();
         onclip.emit(clip_rect);
 
         for(_child in children) {
-            _child.set_clip( _clip_rect );
+            _child.set_clip( clip_rect );
         }
 
     } //set clip
@@ -338,16 +338,14 @@ class Control {
         real_bounds.x += _x;
         real_bounds.y += _y;
 
-        if(clip_rect != null && !_offset) {
-            clip_rect.x += _x;
-            clip_rect.y += _y;
-            onclip.emit(clip_rect);
-        }
-
         ontranslate.emit(_x, _y, _offset);
 
         for(child in children) {
             child.translate( _x, _y, _offset );
+        }
+
+        if(clip_rect != null && !_offset) {
+            set_clip( clip_rect.set(clip_rect.x+_x, clip_rect.y+_y) );
         }
 
         canvas.focus_invalid = true;
