@@ -32,6 +32,9 @@ class Control {
 
         //the relative bounds to the parent
     @:isVar public var bounds (default, set): Rect;
+        //the offset bounds relative to the bounds
+    @:isVar public var offset (default, set): Point;
+
         //the absolute bounds in screen space
     public var real_bounds : Rect;
         //the clipping rectangle for this control
@@ -101,11 +104,12 @@ class Control {
         onchild = new Signal();
 
         bounds = options.bounds == null ? new Rect(0,0,32,32) : options.bounds;
-        real_bounds = bounds.clone();
+        offset = new Point(0,0);
+
+        real_bounds = new Rect(bounds.x+offset.x, bounds.y+offset.y, bounds.w, bounds.h);
 
         if(options.name != null)            { name = options.name; }
         if(options.mouse_enabled != null)   { mouse_enabled = options.mouse_enabled; }
-        // if(options.padding == null)         { options.padding = new Rect(); }
 
         children = [];
 
@@ -190,15 +194,29 @@ class Control {
     } //contains point
 
 
+    function set_offset( _o:Point ) {
+
+        var setup = offset == null;
+
+        offset = _o;
+
+        if(!setup) {
+            bounds = bounds.set(bounds.x, bounds.y, bounds.w, bounds.h);
+        }
+
+        return offset;
+
+    } //set_offset
+
     function set_bounds( _b:Rect ) {
 
         var setup = bounds == null;
 
         if(!setup) {
             if(parent != null) {
-                real_bounds.set( parent.real_bounds.x+_b.x, parent.real_bounds.y+_b.y, _b.w, _b.h );
+                real_bounds.set( parent.real_bounds.x+_b.x+offset.x, parent.real_bounds.y+_b.y+offset.y, _b.w, _b.h );
             } else {
-                real_bounds.set( _b.x, _b.y, _b.w, _b.h );
+                real_bounds.set( _b.x+offset.x, _b.y+offset.y, _b.w, _b.h );
             }
         }
 
@@ -206,7 +224,7 @@ class Control {
 
         if(!setup) {
             for(_child in children) {
-                _child.bounds = _child.bounds.clone();
+                _child.bounds = _child.bounds.set(_child.bounds.x,_child.bounds.y,_child.bounds.w,_child.bounds.h);
             }
         }
 
@@ -279,6 +297,11 @@ class Control {
 
     public var nodes : Int = 0;
     public function add( child:Control ) {
+        if(child.parent != null) {
+            child.parent.remove(child);
+            child.parent = null;
+        }
+
         if(child.parent != this) {
             child.parent = this;
             children.push(child);
@@ -315,11 +338,6 @@ class Control {
         real_bounds.x += _x;
         real_bounds.y += _y;
 
-        if(parent != null) {
-            bounds.x = real_bounds.x - parent.real_bounds.x;
-            bounds.y = real_bounds.y - parent.real_bounds.y;
-        }
-
         if(clip_rect != null && !_offset) {
             clip_rect.x += _x;
             clip_rect.y += _y;
@@ -335,18 +353,6 @@ class Control {
         canvas.focus_invalid = true;
 
     } //translate
-
-    function options_plus(options:Dynamic, plus:Dynamic) {
-
-        var _fields = Reflect.fields(plus);
-
-        for(_field in _fields) {
-            Reflect.setField(options, _field, Reflect.field( plus, _field ) );
-        }
-
-        return options;
-
-    } //options_plus
 
     public function right() {
         return bounds.x + bounds.w;
@@ -401,8 +407,8 @@ class Control {
         children_bounds.bottom = _current_b;
         children_bounds.real_x = _real_x;
         children_bounds.real_y = _real_y;
-        children_bounds.real_w = _current_r - _first_child.bounds.x;
-        children_bounds.real_h = _current_b - _first_child.bounds.y;
+        children_bounds.real_w = _current_r;
+        children_bounds.real_h = _current_b;
 
         return children_bounds;
 
@@ -512,9 +518,9 @@ class Control {
     function set_parent(p:Control) {
 
         if(p != null) {
-            real_bounds.set( p.real_bounds.x+bounds.x, p.real_bounds.y+bounds.y, bounds.w, bounds.h);
+            real_bounds.set( p.real_bounds.x+bounds.x+offset.x, p.real_bounds.y+bounds.y+offset.y, bounds.w, bounds.h);
         } else {
-            real_bounds.set(bounds.x, bounds.y, bounds.w, bounds.h);
+            real_bounds.set(bounds.x+offset.x, bounds.y+offset.y, bounds.w, bounds.h);
         }
 
         return parent = p;

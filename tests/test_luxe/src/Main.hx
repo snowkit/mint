@@ -72,7 +72,7 @@ class Main extends luxe.Game {
             new mint.Image({
                 parent: scroll,
                 name: 'image2',
-                bounds: new Rect(0,0,256,256),
+                bounds: new Rect(0,100,256,256),
                 path: 'assets/transparency.png'
             });
 
@@ -90,7 +90,7 @@ class Main extends luxe.Game {
                         parent: list,
                         mouse_enabled:true,
                         point_size: 16,
-                        bounds: new Rect(0,0,128,32),
+                        bounds: new Rect(0,10,128,32),
                         path: 'assets/transparency.png'
                     })
                 );
@@ -100,7 +100,7 @@ class Main extends luxe.Game {
                         name: 'list_item_${i*2+1}',
                         parent: list,
                         mouse_enabled:true,
-                        bounds: new Rect(0,0,128,128),
+                        bounds: new Rect(0,10,128,128),
                         path: 'assets/transparency.png'
                     })
                 );
@@ -136,6 +136,12 @@ class Main extends luxe.Game {
         }
         if(e.keycode == Key.left) {
             if(canvas!=null) canvas.translate(-100,0);
+        }
+        if(e.keycode == Key.up) {
+            if(canvas!=null) canvas.translate(0,-100);
+        }
+        if(e.keycode == Key.down) {
+            if(canvas!=null) canvas.translate(0,100);
         }
 
         if(e.keycode == Key.key_v) {

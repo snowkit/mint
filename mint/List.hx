@@ -57,7 +57,7 @@ class List extends Control {
         item.bounds = new Rect(item.bounds.x, item.bounds.y+_childbounds.bottom, item.bounds.w, item.bounds.h);
         view.add(item);
 
-        item.clip_with(view);
+        // item.clip_with(view);
 
         items.push(item);
 
