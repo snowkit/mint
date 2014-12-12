@@ -4,8 +4,13 @@ import luxe.Vector;
 import luxe.Input;
 
 import mint.Types;
+import mint.Control;
 import mint.render.LuxeMintRender;
 import mint.render.Convert;
+
+//todo:
+//      keyboard/gamepad tab controls,
+//      "directional" auto navigation based on group/control
 
 class Main extends luxe.Game {
 
@@ -17,8 +22,12 @@ class Main extends luxe.Game {
     var scroll: mint.ScrollArea;
     var panel: mint.Panel;
     var list: mint.List;
+    var window: mint.Window;
+    var window2: mint.Window;
 
     var render: LuxeMintRenderer;
+
+    var debug : Bool = false;
 
     override function ready() {
 
@@ -30,7 +39,7 @@ class Main extends luxe.Game {
             render = new LuxeMintRenderer();
             canvas = new mint.Canvas({
                 renderer: render,
-                bounds: new Rect(10,10,512,512)
+                bounds: new Rect(10,10,900,512)
             });
 
             label = new mint.Label({
@@ -45,7 +54,7 @@ class Main extends luxe.Game {
             check = new mint.Checkbox({
                 parent: canvas,
                 name: 'check1',
-                bounds: new Rect(110,16,24,24)
+                bounds: new Rect(120,16,24,24)
             });
 
             button = new mint.Button({
@@ -83,10 +92,25 @@ class Main extends luxe.Game {
                 path: 'assets/transparency.png'
             });
 
-            list = new mint.List({
+
+            window = new mint.Window({
                 parent: canvas,
-                name: 'list1',
+                name: 'window1',
+                title: 'window',
                 bounds: new Rect(200,10,256,400)
+            });
+
+            window2 = new mint.Window({
+                parent: canvas,
+                name: 'window2',
+                title: 'window',
+                bounds: new Rect(460,10,256,100)
+            });
+
+            list = new mint.List({
+                parent: window,
+                name: 'list1',
+                bounds: new Rect(4,28,248,400-28-4)
             });
 
             for(i in 0 ... 5) {
@@ -110,7 +134,7 @@ class Main extends luxe.Game {
         var _panel = new mint.Panel({
             parent: list,
             name: 'panel_${idx}',
-            bounds: new Rect(10,4,236,96),
+            bounds: new Rect(2,4,236,96),
         });
 
         new mint.Image({
@@ -178,6 +202,13 @@ class Main extends luxe.Game {
             if(canvas!=null) canvas.translate(0,100);
         }
 
+        if(e.keycode == Key.key_w) {
+            if(window != null) window.open();
+        }
+        if(e.keycode == Key.key_d) {
+            debug = !debug;
+        }
+
         if(e.keycode == Key.key_v) {
             if(canvas!=null) canvas.visible = !canvas.visible;
         }
@@ -188,8 +219,36 @@ class Main extends luxe.Game {
 
     } //onkeyup
 
+    function drawc(control:Control) {
+
+        if(!control.visible) return;
+
+        Luxe.draw.rectangle({
+            depth: 1000,
+            x: control.real_bounds.x,
+            y: control.real_bounds.y,
+            w: control.real_bounds.w,
+            h: control.real_bounds.h,
+            color: new Color(1,0,0,0.5),
+            immediate: true
+        });
+
+        for(c in control.children) {
+            drawc(c);
+        }
+
+    } //drawc
+
     override function update(dt:Float) {
-        if(canvas!=null) canvas.update(dt);
+        if(canvas!=null) {
+            canvas.update(dt);
+        }
+
+        if(debug) {
+            for(c in canvas.children) {
+                drawc(c);
+            }
+        }
     } //update
 
     override function ondestroy() {

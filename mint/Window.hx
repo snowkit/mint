@@ -3,53 +3,63 @@ package mint;
 import mint.Types;
 import mint.Control;
 import mint.Label;
+import mint.utils.Signal;
+
+typedef WindowOptions = {
+    > ControlOptions,
+    ? title: String,
+    ? moveable: Bool,
+    ? closeable: Bool,
+    ? onclose: Void->Bool,
+}
 
 class Window extends Control {
-#if no
-
-    public var title_bounds : Rect;
-    public var view_bounds : Rect;
-    public var close_bounds : Rect;
 
     public var title : Label;
     public var close_button : Label;
 
     public var moveable : Bool = true;
-    public var dragging : Bool = false;
+    public var closeable : Bool = true;
+    public var onclose : Signal<Void->Bool>;
 
-    public var drag_start : Point;
-    public var down_start : Point;
+    var dragging : Bool = false;
+    var drag_start : Point;
+    var down_start : Point;
+    var _mouse:Point;
 
-    public var onclose : Void->Bool;
+    @:allow(mint.ControlRenderer)
+        var window_options : WindowOptions;
 
-    public function new(_options:Dynamic) {
+    public function new( _options:WindowOptions ) {
+
+        window_options = _options;
+        onclose = new Signal();
 
         super(_options);
 
-        _options.bounds = real_bounds;
+        if(window_options.mouse_enabled == null){
+            mouse_enabled = true;
+        }
 
+        _mouse = new Point();
         drag_start = new Point();
         down_start = new Point();
 
-        if(_options.align == null) { _options.align = TextAlign.center; }
-        if(_options.align_vertical == null) { _options.align_vertical = TextAlign.center; }
-        if(_options.title_size != null) { _options.size = _options.title_size; }
-        if(_options.title != null) { _options.text = _options.title; }
         if(_options.moveable != null) { moveable = _options.moveable; }
 
-        title_bounds = new Rect(6, 6, bounds.w-12, 20 );
-        close_bounds = new Rect(bounds.w-18, 5, 18, 20 );
-        view_bounds = new Rect(32, 32, bounds.w - 64, bounds.h - 64 );
-
-        _options.pos = new Point(real_bounds.x, real_bounds.y);
+        var title_bounds = new Rect(2, 2, bounds.w-4, 22 );
+        var close_bounds = new Rect(bounds.w-24, 2, 22, 22 );
+        var view_bounds = new Rect(24, 24, bounds.w - 48, bounds.h - 48 );
 
             //create the title label
         title = new Label({
             parent : this,
             bounds : title_bounds,
-            text:_options.text,
-            point_size:_options.title_size,
-            name : name + '.titlelabel'
+            text: _options.title,
+            align : TextAlign.center,
+            align_vertical : TextAlign.center,
+            point_size: 14,
+            name: name + '.titlelabel'
         });
 
             //create the close label
@@ -57,8 +67,9 @@ class Window extends Control {
             parent : this,
             bounds : close_bounds,
             text:'x',
-            align : TextAlign.left,
-            point_size:13,
+            align : TextAlign.center,
+            align_vertical : TextAlign.center,
+            point_size:15,
             name : name + '.closelabel'
         });
 
@@ -68,19 +79,15 @@ class Window extends Control {
         });
 
             //update
-        renderer.window.init( this, _options );
+        canvas.renderer.render( Window, this );
 
     } //new
 
     function on_close() {
 
-        var do_close = true;
+        onclose.emit();
 
-        if(onclose != null) {
-            do_close = onclose();
-        }
-
-        if(do_close) {
+        if(closeable) {
             close();
         }
 
@@ -88,13 +95,13 @@ class Window extends Control {
 
     public function close() {
 
-        set_visible(false);
+        visible = false;
 
     } //close
 
     public function open() {
 
-        set_visible(true);
+        visible = true;
 
     } //open
 
@@ -122,8 +129,9 @@ class Window extends Control {
 
     public override function onmousedown(e:MouseEvent)  {
 
-        var _m : Point = new Point(e.x,e.y);
-        var in_title = title.real_bounds.point_inside(_m);
+        _mouse.set(e.x,e.y);
+        var in_title = title.real_bounds.point_inside(_mouse);
+
 
         if(!in_title) {
             super.onmousedown(e);
@@ -134,8 +142,8 @@ class Window extends Control {
             if(!dragging && moveable) {
                 if( in_title ) {
                     dragging = true;
-                    drag_start = _m.clone();
-                    down_start = new Point(real_bounds.x, real_bounds.y);
+                    drag_start.set(_mouse.x, _mouse.y);
+                    down_start.set(real_bounds.x, real_bounds.y);
                     canvas.dragged = this;
                 } //if inside title bounds
             } //!dragging
@@ -146,7 +154,8 @@ class Window extends Control {
 
         super.onmouseup(e);
 
-        var _m : Point = new Point(e.x,e.y);
+        _mouse.set(e.x,e.y);
+
         if(dragging) {
             dragging = false;
             canvas.dragged = null;
@@ -154,15 +163,4 @@ class Window extends Control {
 
     } //onmouseup
 
-    public override function translate( ?_x : Float = 0, ?_y : Float = 0, ?_offset:Bool = false ) {
-
-        super.translate( _x, _y, _offset );
-
-        title_bounds = new Rect(real_bounds.x, real_bounds.y, bounds.w, 30 );
-
-        renderer.window.translate( this, _x, _y, _offset );
-
-    } //translate
-
-#end
 }

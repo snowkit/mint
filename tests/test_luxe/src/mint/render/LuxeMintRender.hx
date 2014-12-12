@@ -17,6 +17,7 @@ class LuxeMintRenderer extends Renderer {
             case mint.ScrollArea:   follow(control, new mint.render.Scroll(this, cast control));
             case mint.Panel:        follow(control, new mint.render.Panel(this, cast control));
             case mint.Checkbox:     follow(control, new mint.render.Checkbox(this, cast control));
+            case mint.Window:       follow(control, new mint.render.Window(this, cast control));
         }
     } //render
 
