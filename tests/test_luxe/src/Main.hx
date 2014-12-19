@@ -36,6 +36,11 @@ class Main extends luxe.Game {
         var t = Luxe.loadTexture('assets/transparency.png');
         t.onload = function(_) {
 
+
+            new MintFormat();
+
+            return;
+
             render = new LuxeMintRenderer();
             canvas = new mint.Canvas({
                 renderer: render,
