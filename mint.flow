@@ -1,0 +1,13 @@
+{
+  project : {
+    name : 'mint',
+    version : '1.0.0',
+    author : 'underscorediscovery',
+    build : {
+      dependencies : {
+        "hxparse" : '*',
+        "cassowary.hx" : '*'
+      }
+    }
+  }
+}
