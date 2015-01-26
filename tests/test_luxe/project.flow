@@ -13,8 +13,7 @@
     build : {
       dependencies : {
         luxe : '*',
-        mint : '*',
-        pepper : '*',
+        mint : '*'
       }
     },
 
