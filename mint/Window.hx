@@ -3,7 +3,7 @@ package mint;
 import mint.Types;
 import mint.Control;
 import mint.Label;
-import mint.utils.Signal;
+import mint.Signal;
 
 typedef WindowOptions = {
     > ControlOptions,

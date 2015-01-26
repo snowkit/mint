@@ -2,7 +2,7 @@ package mint;
 
 import mint.Types;
 import mint.Control;
-import mint.utils.Signal;
+import mint.Signal;
 
 typedef ListOptions = {
     > ControlOptions,

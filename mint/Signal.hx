@@ -1,4 +1,4 @@
-package mint.utils;
+package mint;
 
 import haxe.macro.Expr;
 

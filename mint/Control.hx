@@ -1,7 +1,7 @@
 package mint;
 
 import mint.Types;
-import mint.utils.Signal;
+import mint.Signal;
 import mint.Renderer;
 
 
