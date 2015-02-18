@@ -8,7 +8,8 @@ interface ControlRenderer {
 class Renderer {
 
         /** A list of ControlRenderers, mapped to unique control instances. */
-    var renderers : Map<Control, mint.ControlRenderer>;
+    @:noCompletion
+    public var renderers : Map<Control, mint.ControlRenderer>;
 
     public function new(){
         renderers = new Map();
