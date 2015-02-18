@@ -10,6 +10,7 @@ typedef ControlOptions = {
     ?bounds : Rect,
     ?parent: Control,
     ?depth: Float,
+    ?visible: Bool,
 
     ?mouse_enabled : Bool,
 }
@@ -146,6 +147,10 @@ class Control {
 
             //closest_to_canvas
         closest_to_canvas = find_top_parent();
+
+            //apply options
+        if(options.visible != null)         { visible = options.visible; }
+
 
     } //new
 
