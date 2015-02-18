@@ -10,6 +10,7 @@ typedef WindowOptions = {
     ? title: String,
     ? moveable: Bool,
     ? closeable: Bool,
+    ? focusable: Bool,
     ? onclose: Void->Bool,
 }
 
@@ -20,6 +21,8 @@ class Window extends Control {
 
     public var moveable : Bool = true;
     public var closeable : Bool = true;
+    public var focusable : Bool = true;
+
     public var onclose : Signal<Void->Bool>;
 
     var dragging : Bool = false;
@@ -46,6 +49,8 @@ class Window extends Control {
         down_start = new Point();
 
         if(_options.moveable != null) { moveable = _options.moveable; }
+        if(_options.closeable != null) { closeable = _options.closeable; }
+        if(_options.focusable != null) { focusable = _options.focusable; }
 
         var title_bounds = new Rect(2, 2, bounds.w-4, 22 );
         var close_bounds = new Rect(bounds.w-24, 2, 22, 22 );
@@ -137,7 +142,7 @@ class Window extends Control {
             super.onmousedown(e);
         }
 
-        bring_to_front();
+        if(focusable) bring_to_front();
 
             if(!dragging && moveable) {
                 if( in_title ) {
