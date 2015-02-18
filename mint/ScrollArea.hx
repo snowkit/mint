@@ -24,6 +24,7 @@ class ScrollArea extends Control {
     public var child_bounds : ChildBounds;
 
     public var onscroll : Signal<Float->Float->Void>;
+    public var onhandlevis : Signal<Bool->Bool->Void>;
 
     var handle_drag_v = false;
     var handle_drag_h = false;
@@ -39,6 +40,7 @@ class ScrollArea extends Control {
     public function new(_options:ScrollAreaOptions) {
 
         onscroll = new Signal();
+        onhandlevis = new Signal();
 
         scroll_options = _options;
         super(_options);
@@ -66,6 +68,7 @@ class ScrollArea extends Control {
 
         canvas.renderer.render( ScrollArea, this );
         drag_offset = new Point();
+        check_handle_vis();
 
     } //new
 
@@ -209,6 +212,9 @@ class ScrollArea extends Control {
             //make sure the child bounds are up to date
         child_bounds = children_bounds;
 
+        var _preh = scroll.h.enabled;
+        var _prev = scroll.v.enabled;
+
             //make sure the scroll goes away when too small
         scroll.h.enabled = false;
         scroll.v.enabled = false;
@@ -225,6 +231,8 @@ class ScrollArea extends Control {
         } else {
             scroll.v.enabled = true;
         }
+
+        onhandlevis.emit(scroll.h.enabled, scroll.v.enabled);
 
     } //check_handle_vis
 
