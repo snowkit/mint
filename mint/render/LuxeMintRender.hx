@@ -6,7 +6,7 @@ import luxe.Text;
 import luxe.Vector;
 import luxe.Input;
 
-class LuxeMintRenderer extends Renderer {
+class LuxeMintRender extends mint.Renderer {
 
     override function render<T:Control>( type:Class<T>, control:T ) {
         switch(type) {

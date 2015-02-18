@@ -13,8 +13,11 @@ import luxe.Log._debug;
 
 class Label extends mint.render.Base {
 
-    var label : mint.Label;
-    var text : Text;
+    public var label : mint.Label;
+    public var text : Text;
+
+    public var hover_color: Int = 0xf6007b;
+    public var normal_color: Int = 0xffffff;
 
     public function new( _render:Renderer, _control:mint.Label ) {
 
@@ -39,10 +42,10 @@ class Label extends mint.render.Base {
         connect();
         label.ontext.listen(ontext);
         control.mouseenter.listen(function(e,c){
-            text.color = new Color().rgb(0xf6007b);
+            text.color.rgb(hover_color);
         });
         control.mouseleave.listen(function(e,c){
-            text.color = new Color().rgb(0xffffff);
+            text.color.rgb(normal_color);
         });
     }
 

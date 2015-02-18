@@ -15,9 +15,9 @@ import luxe.Log._debug;
 class Scroll extends mint.render.Base {
 
     var scroll : mint.ScrollArea;
-    var visual : Sprite;
-    var scrollh : Sprite;
-    var scrollv : Sprite;
+    public var visual : Sprite;
+    public var scrollh : Sprite;
+    public var scrollv : Sprite;
 
     public function new( _render:Renderer, _control:mint.ScrollArea ) {
 
@@ -39,7 +39,7 @@ class Scroll extends mint.render.Base {
             pos: new Vector(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y),
             size: new Vector(scroll.scroll.h.bounds.w, scroll.scroll.h.bounds.h),
             color: new Color().rgb(0xf6007b),
-            depth: control.depth+0.01,
+            depth: control.depth+0.00001,
             visible: control.visible,
         });
         scrollv = new luxe.Sprite({
@@ -47,7 +47,7 @@ class Scroll extends mint.render.Base {
             pos: new Vector(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y),
             size: new Vector(scroll.scroll.v.bounds.w, scroll.scroll.v.bounds.h),
             color: new Color().rgb(0xf6007b),
-            depth: control.depth+0.01,
+            depth: control.depth+0.00001,
             visible: control.visible,
         });
 
@@ -55,6 +55,7 @@ class Scroll extends mint.render.Base {
 
         connect();
         scroll.onscroll.listen(onscroll);
+        scroll.onhandlevis.listen(onhandlevis);
     }
 
     override function ondestroy() {
@@ -77,17 +78,20 @@ class Scroll extends mint.render.Base {
         scrollv.pos.set_xy(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y);
     }
 
+    function onhandlevis(_h:Bool, _v:Bool) {
+        scrollh.visible = _h;
+        scrollv.visible = _v;
+    }
+
     function onscroll(_dx:Float=0.0, _dy:Float=0.0) {
         _debug('scroll / $_dx / $_dy');
         scrollh.pos.x = scroll.scroll.h.bounds.x;
         scrollv.pos.y = scroll.scroll.v.bounds.y;
-        scrollv.visible = scroll.scroll.v.enabled;
-        scrollh.visible = scroll.scroll.h.enabled;
     }
 
     override function onchild( _child:Control ) {
-        scrollv.depth = scroll.depth+scroll.nodes+0.01;
-        scrollh.depth = scroll.depth+scroll.nodes+0.01;
+        scrollv.depth = scroll.depth+(scroll.nodes*0.001)+0.00001;
+        scrollh.depth = scroll.depth+(scroll.nodes*0.001)+0.00001;
     }
 
     override function onclip( _rect:Rect ) {
@@ -109,15 +113,15 @@ class Scroll extends mint.render.Base {
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');
         visual.visible = _visible;
-        scrollv.visible = _visible;
-        scrollh.visible = _visible;
+        scrollh.visible = scroll.scroll.h.enabled;
+        scrollv.visible = scroll.scroll.v.enabled;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
         _debug('depth / $_depth');
         visual.depth = _depth;
-        scrollv.depth = _depth+scroll.nodes+0.01;
-        scrollh.depth = _depth+scroll.nodes+0.01;
+        scrollv.depth = _depth+(scroll.nodes*0.001)+0.00001;
+        scrollh.depth = _depth+(scroll.nodes*0.001)+0.00001;
     } //ondepth
 
 } //Scroll

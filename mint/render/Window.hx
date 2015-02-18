@@ -87,9 +87,12 @@ class Window extends mint.render.Base {
         if(_rect == null) {
             visual.clip_rect = null;
             top.clip_rect = null;
+            border.clip_rect = null;
         } else {
-            visual.clip_rect = Convert.rect(_rect);
-            top.clip_rect = Convert.rect(_rect);
+            var cr = Convert.rect(_rect);
+            visual.clip_rect = cr;
+            top.clip_rect = cr;
+            border.clip_rect = cr;
         }
     } //onclip
 

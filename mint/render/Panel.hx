@@ -15,7 +15,7 @@ import luxe.Log._debug;
 class Panel extends mint.render.Base {
 
     var panel : mint.Panel;
-    var visual : QuadGeometry;
+    public var visual : QuadGeometry;
 
     public function new( _render:Renderer, _control:mint.Panel ) {
 

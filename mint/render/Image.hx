@@ -25,7 +25,7 @@ class Image extends mint.render.Base {
         _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
-            color: Color.random(),
+            // color: Color.random(),
             texture: Luxe.loadTexture(image.image_options.path),
             pos: new Vector(control.real_bounds.x, control.real_bounds.y),
             size: new Vector(control.real_bounds.w, control.real_bounds.h),
