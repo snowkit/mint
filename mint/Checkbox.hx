@@ -6,7 +6,8 @@ import mint.Signal;
 
 typedef CheckboxOptions = {
     > ControlOptions,
-    ? state : Bool
+    ? state : Bool,
+    ? oncheck : Bool->Bool->Void
 }
 
 class Checkbox extends Control {
@@ -32,6 +33,14 @@ class Checkbox extends Control {
         canvas.renderer.render(Checkbox, this);
 
         mouseup.listen(onclick);
+
+        if(check_options.state != null) {
+            state = check_options.state;
+        }
+
+        if(check_options.oncheck != null) {
+            oncheck.listen( check_options.oncheck );
+        }
 
     } //new
 
