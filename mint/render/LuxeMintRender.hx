@@ -14,6 +14,7 @@ class LuxeMintRender extends mint.Renderer {
             case mint.Label:        follow(control, new mint.render.Label(this, cast control));
             case mint.Button:       follow(control, new mint.render.Button(this, cast control));
             case mint.Image:        follow(control, new mint.render.Image(this, cast control));
+            case mint.List:         follow(control, new mint.render.List(this, cast control));
             case mint.ScrollArea:   follow(control, new mint.render.Scroll(this, cast control));
             case mint.Panel:        follow(control, new mint.render.Panel(this, cast control));
             case mint.Checkbox:     follow(control, new mint.render.Checkbox(this, cast control));

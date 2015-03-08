@@ -37,7 +37,7 @@ class Checkbox extends mint.render.Base {
             centered: false,
             pos: new Vector(control.real_bounds.x+4, control.real_bounds.y+4),
             size: new Vector(control.real_bounds.w-8, control.real_bounds.h-8),
-            color: new Color().rgb(0xf6007b),
+            color: new Color().rgb(0x9dca63),
             depth: control.depth,
             visible: control.visible
         });
@@ -45,10 +45,10 @@ class Checkbox extends mint.render.Base {
         visual.clip_rect = Convert.rect(control.clip_rect);
         node.clip_rect = Convert.rect(control.clip_rect);
 
-        box.mouseenter.listen(function(e,c) { node.color.rgb(0xf9007b); visual.color.rgb(0x445158); });
-        box.mouseleave.listen(function(e,c) { node.color.rgb(0xf6007b); visual.color.rgb(0x373737); });
+        box.mouseenter.listen(function(e,c) { node.color.rgb(0xadca63); visual.color.rgb(0x445158); });
+        box.mouseleave.listen(function(e,c) { node.color.rgb(0x9dca63); visual.color.rgb(0x373737); });
         box.mousedown.listen(function(e,c) { node.color.rgb(0x444444); visual.color.rgb(0x444444); });
-        box.mouseup.listen(function(e,c) { node.color.rgb(0xf6007b); visual.color.rgb(0x445158); });
+        box.mouseup.listen(function(e,c) { node.color.rgb(0x9dca63); visual.color.rgb(0x445158); });
 
         connect();
         box.oncheck.listen(oncheck);

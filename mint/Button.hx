@@ -15,7 +15,7 @@ class Button extends Control {
     @:allow(mint.ControlRenderer)
         var button_options: ButtonOptions;
 
-    public function new(_options:Dynamic) {
+    public function new(_options:ButtonOptions) {
 
         button_options = _options;
         super(button_options);

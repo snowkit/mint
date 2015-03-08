@@ -29,7 +29,7 @@ class Scroll extends mint.render.Base {
             centered: false,
             pos: new Vector(control.real_bounds.x, control.real_bounds.y),
             size: new Vector(control.real_bounds.w, control.real_bounds.h),
-            color: new Color().rgb(0xf0f0f0),
+            color: new Color().rgb(0x343434),
             depth: control.depth,
             visible: control.visible,
         });
@@ -38,7 +38,7 @@ class Scroll extends mint.render.Base {
             centered: false,
             pos: new Vector(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y),
             size: new Vector(scroll.scroll.h.bounds.w, scroll.scroll.h.bounds.h),
-            color: new Color().rgb(0xf6007b),
+            color: new Color().rgb(0x9dca63),
             depth: control.depth+0.00001,
             visible: control.visible,
         });
@@ -46,7 +46,7 @@ class Scroll extends mint.render.Base {
             centered: false,
             pos: new Vector(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y),
             size: new Vector(scroll.scroll.v.bounds.w, scroll.scroll.v.bounds.h),
-            color: new Color().rgb(0xf6007b),
+            color: new Color().rgb(0x9dca63),
             depth: control.depth+0.00001,
             visible: control.visible,
         });

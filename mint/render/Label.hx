@@ -16,7 +16,7 @@ class Label extends mint.render.Base {
     public var label : mint.Label;
     public var text : Text;
 
-    public var hover_color: Int = 0xf6007b;
+    public var hover_color: Int = 0x9dca63;
     public var normal_color: Int = 0xffffff;
 
     public function new( _render:Renderer, _control:mint.Label ) {
@@ -31,7 +31,7 @@ class Label extends mint.render.Base {
             text: label.text,
             bounds_wrap: label.label_options.bounds_wrap,
             align: Convert.text_align(label.label_options.align),
-            align_vertical: Convert.text_align(label.label_options.align),
+            align_vertical: Convert.text_align(label.label_options.align_vertical),
             point_size: label.label_options.point_size,
             depth: control.depth,
             visible: control.visible,

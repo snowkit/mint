@@ -15,8 +15,11 @@ class List extends Control {
     public var view : ScrollArea;
     public var items : Array<Control>;
     public var multiselect : Bool = false;
-    public var onselect : Signal<Int->MouseEvent->Void>;
     public var list_options : ListOptions;
+
+    public var onselect : Signal<Int->Control->MouseEvent->Void>;
+    public var onitementer : Signal<Int->Control->MouseEvent->Void>;
+    public var onitemleave : Signal<Int->Control->MouseEvent->Void>;
 
     public function new( _options:ListOptions ) {
 
@@ -24,6 +27,10 @@ class List extends Control {
         list_options = _options;
 
         super(list_options);
+
+        onselect = new Signal();
+        onitemleave = new Signal();
+        onitementer = new Signal();
 
         if(list_options.mouse_enabled == null){
             mouse_enabled = true;
@@ -43,12 +50,20 @@ class List extends Control {
             // onscroll : onscroll
         });
 
+        view.mousedown.listen(click_deselect);
+
         // _options = __options;
         // if(_options.align == null) {
         //     _options.align = TextAlign.center;
         // }
 
+        canvas.renderer.render(List, this);
+
     } //new
+
+    function click_deselect(e:MouseEvent, ctrl) {
+        
+    }
 
     public function add_item( item:Control ) {
 
@@ -57,31 +72,52 @@ class List extends Control {
         item.bounds = new Rect(item.bounds.x, item.bounds.y+_childbounds.bottom, item.bounds.w, item.bounds.h);
         view.add(item);
 
+        item.mouse_enabled = true;
         items.push(item);
+
+        item.mouseup.listen(item_mousedown);
+        item.mouseenter.listen(item_mouseenter);
+        item.mouseleave.listen(item_mouseleave);
 
     } //add_item
 
-    // public function clear() {
+    function item_mouseenter(event:MouseEvent, ctrl:Control ) {
+        var idx = items.indexOf(ctrl);
+        onitementer.emit(idx, ctrl, event);
+    }
 
-        //     for(item in items) {
-        //         item.destroy();
-        //         item = null;
-        //     }
+    function item_mouseleave(event:MouseEvent, ctrl:Control ) {
+        var idx = items.indexOf(ctrl);
+        onitemleave.emit(idx, ctrl, event);
+    }
 
-        //     items = null;
-        //     items = [];
+    function item_mousedown(event:MouseEvent, ctrl:Control ) {
+        var idx = items.indexOf(ctrl);
+        onselect.emit(idx, ctrl, event);
+        trace('child mousedown');
+    }
 
-        //     renderer.list.select_item(this, null);
+    public function clear() {
 
-        // } //clear
+        for(item in items) {
+            item.destroy();
+            item = null;
+        }
 
-        // public function select( _index:Int ) {
+        items = null;
+        items = [];
 
-        //     if(_index < items.length) {
-        //         label_selected(items[_index], null);
-        //     }
+        onselect.emit(-1, null, null);
 
-        // } //select
+    } //clear
+
+    // public function select( _index:Int ) {
+
+    //     if(_index < items.length) {
+    //         label_selected(items[_index], null);
+    //     }
+
+    // } //select
 
    
 
