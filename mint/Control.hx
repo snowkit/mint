@@ -3,8 +3,7 @@ package mint;
 import mint.Types;
 import mint.Signal;
 import mint.Renderer;
-
-typedef MouseSignal = MouseEvent->Control->Void;
+import mint.Macros.*;
 
 typedef ControlOptions = {
 
@@ -23,10 +22,10 @@ typedef ControlOptions = {
 
 } //ControlOptions
 
-
-//base class for all controls
-//handles propogation of events,
-//mouse handling, alignment, so on
+/** An empty control.
+    Base class for all controls
+    handles propogation of events,
+    mouse handling, layout and so on */
 @:allow(mint.ControlRenderer)
 class Control {
 
@@ -59,21 +58,24 @@ class Control {
         //a getter for the bounds information about the children and their children in this control
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
-        //a shortcut to adding multiple mousedown handlers
-    public var mousedown : Signal<MouseSignal>;
-        //a shortcut to adding multiple mouseup handlers
-    public var mouseup : Signal<MouseSignal>;
-        //a shortcut to adding multiple mousemove handlers
-    public var mousemove : Signal<MouseSignal>;
-        //a shortcut to adding multiple mousewheel handlers
-    public var mousewheel : Signal<MouseSignal>;
-        //a shortcut to adding multiple mouseenter handlers
-    public var mouseenter : Signal<MouseSignal>;
-        //a shortcut to adding multiple mouseenter handlers
-    public var mouseleave : Signal<MouseSignal>;
 
-        //a shortcut to adding multiple mouseenter handlers
-    public var onbounds : Signal<Void->Void>;
+    public var onbounds    : Signal<Void->Void>;
+    public var ondestroy   : Signal<Void->Void>;
+    public var onvisible   : Signal<Bool->Void>;
+    public var ondepth     : Signal<Float->Void>;
+    public var ontranslate : Signal<Float->Float->Bool->Void>;
+    public var onclip      : Signal<Rect->Void>;
+    public var onchild     : Signal<Control->Void>;
+    public var mousedown   : Signal<MouseSignal>;
+    public var mouseup     : Signal<MouseSignal>;
+    public var mousemove   : Signal<MouseSignal>;
+    public var mousewheel  : Signal<MouseSignal>;
+    public var mouseenter  : Signal<MouseSignal>;
+    public var mouseleave  : Signal<MouseSignal>;
+    public var keydown     : Signal<KeySignal>;
+    public var keyup       : Signal<KeySignal>;
+    public var textinput   : Signal<TextSignal>;
+
 
         //the parent control, null if no parent
     @:isVar public var parent(get,set) : Control;
@@ -81,42 +83,37 @@ class Control {
     @:isVar public var depth(get,set) : Float = 0.0;
 
     var ctrloptions : ControlOptions;
-    var ondestroy   : Signal<Void->Void>;
-    var onvisible   : Signal<Bool->Void>;
-    var ondepth     : Signal<Float->Void>;
-    var ontranslate : Signal<Float->Float->Bool->Void>;
-    var onclip      : Signal<Rect->Void>;
-    var onchild     : Signal<Control->Void>;
 
     public function new( _options:ControlOptions ) {
 
         ctrloptions = _options;
 
-        onbounds = new Signal();
-        ondestroy = new Signal();
-        onvisible = new Signal();
-        ondepth = new Signal();
+        onbounds    = new Signal();
+        ondestroy   = new Signal();
+        onvisible   = new Signal();
+        ondepth     = new Signal();
         ontranslate = new Signal();
-        onclip = new Signal();
-        onchild = new Signal();
+        onclip      = new Signal();
+        onchild     = new Signal();
+        mousedown   = new Signal();
+        mouseup     = new Signal();
+        mousemove   = new Signal();
+        mousewheel  = new Signal();
+        mouseleave  = new Signal();
+        mouseenter  = new Signal();
+        keydown     = new Signal();
+        keyup       = new Signal();
+        textinput   = new Signal();
 
         bounds = ctrloptions.bounds == null ? new Rect(0,0,32,32) : ctrloptions.bounds;
         offset = new Point(0,0);
 
         real_bounds = new Rect(bounds.x+offset.x, bounds.y+offset.y, bounds.w, bounds.h);
 
-        if(ctrloptions.name != null)            { name = ctrloptions.name; }
-        if(ctrloptions.mouse_enabled != null)   { mouse_enabled = ctrloptions.mouse_enabled; }
+        name = def(ctrloptions.name, 'control');
+        if(ctrloptions.mouse_enabled != null) mouse_enabled = ctrloptions.mouse_enabled;
 
         children = [];
-
-        mousedown = new Signal();
-        mouseup = new Signal();
-        mousemove = new Signal();
-        mousewheel = new Signal();
-        mouseleave = new Signal();
-        mouseenter = new Signal();
-
         children_bounds = {
             x:0,
             y:0,
@@ -139,18 +136,16 @@ class Control {
             if( !Std.is(this, Canvas) && canvas == null) {
                 throw "Control without a canvas " + ctrloptions;
             } //canvas
+
         }
 
-            //closest_to_canvas
         closest_to_canvas = find_top_parent();
 
-            //apply ctrloptions
         if(ctrloptions.visible != null)         { visible = ctrloptions.visible; }
-
 
     } //new
 
-    public function topmost_child_under_point( _p:Point ) : Control {
+    public function topmost_child_at_point( _p:Point ) : Control {
 
             //if we have no children, we are the topmost child
         if(children.length == 0) return this;
@@ -173,12 +168,12 @@ class Control {
         } //child in children
 
         if(highest_child != this && highest_child.children.length != 0) {
-            return highest_child.topmost_child_under_point(_p);
+            return highest_child.topmost_child_at_point(_p);
         } else {
             return highest_child;
         }
 
-    } //topmost_child_under_point
+    } //topmost_child_at_point
 
     public function contains_point( _p:Point ) {
 
@@ -536,6 +531,7 @@ class Control {
 
 
 typedef ChildBounds = {
+
     var x : Float;
     var y : Float;
     var bottom : Float;
@@ -545,4 +541,13 @@ typedef ChildBounds = {
     var real_x : Float;
     var real_w : Float;
     var real_h : Float;
-}
+
+} //ChildBounds
+
+
+    /** A signal for mouse input events */
+typedef MouseSignal = MouseEvent->Control->Void;
+    /** A signal for key input events */
+typedef KeySignal   = KeyEvent->Control->Void;
+    /** A signal for text input events */
+typedef TextSignal  = TextEvent->Control->Void;
