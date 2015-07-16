@@ -51,12 +51,74 @@ abstract MouseButton(Int) from Int to Int {
 
 } //MouseButton
 
+/** A typed key id */
+@:enum
+abstract KeyCode(Int) from Int to Int {
+
+/** no known key */
+    var unknown = -1;
+/** left arrow key */
+    var left = 0;
+/** right arrow key */
+    var right = 1;
+/** up arrow key */
+    var up = 2;
+/** down arrow key */
+    var down = 3;
+/** the backspace key */
+    var backspace = 4;
+/** the tab key */
+    var tab = 5;
+/** the delete key */
+    var delete = 6;
+/** the enter key */
+    var enter = 7;
+
+} //KeyCode
+
+/** Input modifier state */
+typedef ModState = {
+
+        /** no modifiers are down */
+    var none : Bool;
+        /** left shift key is down */
+    var lshift : Bool;
+        /** right shift key is down */
+    var rshift : Bool;
+        /** left ctrl key is down */
+    var lctrl : Bool;
+        /** right ctrl key is down */
+    var rctrl : Bool;
+        /** left alt/option key is down */
+    var lalt : Bool;
+        /** right alt/option key is down */
+    var ralt : Bool;
+        /** left windows/command key is down */
+    var lmeta : Bool;
+        /** right windows/command key is down */
+    var rmeta : Bool;
+        /** numlock is enabled */
+    var num : Bool;
+        /** capslock is enabled */
+    var caps : Bool;
+        /** mode key is down */
+    var mode : Bool;
+        /** left or right ctrl key is down */
+    var ctrl : Bool;
+        /** left or right shift key is down */
+    var shift : Bool;
+        /** left or right alt/option key is down */
+    var alt : Bool;
+        /** left or right windows/command key is down */
+    var meta : Bool;
+
+} //ModState
+
+
 typedef MouseEvent = {
 
-        /** The time in seconds when this touch event occurred, use for deltas */
+        /** The time in seconds when this mouse event occurred, useful for deltas */
     var timestamp : Float;
-        /** The window id this event originated from */
-    var window_id : Int;
         /** The state this event is in */
     var state : InteractState;
         /** The button id, if the event `state` is `down` or `up` */
@@ -73,6 +135,48 @@ typedef MouseEvent = {
     var bubble : Bool;
 
 } //MouseEvent
+
+/** A mint specific key event */
+typedef KeyEvent = {
+
+        /** The time in seconds when this key event occurred, useful for deltas */
+    var timestamp : Float;
+        /** The raw keycode of the event */
+    var keycode : Int;
+        /** The typed mint key for the event */
+    var key : KeyCode;
+        /** The modifier state */
+    var mod : ModState;
+
+} //KeyEvent
+
+/** Information about a text input event */
+typedef TextEvent = {
+
+        /** The text that this event has generated */
+    var text : String;
+        /** The type of text event */
+    var type : TextEventType;
+        /** The time in seconds when this touch event occurred, use for deltas */
+    var timestamp : Float;
+        /** The start position, if the `type` is `edit` */
+    var start : Int;
+        /** The length position, if the `type` is `edit` */
+    var length : Int;
+
+} //TextEvent
+
+/** A typed text event type */
+enum TextEventType {
+
+/** An unknown event */
+    unknown;
+/** An edit text typing event */
+    edit;
+/** An input text typing event */
+    input;
+
+} //TextEventType
 
 
 class Utils {

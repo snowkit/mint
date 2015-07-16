@@ -80,7 +80,6 @@ class Convert {
         return {
             state : interact_state(_event.state),
             button : mouse_button(_event.button),
-            window_id : _event.window_id,
             timestamp : _event.timestamp,
             x : _event.x,
             y : _event.y,

@@ -8,10 +8,6 @@ import mint.Control;
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
 
-//todo:
-//      keyboard/gamepad tab controls,
-//      "directional" auto navigation based on group/control
-
 class Main extends luxe.Game {
 
     var canvas: mint.Canvas;
@@ -188,29 +184,17 @@ class Main extends luxe.Game {
         if(canvas!=null) canvas.onmousedown( Convert.mouse_event(e) );
     }
 
-    override function onkeyup(e:KeyEvent) {
+    override function onkeyup(e:luxe.Input.KeyEvent) {
 
-        if(e.keycode == Key.right) {
-            if(canvas!=null) canvas.translate(100,0);
-        }
-        if(e.keycode == Key.left) {
-            if(canvas!=null) canvas.translate(-100,0);
-        }
-        if(e.keycode == Key.up) {
-            if(canvas!=null) canvas.translate(0,-100);
-        }
-        if(e.keycode == Key.down) {
-            if(canvas!=null) canvas.translate(0,100);
-        }
-
-        if(e.keycode == Key.key_w) {
+        if(e.keycode == Key.key_3) {
             if(window != null) window.open();
         }
-        if(e.keycode == Key.key_d) {
+
+        if(e.keycode == Key.key_2) {
             debug = !debug;
         }
 
-        if(e.keycode == Key.key_v) {
+        if(e.keycode == Key.key_1) {
             if(canvas!=null) canvas.visible = !canvas.visible;
         }
 
