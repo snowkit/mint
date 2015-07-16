@@ -4,29 +4,33 @@ import mint.Types;
 import mint.Signal;
 import mint.Renderer;
 
+typedef MouseSignal = MouseEvent->Control->Void;
 
 typedef ControlOptions = {
-    ?name:String,
-    ?bounds : Rect,
-    ?parent: Control,
-    ?depth: Float,
-    ?visible: Bool,
 
-    ?mouse_enabled : Bool,
-}
+        /** The control name */
+    @:optional var name: String;
+        /** The control bounds */
+    @:optional var bounds: Rect;
+        /** The control parent, if any */
+    @:optional var parent: Control;
+        /** The control depth. Usually set internally */
+    @:optional var depth: Float;
+        /** Whether or not the control is visible at creation */
+    @:optional var visible: Bool;
+        /** Whether or not the control responds to mouse input */
+    @:optional var mouse_enabled: Bool;
 
-typedef MouseSignal = MouseEvent->Control->Void;
+} //ControlOptions
 
 
 //base class for all controls
 //handles propogation of events,
 //mouse handling, alignment, so on
-
 @:allow(mint.ControlRenderer)
 class Control {
 
     public var name : String = 'control';
-
         //parent canvas that this element belongs to
     public var canvas : Canvas;
         //the top most control below the canvas that holds us
