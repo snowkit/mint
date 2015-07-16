@@ -1,7 +1,7 @@
-package mint.render;
+package mint.render.luxe;
 
 import mint.Types;
-import mint.render.Convert;
+import mint.render.luxe.Convert;
 
 import luxe.Rectangle;
 import luxe.Vector;

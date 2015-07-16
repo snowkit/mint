@@ -5,8 +5,8 @@ import luxe.Input;
 
 import mint.Types;
 import mint.Control;
-import mint.render.LuxeMintRender;
-import mint.render.Convert;
+import mint.render.luxe.LuxeMintRender;
+import mint.render.luxe.Convert;
 
 //todo:
 //      keyboard/gamepad tab controls,

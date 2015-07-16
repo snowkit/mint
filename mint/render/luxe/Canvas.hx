@@ -1,26 +1,26 @@
-package mint.render;
+package mint.render.luxe;
 
 import luxe.Vector;
 import mint.Types;
 import mint.Renderer;
 
-import mint.render.LuxeMintRender;
-import mint.render.Convert;
+import mint.render.luxe.LuxeMintRender;
+import mint.render.luxe.Convert;
 
 import phoenix.geometry.QuadGeometry;
 import luxe.Color;
 import luxe.Log.log;
 import luxe.Log._debug;
 
-class Panel extends mint.render.Base {
+class Canvas extends mint.render.Base {
 
-    var panel : mint.Panel;
-    public var visual : QuadGeometry;
+    var canvas : mint.Canvas;
+    var visual : QuadGeometry;
 
-    public function new( _render:Renderer, _control:mint.Panel ) {
+    public function new( _render:Renderer, _control:mint.Canvas ) {
 
         super(_render, _control);
-        panel = _control;
+        canvas = _control;
 
         _debug('create / ${control.name}');
         visual = Luxe.draw.box({
@@ -28,10 +28,10 @@ class Panel extends mint.render.Base {
             y:control.real_bounds.y,
             w:control.real_bounds.w,
             h:control.real_bounds.h,
-            color: new Color(0,0,0,1).rgb(0x242424),
+            color: new Color(0,0,0,0).rgb(0x0c0c0c),
             depth: control.depth,
             visible: control.visible,
-            clip_rect: Convert.rect(control.clip_rect)
+            clip_rect: Convert.rect(control.clip_rect),
         });
 
         connect();
@@ -55,16 +55,16 @@ class Panel extends mint.render.Base {
     }
 
     override function onclip( _rect:Rect ) {
-        _debug('clip / ${control.name} / $_rect');
+        _debug('clip / $_rect');
         if(_rect == null) {
             visual.clip_rect = null;
         } else {
-            visual.clip_rect = Convert.rect(_rect);
+            visual.clip_rect.set(_rect.x, _rect.y, _rect.w, _rect.h);
         }
     } //onclip
 
     override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / ${control.name} / $_x / $_y / $_offset');
+        _debug('translate / $_x / $_y / $_offset / ${control.real_bounds}');
         visual.transform.pos.add_xyz(_x, _y);
     } //ontranslate
 

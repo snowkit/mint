@@ -1,11 +1,11 @@
-package mint.render;
+package mint.render.luxe;
 
 import luxe.Vector;
 import mint.Types;
 import mint.Renderer;
 
-import mint.render.LuxeMintRender;
-import mint.render.Convert;
+import mint.render.luxe.LuxeMintRender;
+import mint.render.luxe.Convert;
 
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;

@@ -1,10 +1,10 @@
-package mint.render;
+package mint.render.luxe;
 
 import mint.Types;
 import mint.Renderer;
 
-import mint.render.LuxeMintRender;
-import mint.render.Convert;
+import mint.render.luxe.LuxeMintRender;
+import mint.render.luxe.Convert;
 
 import luxe.Text;
 import luxe.Color;
