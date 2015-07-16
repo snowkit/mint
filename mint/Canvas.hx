@@ -5,21 +5,39 @@ import mint.Control;
 import mint.Renderer;
 import mint.Macros.*;
 
+/** Options for constructing a Canvas */
 typedef CanvasOptions = {
-    > ControlOptions,
-    renderer : Renderer
-}
 
+    > ControlOptions,
+
+    var renderer : Renderer;
+
+} //CanvasOptions
+
+/**
+    A canvas is a root object in mint.
+    It requires a renderer and handles all incoming events,
+    propagating them to the children. It also maintains the state
+    of modality, focused controls and dragged contorls to simplify interaction.
+    Additional Signals: none
+*/
 class Canvas extends Control {
 
+        /** The current focused control, null if none */
     public var focused : Control;
+        /** The current dragged control, null if none */
     public var dragged : Control;
+        /** The current modal control, null if none */
     public var modal   : Control;
 
+        /** The renderer that this canvas refers it's children to by default */
     public var renderer : Renderer;
+        /** Whether or not the current focus needs refreshing. */
     public var focus_invalid : Bool = true;
 
     var options: CanvasOptions;
+    var _mouse_last:Point;
+    var depth_seq : Float = 0;
 
     public function new( _options:CanvasOptions ) {
 
@@ -38,9 +56,12 @@ class Canvas extends Control {
         canvas = this;
 
         mouse_enabled = true;
+        depth = def(options.depth, 0.0);
+        depth_seq = depth;
+
         focused = null;
-        depth = (_options.depth == null) ? 0.0 : _options.depth;
-        depths = depth;
+        modal = null;
+        dragged = null;
 
         renderer.render( Canvas, this );
 
@@ -48,49 +69,32 @@ class Canvas extends Control {
 
     } //new
 
-    public function topmost_control_under_point( _p:Point ) {
+        /** Get the top most control under the given point, or null if there is none (or is the canvas itself) */
+    public function topmost_at_point( _p:Point ) {
+
         var _control = topmost_child_under_point(_p);
+
         if(_control != this) return _control;
+
         return null;
-    }
 
-    var _mouse_last:Point;
+    } //topmost_at_point
 
-    function set_control_unfocused(_control:Control, e:MouseEvent, ?do_mouseleave:Bool = true) {
-        if(_control != null) {
+//Internal
 
-            _control.ishovered = false;
-            _control.isfocused = false;
+        /** Get the next viable depth */
+    @:allow(Control)
+    function next_depth() {
 
-            if(_control.mouse_enabled && do_mouseleave) {
-                _control.onmouseleave(e);
-            } //mouse enabled and we want handlers
+        depth_seq += 1;
 
-        } //_control != null
-    } //set_unfocused
+        return depth_seq;
 
-    function set_control_focused(_control:Control, e:MouseEvent, ?do_mouseenter:Bool = true) {
-        if(_control != null) {
-            _control.ishovered = true;
-            _control.isfocused = true;
+    } //next_depth
 
-            if(_control.mouse_enabled && do_mouseenter) {
-                _control.onmouseenter(e);
-            } //mouse enabled and we want handlers
-        }
-    } //set_focused
-
-    function get_focused( _p : Point ) {
-
-        if( modal != null ) {
-            return modal;
-        } else {
-            return topmost_control_under_point( _p );
-        }
-
-    } //get_focused
-
-    public function reset_focus( ?_control:Control, ?e:MouseEvent ) {
+        /** Reset the focus to nothing, if given a control will tell
+            that control of itself losing focus */
+    function reset_focus( ?_control:Control, ?e:MouseEvent ) {
 
         //this happens in children want to invalidate their focus
 
@@ -102,7 +106,8 @@ class Canvas extends Control {
 
     } //reset_focus
 
-    public function find_focus( ?e:MouseEvent ) {
+        /** Find viable focusable controls, if any */
+    function find_focus( ?e:MouseEvent ) {
 
         focused = get_focused( _mouse_last );
 
@@ -113,6 +118,50 @@ class Canvas extends Control {
         focus_invalid = false;
 
     } //find_focus
+
+        /** Mark a control as unfocused */
+    function set_control_unfocused(_control:Control, e:MouseEvent, ?do_mouseleave:Bool = true) {
+
+        if(_control != null) {
+
+            _control.ishovered = false;
+            _control.isfocused = false;
+
+            if(_control.mouse_enabled && do_mouseleave) {
+                _control.onmouseleave(e);
+            } //mouse enabled and we want handlers
+
+        } //_control != null
+
+    } //set_unfocused
+
+        /** Mark a control as focused */
+    function set_control_focused(_control:Control, e:MouseEvent, ?do_mouseenter:Bool = true) {
+
+        if(_control != null) {
+            _control.ishovered = true;
+            _control.isfocused = true;
+
+            if(_control.mouse_enabled && do_mouseenter) {
+                _control.onmouseenter(e);
+            } //mouse enabled and we want handlers
+        }
+
+    } //set_focused
+
+        /** Return a control to focus from a point.
+            If modal is set, that will be returned instead */
+    function get_focused( _p : Point ) {
+
+        if( modal != null ) {
+            return modal;
+        } else {
+            return topmost_at_point( _p );
+        }
+
+    } //get_focused
+
+//Overrides from Control
 
     public override function onmousemove( e:MouseEvent ) {
 
@@ -221,14 +270,10 @@ class Canvas extends Control {
 
     } //onmousedown
 
-    var depths:Float = 0;
-    public function next_depth() {
-        depths += 1;
-        return depths;
-    } //next_depth
-
     public override function add( child:Control ) {
+
         super.add(child);
+
     } //add
 
     public override function update(dt:Float) {
@@ -240,7 +285,9 @@ class Canvas extends Control {
     } //update
 
     public override function destroy(){
+
         super.destroy();
+
     } //destroy
 
 } //Canvas
