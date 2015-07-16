@@ -29,6 +29,8 @@ class Button extends Control {
 
         options = _options;
 
+        def(options.name, 'button');
+
         super(options);
 
         mouse_enabled = def(options.mouse_enabled, true);

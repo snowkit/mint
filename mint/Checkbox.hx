@@ -39,11 +39,13 @@ class Checkbox extends Control {
 
     public function new( _options:CheckboxOptions ) {
 
-        onchange = new Signal();
-
         options = _options;
 
+        def(options.name, 'checkbox');
+
         super(_options);
+
+        onchange = new Signal();
 
         mouse_enabled = def(options.mouse_enabled, true);
 

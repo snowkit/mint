@@ -21,6 +21,10 @@ class Dropdown extends Control {
 
     public function new(_options:Dynamic) {
 
+        options = _options;
+
+        def(options.name, 'dropdown');
+
             //create the base control
         super(_options);
             //dropdowns can be clicked

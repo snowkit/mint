@@ -43,10 +43,13 @@ class Label extends Control {
 
     public function new( _options:LabelOptions ) {
 
-        onchange = new Signal();
         options = _options;
 
+        def(options.name, 'label');
+
         super(options);
+
+        onchange = new Signal();
 
         mouse_enabled = def(options.mouse_enabled, false);
 

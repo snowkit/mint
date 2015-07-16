@@ -2,6 +2,7 @@ package mint;
 
 import mint.Types;
 import mint.Control;
+import mint.Macros.*;
 
 /** Options for constructing an Image */
 typedef ImageOptions = {
@@ -35,9 +36,11 @@ class Image extends Control {
 
         options = _options;
 
-        mouse_enabled = false;
+        def(options.name, 'image');
 
         super(_options);
+
+        mouse_enabled = def(options.mouse_enabled, false);
 
         canvas.renderer.render(Image, this);
 

@@ -4,6 +4,7 @@ import mint.Types;
 import mint.Control;
 import mint.Label;
 import mint.Signal;
+import mint.Macros.*;
 
 typedef WindowOptions = {
     > ControlOptions,
@@ -39,6 +40,8 @@ class Window extends Control {
 
         options = _options;
         onclose = new Signal();
+
+        def(options.name, 'window');
 
         super(_options);
 

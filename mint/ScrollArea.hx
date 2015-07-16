@@ -3,6 +3,7 @@ package mint;
 import mint.Types;
 import mint.Control;
 import mint.Signal;
+import mint.Macros.*;
 
 typedef ScrollInfo = {
     enabled: Bool,
@@ -43,6 +44,9 @@ class ScrollArea extends Control {
         onhandlevis = new Signal();
 
         options = _options;
+
+        def(options.name, 'scroll');
+
         super(_options);
 
         if(options.mouse_enabled == null){

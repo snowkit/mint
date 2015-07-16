@@ -3,6 +3,7 @@ package mint;
 import mint.Types;
 import mint.Control;
 import mint.Signal;
+import mint.Macros.*;
 
 typedef ListOptions = {
     > ControlOptions,
@@ -25,6 +26,8 @@ class List extends Control {
 
         items = [];
         options = _options;
+
+        def(options.name, 'list');
 
         super(options);
 

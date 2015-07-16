@@ -2,6 +2,7 @@ package mint;
 
 import mint.Types;
 import mint.Control;
+import mint.Macros.*;
 
 /** Options for constructing a Panel */
 typedef PanelOptions = {
@@ -22,6 +23,8 @@ class Panel extends Control {
     public function new(_options:Dynamic) {
 
         options = _options;
+
+        def(options.name, 'panel');
 
         super(options);
 

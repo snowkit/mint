@@ -72,7 +72,7 @@ class Canvas extends Control {
         /** Get the top most control under the given point, or null if there is none (or is the canvas itself) */
     public function topmost_at_point( _p:Point ) {
 
-        var _control = topmost_child_under_point(_p);
+        var _control = topmost_child_at_point(_p);
 
         if(_control != this) return _control;
 
@@ -83,7 +83,7 @@ class Canvas extends Control {
 //Internal
 
         /** Get the next viable depth */
-    @:allow(Control)
+    @:allow(mint.Control)
     function next_depth() {
 
         depth_seq += 1;
@@ -179,7 +179,7 @@ class Canvas extends Control {
             if(focused.contains_point(_mouse_last)) {
 
                     //now check if we haven't gone into any of it's children
-                var _child_over = focused.topmost_child_under_point(_mouse_last);
+                var _child_over = focused.topmost_child_at_point(_mouse_last);
                 if(_child_over != null && _child_over != focused) {
 
                         //if we don't want mouseleave when the child takes focus, set to false
