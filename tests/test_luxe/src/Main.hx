@@ -25,23 +25,23 @@ class Main extends luxe.Game {
     var window: mint.Window;
     var window2: mint.Window;
 
-    var render: LuxeMintRenderer;
+    var render: LuxeMintRender;
 
     var debug : Bool = false;
 
     override function ready() {
 
-        Luxe.renderer.clear_color.rgb(0x373737);
+        Luxe.renderer.clear_color.rgb(0x161619);
 
-        var t = Luxe.loadTexture('assets/transparency.png');
-        t.onload = function(_) {
+        var te = Luxe.resources.load_texture('assets/transparency.png');
+        te.then(function(t) {
 
             // new Props();
             // new MintFormat();
 
             // return;
 
-            render = new LuxeMintRenderer();
+            render = new LuxeMintRender();
             canvas = new mint.Canvas({
                 renderer: render,
                 bounds: new Rect(10,10,900,512)
@@ -124,7 +124,7 @@ class Main extends luxe.Game {
 
             trace(canvas.nodes);
 
-        }
+        });
 
 
     } //ready

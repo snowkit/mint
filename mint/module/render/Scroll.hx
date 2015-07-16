@@ -113,8 +113,8 @@ class Scroll extends mint.render.Base {
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');
         visual.visible = _visible;
-        scrollh.visible = scroll.scroll.h.enabled;
-        scrollv.visible = scroll.scroll.v.enabled;
+        scrollh.visible = scroll.scroll.h.enabled && _visible;
+        scrollv.visible = scroll.scroll.v.enabled && _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {

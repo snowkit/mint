@@ -30,6 +30,8 @@ class Window extends Control {
     var down_start : Point;
     var _mouse:Point;
 
+    var resize_handle : Control;
+
     @:allow(mint.ControlRenderer)
         var window_options : WindowOptions;
 
@@ -55,6 +57,16 @@ class Window extends Control {
         var title_bounds = new Rect(2, 2, bounds.w-4, 22 );
         var close_bounds = new Rect(bounds.w-24, 2, 22, 22 );
         var view_bounds = new Rect(24, 24, bounds.w - 48, bounds.h - 48 );
+
+        resize_handle = new Control({
+            parent : this,
+            bounds : new Rect(bounds.w-24, bounds.h-24, 24, 24),
+            name : name + '.resize_handle',
+        });
+
+        resize_handle.mouse_enabled = true;//options.resizable
+        resize_handle.mousedown.listen(on_resize_down);
+        resize_handle.mouseup.listen(on_resize_up);
 
             //create the title label
         title = new Label({
@@ -88,6 +100,21 @@ class Window extends Control {
 
     } //new
 
+    var resizing = false;
+    var resize_start : Point;
+
+    function on_resize_up(e:MouseEvent, _) {
+        resizing = false;
+        canvas.dragged = null;
+    }
+
+    function on_resize_down(e:MouseEvent, _) {
+        if(resizing) return;
+        resizing = true;
+        resize_start = new Point(e.x, e.y);
+        canvas.dragged = this;
+    }
+
     function on_close() {
 
         onclose.emit();
@@ -113,6 +140,16 @@ class Window extends Control {
     public override function onmousemove(e:MouseEvent)  {
 
         super.onmousemove(e);
+
+        if(resizing) {
+            var diff_x = e.x - resize_start.x;
+            var diff_y = e.y - resize_start.y;
+            // resize_start
+            var ww = bounds.w + diff_x;
+            var hh = bounds.h + diff_y;
+            resize_start.set(e.x, e.y);
+            bounds = new Rect(bounds.x, bounds.y, ww, hh);
+        }
 
         if(dragging) {
 
@@ -167,5 +204,15 @@ class Window extends Control {
         } //dragging
 
     } //onmouseup
+
+    override function set_bounds( _b:Rect ) {
+
+        bounds = super.set_bounds(_b);
+
+        if(resize_handle != null)
+        resize_handle.bounds = new Rect(_b.w-24, _b.h-24, 24, 24);
+
+        return bounds;
+    }
 
 }
