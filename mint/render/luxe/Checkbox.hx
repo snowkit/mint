@@ -51,7 +51,7 @@ class Checkbox extends mint.render.Base {
         box.mouseup.listen(function(e,c) { node.color.rgb(0x9dca63); visual.color.rgb(0x445158); });
 
         connect();
-        box.oncheck.listen(oncheck);
+        box.onchange.listen(oncheck);
 
     }
 

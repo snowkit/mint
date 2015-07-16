@@ -29,10 +29,10 @@ class Label extends mint.render.Base {
             bounds: Convert.rect(control.real_bounds),
             color: new Color(),
             text: label.text,
-            bounds_wrap: label.label_options.bounds_wrap,
-            align: Convert.text_align(label.label_options.align),
-            align_vertical: Convert.text_align(label.label_options.align_vertical),
-            point_size: label.label_options.point_size,
+            bounds_wrap: label.options.bounds_wrap,
+            align: Convert.text_align(label.options.align),
+            align_vertical: Convert.text_align(label.options.align_vertical),
+            point_size: label.options.point_size,
             depth: control.depth,
             visible: control.visible,
         });
@@ -40,7 +40,7 @@ class Label extends mint.render.Base {
         text.clip_rect = Convert.rect(control.clip_rect);
 
         connect();
-        label.ontext.listen(ontext);
+        label.onchange.listen(ontext);
         control.mouseenter.listen(function(e,c){
             text.color.rgb(hover_color);
         });
@@ -59,7 +59,7 @@ class Label extends mint.render.Base {
 
     override function ondestroy() {
         disconnect();
-        label.ontext.remove(ontext);
+        label.onchange.remove(ontext);
 
         text.destroy();
         text = null;

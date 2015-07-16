@@ -22,7 +22,7 @@ class Image extends mint.render.Base {
         super(_render, _control);
         image = _control;
 
-        var get = Luxe.resources.load_texture(image.image_options.path);
+        var get = Luxe.resources.load_texture(image.options.path);
 
         get.then(function(texture){
 

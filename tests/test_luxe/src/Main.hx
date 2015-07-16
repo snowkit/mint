@@ -36,12 +36,8 @@ class Main extends luxe.Game {
         var te = Luxe.resources.load_texture('assets/transparency.png');
         te.then(function(t) {
 
-            // new Props();
-            // new MintFormat();
-
-            // return;
-
             render = new LuxeMintRender();
+
             canvas = new mint.Canvas({
                 renderer: render,
                 bounds: new Rect(10,10,900,512)

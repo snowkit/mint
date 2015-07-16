@@ -22,6 +22,7 @@ typedef MouseSignal = MouseEvent->Control->Void;
 //handles propogation of events,
 //mouse handling, alignment, so on
 
+@:allow(mint.ControlRenderer)
 class Control {
 
     public var name : String = 'control';
@@ -75,26 +76,17 @@ class Control {
         //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
 
-    @:allow(mint.ControlRenderer)
-        var options : ControlOptions;
-
-        //shared render event signals
-    @:allow(mint.ControlRenderer)
-        var ondestroy : Signal<Void->Void>;
-    @:allow(mint.ControlRenderer)
-        var onvisible : Signal<Bool->Void>;
-    @:allow(mint.ControlRenderer)
-        var ondepth : Signal<Float->Void>;
-    @:allow(mint.ControlRenderer)
-        var ontranslate : Signal<Float->Float->Bool->Void>;
-    @:allow(mint.ControlRenderer)
-        var onclip : Signal<Rect->Void>;
-    @:allow(mint.ControlRenderer)
-        var onchild : Signal<Control->Void>;
+    var ctrloptions : ControlOptions;
+    var ondestroy   : Signal<Void->Void>;
+    var onvisible   : Signal<Bool->Void>;
+    var ondepth     : Signal<Float->Void>;
+    var ontranslate : Signal<Float->Float->Bool->Void>;
+    var onclip      : Signal<Rect->Void>;
+    var onchild     : Signal<Control->Void>;
 
     public function new( _options:ControlOptions ) {
 
-        options = _options;
+        ctrloptions = _options;
 
         onbounds = new Signal();
         ondestroy = new Signal();
@@ -104,13 +96,13 @@ class Control {
         onclip = new Signal();
         onchild = new Signal();
 
-        bounds = options.bounds == null ? new Rect(0,0,32,32) : options.bounds;
+        bounds = ctrloptions.bounds == null ? new Rect(0,0,32,32) : ctrloptions.bounds;
         offset = new Point(0,0);
 
         real_bounds = new Rect(bounds.x+offset.x, bounds.y+offset.y, bounds.w, bounds.h);
 
-        if(options.name != null)            { name = options.name; }
-        if(options.mouse_enabled != null)   { mouse_enabled = options.mouse_enabled; }
+        if(ctrloptions.name != null)            { name = ctrloptions.name; }
+        if(ctrloptions.mouse_enabled != null)   { mouse_enabled = ctrloptions.mouse_enabled; }
 
         children = [];
 
@@ -132,24 +124,24 @@ class Control {
             real_h : 0
         };
 
-        if(options.parent != null) {
+        if(ctrloptions.parent != null) {
 
-            canvas = options.parent.canvas;
+            canvas = ctrloptions.parent.canvas;
             depth = canvas.next_depth();
-            options.parent.add(this);
+            ctrloptions.parent.add(this);
 
         } else { //parent != null
 
             if( !Std.is(this, Canvas) && canvas == null) {
-                throw "Control without a canvas " + options;
+                throw "Control without a canvas " + ctrloptions;
             } //canvas
         }
 
             //closest_to_canvas
         closest_to_canvas = find_top_parent();
 
-            //apply options
-        if(options.visible != null)         { visible = options.visible; }
+            //apply ctrloptions
+        if(ctrloptions.visible != null)         { visible = ctrloptions.visible; }
 
 
     } //new

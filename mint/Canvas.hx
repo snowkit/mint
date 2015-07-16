@@ -3,6 +3,7 @@ package mint;
 import mint.Types;
 import mint.Control;
 import mint.Renderer;
+import mint.Macros.*;
 
 typedef CanvasOptions = {
     > ControlOptions,
@@ -18,19 +19,22 @@ class Canvas extends Control {
     public var renderer : Renderer;
     public var focus_invalid : Bool = true;
 
-    var canvas_options: CanvasOptions;
+    var options: CanvasOptions;
 
     public function new( _options:CanvasOptions ) {
 
-        if(_options == null) throw "No options given to canvas, at least a Renderer is required.";
-        if(_options.renderer == null) throw "No renderer given to Canvas, cannot create this way.";
-        if(_options.name == null) _options.name = 'canvas';
-        if(_options.bounds == null) _options.bounds = new Rect(0, 0, 800, 600 );
+        options = _options;
 
-        canvas_options = _options;
-        renderer = _options.renderer;
+        assertnull(options, "No options given to canvas, at least a Renderer is required.");
+        assertnull(options.renderer, "No renderer given to Canvas, cannot create a canvas without one.");
 
-        super(_options);
+        renderer = options.renderer;
+
+        def(options.name, 'canvas');
+        def(options.bounds, new Rect(0, 0, 800, 600));
+
+        super(options);
+
         canvas = this;
 
         mouse_enabled = true;

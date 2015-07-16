@@ -15,7 +15,7 @@ class List extends Control {
     public var view : ScrollArea;
     public var items : Array<Control>;
     public var multiselect : Bool = false;
-    public var list_options : ListOptions;
+    public var options : ListOptions;
 
     public var onselect : Signal<Int->Control->MouseEvent->Void>;
     public var onitementer : Signal<Int->Control->MouseEvent->Void>;
@@ -24,23 +24,23 @@ class List extends Control {
     public function new( _options:ListOptions ) {
 
         items = [];
-        list_options = _options;
+        options = _options;
 
-        super(list_options);
+        super(options);
 
         onselect = new Signal();
         onitemleave = new Signal();
         onitementer = new Signal();
 
-        if(list_options.mouse_enabled == null){
+        if(options.mouse_enabled == null){
             mouse_enabled = true;
         }
 
-        if(list_options.multiselect != null) {
-            multiselect = list_options.multiselect;
+        if(options.multiselect != null) {
+            multiselect = options.multiselect;
         }
 
-        var view_bounds = list_options.bounds.clone();
+        var view_bounds = options.bounds.clone();
             view_bounds.x = 0; view_bounds.y = 0;
 
         view = new ScrollArea({

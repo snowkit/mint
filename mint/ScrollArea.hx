@@ -32,7 +32,7 @@ class ScrollArea extends Control {
     var last_modal : Control;
 
     @:allow(mint.ControlRenderer)
-        var scroll_options: ScrollAreaOptions;
+        var options: ScrollAreaOptions;
 
     // public var handle_h__bounds : Rect;
     // public var handle_v__bounds : Rect;
@@ -42,10 +42,10 @@ class ScrollArea extends Control {
         onscroll = new Signal();
         onhandlevis = new Signal();
 
-        scroll_options = _options;
+        options = _options;
         super(_options);
 
-        if(scroll_options.mouse_enabled == null){
+        if(options.mouse_enabled == null){
             mouse_enabled = true;
         }
 

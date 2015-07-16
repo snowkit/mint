@@ -3,6 +3,7 @@ package mint;
 import mint.Types;
 import mint.Control;
 import mint.Signal;
+import mint.Macros.*;
 
 typedef LabelOptions = {
     > ControlOptions,
@@ -14,45 +15,45 @@ typedef LabelOptions = {
     ? onclick: MouseSignal
 }
 
+@:allow(mint.ControlRenderer)
 class Label extends Control {
 
     @:isVar public var text(default, set) : String;
 
-    @:allow(mint.ControlRenderer)
-        var ontext : Signal<String->Void>;
-    @:allow(mint.ControlRenderer)
-        var label_options : LabelOptions;
+    public var onchange : Signal<String->Void>;
+
+    var options : LabelOptions;
 
     public function new( _options:LabelOptions ) {
 
-        ontext = new Signal();
-        label_options = _options;
+        onchange = new Signal();
+        options = _options;
 
-            //disable mouse input by default
-        mouse_enabled = false;
+        super(options);
 
-        super(label_options);
+        mouse_enabled = def(options.mouse_enabled, false);
 
-            //assign any potential options
-        if(label_options.align == null)          { label_options.align = TextAlign.center; }
-        if(label_options.align_vertical == null) { label_options.align_vertical = TextAlign.center; }
+        def(options.align, TextAlign.center);
+        def(options.align_vertical, TextAlign.center);
 
-        if(label_options.onclick != null) {
+        if(options.onclick != null) {
             mouse_enabled = true;
-            mousedown.listen(label_options.onclick);
+            mouseup.listen(options.onclick);
         }
 
-            //store the text
-        text = label_options.text;
-            //create it
+        text = options.text;
         canvas.renderer.render(Label, this);
 
     } //new
 
-    public function set_text(_s:String) : String {
+//Internal
+
+    function set_text( _s:String ) : String {
 
         text = _s;
-        ontext.emit( text );
+
+        onchange.emit( text );
+
         return text;
 
     } //set_text

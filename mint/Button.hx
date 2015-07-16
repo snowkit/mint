@@ -3,42 +3,52 @@ package mint;
 import mint.Types;
 import mint.Control;
 import mint.Label;
+import mint.Macros.*;
 
+/** Options for constructing a Button */
 typedef ButtonOptions = {
-    > LabelOptions,
-}
 
+    > LabelOptions,
+
+} //ButtonOptions
+
+
+/**
+    A simple button with a label
+    Additional Signals: none
+*/
+@:allow(mint.ControlRenderer)
 class Button extends Control {
 
+        /** The label the button displays */
     public var label : Label;
 
-    @:allow(mint.ControlRenderer)
-        var button_options: ButtonOptions;
+    var options: ButtonOptions;
 
-    public function new(_options:ButtonOptions) {
+    public function new( _options:ButtonOptions ) {
 
-        button_options = _options;
-        super(button_options);
+        options = _options;
 
-        if(button_options.mouse_enabled == null){
-            mouse_enabled = true;
-        }
+        super(options);
+
+        mouse_enabled = def(options.mouse_enabled, true);
 
         label = new Label({
             parent : this,
-            bounds : button_options.bounds.clone().set(0,0),
-            text: button_options.text,
-            point_size: button_options.point_size,
+            bounds : options.bounds.clone().set(0,0),
+            text: options.text,
+            point_size: options.point_size,
             name : name + '.label',
             mouse_enabled: false
         });
 
-        if(button_options.onclick != null) {
-            mousedown.listen(button_options.onclick);
+        if(options.onclick != null) {
+            mouseup.listen(options.onclick);
         }
 
         canvas.renderer.render( Button, this );
 
     } //new
 
-} //Control
+
+} //Button

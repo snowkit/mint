@@ -10,12 +10,12 @@ typedef PanelOptions = {
 class Panel extends Control {
 
     @:allow(mint.ControlRenderer)
-        var panel_options: PanelOptions;
+        var options: PanelOptions;
 
     public function new(_options:Dynamic) {
 
-        panel_options = _options;
-        super(panel_options);
+        options = _options;
+        super(options);
 
         canvas.renderer.render(Panel, this);
 

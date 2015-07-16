@@ -33,16 +33,16 @@ class Window extends Control {
     var resize_handle : Control;
 
     @:allow(mint.ControlRenderer)
-        var window_options : WindowOptions;
+        var options : WindowOptions;
 
     public function new( _options:WindowOptions ) {
 
-        window_options = _options;
+        options = _options;
         onclose = new Signal();
 
         super(_options);
 
-        if(window_options.mouse_enabled == null){
+        if(options.mouse_enabled == null){
             mouse_enabled = true;
         }
 
