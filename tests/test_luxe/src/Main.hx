@@ -27,14 +27,20 @@ class Main extends luxe.Game {
     var debug : Bool = false;
     var td : Text;
 
+    override function config(config:luxe.AppConfig) {
+
+        config.preload.textures.push({ id:'assets/960.png' });
+        config.preload.textures.push({ id:'assets/transparency.png' });
+        config.preload.textures.push({ id:'assets/mint.box.png' });
+
+        return config;
+    }
+
     override function ready() {
 
         Luxe.snow.windowing.enable_vsync(false);
 
-        var load = Luxe.resources.load_texture('assets/960.png');
-            load.then(function(grid) {
-                new luxe.Sprite({ texture:grid, centered:false, depth:-1 });
-            });
+        new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
 
         Luxe.renderer.clear_color.rgb(0x161619);
 
@@ -53,23 +59,96 @@ class Main extends luxe.Game {
             color: new Color()
         });
 
-        test0();
         test1();
 
     }
 
-    function test0() {
 
-        list = new mint.List({
+    function test1() {
+
+        label = new mint.Label({
             parent: canvas,
+            name: 'label1',
+            x:10, y:10, w:100, h:32,
+            text: 'hello mint',
+            point_size: 14,
+            onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
+        });
+
+        check = new mint.Checkbox({
+            parent: canvas,
+            name: 'check1',
+            x: 120, y: 16, w: 24, h: 24
+        });
+
+        button = new mint.Button({
+            parent: canvas,
+            name: 'button1',
+            x: 10, y: 52, w: 100, h: 32,
+            text: 'mint button',
+            point_size: 14,
+            onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
+        });
+
+        image = new mint.Image({
+            parent: canvas,
+            name: 'image1',
+            x: 10, y: 102, w: 64, h: 64,
+            path: 'assets/transparency.png'
+        });
+
+        panel = new mint.Panel({
+            parent: canvas,
+            name: 'panel1',
+            x:84, y:102, w:64, h: 64,
+        });
+
+        scroll = new mint.ScrollArea({
+            parent: canvas,
+            name: 'scroll1',
+            x:10, y:180, w: 128, h: 128,
+        });
+
+        new mint.Image({
+            parent: scroll,
+            name: 'image2',
+            x:0, y:100, w:256, h: 256,
+            path: 'assets/transparency.png'
+        });
+
+
+        window = new mint.Window({
+            parent: canvas,
+            name: 'window1',
+            title: 'window',
+            x:200, y:10, w:256, h: 400
+        });
+
+        window2 = new mint.Window({
+            parent: canvas,
+            name: 'window2',
+            title: 'window',
+            x:460, y:10, w:256, h: 95
+        });
+
+        var customwindow = new mint.Window({
+            parent: canvas,
+            name: 'customwindow',
+            title: 'custom window',
+            renderer: new CustomWindowRender(),
+            x:460, y:140, w:256, h: 140+42+32
+        });
+
+        var list2 = new mint.List({
+            parent: customwindow,
             name: 'list',
-            x: 460, y: 120, w: 140, h: 140
+            x: 10, y: 42, w: 140, h: 140
         });
 
         for(i in 0 ... 20) {
-            list.add_item(
+            list2.add_item(
                 label = new mint.Label({
-                    parent: list,
+                    parent: list2,
                     name: 'label$i',
                     w:140, h:20,
                     text: 'label $i',
@@ -80,108 +159,34 @@ class Main extends luxe.Game {
             );
         }
 
-    }
-
-    function test1() {
-
-        var te = Luxe.resources.load_texture('assets/transparency.png');
-        te.then(function(t) {
-
-            label = new mint.Label({
-                parent: canvas,
-                name: 'label1',
-                x:10, y:10, w:100, h:32,
-                text: 'hello mint',
-                point_size: 14,
-                onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
-            });
-
-            check = new mint.Checkbox({
-                parent: canvas,
-                name: 'check1',
-                x: 120, y: 16, w: 24, h: 24
-            });
-
-            button = new mint.Button({
-                parent: canvas,
-                name: 'button1',
-                x: 10, y: 52, w: 100, h: 32,
-                text: 'mint button',
-                point_size: 14,
-                onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
-            });
-
-            image = new mint.Image({
-                parent: canvas,
-                name: 'image1',
-                x: 10, y: 102, w: 64, h: 64,
-                path: 'assets/transparency.png'
-            });
-
-            panel = new mint.Panel({
-                parent: canvas,
-                name: 'panel1',
-                x:84, y:102, w:64, h: 64,
-            });
-
-            scroll = new mint.ScrollArea({
-                parent: canvas,
-                name: 'scroll1',
-                x:10, y:180, w: 128, h: 128,
-            });
-
-            new mint.Image({
-                parent: scroll,
-                name: 'image2',
-                x:0, y:100, w:256, h: 256,
-                path: 'assets/transparency.png'
-            });
-
-
-            window = new mint.Window({
-                parent: canvas,
-                name: 'window1',
-                title: 'window',
-                x:200, y:10, w:256, h: 400
-            });
-
-            window2 = new mint.Window({
-                parent: canvas,
-                name: 'window2',
-                title: 'window',
-                x:460, y:10, w:256, h: 95
-            });
-
-            new mint.TextEdit({
-                parent: window2,
-                name: 'textedit1',
-                text: 'type anything',
-                does_render: true,
-                x: 10, y:32, w: 256-10-10, h: 22
-            });
-
-            new mint.TextEdit({
-                parent: window2,
-                name: 'textnumbersonly',
-                text: 'numbers only',
-                x: 10, y:32+22+10, w: 256-10-10, h: 22,
-                filter: new EReg('[0-9]+','gi'),
-            });
-
-            list = new mint.List({
-                parent: window,
-                name: 'list1',
-                x: 4, y: 28, w: 248, h: 400-28-4
-            });
-
-            for(i in 0 ... 5) {
-                list.add_item( create_block(i) );
-            } //for
-
+        new mint.TextEdit({
+            parent: window2,
+            name: 'textedit1',
+            text: 'type anything',
+            does_render: true,
+            x: 10, y:32, w: 256-10-10, h: 22
         });
 
+        new mint.TextEdit({
+            parent: window2,
+            name: 'textnumbersonly',
+            text: 'numbers only',
+            x: 10, y:32+22+10, w: 256-10-10, h: 22,
+            filter: new EReg('[0-9]+','gi'),
+        });
 
-    } //ready
+        list = new mint.List({
+            parent: window,
+            name: 'list1',
+            x: 4, y: 28, w: 248, h: 400-28-4
+        });
+
+        for(i in 0 ... 5) {
+            list.add_item( create_block(i) );
+        } //for
+
+
+    } //test1
 
     function create_block(idx:Int) {
 
@@ -228,6 +233,7 @@ class Main extends luxe.Game {
         });
 
         return _panel;
+
     }
 
     override function onmousemove(e) {
@@ -344,3 +350,53 @@ class Main extends luxe.Game {
 } //Main
 
 
+
+class CustomWindow extends mint.render.Base {
+
+    var window : mint.Window;
+    var visual : luxe.NineSlice;
+
+    public function new( _render:mint.Renderer, _control:mint.Window ) {
+
+        super(_render, _control);
+        window = _control;
+
+        connect();
+
+        visual = new luxe.NineSlice({
+            texture : Luxe.resources.texture('assets/mint.box.png'),
+            top : 32, left : 32, right : 32, bottom : 32,
+        });
+
+        visual.create(new Vector(window.x, window.y), window.w, window.h);
+
+    } //new
+
+    override function ondestroy() {
+        disconnect();
+        visual.destroy();
+        visual = null;
+        destroy();
+    }
+
+    override function onbounds() {
+        visual.pos = new Vector(control.x, control.y);
+        visual.size = new Vector(control.w, control.h);
+    }
+
+    override function onclip( _rect:Rect ) visual.clip_rect = (_rect == null ? null : Convert.rect(_rect));
+    override function onvisible( _visible:Bool ) visual.visible = _visible;
+    override function ondepth( _depth:Float ) visual.depth = _depth;
+
+}
+
+class CustomWindowRender extends mint.Renderer {
+
+    override function render<T:Control, T1>( type:Class<T>, control:T ) : T1 {
+        return cast switch(type) {
+            case mint.Window:       follow(control, new CustomWindow(this, cast control));
+            case _:                 null;
+        }
+    } //render
+
+} //CustomWindowRender
