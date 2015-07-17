@@ -150,11 +150,11 @@ class ScrollArea extends Control {
         super.mousewheel(e);
 
         if(e.x != 0 && scroll.h.enabled) {
-            set_scroll_x((scroll.h.amount)-(w*0.03*e.x));
+            set_scroll_x((scroll.h.amount)+(w*0.03*e.x));
         }
 
         if(e.y != 0 && scroll.v.enabled) {
-            set_scroll_y((scroll.v.amount)-(h*0.01*e.y));
+            set_scroll_y((scroll.v.amount)+(h*0.01*e.y));
         }
 
     } //mousewheel
