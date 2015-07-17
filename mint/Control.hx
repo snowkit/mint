@@ -19,6 +19,8 @@ typedef ControlOptions = {
     @:optional var visible: Bool;
         /** Whether or not the control responds to mouse input */
     @:optional var mouse_enabled: Bool;
+        /** Whether or not the control responds to key input */
+    @:optional var key_enabled: Bool;
 
 } //ControlOptions
 
@@ -52,6 +54,8 @@ class Control {
     public var ishovered : Bool = false;
         //if the control accepts mouse events
     public var mouse_enabled : Bool = false;
+        //if the control accepts key events
+    public var key_enabled : Bool = false;
 
         //if the control is visible
     @:isVar public var visible (default, set) : Bool = true;
@@ -81,6 +85,8 @@ class Control {
     @:isVar public var parent(get,set) : Control;
         //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
+        //The concrete renderer for this control instance
+    public var render: mint.Renderer.ControlRenderer;
 
     var ctrloptions : ControlOptions;
 
@@ -112,6 +118,7 @@ class Control {
 
         name = def(ctrloptions.name, 'control');
         if(ctrloptions.mouse_enabled != null) mouse_enabled = ctrloptions.mouse_enabled;
+        if(ctrloptions.key_enabled != null) key_enabled = ctrloptions.key_enabled;
 
         children = [];
         children_bounds = {
@@ -408,15 +415,59 @@ class Control {
 
     } //children_bounds
 
+    public function onkeyup( e:KeyEvent ) {
+
+        keyup.emit(e, this);
+
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
+            parent.onkeyup(e);
+        }
+
+    } //onkeyup
+
+    public function onkeydown( e:KeyEvent ) {
+
+        keydown.emit(e, this);
+
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
+            parent.onkeydown(e);
+        }
+
+    } //onkeydown
+
+    public function ontextinput( e:TextEvent ) {
+
+        textinput.emit(e, this);
+
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
+            parent.ontextinput(e);
+        }
+
+    } //ontextinput
 
     public function onmousemove( e:MouseEvent ) {
 
         mousemove.emit(e, this);
 
-            //events bubble upward into the parent
-        if(parent != null && parent != canvas && e.bubble) {
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
             parent.onmousemove(e);
-        } //parent not null and parent not canvas
+        }
 
     } //onmousemove
 
@@ -424,10 +475,13 @@ class Control {
 
         mouseup.emit(e, this);
 
-            //events bubble upward into the parent
-        if(parent != null && parent != canvas && e.bubble) {
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
             parent.onmouseup(e);
-        } //parent not null and parent not canvas
+        }
 
     } //onmouseup
 
@@ -435,10 +489,13 @@ class Control {
 
         mousewheel.emit(e, this);
 
-            //events bubble upward into the parent
-        if(parent != null && parent != canvas && e.bubble) {
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
             parent.onmousewheel(e);
-        } //parent not null and parent not canvas
+        }
 
     } //onmousewheel
 
@@ -446,14 +503,13 @@ class Control {
 
         mousedown.emit(e, this);
 
-            //events bubble upward into the parent
         if( parent != null &&
             parent != canvas &&
             canvas != this &&
             e.bubble )
         {
             parent.onmousedown(e);
-        } //parent not null and parent not canvas
+        }
 
     } //onmousedown
 
