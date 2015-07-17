@@ -41,7 +41,7 @@ class TextEdit extends mint.render.Base {
             p1: new Vector(0,0),
             color: new Color(0,0,0,1).rgb(0x9dca63),
             depth: control.depth+0.0001,
-            visible: control.visible,
+            visible: false,
             clip_rect: Convert.rect(control.clip_rect)
         });
 
