@@ -37,7 +37,7 @@ class Image extends mint.render.Base {
                 visible: control.visible,
             });
 
-            visual.clip_rect = Convert.rect(control.clip_rect);
+            visual.clip_rect = Convert.bounds(control.clip_with);
 
             connect();
 
@@ -59,10 +59,12 @@ class Image extends mint.render.Base {
         destroy();
     }
 
-    override function onclip( _rect:Rect ) {
-        _debug('clip / $_rect');
-        if(_rect == null) visual.clip_rect = null;
-        else visual.clip_rect = Convert.rect(_rect);
+    override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
+        if(_disable) {
+            visual.clip_rect = null;
+        } else {
+            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
+        }
     } //onclip
 
     override function onvisible( _visible:Bool ) {

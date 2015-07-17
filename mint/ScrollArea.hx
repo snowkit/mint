@@ -78,7 +78,7 @@ class ScrollArea extends Control {
         super.add(child);
         on_internal_scroll(0,0);
 
-        child.clip_with( this );
+        child.clip_with = this;
         depth = depth;
 
     } //add

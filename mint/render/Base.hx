@@ -40,7 +40,7 @@ class Base implements ControlRenderer {
     function ondepth(_d:Float){}
     function ondestroy(){}
     function onbounds(){}
-    function onclip(_r:Rect){}
+    function onclip(_disable:Bool,_x:Float,_y:Float,_w:Float,_h:Float){}
     function onchild(_c:Control){}
 
 } //Base

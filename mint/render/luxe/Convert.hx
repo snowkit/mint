@@ -32,6 +32,15 @@ class Convert {
 
     } //rect
 
+        /** from mint.Control bounds to luxe.Rectangle */
+    public static function bounds( _control:Control ) : Rectangle {
+
+        if(_control == null) return null;
+
+        return new Rectangle( _control.x, _control.y, _control.w, _control.h );
+
+    } //bounds
+
         /** from mint.Point to luxe.Vector */
     public static function point( _point:Point ) : Vector {
 

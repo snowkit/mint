@@ -51,7 +51,7 @@ class Scroll extends mint.render.Base {
             visible: control.visible,
         });
 
-        visual.clip_rect = Convert.rect(control.clip_rect);
+        visual.clip_rect = Convert.bounds(control.clip_with);
 
         connect();
         scroll.onscroll.listen(onscroll);
@@ -94,14 +94,14 @@ class Scroll extends mint.render.Base {
         scrollh.depth = scroll.depth+(scroll.nodes*0.001)+0.00001;
     }
 
-    override function onclip( _rect:Rect ) {
-        _debug('clip / $_rect');
-        if(_rect == null) {
+    override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
+        if(_disable) {
             visual.clip_rect = null;
         } else {
-            visual.clip_rect = Convert.rect(_rect);
+            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
         }
     } //onclip
+
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

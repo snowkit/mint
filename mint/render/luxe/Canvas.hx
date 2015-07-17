@@ -31,7 +31,7 @@ class Canvas extends mint.render.Base {
             color: new Color(0,0,0,0.2).rgb(0x0c0c0c),
             depth: control.depth,
             visible: control.visible,
-            clip_rect: Convert.rect(control.clip_rect),
+            clip_rect: Convert.bounds(control.clip_with),
         });
 
         connect();
@@ -54,14 +54,14 @@ class Canvas extends mint.render.Base {
         visual.resize_xy(control.w, control.h);
     }
 
-    override function onclip( _rect:Rect ) {
-        _debug('clip / $_rect');
-        if(_rect == null) {
+    override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
+        if(_disable) {
             visual.clip_rect = null;
         } else {
-            visual.clip_rect.set(_rect.x, _rect.y, _rect.w, _rect.h);
+            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
         }
     } //onclip
+
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

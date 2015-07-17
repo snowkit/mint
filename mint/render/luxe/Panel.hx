@@ -31,7 +31,7 @@ class Panel extends mint.render.Base {
             color: new Color(0,0,0,1).rgb(0x242424),
             depth: control.depth,
             visible: control.visible,
-            clip_rect: Convert.rect(control.clip_rect)
+            clip_rect: Convert.bounds(control.clip_with)
         });
 
         connect();
@@ -54,12 +54,11 @@ class Panel extends mint.render.Base {
         visual.resize_xy(control.w, control.h);
     }
 
-    override function onclip( _rect:Rect ) {
-        _debug('clip / ${control.name} / $_rect');
-        if(_rect == null) {
+    override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
+        if(_disable) {
             visual.clip_rect = null;
         } else {
-            visual.clip_rect = Convert.rect(_rect);
+            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
         }
     } //onclip
 

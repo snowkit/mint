@@ -85,17 +85,14 @@ class List extends mint.render.Base {
         // select_rects[0].drop();
     }
 
-    override function onclip( _rect:Rect ) {
-        _debug('clip / $_rect');
-        if(_rect == null) {
-            // hover_rect.clip_rect = null;
-            // select_rects[0].clip_rect = null;
+    override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
+        if(_disable) {
+            // visual.clip_rect = null;
         } else {
-            // var r = Convert.rect(_rect);
-            // hover_rect.clip_rect = r;
-            // select_rects[0].clip_rect = r;
+            // visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
         }
     } //onclip
+
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

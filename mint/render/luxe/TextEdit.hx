@@ -33,7 +33,7 @@ class TextEdit extends mint.render.Base {
             color: new Color(0,0,0,1).rgb(0x646469),
             depth: control.depth,
             visible: control.visible,
-            clip_rect: Convert.rect(control.clip_rect)
+            clip_rect: Convert.bounds(control.clip_with)
         });
 
         cursor = Luxe.draw.line({
@@ -42,7 +42,7 @@ class TextEdit extends mint.render.Base {
             color: new Color(0,0,0,1).rgb(0x9dca63),
             depth: control.depth+0.0001,
             visible: false,
-            clip_rect: Convert.rect(control.clip_rect)
+            clip_rect: Convert.bounds(control.clip_with)
         });
 
         connect();
@@ -145,23 +145,24 @@ class TextEdit extends mint.render.Base {
         visual.resize_xy( control.w, control.h );
     }
 
-    override function onclip( _rect:Rect ) {
-        _debug('clip / ${control.name} / $_rect');
-        if(_rect == null) {
+    override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
+        if(_disable) {
             visual.clip_rect = null;
         } else {
-            visual.clip_rect = Convert.rect(_rect);
+            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
         }
     } //onclip
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
+
         visual.visible = _visible;
+
         if(!_visible) {
             stop_cursor();
         } else if(_visible && textedit.isfocused) {
             start_cursor();
         }
+
     } //onvisible
 
     override function ondepth( _depth:Float ) {
