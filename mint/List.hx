@@ -51,7 +51,7 @@ class List extends Control {
 
         view.onmousedown.listen(click_deselect);
 
-        renderinst = canvas.renderer.render(List, this);
+        renderinst = render_service.render(List, this);
 
     } //new
 

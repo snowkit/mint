@@ -67,7 +67,7 @@ class TextEdit extends Control {
         edit = label.text;
         index = edit.uLength();
 
-        renderinst = canvas.renderer.render(TextEdit, this);
+        renderinst = render_service.render(TextEdit, this);
 
         refresh(edit);
 

@@ -62,7 +62,7 @@ class Label extends Control {
         }
 
         text = options.text;
-        renderinst = canvas.renderer.render(Label, this);
+        renderinst = render_service.render(Label, this);
 
     } //new
 

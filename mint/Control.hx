@@ -33,6 +33,10 @@ typedef ControlOptions = {
         /** Whether or not the control emits render signals from the canvas render call */
     @:optional var does_render: Bool;
 
+        /** The render service that provides this instance with an implementation.
+            Defaults to using the owning canvas render service if not specified */
+    @:optional var renderer : Renderer;
+
 } //ControlOptions
 
 /** An empty control.
@@ -109,6 +113,8 @@ class Control {
     @:isVar public var depth(get,set) : Float = 0.0;
         //The concrete renderer for this control instance
     public var renderinst : mint.Renderer.ControlRenderer;
+        /** The renderer service that this instance uses, defaults to the canvas render service */
+    public var render_service : Renderer;
 
     var ctrloptions : ControlOptions;
 
@@ -177,6 +183,9 @@ class Control {
 
         closest_to_canvas = find_top_parent();
 
+        //canvas is valid here
+
+        render_service = def(_options.renderer, canvas.render_service);
 
         if(ctrloptions.does_render != null) {
             does_render = ctrloptions.does_render;

@@ -42,7 +42,7 @@ class Image extends Control {
 
         mouse_input = def(options.mouse_input, false);
 
-        renderinst = canvas.renderer.render(Image, this);
+        renderinst = render_service.render(Image, this);
 
     } //new
 

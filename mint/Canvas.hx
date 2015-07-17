@@ -11,8 +11,6 @@ typedef CanvasOptions = {
 
     > ControlOptions,
 
-    var renderer : Renderer;
-
 } //CanvasOptions
 
 /**
@@ -31,8 +29,6 @@ class Canvas extends Control {
         /** The current modal control, null if none */
     public var modal   : Control;
 
-        /** The renderer that this canvas refers it's children to by default */
-    public var renderer : Renderer;
         /** Whether or not the current focus needs refreshing. */
     public var focus_invalid : Bool = true;
 
@@ -44,9 +40,7 @@ class Canvas extends Control {
         options = _options;
 
         assertnull(options, "No options given to canvas, at least a Renderer is required.");
-        assertnull(options.renderer, "No renderer given to Canvas, cannot create a canvas without one.");
-
-        renderer = options.renderer;
+        assertnull(options.renderer, "No Renderer(render_service) given to Canvas, cannot create a canvas without one.");
 
         def(options.name, 'canvas');
         def(options.w, 800);
@@ -64,7 +58,7 @@ class Canvas extends Control {
         modal = null;
         dragged = null;
 
-        renderinst = renderer.render( Canvas, this );
+        renderinst = render_service.render( Canvas, this );
 
     } //new
 

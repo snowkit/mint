@@ -89,7 +89,7 @@ class Window extends Control {
         });
 
             //update
-        renderinst = canvas.renderer.render( Window, this );
+        renderinst = render_service.render( Window, this );
 
     } //new
 

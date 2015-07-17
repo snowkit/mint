@@ -48,7 +48,7 @@ class Button extends Control {
             onmouseup.listen(options.onclick);
         }
 
-        renderinst = canvas.renderer.render( Button, this );
+        renderinst = render_service.render( Button, this );
 
     } //new
 

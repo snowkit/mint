@@ -28,7 +28,7 @@ class Panel extends Control {
 
         super(options);
 
-        renderinst = canvas.renderer.render(Panel, this);
+        renderinst = render_service.render(Panel, this);
 
     } //new
 

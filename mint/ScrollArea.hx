@@ -67,7 +67,7 @@ class ScrollArea extends Control {
             }
         };
 
-        renderinst = canvas.renderer.render( ScrollArea, this );
+        renderinst = render_service.render( ScrollArea, this );
         drag_offset = new Point();
         check_handle_vis();
 
