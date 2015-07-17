@@ -80,4 +80,4 @@ class Image extends mint.render.Base {
         visual.depth = _depth;
     } //ondepth
 
-} //Button
+} //Image

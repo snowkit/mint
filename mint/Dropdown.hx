@@ -52,7 +52,7 @@ class Dropdown extends Control {
             align : TextAlign.left
         });
 
-        renderer.dropdown.init( this, _options );
+        render = renderer.dropdown.init( this, _options );
 
             //the list is hidden at start
         list.set_visible(false);

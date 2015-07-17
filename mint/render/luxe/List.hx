@@ -115,4 +115,4 @@ class List extends mint.render.Base {
         // hover_rect.depth = list.depth+(list.nodes*0.001)+0.00002;
     } //ondepth
 
-} //Label
+} //List

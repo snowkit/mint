@@ -20,7 +20,7 @@ class Panel extends Control {
 
     var options: PanelOptions;
 
-    public function new(_options:Dynamic) {
+    public function new( _options:PanelOptions ) {
 
         options = _options;
 
@@ -28,7 +28,7 @@ class Panel extends Control {
 
         super(options);
 
-        canvas.renderer.render(Panel, this);
+        render = canvas.renderer.render(Panel, this);
 
     } //new
 

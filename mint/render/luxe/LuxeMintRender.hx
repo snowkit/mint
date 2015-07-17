@@ -8,8 +8,8 @@ import luxe.Input;
 
 class LuxeMintRender extends mint.Renderer {
 
-    override function render<T:Control>( type:Class<T>, control:T ) {
-        switch(type) {
+    override function render<T:Control, T1>( type:Class<T>, control:T ) : T1 {
+        return cast switch(type) {
             case mint.Canvas:       follow(control, new mint.render.luxe.Canvas(this, cast control));
             case mint.Label:        follow(control, new mint.render.luxe.Label(this, cast control));
             case mint.Button:       follow(control, new mint.render.luxe.Button(this, cast control));
@@ -19,6 +19,8 @@ class LuxeMintRender extends mint.Renderer {
             case mint.Panel:        follow(control, new mint.render.luxe.Panel(this, cast control));
             case mint.Checkbox:     follow(control, new mint.render.luxe.Checkbox(this, cast control));
             case mint.Window:       follow(control, new mint.render.luxe.Window(this, cast control));
+            case mint.TextEdit:     follow(control, new mint.render.luxe.TextEdit(this, cast control));
+            case _:                 null;
         }
     } //render
 

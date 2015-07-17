@@ -49,7 +49,7 @@ class Checkbox extends Control {
 
         mouse_enabled = def(options.mouse_enabled, true);
 
-        canvas.renderer.render(Checkbox, this);
+        render = canvas.renderer.render(Checkbox, this);
 
         mouseup.listen(onclick);
 

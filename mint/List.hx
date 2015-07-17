@@ -60,7 +60,7 @@ class List extends Control {
         //     _options.align = TextAlign.center;
         // }
 
-        canvas.renderer.render(List, this);
+        render = canvas.renderer.render(List, this);
 
     } //new
 

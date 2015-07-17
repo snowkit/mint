@@ -16,21 +16,22 @@ class Renderer {
     }
 
         /** Overridden in subclass, tells this Renderer to render this control */
-    public function render<T:Control>( type:Class<T>, control:T ) {
+    public function render<T:Control, T1>( type:Class<T>, control:T ) : T1 {
         trace('$type / $control');
+        return null;
     }
 
     public function stat() {
         return ' ${Lambda.count(renderers)}';
     }
 
-    function follow( control:Control, renderer:mint.ControlRenderer ) {
-        renderers.set(control, renderer);
+    public function follow<T:Control, TR:mint.ControlRenderer>( control:T, renderer:TR ) {
+        renderers.set( control, renderer );
+        return renderer;
     }
 
-    @:allow(mint.ControlRenderer)
-    function unfollow<T:Control>(control:T, renderer:mint.ControlRenderer) {
-        renderers.remove(control);
+    public function unfollow<T:Control, TR:mint.ControlRenderer>( control:T, renderer:TR ) {
+        renderers.remove( control );
         renderer = null;
     }
 

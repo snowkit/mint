@@ -42,7 +42,7 @@ class Image extends Control {
 
         mouse_enabled = def(options.mouse_enabled, false);
 
-        canvas.renderer.render(Image, this);
+        render = canvas.renderer.render(Image, this);
 
     } //new
 

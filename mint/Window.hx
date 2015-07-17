@@ -99,7 +99,7 @@ class Window extends Control {
         });
 
             //update
-        canvas.renderer.render( Window, this );
+        render = canvas.renderer.render( Window, this );
 
     } //new
 

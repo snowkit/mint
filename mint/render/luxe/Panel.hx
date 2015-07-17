@@ -78,4 +78,4 @@ class Panel extends mint.render.Base {
         visual.depth = _depth;
     } //ondepth
 
-} //Canvas
+} //Panel
