@@ -9,6 +9,9 @@ import mint.Control;
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
 
+
+import mint.layout.margins.Margins;
+
 class Main extends luxe.Game {
 
     var canvas: mint.Canvas;
@@ -23,6 +26,7 @@ class Main extends luxe.Game {
     var window2: mint.Window;
 
     var render: LuxeMintRender;
+    var layout: Margins;
 
     var debug : Bool = false;
     var td : Text;
@@ -38,13 +42,15 @@ class Main extends luxe.Game {
 
     override function ready() {
 
-        Luxe.snow.windowing.enable_vsync(false);
+        // Luxe.snow.windowing.enable_vsync(false);
 
         new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
 
         Luxe.renderer.clear_color.rgb(0x161619);
 
         render = new LuxeMintRender();
+        layout = new Margins();
+
         canvas = new mint.Canvas({
             renderer: render,
             x: 0, y:0, w: 960, h: 640
@@ -136,13 +142,22 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             renderer: new CustomWindowRender(),
-            x:460, y:140, w:256, h: 140+42+32
+            x:460, y:140, w:256, h: 180+42+32
         });
 
-        var list2 = new mint.List({
+        var layoutpanel = new mint.Panel({
             parent: customwindow,
+            name: 'layoutpanel',
+            x: 32, y: 56, w: 30, h: 32
+        });
+
+        layout.margin(layoutpanel, right, fixed, 32);
+        layout.margin(layoutpanel, bottom, fixed, 32);
+
+        var list2 = new mint.List({
+            parent: canvas,
             name: 'list',
-            x: 10, y: 42, w: 140, h: 140
+            x: 10, y: 320, w: 140, h: 140
         });
 
         for(i in 0 ... 20) {
@@ -162,7 +177,7 @@ class Main extends luxe.Game {
         new mint.TextEdit({
             parent: window2,
             name: 'textedit1',
-            text: 'snõwkit / mînt',
+            text: 'snõwkit / mínt',
             does_render: true,
             x: 10, y:32, w: 256-10-10, h: 22
         });
