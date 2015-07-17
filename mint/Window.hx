@@ -172,6 +172,8 @@ class Window extends Control {
 
     public override function mousedown(e:MouseEvent)  {
 
+        if(close_button.contains(e.x, e.y)) return;
+
         var in_title = title.contains(e.x, e.y);
 
         if(!in_title) {

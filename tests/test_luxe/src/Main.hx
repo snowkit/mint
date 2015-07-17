@@ -24,6 +24,7 @@ class Main extends luxe.Game {
     var list: mint.List;
     var window: mint.Window;
     var window2: mint.Window;
+    var customwindow: mint.Window;
 
     var render: LuxeMintRender;
     var layout: Margins;
@@ -137,7 +138,7 @@ class Main extends luxe.Game {
             x:460, y:10, w:256, h: 95
         });
 
-        var customwindow = new mint.Window({
+        customwindow = new mint.Window({
             parent: canvas,
             name: 'customwindow',
             title: 'custom window',
@@ -303,6 +304,9 @@ class Main extends luxe.Game {
         }
         if(e.keycode == Key.key_2) {
             if(window2 != null) window2.open();
+        }
+        if(e.keycode == Key.key_3) {
+            if(customwindow != null) customwindow.open();
         }
 
         if(e.keycode == Key.key_d && e.mod.ctrl) {
