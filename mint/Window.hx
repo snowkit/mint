@@ -115,7 +115,7 @@ class Window extends Control {
         if(resizing) return;
         resizing = true;
         resize_start = new Point(e.x, e.y);
-        canvas.dragged = this;
+        canvas.dragged = resize_handle;
     }
 
     function on_close() {
@@ -142,19 +142,22 @@ class Window extends Control {
 
     public override function onmousemove(e:MouseEvent)  {
 
-        super.onmousemove(e);
-
         if(resizing) {
+
             var diff_x = e.x - resize_start.x;
             var diff_y = e.y - resize_start.y;
-            // resize_start
+
             var ww = bounds.w + diff_x;
             var hh = bounds.h + diff_y;
-            resize_start.set(e.x, e.y);
-            bounds = new Rect(bounds.x, bounds.y, ww, hh);
-        }
 
-        if(dragging) {
+            resize_start.set(e.x, e.y);
+
+            bounds = new Rect(bounds.x, bounds.y, ww, hh);
+
+            close_button.bounds = new Rect(bounds.w-24, 2, 22, 22);
+            title.bounds = new Rect(2, 2, bounds.w-4, 22);
+
+        } else if(dragging) {
 
             var diff_x = e.x - drag_start.x;
             var diff_y = e.y - drag_start.y;
@@ -162,8 +165,16 @@ class Window extends Control {
             drag_start.set(e.x,e.y);
 
             translate(diff_x, diff_y);
+            // bounds.x += diff_x;
+            // bounds.y += diff_y;
+            // bounds = new Rect(bounds.x + diff_x, bounds.y + diff_y, bounds.w, bounds.h);
 
-        } //dragging
+        } else { //dragging
+
+            super.onmousemove(e);
+
+        }
+
     } //onmousemove
 
     function bring_to_front() {
