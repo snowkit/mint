@@ -62,6 +62,11 @@ class Control {
         /** The height of the control bounds */
     @:isVar public var h (default, set) : Float;
 
+        /** The right edge of the control bounds */
+    public var right (get, never) : Float;
+        /** The bottom edge of the control bounds */
+    public var bottom (get, never) : Float;
+
         /** The x position of the control bounds, relative to its container */
     @:isVar public var x_local (get, set) : Float;
         /** The y position of the control bounds, relative to its container */
@@ -335,10 +340,6 @@ class Control {
         }
     }
 
-    //:todo: getters?
-    public inline function right() return x_local + w;
-    public inline function bottom() return y_local + h;
-
     function get_children_bounds() : ChildBounds {
 
         if(children.length == 0) {
@@ -360,8 +361,8 @@ class Control {
 
         var _current_x : Float = _first_child.x_local;
         var _current_y : Float = _first_child.y_local;
-        var _current_r : Float = _first_child.right();
-        var _current_b : Float = _first_child.bottom();
+        var _current_r : Float = _first_child.x_local + _first_child.w;
+        var _current_b : Float = _first_child.y_local + _first_child.h;
 
         var _real_x : Float = _first_child.x;
         var _real_y : Float = _first_child.y;
@@ -370,8 +371,8 @@ class Control {
 
             _current_x = Math.min( child.x_local, _current_x );
             _current_y = Math.min( child.y_local, _current_y );
-            _current_r = Math.max( _current_r, child.right() );
-            _current_b = Math.max( _current_b, child.bottom() );
+            _current_r = Math.max( _current_r, child.x_local+child.w );
+            _current_b = Math.max( _current_b, child.y_local+child.h );
 
             _real_x = Math.min( child.x, _real_x );
             _real_y = Math.min( child.y, _real_y );
@@ -580,6 +581,18 @@ class Control {
         bounds_changed(0,0, _dw, _dh);
 
     } //set_size
+
+    inline function get_right() : Float {
+
+        return x + w;
+
+    } //get_right
+
+    inline function get_bottom() : Float {
+
+        return y + h;
+
+    } //get_bottom
 
     function set_x(_x:Float) : Float {
 
