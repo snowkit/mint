@@ -128,14 +128,14 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'window1',
             title: 'window',
-            x:200, y:10, w:256, h: 400
+            x:160, y:10, w:256, h: 400
         });
 
         window2 = new mint.Window({
             parent: canvas,
             name: 'window2',
             title: 'window',
-            x:460, y:10, w:256, h: 95
+            x:500, y:10, w:256, h: 95
         });
 
         customwindow = new mint.Window({
@@ -143,7 +143,7 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             renderer: new CustomWindowRender(),
-            x:460, y:140, w:256, h: 180+42+32
+            x:500, y:140, w:256, h: 180+42+32
         });
 
         var p1 = new mint.Panel({
@@ -185,7 +185,7 @@ class Main extends luxe.Game {
             );
         }
 
-        new mint.TextEdit({
+        var text1 = new mint.TextEdit({
             parent: window2,
             name: 'textedit1',
             text: 'snõwkit / mínt',
@@ -193,7 +193,9 @@ class Main extends luxe.Game {
             x: 10, y:32, w: 256-10-10, h: 22
         });
 
-        new mint.TextEdit({
+        layout.margin(text1, right, fixed, 10);
+
+        var text2 = new mint.TextEdit({
             parent: window2,
             name: 'textnumbersonly',
             text: 'numbers only',
@@ -201,11 +203,16 @@ class Main extends luxe.Game {
             filter: new EReg('[0-9]+','gi'),
         });
 
+        layout.margin(text2, right, fixed, 10);
+
         list = new mint.List({
             parent: window,
             name: 'list1',
             x: 4, y: 28, w: 248, h: 400-28-4
         });
+
+        layout.margin(list, right, fixed, 4);
+        layout.margin(list, bottom, fixed, 4);
 
         for(i in 0 ... 5) {
             list.add_item( create_block(i) );
@@ -227,7 +234,9 @@ class Main extends luxe.Game {
             x:2, y:4, w:236, h:96,
         });
 
-        new mint.Image({
+        layout.margin(_panel, right, fixed, 2);
+
+        var _icon = new mint.Image({
             name: 'icon_${idx}',
             parent: _panel,
             mouse_input:true,
@@ -235,7 +244,7 @@ class Main extends luxe.Game {
             path: 'assets/transparency.png'
         });
 
-        new mint.Label({
+        var _title = new mint.Label({
             name: 'label_${idx}',
             parent: _panel,
             mouse_input:true,
@@ -246,7 +255,9 @@ class Main extends luxe.Game {
             text: titles[idx]
         });
 
-        new mint.Label({
+        layout.margin(_title, right, fixed, 8);
+
+        var _desc = new mint.Label({
             name: 'desc_${idx}',
             parent: _panel,
             mouse_input:true,
@@ -257,6 +268,8 @@ class Main extends luxe.Game {
             align_vertical: TextAlign.top,
             text: desc[idx]
         });
+
+        layout.margin(_desc, right, fixed, 8);
 
         return _panel;
 
@@ -413,7 +426,6 @@ class CustomWindow extends mint.render.Base {
         visual.size = new Vector(control.w, control.h);
     }
 
-    override function onclip( _rect:Rect ) visual.clip_rect = (_rect == null ? null : Convert.rect(_rect));
     override function onvisible( _visible:Bool ) visual.visible = _visible;
     override function ondepth( _depth:Float ) visual.depth = _depth;
 
