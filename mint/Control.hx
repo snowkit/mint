@@ -72,8 +72,8 @@ class Control {
         /** The y position of the control bounds, relative to its container */
     @:isVar public var y_local (get, set) : Float;
 
-        //the clipping rectangle for this control
-    public var clip_rect : Rect;
+        //The control this one is clipped by
+    @:isVar public var clip_with (default, set): Control;
         //the list of children added to this control
     public var children : Array<Control>;
 
@@ -99,7 +99,7 @@ class Control {
     public var ondestroy    : Signal<Void->Void>;
     public var onvisible    : Signal<Bool->Void>;
     public var ondepth      : Signal<Float->Void>;
-    public var onclip       : Signal<Rect->Void>;
+    public var onclip       : Signal<Bool->Float->Float->Float->Float->Void>;
     public var onchild      : Signal<Control->Void>;
     public var onmousedown  : Signal<MouseSignal>;
     public var onmouseup    : Signal<MouseSignal>;
@@ -238,38 +238,46 @@ class Control {
 
         var inside = in_rect(_x, _y, x, y, w, h);
 
-        if(clip_rect == null) return inside;
+        if(clip_with == null) return inside;
 
-        return inside && in_rect(_x, _y, clip_rect.x, clip_rect.y, clip_rect.w, clip_rect.h);
+        return inside && clip_with.contains(_x, _y);
 
     } //contains
 
-    function clip_with_closest_to_canvas() {
-        if(closest_to_canvas != null) {
-            clip_with( closest_to_canvas );
+    function onclipchanged() {
+
+        if(clip_with != null) {
+            onclip.emit(false, clip_with.x, clip_with.y, clip_with.w, clip_with.h);
         }
-    } //clip_with_closest_to_canvas
 
+    } //onclipchanged
 
-    public function clip_with( ?_control:Control ) {
-        if(_control != null) {
-            set_clip( new Rect(_control.x, _control.y, _control.w, _control.h) );
+    function set_clip_with(_other:Control) {
+
+        if(clip_with != null) {
+            clip_with.onbounds.remove(onclipchanged);
+        }
+
+        clip_with = _other;
+
+        if(clip_with != null) {
+
+            clip_with.onbounds.listen(onclipchanged);
+
+                //:todo:
+            for(child in children) {
+                child.clip_with = clip_with;
+            }
+
+            onclipchanged();
+
         } else {
-            set_clip();
-        }
-    } //clip_with
-
-    public function set_clip( ?_clip_rect:Rect = null ) {
-        //temporarily, all children clip by their parent clip
-
-        clip_rect = _clip_rect.clone();
-        onclip.emit(clip_rect);
-
-        for(_child in children) {
-            _child.set_clip( clip_rect );
+            onclip.emit(true, 0,0,0,0);
         }
 
-    } //set clip
+        return clip_with;
+
+    } //set_clip_with
 
     function set_visible( _visible:Bool) {
 
@@ -532,14 +540,7 @@ class Control {
         if(updating) return;
 
         if(_dx != 0.0 || _dy != 0.0) {
-            for(child in children) {
-                child.set_pos(child.x + _dx, child.y + _dy);
-                if(child.clip_rect != null && !_offset) {
-                    child.clip_rect.x += _dx;
-                    child.clip_rect.y += _dy;
-                    child.set_clip(child.clip_rect);
-                }
-            }
+            for(child in children) child.set_pos(child.x + _dx, child.y + _dy);
         }
 
         onbounds.emit();
