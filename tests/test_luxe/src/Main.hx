@@ -162,7 +162,7 @@ class Main extends luxe.Game {
         new mint.TextEdit({
             parent: window2,
             name: 'textedit1',
-            text: 'snõwkit / mïnt',
+            text: 'snõwkit / mînt',
             does_render: true,
             x: 10, y:32, w: 256-10-10, h: 22
         });
