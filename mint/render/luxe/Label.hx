@@ -26,7 +26,7 @@ class Label extends mint.render.Base {
 
         _debug('create / ${control.name}');
         text = new luxe.Text({
-            bounds: Convert.rect(control.real_bounds),
+            bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
             color: new Color(),
             text: label.text,
             bounds_wrap: label.options.bounds_wrap,
@@ -50,7 +50,7 @@ class Label extends mint.render.Base {
     }
 
     override function onbounds() {
-        text.bounds = new luxe.Rectangle(control.real_bounds.x, control.real_bounds.y, control.real_bounds.w, control.real_bounds.h );
+        text.bounds = new luxe.Rectangle(control.x, control.y, control.w, control.h);
     }
 
     function ontext(_text:String) {
@@ -72,11 +72,6 @@ class Label extends mint.render.Base {
         if(_rect == null) text.clip_rect = null;
         else text.clip_rect = Convert.rect(_rect);
     } //onclip
-
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset');
-        text.pos.add_xyz(_x, _y);
-    } //ontranslate
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

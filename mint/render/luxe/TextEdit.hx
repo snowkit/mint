@@ -26,10 +26,10 @@ class TextEdit extends mint.render.Base {
 
         _debug('create / ${control.name}');
         visual = Luxe.draw.box({
-            x:control.real_bounds.x,
-            y:control.real_bounds.y,
-            w:control.real_bounds.w,
-            h:control.real_bounds.h,
+            x:control.x,
+            y:control.y,
+            w:control.w,
+            h:control.h,
             color: new Color(0,0,0,1).rgb(0x646469),
             depth: control.depth,
             visible: control.visible,
@@ -103,11 +103,11 @@ class TextEdit extends mint.render.Base {
 
         _y += _th * 0.2;
 
-        var _xx = textedit.label.real_bounds.x + _x;
-        var _yy = textedit.label.real_bounds.y + 2;
+        var _xx = textedit.label.x + _x;
+        var _yy = textedit.label.y + 2;
 
         cursor.p0 = new Vector(_xx, _yy);
-        cursor.p1 = new Vector(_xx, _yy + textedit.label.real_bounds.h - 4);
+        cursor.p1 = new Vector(_xx, _yy + textedit.label.h - 4);
 
     } //
 
@@ -125,8 +125,8 @@ class TextEdit extends mint.render.Base {
     }
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.resize_xy( control.real_bounds.w, control.real_bounds.h );
+        visual.transform.pos.set_xy(control.x, control.y);
+        visual.resize_xy( control.w, control.h );
     }
 
     override function onclip( _rect:Rect ) {
@@ -137,11 +137,6 @@ class TextEdit extends mint.render.Base {
             visual.clip_rect = Convert.rect(_rect);
         }
     } //onclip
-
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / ${control.name} / $_x / $_y / $_offset');
-        visual.transform.pos.add_xyz(_x, _y);
-    } //ontranslate
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

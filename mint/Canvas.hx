@@ -4,6 +4,7 @@ import mint.Types;
 import mint.Control;
 import mint.Renderer;
 import mint.Macros.*;
+import mint.Types.Utils.in_rect;
 
 /** Options for constructing a Canvas */
 typedef CanvasOptions = {
@@ -49,7 +50,8 @@ class Canvas extends Control {
         renderer = options.renderer;
 
         def(options.name, 'canvas');
-        def(options.bounds, new Rect(0, 0, 800, 600));
+        def(options.w, 800);
+        def(options.h, 600);
 
         super(options);
 
@@ -167,7 +169,7 @@ class Canvas extends Control {
 
         _mouse_last.set(e.x,e.y);
 
-        var _inside = real_bounds.point_inside(_mouse_last);
+        var _inside = in_rect(_mouse_last.x, _mouse_last.y, x, y, w, h);
 
         if(!_inside) {
             onmouseup(e);
@@ -176,7 +178,7 @@ class Canvas extends Control {
             //first we check if the mouse is still inside the focused element
         if(focused != null) {
 
-            if(focused.contains_point(_mouse_last)) {
+            if(focused.contains(_mouse_last.x, _mouse_last.y)) {
 
                     //now check if we haven't gone into any of it's children
                 var _child_over = focused.topmost_child_at_point(_mouse_last);
@@ -193,7 +195,7 @@ class Canvas extends Control {
 
                 } //child_over != null
 
-            } else { //focused.real_bounds point_inside( mouse )
+            } else { //focused.contains
 
                     //unfocus the existing one
                 set_control_unfocused(focused, e);

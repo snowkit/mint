@@ -37,7 +37,7 @@ class Dropdown extends Control {
         list = new List({
             parent : this,
             name : name + '.list',
-            bounds : new Rect( 0, bounds.h, bounds.w, _height ),
+            x: 0, y: h, w: w, h: _height,
             align : TextAlign.left,
             point_size : _point_size,
             onselect : onselected
@@ -85,11 +85,6 @@ class Dropdown extends Control {
     public function add_items( _items:Array<String> ) {
         list.add_items(_items);
         list.set_visible(is_open);
-    }
-
-    public override function translate(?_x:Float = 0, ?_y:Float = 0, ?_offset:Bool = false ) {
-        super.translate( _x, _y, _offset);
-        renderer.dropdown.translate( this, _x, _y, _offset );
     }
 
     override function set_depth( _depth:Float ) : Float {
@@ -153,7 +148,7 @@ class Dropdown extends Control {
 
             var m = new Point(e.x, e.y);
 
-            if( selected_label.real_bounds.point_inside(m) ) {
+            if( selected_label.contains(m.x, m.y) ) {
                 open_list();
             }
 

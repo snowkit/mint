@@ -50,15 +50,16 @@ class TextEdit extends Control {
         key_enabled = def(options.key_enabled, true);
         filter = def(options.filter, null);
 
-        def(options.text, 'TextEdit');
-        def(options.point_size, options.bounds.h * 0.8);
+        def(options.text, 'mint.TextEdit');
+        def(options.point_size, options.h * 0.8);
 
         label = new Label({
             parent : this,
-            bounds : options.bounds.clone().set(2,0),
+            x: 2, y: 0, w: w, h: h,
             text: options.text,
             point_size: options.point_size,
             align: TextAlign.left,
+            align_vertical: TextAlign.center,
             name : name + '.label',
             mouse_enabled: false
         });

@@ -10,7 +10,7 @@ typedef ImageOptions = {
     > ControlOptions,
 
         /** The image path/id.
-            The renderer should translate this as is appropriate. */
+            The renderer should translate the id as needed. */
     path: String,
 
 } //ImageOptions

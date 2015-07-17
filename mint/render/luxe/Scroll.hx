@@ -27,8 +27,8 @@ class Scroll extends mint.render.Base {
         _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
-            pos: new Vector(control.real_bounds.x, control.real_bounds.y),
-            size: new Vector(control.real_bounds.w, control.real_bounds.h),
+            pos: new Vector(control.x, control.y),
+            size: new Vector(control.w, control.h),
             color: new Color().rgb(0x343434),
             depth: control.depth,
             visible: control.visible,
@@ -71,8 +71,8 @@ class Scroll extends mint.render.Base {
     } //ondestroy
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.geometry_quad.resize_xy( control.real_bounds.w, control.real_bounds.h );
+        visual.transform.pos.set_xy(control.x, control.y);
+        visual.geometry_quad.resize_xy( control.w, control.h );
         //
         scrollh.pos.set_xy(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y);
         scrollv.pos.set_xy(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y);
@@ -102,13 +102,6 @@ class Scroll extends mint.render.Base {
             visual.clip_rect = Convert.rect(_rect);
         }
     } //onclip
-
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset');
-        visual.pos.add_xyz(_x, _y);
-        scrollh.pos.add_xyz(_x, _y);
-        scrollv.pos.add_xyz(_x, _y);
-    } //ontranslate
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

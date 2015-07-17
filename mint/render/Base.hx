@@ -19,7 +19,6 @@ class Base implements ControlRenderer {
         control.ondepth.listen(ondepth);
         control.ondestroy.listen(ondestroy);
         control.onclip.listen(onclip);
-        control.ontranslate.listen(ontranslate);
         control.onchild.listen(onchild);
         control.onbounds.listen(onbounds);
     }
@@ -43,7 +42,6 @@ class Base implements ControlRenderer {
     function onbounds(){}
     function onclip(_r:Rect){}
     function onchild(_c:Control){}
-    function ontranslate(_x:Float=0.0,_y:Float=0.0,_o:Bool=false){}
 
 } //Base
 

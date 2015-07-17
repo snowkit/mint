@@ -97,12 +97,6 @@ class List extends mint.render.Base {
         }
     } //onclip
 
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset');
-        // hover_rect.transform.pos.add_xyz(_x, _y);
-        // select_rects[0].transform.pos.add_xyz(_x, _y);
-    } //ontranslate
-
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');
         // hover_rect.visible = _visible;

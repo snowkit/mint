@@ -27,10 +27,10 @@ class Window extends mint.render.Base {
 
         _debug('create / ${control.name}');
         visual = Luxe.draw.box({
-            x:control.real_bounds.x,
-            y:control.real_bounds.y,
-            w:control.real_bounds.w,
-            h:control.real_bounds.h,
+            x:control.x,
+            y:control.y,
+            w:control.w,
+            h:control.h,
             color: new Color(0,0,0,1).rgb(0x242424),
             depth: control.depth,
             visible: control.visible,
@@ -38,10 +38,10 @@ class Window extends mint.render.Base {
         });
 
         top = Luxe.draw.box({
-            x: window.title.real_bounds.x,
-            y:window.title.real_bounds.y,
-            w:window.title.real_bounds.w,
-            h:window.title.real_bounds.h,
+            x: window.title.x,
+            y:window.title.y,
+            w:window.title.w,
+            h:window.title.h,
             color: new Color(0,0,0,1).rgb(0x373737),
             depth: window.depth,
             visible: window.visible,
@@ -49,10 +49,10 @@ class Window extends mint.render.Base {
         });
 
         border = Luxe.draw.rectangle({
-            x: window.real_bounds.x,
-            y: window.real_bounds.y,
-            w: window.real_bounds.w,
-            h: window.real_bounds.h,
+            x: window.x,
+            y: window.y,
+            w: window.w,
+            h: window.h,
             color: new Color(0,0,0,1).rgb(0x373739),
             depth: window.depth+0.001,
             visible: window.visible,
@@ -75,11 +75,11 @@ class Window extends mint.render.Base {
     }
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.resize_xy( control.real_bounds.w, control.real_bounds.h );
-        top.transform.pos.set_xy(window.title.real_bounds.x, window.title.real_bounds.y);
-        top.resize_xy( window.title.real_bounds.w, window.title.real_bounds.h );
-        border.set({ x:control.real_bounds.x, y:control.real_bounds.y, w:control.real_bounds.w, h:control.real_bounds.h, color:border.color });
+        visual.transform.pos.set_xy(control.x, control.y);
+        visual.resize_xy(control.w, control.h);
+        top.transform.pos.set_xy(window.title.x, window.title.y);
+        top.resize_xy(window.title.w, window.title.h);
+        border.set({ x:control.x, y:control.y, w:control.w, h:control.h, color:border.color });
     }
 
     override function onclip( _rect:Rect ) {
@@ -95,13 +95,6 @@ class Window extends mint.render.Base {
             border.clip_rect = cr;
         }
     } //onclip
-
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / ${control.name} / $_x / $_y / $_offset');
-        visual.transform.pos.add_xyz(_x, _y);
-        top.transform.pos.add_xyz(_x, _y);
-        border.transform.pos.add_xyz(_x, _y);
-    } //ontranslate
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

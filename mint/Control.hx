@@ -4,13 +4,22 @@ import mint.Types;
 import mint.Signal;
 import mint.Renderer;
 import mint.Macros.*;
+import mint.Types.Utils.in_rect;
 
 typedef ControlOptions = {
 
         /** The control name */
     @:optional var name: String;
-        /** The control bounds */
-    @:optional var bounds: Rect;
+
+        /** The control x position, relative to its container */
+    @:optional var x: Float;
+        /** The control y position, relative to its container */
+    @:optional var y: Float;
+        /** The control width */
+    @:optional var w: Float;
+        /** The control height */
+    @:optional var h: Float;
+
         /** The control parent, if any */
     @:optional var parent: Control;
         /** The control depth. Usually set internally */
@@ -31,19 +40,27 @@ typedef ControlOptions = {
 @:allow(mint.ControlRenderer)
 class Control {
 
+        /** The name of this control. default: 'control'*/
     public var name : String = 'control';
-        //parent canvas that this element belongs to
+        /** Root canvas that this element belongs to */
     public var canvas : Canvas;
-        //the top most control below the canvas that holds us
+        /** the top most control below the canvas that holds us */
     public var closest_to_canvas : Control;
 
-        //the relative bounds to the parent
-    @:isVar public var bounds (default, set): Rect;
-        //the offset bounds relative to the bounds
-    @:isVar public var offset (default, set): Point;
+        /** The x position of the control bounds, world coordinate */
+    @:isVar public var x (default, set) : Float;
+        /** The y position of the control bounds, world coordinate */
+    @:isVar public var y (default, set) : Float;
+        /** The width of the control bounds */
+    @:isVar public var w (default, set) : Float;
+        /** The height of the control bounds */
+    @:isVar public var h (default, set) : Float;
 
-        //the absolute bounds in screen space
-    public var real_bounds : Rect;
+        /** The x position of the control bounds, relative to its container */
+    @:isVar public var x_local (get, set) : Float;
+        /** The y position of the control bounds, relative to its container */
+    @:isVar public var y_local (get, set) : Float;
+
         //the clipping rectangle for this control
     public var clip_rect : Rect;
         //the list of children added to this control
@@ -67,7 +84,6 @@ class Control {
     public var ondestroy   : Signal<Void->Void>;
     public var onvisible   : Signal<Bool->Void>;
     public var ondepth     : Signal<Float->Void>;
-    public var ontranslate : Signal<Float->Float->Bool->Void>;
     public var onclip      : Signal<Rect->Void>;
     public var onchild     : Signal<Control->Void>;
     public var mousedown   : Signal<MouseSignal>;
@@ -98,7 +114,6 @@ class Control {
         ondestroy   = new Signal();
         onvisible   = new Signal();
         ondepth     = new Signal();
-        ontranslate = new Signal();
         onclip      = new Signal();
         onchild     = new Signal();
         mousedown   = new Signal();
@@ -111,16 +126,22 @@ class Control {
         keyup       = new Signal();
         textinput   = new Signal();
 
-        bounds = ctrloptions.bounds == null ? new Rect(0,0,32,32) : ctrloptions.bounds;
-        offset = new Point(0,0);
+        children = [];
 
-        real_bounds = new Rect(bounds.x+offset.x, bounds.y+offset.y, bounds.w, bounds.h);
+        // bounds = ctrloptions.bounds == null ? new Rect(0,0,32,32) : ctrloptions.bounds;
+
+        x = def(ctrloptions.x, 0);
+        y = def(ctrloptions.y, 0);
+        w = def(ctrloptions.w, 32);
+        h = def(ctrloptions.h, 32);
+
+        x_local = x;
+        y_local = y;
 
         name = def(ctrloptions.name, 'control');
         if(ctrloptions.mouse_enabled != null) mouse_enabled = ctrloptions.mouse_enabled;
         if(ctrloptions.key_enabled != null) key_enabled = ctrloptions.key_enabled;
 
-        children = [];
         children_bounds = {
             x:0,
             y:0,
@@ -164,7 +185,7 @@ class Control {
         var highest_depth : Float = 0;
 
         for(_child in children) {
-            if(_child.contains_point(_p) && _child.mouse_enabled && _child.visible) {
+            if(_child.contains(_p.x, _p.y) && _child.mouse_enabled && _child.visible) {
 
                 if(_child.depth >= highest_depth) {
                     highest_child = _child;
@@ -182,72 +203,26 @@ class Control {
 
     } //topmost_child_at_point
 
-    public function contains_point( _p:Point ) {
+    public function contains( _x:Float, _y:Float ) {
 
-            //if we aren't inside the clip_rect
-            //we aren't going to be reporting true
-        if(clip_rect != null) {
-            if(!clip_rect.point_inside(_p)) {
-                return false;
-            }
-        }
+        var inside = in_rect(_x, _y, x, y, w, h);
 
-        return real_bounds.point_inside(_p);
+        if(clip_rect == null) return inside;
 
-    } //contains point
+        return inside && in_rect(_x, _y, clip_rect.x, clip_rect.y, clip_rect.w, clip_rect.h);
 
-
-    function set_offset( _o:Point ) {
-
-        var setup = offset == null;
-
-        offset = _o;
-
-        if(!setup) {
-            bounds = bounds.set(bounds.x, bounds.y, bounds.w, bounds.h);
-        }
-
-        return offset;
-
-    } //set_offset
-
-    function set_bounds( _b:Rect ) {
-
-        var setup = bounds == null;
-
-        if(!setup) {
-            if(parent != null) {
-                real_bounds.set( parent.real_bounds.x+_b.x+offset.x, parent.real_bounds.y+_b.y+offset.y, _b.w, _b.h );
-            } else {
-                real_bounds.set( _b.x+offset.x, _b.y+offset.y, _b.w, _b.h );
-            }
-        }
-
-        bounds = _b;
-
-        if(!setup) {
-            for(_child in children) {
-                _child.bounds = _child.bounds.set(_child.bounds.x,_child.bounds.y,_child.bounds.w,_child.bounds.h);
-            }
-        }
-
-        onbounds.emit();
-
-        return bounds;
-
-    } //set_bounds
+    } //contains
 
     function clip_with_closest_to_canvas() {
         if(closest_to_canvas != null) {
-            set_clip( closest_to_canvas.real_bounds );
+            clip_with( closest_to_canvas );
         }
     } //clip_with_closest_to_canvas
 
 
     public function clip_with( ?_control:Control ) {
         if(_control != null) {
-            var _b = _control.real_bounds;
-            set_clip( new Rect(_b.x, _b.y, _b.w, _b.h) );
+            set_clip( new Rect(_control.x, _control.y, _control.w, _control.h) );
         } else {
             set_clip();
         }
@@ -300,6 +275,7 @@ class Control {
 
     public var nodes : Int = 0;
     public function add( child:Control ) {
+
         if(child.parent != null) {
             child.parent.remove(child);
             child.parent = null;
@@ -333,35 +309,9 @@ class Control {
         }
     }
 
-        //if translating in offset mode, we don't update the clip rect and other stuff
-        //this happens for example when moving children around from a scroll view, just
-        //offseting their positions, not moving them as a whole
-    public function translate( ?_x : Float = 0, ?_y : Float = 0, ?_offset:Bool = false ) {
-
-        real_bounds.x += _x;
-        real_bounds.y += _y;
-
-        ontranslate.emit(_x, _y, _offset);
-
-        for(child in children) {
-            child.translate( _x, _y, _offset );
-        }
-
-        if(clip_rect != null && !_offset) {
-            set_clip( clip_rect.set(clip_rect.x+_x, clip_rect.y+_y) );
-        }
-
-        canvas.focus_invalid = true;
-
-    } //translate
-
-    public function right() {
-        return bounds.x + bounds.w;
-    } //right
-
-    public function bottom() {
-        return bounds.y + bounds.h;
-    } //bottom
+    //:todo: getters?
+    public inline function right() return x_local + w;
+    public inline function bottom() return y_local + h;
 
     function get_children_bounds() : ChildBounds {
 
@@ -382,23 +332,23 @@ class Control {
 
         var _first_child = children[0];
 
-        var _current_x : Float = _first_child.bounds.x;
-        var _current_y : Float = _first_child.bounds.y;
+        var _current_x : Float = _first_child.x_local;
+        var _current_y : Float = _first_child.y_local;
         var _current_r : Float = _first_child.right();
         var _current_b : Float = _first_child.bottom();
 
-        var _real_x : Float = _first_child.real_bounds.x;
-        var _real_y : Float = _first_child.real_bounds.y;
+        var _real_x : Float = _first_child.x;
+        var _real_y : Float = _first_child.y;
 
         for(child in children) {
 
-            _current_x = Math.min( child.bounds.x, _current_x );
-            _current_y = Math.min( child.bounds.y, _current_y );
+            _current_x = Math.min( child.x_local, _current_x );
+            _current_y = Math.min( child.y_local, _current_y );
             _current_r = Math.max( _current_r, child.right() );
             _current_b = Math.max( _current_b, child.bottom() );
 
-            _real_x = Math.min( child.real_bounds.x, _real_x );
-            _real_y = Math.min( child.real_bounds.y, _real_y );
+            _real_x = Math.min( child.x, _real_x );
+            _real_y = Math.min( child.y, _real_y );
 
         } //child in children
 
@@ -515,7 +465,7 @@ class Control {
 
     public function onmouseenter( e:MouseEvent ) {
 
-        mouseenter.emit(e, this);
+        mouseenter.emit(e, tohis);
 
     }
 
@@ -539,7 +489,145 @@ class Control {
 
     } //update
 
+    var updating = false;
+    function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
+
+        if(updating) return;
+
+        onbounds.emit();
+
+        if(_dx != 0.0 || _dy != 0.0) {
+            for(child in children) {
+                child.set_pos(child.x + _dx, child.y + _dy);
+                if(child.clip_rect != null && !_offset) {
+                    child.clip_rect.x += _dx;
+                    child.clip_rect.y += _dy;
+                    child.set_clip(child.clip_rect);
+                }
+            }
+        }
+
+    } //bounds_changed
+
 //Properties
+
+//Spatial properties
+
+    function set_pos(_x:Float, _y:Float, ?_offset:Bool = false ) {
+
+        updating = true;
+
+        var _dx = _x - x;
+        var _dy = _y - y;
+
+        x = _x;
+        y = _y;
+
+        updating = false;
+
+        bounds_changed(_dx, _dy, 0, 0, _offset);
+
+    } //set_pos
+
+    function set_size(_w:Float, _h:Float) {
+
+        updating = true;
+
+        var _dw = _w - w;
+        var _dh = _h - h;
+
+        w = _w;
+        h = _h;
+
+        updating = false;
+
+        bounds_changed(0,0, _dw, _dh);
+
+    } //set_size
+
+    function set_x(_x:Float) : Float {
+
+        var _dx = _x - x;
+
+        x = _x;
+
+        bounds_changed(_dx);
+
+        return x;
+
+    } //set_x
+
+    function set_y(_y:Float) : Float {
+
+        var _dy = _y - y;
+        y = _y;
+
+        bounds_changed(0, _dy);
+
+        return y;
+
+    } //set_y
+
+    function set_w(_w:Float) : Float {
+
+        var _dw = _w - w;
+        w = _w;
+        bounds_changed(0,0, _dw);
+
+        return w;
+
+    } //set_w
+
+    function set_h(_h:Float) : Float {
+
+        var _dh = _h - h;
+        h = _h;
+        bounds_changed(0,0,0, _dh);
+
+        return h;
+
+    } //set_h
+
+    function set_x_local(_x:Float) : Float {
+
+        x_local = _x;
+
+        if(parent != null) {
+            x = parent.x + x_local;
+        } else {
+            x = x_local;
+        }
+
+        return x_local;
+
+    } //set_x_local
+
+    function set_y_local(_y:Float) : Float {
+
+        y_local = _y;
+
+        if(parent != null) {
+            y = parent.y + y_local;
+        } else {
+            y = y_local;
+        }
+
+        return y_local;
+
+    } //set_y_local
+
+    function get_x_local() : Float {
+
+        return x_local;
+
+    } //get_x_local
+
+    function get_y_local() : Float {
+
+        return y_local;
+
+    } //get_y_local
+
 //Depth properties
 
     inline function get_depth() : Float {
@@ -567,10 +655,17 @@ class Control {
 
     function set_parent(p:Control) {
 
+        if(parent != null) {
+            x -= parent.x;
+            y -= parent.y;
+        }
+
+        // x_local = x;
+        // y_local = y;
+
         if(p != null) {
-            real_bounds.set( p.real_bounds.x+bounds.x+offset.x, p.real_bounds.y+bounds.y+offset.y, bounds.w, bounds.h);
-        } else {
-            real_bounds.set(bounds.x+offset.x, bounds.y+offset.y, bounds.w, bounds.h);
+            x = p.x + x_local;
+            y = p.y + y_local;
         }
 
         return parent = p;

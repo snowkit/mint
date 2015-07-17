@@ -26,8 +26,8 @@ class Checkbox extends mint.render.Base {
         _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
-            pos: new Vector(control.real_bounds.x, control.real_bounds.y),
-            size: new Vector(control.real_bounds.w, control.real_bounds.h),
+            pos: new Vector(control.x, control.y),
+            size: new Vector(control.w, control.h),
             color: new Color().rgb(0x373737),
             depth: control.depth,
             visible: control.visible,
@@ -35,8 +35,8 @@ class Checkbox extends mint.render.Base {
 
         node = new luxe.Sprite({
             centered: false,
-            pos: new Vector(control.real_bounds.x+4, control.real_bounds.y+4),
-            size: new Vector(control.real_bounds.w-8, control.real_bounds.h-8),
+            pos: new Vector(control.x+4, control.y+4),
+            size: new Vector(control.w-8, control.h-8),
             color: new Color().rgb(0x9dca63),
             depth: control.depth,
             visible: control.visible
@@ -62,10 +62,10 @@ class Checkbox extends mint.render.Base {
     } //oncheck
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.geometry_quad.resize_xy( control.real_bounds.w, control.real_bounds.h );
-        node.transform.pos.set_xy(control.real_bounds.x+4, control.real_bounds.y+4);
-        node.geometry_quad.resize_xy( control.real_bounds.w-8, control.real_bounds.h-8 );
+        visual.transform.pos.set_xy(control.x, control.y);
+        visual.geometry_quad.resize_xy( control.w, control.h );
+        node.transform.pos.set_xy(control.x+4, control.y+4);
+        node.geometry_quad.resize_xy( control.w-8, control.h-8 );
     }
 
     override function ondestroy() {
@@ -90,12 +90,6 @@ class Checkbox extends mint.render.Base {
             node.clip_rect = Convert.rect(_rect);
         }
     } //onclip
-
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset');
-        visual.pos.add_xyz(_x, _y);
-        node.pos.add_xyz(_x, _y);
-    } //ontranslate
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

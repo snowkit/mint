@@ -31,8 +31,8 @@ class Image extends mint.render.Base {
                 centered: false,
                 // color: Color.random(),
                 texture: texture,
-                pos: new Vector(control.real_bounds.x, control.real_bounds.y),
-                size: new Vector(control.real_bounds.w, control.real_bounds.h),
+                pos: new Vector(control.x, control.y),
+                size: new Vector(control.w, control.h),
                 depth: control.depth,
                 visible: control.visible,
             });
@@ -46,8 +46,8 @@ class Image extends mint.render.Base {
     }
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.geometry_quad.resize_xy( control.real_bounds.w, control.real_bounds.h );
+        visual.transform.pos.set_xy(control.x, control.y);
+        visual.geometry_quad.resize_xy( control.w, control.h );
     }
 
     override function ondestroy() {
@@ -64,11 +64,6 @@ class Image extends mint.render.Base {
         if(_rect == null) visual.clip_rect = null;
         else visual.clip_rect = Convert.rect(_rect);
     } //onclip
-
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset');
-        visual.pos.add_xyz(_x, _y);
-    } //ontranslate
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

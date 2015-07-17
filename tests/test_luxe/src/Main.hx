@@ -2,6 +2,7 @@
 import luxe.Color;
 import luxe.Vector;
 import luxe.Input;
+import luxe.Text;
 
 import mint.Types;
 import mint.Control;
@@ -24,25 +25,70 @@ class Main extends luxe.Game {
     var render: LuxeMintRender;
 
     var debug : Bool = false;
+    var td : Text;
 
     override function ready() {
 
+        var load = Luxe.resources.load_texture('assets/960.png');
+            load.then(function(grid) {
+                new luxe.Sprite({ texture:grid, centered:false, depth:-1 });
+            });
+
         Luxe.renderer.clear_color.rgb(0x161619);
+
+        render = new LuxeMintRender();
+        canvas = new mint.Canvas({
+            renderer: render,
+            x: 0, y:0, w: 960, h: 640
+        });
+
+        td = new Text({
+            text: 'debug',
+            point_size: 14,
+            pos: new Vector(950, 10),
+            align: right,
+            depth: 999,
+            color: new Color()
+        });
+
+        test0();
+        test1();
+
+    }
+
+    function test0() {
+
+        list = new mint.List({
+            parent: canvas,
+            name: 'list',
+            x: 460, y: 120, w: 140, h: 140
+        });
+
+        for(i in 0 ... 20) {
+            list.add_item(
+                label = new mint.Label({
+                    parent: list,
+                    name: 'label$i',
+                    w:140, h:20,
+                    text: 'label $i',
+                    point_size: 14,
+                    onclick: function(e,c) { trace('label $i! ${Luxe.time}'); }
+                }),
+                0, i == 0 ? 0 : 10
+            );
+        }
+
+    }
+
+    function test1() {
 
         var te = Luxe.resources.load_texture('assets/transparency.png');
         te.then(function(t) {
 
-            render = new LuxeMintRender();
-
-            canvas = new mint.Canvas({
-                renderer: render,
-                bounds: new Rect(10,10,900,512)
-            });
-
             label = new mint.Label({
                 parent: canvas,
                 name: 'label1',
-                bounds: new Rect(10,10,100,32),
+                x:10, y:10, w:100, h:32,
                 text: 'hello mint',
                 point_size: 14,
                 onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
@@ -51,13 +97,13 @@ class Main extends luxe.Game {
             check = new mint.Checkbox({
                 parent: canvas,
                 name: 'check1',
-                bounds: new Rect(120,16,24,24)
+                x: 120, y: 16, w: 24, h: 24
             });
 
             button = new mint.Button({
                 parent: canvas,
                 name: 'button1',
-                bounds: new Rect(10,52,100,32),
+                x: 10, y: 52, w: 100, h: 32,
                 text: 'mint button',
                 point_size: 14,
                 onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
@@ -66,26 +112,26 @@ class Main extends luxe.Game {
             image = new mint.Image({
                 parent: canvas,
                 name: 'image1',
-                bounds: new Rect(10,102,64,64),
+                x: 10, y: 102, w: 64, h: 64,
                 path: 'assets/transparency.png'
             });
 
             panel = new mint.Panel({
                 parent: canvas,
                 name: 'panel1',
-                bounds: new Rect(84,102,64,64),
+                x:84, y:102, w:64, h: 64,
             });
 
             scroll = new mint.ScrollArea({
                 parent: canvas,
                 name: 'scroll1',
-                bounds: new Rect(10, 180, 128, 128),
+                x:10, y:180, w: 128, h: 128,
             });
 
             new mint.Image({
                 parent: scroll,
                 name: 'image2',
-                bounds: new Rect(0,100,256,256),
+                x:0, y:100, w:256, h: 256,
                 path: 'assets/transparency.png'
             });
 
@@ -94,42 +140,40 @@ class Main extends luxe.Game {
                 parent: canvas,
                 name: 'window1',
                 title: 'window',
-                bounds: new Rect(200,10,256,400)
+                x:200, y:10, w:256, h: 400
             });
 
             window2 = new mint.Window({
                 parent: canvas,
                 name: 'window2',
                 title: 'window',
-                bounds: new Rect(460,10,256,95)
+                x:460, y:10, w:256, h: 95
             });
 
             new mint.TextEdit({
                 parent: window2,
                 name: 'textedit1',
                 text: 'type anything',
-                bounds: new Rect(10,32,256-10-10,22)
+                x: 10, y:32, w: 256-10-10, h: 22
             });
 
             new mint.TextEdit({
                 parent: window2,
                 name: 'textnumbersonly',
                 text: 'numbers only',
-                bounds: new Rect(10,32+22+10,256-10-10,22),
+                x: 10, y:32+22+10, w: 256-10-10, h: 22,
                 filter: new EReg('[0-9]+','gi'),
             });
 
             list = new mint.List({
                 parent: window,
                 name: 'list1',
-                bounds: new Rect(4,28,248,400-28-4)
+                x: 4, y: 28, w: 248, h: 400-28-4
             });
 
             for(i in 0 ... 5) {
                 list.add_item( create_block(i) );
             } //for
-
-            trace(canvas.nodes);
 
         });
 
@@ -146,14 +190,14 @@ class Main extends luxe.Game {
         var _panel = new mint.Panel({
             parent: list,
             name: 'panel_${idx}',
-            bounds: new Rect(2,4,236,96),
+            x:2, y:4, w:236, h:96,
         });
 
         new mint.Image({
             name: 'icon_${idx}',
             parent: _panel,
             mouse_enabled:true,
-            bounds: new Rect(8,8,80,80),
+            x:8, y:8, w:80, h:80,
             path: 'assets/transparency.png'
         });
 
@@ -161,7 +205,7 @@ class Main extends luxe.Game {
             name: 'label_${idx}',
             parent: _panel,
             mouse_enabled:true,
-            bounds: new Rect(96,8,148,18),
+            x:96, y:8, w:148, h:18,
             point_size: 16,
             align: TextAlign.left,
             align_vertical: TextAlign.top,
@@ -173,7 +217,7 @@ class Main extends luxe.Game {
             parent: _panel,
             mouse_enabled:true,
             bounds_wrap: true,
-            bounds: new Rect(96,30,132,18),
+            x:96, y:30, w:132, h:18,
             point_size: 12,
             align: TextAlign.left,
             align_vertical: TextAlign.top,
@@ -184,7 +228,28 @@ class Main extends luxe.Game {
     }
 
     override function onmousemove(e) {
-        if(canvas!=null) canvas.onmousemove( Convert.mouse_event(e) );
+
+        if(canvas!=null) {
+            canvas.onmousemove( Convert.mouse_event(e) );
+
+            var s = 'debug:\n';
+
+            s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none');
+            s += '\n';
+            s += 'canvas depth_seq: ' + (canvas != null ? @:privateAccess canvas.depth_seq + '' : 'none');
+            s += '\n';
+            s += 'focused: ' + (canvas.focused != null ? canvas.focused.name : 'none');
+            s += (canvas.focused != null ? ' / depth: '+canvas.focused.depth : '');
+            s += '\n';
+            s += 'modal: ' + (canvas.modal != null ?  canvas.modal.name : 'none');
+            s += '\n';
+            s += 'dragged: ' + (canvas.dragged != null ? canvas.dragged.name : 'none');
+            s += '\n';
+
+            td.text = s;
+
+        }
+
     }
 
     override function onmousewheel(e) {
@@ -238,10 +303,10 @@ class Main extends luxe.Game {
 
         Luxe.draw.rectangle({
             depth: 1000,
-            x: control.real_bounds.x,
-            y: control.real_bounds.y,
-            w: control.real_bounds.w,
-            h: control.real_bounds.h,
+            x: control.x,
+            y: control.y,
+            w: control.w,
+            h: control.h,
             color: new Color(1,0,0,0.5),
             immediate: true
         });

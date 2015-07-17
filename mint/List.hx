@@ -43,36 +43,29 @@ class List extends Control {
             multiselect = options.multiselect;
         }
 
-        var view_bounds = options.bounds.clone();
-            view_bounds.x = 0; view_bounds.y = 0;
-
         view = new ScrollArea({
             parent : this,
-            bounds : view_bounds,
-            name : name + '.view',
-            // onscroll : onscroll
+            x: 0, y: 0, w: w, h: h,
+            name : name + '.view'
         });
 
         view.mousedown.listen(click_deselect);
-
-        // _options = __options;
-        // if(_options.align == null) {
-        //     _options.align = TextAlign.center;
-        // }
 
         render = canvas.renderer.render(List, this);
 
     } //new
 
     function click_deselect(e:MouseEvent, ctrl) {
-        
+
     }
 
-    public function add_item( item:Control ) {
+    public function add_item( item:Control, offset_x:Float = 0.0, offset_y:Float = 0.0 ) {
 
         var _childbounds = view.children_bounds;
 
-        item.bounds = new Rect(item.bounds.x, item.bounds.y+_childbounds.bottom, item.bounds.w, item.bounds.h);
+        item.y_local += _childbounds.bottom + offset_y;
+        item.x_local += offset_x;
+
         view.add(item);
 
         item.mouse_enabled = true;
@@ -97,7 +90,6 @@ class List extends Control {
     function item_mousedown(event:MouseEvent, ctrl:Control ) {
         var idx = items.indexOf(ctrl);
         onselect.emit(idx, ctrl, event);
-        trace('child mousedown');
     }
 
     public function clear() {
@@ -113,45 +105,5 @@ class List extends Control {
         onselect.emit(-1, null, null);
 
     } //clear
-
-    // public function select( _index:Int ) {
-
-    //     if(_index < items.length) {
-    //         label_selected(items[_index], null);
-    //     }
-
-    // } //select
-
-   
-
-        // public override function translate(?_x:Float=0, ?_y:Float=0, ?_offset:Bool = false ) {
-
-        //     super.translate( _x,_y, _offset );
-
-        //     renderer.list.translate( this, _x, _y, _offset );
-
-        //     for(_item in view.children) {
-        //         _item.clip_with(view);
-        //     } //_item in children
-
-        // } //translate
-
-        // function label_selected(_control:Control, e:MouseEvent) {
-
-        //     var _label:Label = cast _control;
-        //     renderer.list.select_item(this, _control);
-
-        //     //call callback
-        //     if(onselect != null) {
-        //         onselect(_label.text, _label, e);
-        //     } //onselect
-
-        // } //label_selected
-
-        // public function add_items( _items:Array<String> ) {
-        //     for(_item in _items) {
-        //         add_item(_item);
-        //     } //item
-        // } //add_items
 
 } //List

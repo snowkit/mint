@@ -186,9 +186,22 @@ enum TextEventType {
 
 
 class Utils {
-    static public function clamp (value:Float, a:Float, b:Float) : Float {
+
+    static public inline function clamp (value:Float, a:Float, b:Float) : Float {
         return ( value < a ) ? a : ( ( value > b ) ? b : value );
     }
+
+    static public function in_rect(x:Float, y:Float, rx:Float, ry:Float, rw:Float, rh:Float) {
+
+            if(x < rx) return false;
+            if(y < ry) return false;
+            if(x > rx+rw) return false;
+            if(y > ry+rh) return false;
+
+        return true;
+
+    } //in_rect
+
 }
 
 class Point {

@@ -24,11 +24,11 @@ class Canvas extends mint.render.Base {
 
         _debug('create / ${control.name}');
         visual = Luxe.draw.box({
-            x:control.real_bounds.x,
-            y:control.real_bounds.y,
-            w:control.real_bounds.w,
-            h:control.real_bounds.h,
-            color: new Color(0,0,0,1).rgb(0x0c0c0c),
+            x:control.x,
+            y:control.y,
+            w:control.w,
+            h:control.h,
+            color: new Color(0,0,0,0.2).rgb(0x0c0c0c),
             depth: control.depth,
             visible: control.visible,
             clip_rect: Convert.rect(control.clip_rect),
@@ -50,8 +50,8 @@ class Canvas extends mint.render.Base {
     }
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.resize_xy( control.real_bounds.w, control.real_bounds.h );
+        visual.transform.pos.set_xy(control.x, control.y);
+        visual.resize_xy(control.w, control.h);
     }
 
     override function onclip( _rect:Rect ) {
@@ -62,11 +62,6 @@ class Canvas extends mint.render.Base {
             visual.clip_rect.set(_rect.x, _rect.y, _rect.w, _rect.h);
         }
     } //onclip
-
-    override function ontranslate( _x:Float=0.0, _y:Float=0.0, _offset:Bool=false ) {
-        _debug('translate / $_x / $_y / $_offset / ${control.real_bounds}');
-        visual.transform.pos.add_xyz(_x, _y);
-    } //ontranslate
 
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');

@@ -37,7 +37,7 @@ class Button extends Control {
 
         label = new Label({
             parent : this,
-            bounds : options.bounds.clone().set(0,0),
+            x: 0, y:0, w: w, h: h,
             text: options.text,
             point_size: options.point_size,
             name : name + '.label',

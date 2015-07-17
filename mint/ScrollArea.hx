@@ -18,6 +18,7 @@ typedef ScrollAreaOptions = {
     ? onscroll: Float->Float->Void
 }
 
+@:allow(mint.ControlRenderer)
 class ScrollArea extends Control {
 
     public var scroll: { v:ScrollInfo, h:ScrollInfo };
@@ -32,11 +33,7 @@ class ScrollArea extends Control {
 
     var last_modal : Control;
 
-    @:allow(mint.ControlRenderer)
-        var options: ScrollAreaOptions;
-
-    // public var handle_h__bounds : Rect;
-    // public var handle_v__bounds : Rect;
+    var options: ScrollAreaOptions;
 
     public function new(_options:ScrollAreaOptions) {
 
@@ -57,15 +54,15 @@ class ScrollArea extends Control {
             v: {
                 enabled: false, percent: 0, amount: 0,
                 bounds: new Rect(
-                    real_bounds.x+real_bounds.w-8,
-                    real_bounds.y,
+                    x+w-8,
+                    y,
                     8,16)
             },
             h: {
                 enabled: false, percent: 0, amount: 0,
                 bounds: new Rect(
-                    real_bounds.x,
-                    real_bounds.y+real_bounds.h-8,
+                    x,
+                    y+h-8,
                     16,8)
             }
         };
@@ -138,11 +135,11 @@ class ScrollArea extends Control {
         super.onmousemove(e);
 
         if(handle_drag_v) {
-            set_scroll_y( e.y-real_bounds.y-drag_offset.y );
+            set_scroll_y( e.y-y-drag_offset.y );
         }
 
         if(handle_drag_h) {
-            set_scroll_x( e.x-real_bounds.x-drag_offset.x );
+            set_scroll_x( e.x-x-drag_offset.x );
         }
 
     } //onmousemove
@@ -153,43 +150,28 @@ class ScrollArea extends Control {
         super.onmousewheel(e);
 
         if(e.x != 0 && scroll.h.enabled) {
-            set_scroll_x((scroll.h.amount)-(real_bounds.w*0.03*e.x));
+            set_scroll_x((scroll.h.amount)-(w*0.03*e.x));
         }
 
         if(e.y != 0 && scroll.v.enabled) {
-            set_scroll_y((scroll.v.amount)-(real_bounds.h*0.01*e.y));
+            set_scroll_y((scroll.v.amount)-(h*0.01*e.y));
         }
 
     } //onmousewheel
 
-    override function set_bounds( _b:Rect ) {
 
-        var setup = bounds == null;
+    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
 
-        super.set_bounds(_b);
-
-        if(!setup) {
-            scroll.v.bounds = new Rect( real_bounds.x+real_bounds.w-8, real_bounds.y+scroll.v.amount, 8,16);
-            scroll.h.bounds = new Rect( real_bounds.x+scroll.h.amount, real_bounds.y+real_bounds.h-8, 16,8);
-                //make sure the scroll bits are refreshed,
-                //todo: less than ideal ofc
-            onbounds.emit();
+        if(scroll != null) {
+            scroll.v.bounds.x = x+w-8;
+            scroll.v.bounds.y = y+scroll.v.amount;
+            scroll.h.bounds.x = x+scroll.h.amount;
+            scroll.h.bounds.y = y+h-8;
         }
 
-        return bounds;
+        super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
 
-    } //set_bounds
-
-    public override function translate(?_x:Float = 0, ?_y:Float = 0, ?_offset:Bool = false ) {
-
-        scroll.h.bounds.x += _x;
-        scroll.h.bounds.y += _y;
-        scroll.v.bounds.x += _x;
-        scroll.v.bounds.y += _y;
-
-        super.translate(_x, _y, _offset);
-
-    } //translate
+    } //bounds_changed
 
     function on_internal_scroll(_dx:Float, _dy:Float) {
 
@@ -197,7 +179,7 @@ class ScrollArea extends Control {
 
                 //tell the children to scroll the delta
             for(child in children) {
-                child.translate(_dx, _dy, true);
+                child.set_pos(child.x+_dx, child.y+_dy, true);
             }
 
         } //has delta
@@ -224,13 +206,13 @@ class ScrollArea extends Control {
         scroll.v.enabled = false;
 
             //if the children bounds are < our size, it can't scroll
-        if(child_bounds.real_w <= real_bounds.w) {
+        if(child_bounds.real_w <= w) {
             scroll.h.enabled = false;
         } else {
             scroll.h.enabled = true;
         }
 
-        if(child_bounds.real_h <= real_bounds.h) {
+        if(child_bounds.real_h <= h) {
             scroll.v.enabled = false;
         } else {
             scroll.v.enabled = true;
@@ -240,23 +222,23 @@ class ScrollArea extends Control {
 
     } //check_handle_vis
 
-        //set the scroll value directly in pixels, between 0 and bounds.h
+        //set the scroll value directly in pixels, between 0 and h
     public function set_scroll_y(exact:Float) {
 
         if(!scroll.v.enabled) return;
 
             //can't go outside the bounds
-        exact = Utils.clamp( exact, 0, real_bounds.h );
+        exact = Utils.clamp( exact, 0, h );
 
             //for a delta
         var last_p_y = scroll.v.percent;
             //the new percent is based on the size of the control
-        scroll.v.percent = Utils.clamp(exact / (real_bounds.h-scroll.v.bounds.h), 0, 1);
+        scroll.v.percent = Utils.clamp(exact / (h-scroll.v.bounds.h), 0, 1);
         scroll.v.amount = exact;
             //we need the difference in scroll amount in pixels
-        var pdiff = (last_p_y - scroll.v.percent) * (child_bounds.real_h - real_bounds.h);
+        var pdiff = (last_p_y - scroll.v.percent) * (child_bounds.real_h - h);
             //update the real slider y value
-        scroll.v.bounds.y = Utils.clamp( real_bounds.y + exact, real_bounds.y, real_bounds.y+real_bounds.h-scroll.v.bounds.h );
+        scroll.v.bounds.y = Utils.clamp( y + exact, y, y+h-scroll.v.bounds.h );
 
         on_internal_scroll(0, pdiff);
 
@@ -267,17 +249,17 @@ class ScrollArea extends Control {
         if(!scroll.h.enabled) return;
 
             //limit to the size of the control
-        exact = Utils.clamp( exact, 0, real_bounds.w );
+        exact = Utils.clamp( exact, 0, w );
 
             //for a delta
         var last_p_x = scroll.h.percent;
             //the new percent is based on the size of the control
-        scroll.h.percent = Utils.clamp(exact / real_bounds.w, 0, 1);
+        scroll.h.percent = Utils.clamp(exact / w, 0, 1);
         scroll.h.amount = exact;
             //we need the difference in scroll amount in pixels
-        var pdiff = (last_p_x - scroll.h.percent) * (child_bounds.real_w - real_bounds.w);
+        var pdiff = (last_p_x - scroll.h.percent) * (child_bounds.real_w - w);
             //update the real slider x value
-        scroll.h.bounds.x = Utils.clamp( real_bounds.x + exact, real_bounds.x, real_bounds.x+real_bounds.w-scroll.h.bounds.w );
+        scroll.h.bounds.x = Utils.clamp( x + exact, x, x+w-scroll.h.bounds.w );
 
         on_internal_scroll(pdiff, 0);
 

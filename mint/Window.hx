@@ -57,13 +57,9 @@ class Window extends Control {
         if(_options.closeable != null) { closeable = _options.closeable; }
         if(_options.focusable != null) { focusable = _options.focusable; }
 
-        var title_bounds = new Rect(2, 2, bounds.w-4, 22 );
-        var close_bounds = new Rect(bounds.w-24, 2, 22, 22 );
-        var view_bounds = new Rect(24, 24, bounds.w - 48, bounds.h - 48 );
-
         resize_handle = new Control({
             parent : this,
-            bounds : new Rect(bounds.w-24, bounds.h-24, 24, 24),
+            x: w-24, y: h-24, w: 24, h: 24,
             name : name + '.resize_handle',
         });
 
@@ -74,7 +70,7 @@ class Window extends Control {
             //create the title label
         title = new Label({
             parent : this,
-            bounds : title_bounds,
+            x: 2, y: 2, w: w - 4, h: 22,
             text: _options.title,
             align : TextAlign.center,
             align_vertical : TextAlign.center,
@@ -85,7 +81,7 @@ class Window extends Control {
             //create the close label
         close_button = new Label({
             parent : this,
-            bounds : close_bounds,
+            x: w - 24, y: 2, w: 22, h: 22,
             text:'x',
             align : TextAlign.center,
             align_vertical : TextAlign.center,
@@ -147,15 +143,12 @@ class Window extends Control {
             var diff_x = e.x - resize_start.x;
             var diff_y = e.y - resize_start.y;
 
-            var ww = bounds.w + diff_x;
-            var hh = bounds.h + diff_y;
+            var ww = w + diff_x;
+            var hh = h + diff_y;
 
             resize_start.set(e.x, e.y);
 
-            bounds = new Rect(bounds.x, bounds.y, ww, hh);
-
-            close_button.bounds = new Rect(bounds.w-24, 2, 22, 22);
-            title.bounds = new Rect(2, 2, bounds.w-4, 22);
+            set_size(ww, hh);
 
         } else if(dragging) {
 
@@ -164,10 +157,7 @@ class Window extends Control {
 
             drag_start.set(e.x,e.y);
 
-            translate(diff_x, diff_y);
-            // bounds.x += diff_x;
-            // bounds.y += diff_y;
-            // bounds = new Rect(bounds.x + diff_x, bounds.y + diff_y, bounds.w, bounds.h);
+            set_pos(x + diff_x, y + diff_y);
 
         } else { //dragging
 
@@ -178,7 +168,7 @@ class Window extends Control {
     } //onmousemove
 
     function bring_to_front() {
-        if(depth != canvas.depth) {
+        if(depth != @:privateAccess canvas.depth_seq) {
             depth = canvas.next_depth();
         }
     }
@@ -186,8 +176,8 @@ class Window extends Control {
     public override function onmousedown(e:MouseEvent)  {
 
         _mouse.set(e.x,e.y);
-        var in_title = title.real_bounds.point_inside(_mouse);
 
+        var in_title = title.contains(_mouse.x, _mouse.y);
 
         if(!in_title) {
             super.onmousedown(e);
@@ -199,7 +189,7 @@ class Window extends Control {
                 if( in_title ) {
                     dragging = true;
                     drag_start.set(_mouse.x, _mouse.y);
-                    down_start.set(real_bounds.x, real_bounds.y);
+                    down_start.set(x, y);
                     canvas.dragged = this;
                 } //if inside title bounds
             } //!dragging
@@ -219,14 +209,15 @@ class Window extends Control {
 
     } //onmouseup
 
-    override function set_bounds( _b:Rect ) {
+    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
 
-        bounds = super.set_bounds(_b);
+        super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
 
-        if(resize_handle != null)
-        resize_handle.bounds = new Rect(_b.w-24, _b.h-24, 24, 24);
+        if(close_button != null) close_button.x_local = w - 24;
+        if(title != null) title.w = w - 4;
+        if(resize_handle != null) resize_handle.set_pos(x + w - 24, y + h - 24);
 
-        return bounds;
-    }
+
+    } //bounds_changed
 
 }
