@@ -63,7 +63,7 @@ class Canvas extends Control {
         modal = null;
         dragged = null;
 
-        renderer.render( Canvas, this );
+        render = renderer.render( Canvas, this );
 
         _mouse_last = new Point();
 
@@ -248,11 +248,43 @@ class Canvas extends Control {
 
     public override function onmousewheel( e:MouseEvent ) {
 
+        super.onmousewheel(e);
+
         if(focused != null && focused.mouse_enabled) {
             focused.onmousewheel(e);
         } //focused
 
     } //onmouseup
+
+    public override function onkeyup( e:KeyEvent ) {
+
+        super.onkeyup(e);
+
+        if(focused != null && focused.key_enabled) {
+            focused.onkeyup(e);
+        } //focused
+
+    } //onkeyup
+
+    public override function onkeydown( e:KeyEvent ) {
+
+        super.onkeydown(e);
+
+        if(focused != null && focused.key_enabled) {
+            focused.onkeydown(e);
+        } //focused
+
+    } //onkeydown
+
+    public override function ontextinput( e:TextEvent ) {
+
+        super.ontextinput(e);
+
+        if(focused != null && focused.key_enabled) {
+            focused.ontextinput(e);
+        } //focused
+
+    } //ontextinput
 
     public override function onmousedown( e:MouseEvent ) {
 
