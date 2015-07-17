@@ -107,4 +107,12 @@ class List extends Control {
 
     } //clear
 
+    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
+
+        super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
+
+        if(view != null) view.set_size(w, h);
+
+    } //bounds_changed
+
 } //List
