@@ -102,11 +102,6 @@ class Dropdown extends Control {
         renderer.dropdown.set_visible(this,_visible);
     }
 
-    public override function set_clip( ?_clip_rect:Rect = null ) {
-        super.set_clip(_clip_rect);
-        renderer.dropdown.set_clip(this,_clip_rect);
-    }
-
     public function close_list() {
 
         canvas.modal = null;

@@ -94,19 +94,15 @@ class Margins {
                 switch(info.type) {
                     case fixed: {
                         switch(info.target) {
-                            case right:
-                                child.w = Math.abs((child.parent.right-info.value) - child.x);
-                            case bottom:
-                                child.h = Math.abs((child.parent.bottom-info.value) - child.y);
+                            case right:  child.w = Math.abs((child.parent.right-info.value) - child.x);
+                            case bottom: child.h = Math.abs((child.parent.bottom-info.value) - child.y);
                         }
                     }
                     case percent: {
                         var per = (info.value/100);
                         switch(info.target) {
-                            case right:
-                                child.w = Math.abs((child.parent.right-(child.parent.w*per)) - child.x);
-                            case bottom:
-                                child.h = Math.abs((child.parent.bottom-(child.parent.h*per)) - child.y);
+                            case right:  child.w = Math.abs((child.parent.right-(child.parent.w*per)) - child.x);
+                            case bottom: child.h = Math.abs((child.parent.bottom-(child.parent.h*per)) - child.y);
                         }
                     }
                 } //type
