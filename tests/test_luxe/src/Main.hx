@@ -146,14 +146,24 @@ class Main extends luxe.Game {
             x:460, y:140, w:256, h: 180+42+32
         });
 
-        var layoutpanel = new mint.Panel({
-            parent: customwindow,
-            name: 'layoutpanel',
-            x: 32, y: 56, w: 30, h: 32
+        var p1 = new mint.Panel({
+            parent: customwindow, name: 'p1', x: 32, y: 56, w: 32, h: 32
         });
 
-        layout.margin(layoutpanel, right, fixed, 32);
-        layout.margin(layoutpanel, bottom, fixed, 32);
+        var p2 = new mint.Panel({
+            parent: customwindow, name: 'p2', x: 32, y: 96, w: 32, h: 32
+        });
+
+        var p3 = new mint.Panel({
+            parent: customwindow, name: 'p3', x: 32, y: 136, w: 32, h: 32
+        });
+
+        // layout.margin(p1, right, fixed, 32);
+        // layout.margin(p1, bottom, fixed, 32);
+        layout.anchor(p1, center_x, center_x);
+        layout.anchor(p1, center_y, center_y);
+        layout.anchor(p2, left, center_x);
+        layout.anchor(p3, right, center_x);
 
         var list2 = new mint.List({
             parent: canvas,
