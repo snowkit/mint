@@ -67,10 +67,10 @@ abstract KeyCode(Int) from Int to Int {
     var down = 3;
 /** the backspace key */
     var backspace = 4;
-/** the tab key */
-    var tab = 5;
 /** the delete key */
-    var delete = 6;
+    var delete = 5;
+/** the tab key */
+    var tab = 6;
 /** the enter key */
     var enter = 7;
 
@@ -141,12 +141,16 @@ typedef KeyEvent = {
 
         /** The time in seconds when this key event occurred, useful for deltas */
     var timestamp : Float;
+        /** The state this event is in */
+    var state : InteractState;
         /** The raw keycode of the event */
     var keycode : Int;
         /** The typed mint key for the event */
     var key : KeyCode;
         /** The modifier state */
     var mod : ModState;
+        /** Whether or not the event should bubble further. set to false to stop propagation */
+    var bubble : Bool;
 
 } //KeyEvent
 
@@ -163,6 +167,8 @@ typedef TextEvent = {
     var start : Int;
         /** The length position, if the `type` is `edit` */
     var length : Int;
+        /** Whether or not the event should bubble further. set to false to stop propagation */
+    var bubble : Bool;
 
 } //TextEvent
 
