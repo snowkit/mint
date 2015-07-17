@@ -47,7 +47,7 @@ class Image extends mint.render.Base {
 
     override function onbounds() {
         visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.geometry_quad.resize( new Vector(control.real_bounds.w, control.real_bounds.h) );
+        visual.geometry_quad.resize_xy( control.real_bounds.w, control.real_bounds.h );
     }
 
     override function ondestroy() {

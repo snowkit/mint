@@ -53,7 +53,7 @@ class Window extends mint.render.Base {
             y: window.real_bounds.y,
             w: window.real_bounds.w,
             h: window.real_bounds.h,
-            color: new Color(0,0,0,1).rgb(0x666666),
+            color: new Color(0,0,0,1).rgb(0x373739),
             depth: window.depth+0.001,
             visible: window.visible,
             clip_rect: Convert.rect(window.clip_rect)
@@ -76,10 +76,10 @@ class Window extends mint.render.Base {
 
     override function onbounds() {
         visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.resize( new Vector(control.real_bounds.w, control.real_bounds.h) );
+        visual.resize_xy( control.real_bounds.w, control.real_bounds.h );
         top.transform.pos.set_xy(window.title.real_bounds.x, window.title.real_bounds.y);
-        top.resize( new Vector(window.title.real_bounds.w, window.title.real_bounds.h) );
-        border.set({ x:control.real_bounds.x, y:control.real_bounds.y, w:control.real_bounds.w, h:control.real_bounds.h });
+        top.resize_xy( window.title.real_bounds.w, window.title.real_bounds.h );
+        border.set({ x:control.real_bounds.x, y:control.real_bounds.y, w:control.real_bounds.w, h:control.real_bounds.h, color:border.color });
     }
 
     override function onclip( _rect:Rect ) {

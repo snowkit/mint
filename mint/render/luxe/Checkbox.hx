@@ -63,9 +63,9 @@ class Checkbox extends mint.render.Base {
 
     override function onbounds() {
         visual.transform.pos.set_xy(control.real_bounds.x, control.real_bounds.y);
-        visual.geometry_quad.resize( new Vector(control.real_bounds.w, control.real_bounds.h) );
+        visual.geometry_quad.resize_xy( control.real_bounds.w, control.real_bounds.h );
         node.transform.pos.set_xy(control.real_bounds.x+4, control.real_bounds.y+4);
-        node.geometry_quad.resize( new Vector(control.real_bounds.w-8, control.real_bounds.h-8) );
+        node.geometry_quad.resize_xy( control.real_bounds.w-8, control.real_bounds.h-8 );
     }
 
     override function ondestroy() {
