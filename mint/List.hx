@@ -46,7 +46,8 @@ class List extends Control {
         view = new ScrollArea({
             parent : this,
             x: 0, y: 0, w: w, h: h,
-            name : name + '.view'
+            name : name + '.view',
+            visible: options.visible
         });
 
         view.onmousedown.listen(click_deselect);

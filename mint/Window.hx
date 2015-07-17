@@ -41,15 +41,15 @@ class Window extends Control {
 
         def(options.name, 'window');
 
-        super(_options);
+        super(options);
 
         if(options.mouse_input == null){
             mouse_input = true;
         }
 
-        if(_options.moveable != null) { moveable = _options.moveable; }
-        if(_options.closeable != null) { closeable = _options.closeable; }
-        if(_options.focusable != null) { focusable = _options.focusable; }
+        if(options.moveable != null) { moveable = options.moveable; }
+        if(options.closeable != null) { closeable = options.closeable; }
+        if(options.focusable != null) { focusable = options.focusable; }
 
         resize_handle = new Control({
             parent : this,
@@ -65,11 +65,12 @@ class Window extends Control {
         title = new Label({
             parent : this,
             x: 2, y: 2, w: w - 4, h: 22,
-            text: _options.title,
+            text: options.title,
             align : TextAlign.center,
             align_vertical : TextAlign.center,
             point_size: 14,
-            name: name + '.titlelabel'
+            name: name + '.titlelabel',
+            visible: options.visible
         });
 
             //create the close label
@@ -80,7 +81,8 @@ class Window extends Control {
             align : TextAlign.center,
             align_vertical : TextAlign.center,
             point_size:15,
-            name : name + '.closelabel'
+            name : name + '.closelabel',
+            visible: options.visible
         });
 
         close_button.mouse_input = true;

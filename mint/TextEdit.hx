@@ -61,7 +61,8 @@ class TextEdit extends Control {
             align: TextAlign.left,
             align_vertical: TextAlign.center,
             name : name + '.label',
-            mouse_input: false
+            mouse_input: false,
+            visible: options.visible
         });
 
         edit = label.text;

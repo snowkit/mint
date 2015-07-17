@@ -41,7 +41,8 @@ class Button extends Control {
             text: options.text,
             point_size: options.point_size,
             name : name + '.label',
-            mouse_input: false
+            mouse_input: false,
+            visible: options.visible
         });
 
         if(options.onclick != null) {
