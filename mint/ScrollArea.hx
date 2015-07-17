@@ -46,8 +46,8 @@ class ScrollArea extends Control {
 
         super(_options);
 
-        if(options.mouse_enabled == null){
-            mouse_enabled = true;
+        if(options.mouse_input == null){
+            mouse_input = true;
         }
 
         scroll = {
@@ -67,7 +67,7 @@ class ScrollArea extends Control {
             }
         };
 
-        render = canvas.renderer.render( ScrollArea, this );
+        renderinst = canvas.renderer.render( ScrollArea, this );
         drag_offset = new Point();
         check_handle_vis();
 
@@ -84,7 +84,7 @@ class ScrollArea extends Control {
     } //add
 
     var drag_offset:Point;
-    public override function onmousedown(e : MouseEvent) {
+    public override function mousedown(e : MouseEvent) {
 
         var forward = true;
 
@@ -111,14 +111,14 @@ class ScrollArea extends Control {
         } //can_scroll at all
 
         if(forward) {
-            super.onmousedown(e);
+            super.mousedown(e);
         }
 
-    } //onmousedown
+    } //mousedown
 
-    public override function onmouseup(e : MouseEvent) {
+    public override function mouseup(e : MouseEvent) {
 
-        super.onmouseup(e);
+        super.mouseup(e);
 
         drag_offset.set(0,0);
 
@@ -128,11 +128,11 @@ class ScrollArea extends Control {
             canvas.modal = last_modal;
         }
 
-    } //onmouseup
+    } //mouseup
 
-    public override function onmousemove(e : MouseEvent) {
+    public override function mousemove(e : MouseEvent) {
 
-        super.onmousemove(e);
+        super.mousemove(e);
 
         if(handle_drag_v) {
             set_scroll_y( e.y-y-drag_offset.y );
@@ -142,12 +142,12 @@ class ScrollArea extends Control {
             set_scroll_x( e.x-x-drag_offset.x );
         }
 
-    } //onmousemove
+    } //mousemove
 
-    public override function onmousewheel(e:MouseEvent) {
+    public override function mousewheel(e:MouseEvent) {
 
             //forward to
-        super.onmousewheel(e);
+        super.mousewheel(e);
 
         if(e.x != 0 && scroll.h.enabled) {
             set_scroll_x((scroll.h.amount)-(w*0.03*e.x));
@@ -157,7 +157,7 @@ class ScrollArea extends Control {
             set_scroll_y((scroll.v.amount)-(h*0.01*e.y));
         }
 
-    } //onmousewheel
+    } //mousewheel
 
 
     override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {

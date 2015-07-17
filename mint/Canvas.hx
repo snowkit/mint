@@ -37,7 +37,6 @@ class Canvas extends Control {
     public var focus_invalid : Bool = true;
 
     var options: CanvasOptions;
-    var _mouse_last:Point;
     var depth_seq : Float = 0;
 
     public function new( _options:CanvasOptions ) {
@@ -57,7 +56,7 @@ class Canvas extends Control {
 
         canvas = this;
 
-        mouse_enabled = true;
+        mouse_input = true;
         depth = def(options.depth, 0.0);
         depth_seq = depth;
 
@@ -65,16 +64,14 @@ class Canvas extends Control {
         modal = null;
         dragged = null;
 
-        render = renderer.render( Canvas, this );
-
-        _mouse_last = new Point();
+        renderinst = renderer.render( Canvas, this );
 
     } //new
 
         /** Get the top most control under the given point, or null if there is none (or is the canvas itself) */
-    public function topmost_at_point( _p:Point ) {
+    public function topmost_at_point( _x:Float, _y:Float ) {
 
-        var _control = topmost_child_at_point(_p);
+        var _control = topmost_child_at_point(_x, _y);
 
         if(_control != this) return _control;
 
@@ -109,9 +106,9 @@ class Canvas extends Control {
     } //reset_focus
 
         /** Find viable focusable controls, if any */
-    function find_focus( ?e:MouseEvent ) {
+    function find_focus( e:MouseEvent ) {
 
-        focused = get_focused( _mouse_last );
+        focused = get_focused( e.x, e.y );
 
         if(focused != null) {
             set_control_focused( focused, e );
@@ -129,8 +126,8 @@ class Canvas extends Control {
             _control.ishovered = false;
             _control.isfocused = false;
 
-            if(_control.mouse_enabled && do_mouseleave) {
-                _control.onmouseleave(e);
+            if(_control.mouse_input && do_mouseleave) {
+                _control.mouseleave(e);
             } //mouse enabled and we want handlers
 
         } //_control != null
@@ -144,8 +141,8 @@ class Canvas extends Control {
             _control.ishovered = true;
             _control.isfocused = true;
 
-            if(_control.mouse_enabled && do_mouseenter) {
-                _control.onmouseenter(e);
+            if(_control.mouse_input && do_mouseenter) {
+                _control.mouseenter(e);
             } //mouse enabled and we want handlers
         }
 
@@ -153,35 +150,33 @@ class Canvas extends Control {
 
         /** Return a control to focus from a point.
             If modal is set, that will be returned instead */
-    function get_focused( _p : Point ) {
+    function get_focused( _x:Float, _y:Float ) {
 
         if( modal != null ) {
             return modal;
         } else {
-            return topmost_at_point( _p );
+            return topmost_at_point( _x, _y );
         }
 
     } //get_focused
 
 //Overrides from Control
 
-    public override function onmousemove( e:MouseEvent ) {
+    public override function mousemove( e:MouseEvent ) {
 
-        _mouse_last.set(e.x,e.y);
-
-        var _inside = in_rect(_mouse_last.x, _mouse_last.y, x, y, w, h);
+        var _inside = in_rect(e.x, e.y, x, y, w, h);
 
         if(!_inside) {
-            onmouseup(e);
+            mouseup(e);
         }
 
             //first we check if the mouse is still inside the focused element
         if(focused != null) {
 
-            if(focused.contains(_mouse_last.x, _mouse_last.y)) {
+            if(focused.contains(e.x, e.y)) {
 
                     //now check if we haven't gone into any of it's children
-                var _child_over = focused.topmost_child_at_point(_mouse_last);
+                var _child_over = focused.topmost_child_at_point(e.x, e.y);
                 if(_child_over != null && _child_over != focused) {
 
                         //if we don't want mouseleave when the child takes focus, set to false
@@ -221,88 +216,84 @@ class Canvas extends Control {
         } //focused == null
 
         if(focused != null && focused != this) {
-            focused.onmousemove(e);
+            focused.mousemove(e);
         } //focused != null
 
         if(dragged != null && dragged != focused && dragged != this) {
-            dragged.onmousemove(e);
+            dragged.mousemove(e);
         } //dragged ! null and ! focused
 
-    } //onmousemove
+    } //mousemove
 
-    public override function onmouseup( e:MouseEvent ) {
-
-        _mouse_last.set(e.x,e.y);
+    public override function mouseup( e:MouseEvent ) {
 
         if(focus_invalid) {
             find_focus(e);
         }
 
-        if(focused != null && focused.mouse_enabled) {
-            focused.onmouseup(e);
+        if(focused != null && focused.mouse_input) {
+            focused.mouseup(e);
         } //focused
 
         if(dragged != null && dragged != focused && dragged != this) {
-            dragged.onmouseup(e);
+            dragged.mouseup(e);
         } //dragged ! null and ! focused
 
-    } //onmouseup
+    } //mouseup
 
-    public override function onmousewheel( e:MouseEvent ) {
+    public override function mousewheel( e:MouseEvent ) {
 
-        super.onmousewheel(e);
+        super.mousewheel(e);
 
-        if(focused != null && focused.mouse_enabled) {
-            focused.onmousewheel(e);
+        if(focused != null && focused.mouse_input) {
+            focused.mousewheel(e);
         } //focused
 
-    } //onmouseup
+    } //mousewheel
 
-    public override function onkeyup( e:KeyEvent ) {
+    public override function keyup( e:KeyEvent ) {
 
-        super.onkeyup(e);
+        super.keyup(e);
 
-        if(focused != null && focused.key_enabled) {
-            focused.onkeyup(e);
+        if(focused != null && focused.key_input) {
+            focused.keyup(e);
         } //focused
 
-    } //onkeyup
+    } //keyup
 
-    public override function onkeydown( e:KeyEvent ) {
+    public override function keydown( e:KeyEvent ) {
 
-        super.onkeydown(e);
+        super.keydown(e);
 
-        if(focused != null && focused.key_enabled) {
-            focused.onkeydown(e);
+        if(focused != null && focused.key_input) {
+            focused.keydown(e);
         } //focused
 
-    } //onkeydown
+    } //keydown
 
-    public override function ontextinput( e:TextEvent ) {
+    public override function textinput( e:TextEvent ) {
 
-        super.ontextinput(e);
+        super.textinput(e);
 
-        if(focused != null && focused.key_enabled) {
-            focused.ontextinput(e);
+        if(focused != null && focused.key_input) {
+            focused.textinput(e);
         } //focused
 
-    } //ontextinput
+    } //textinput
 
-    public override function onmousedown( e:MouseEvent ) {
+    public override function mousedown( e:MouseEvent ) {
 
-        super.onmousedown(e);
-
-        _mouse_last.set(e.x,e.y);
+        super.mousedown(e);
 
         if(focus_invalid) {
             find_focus(e);
         }
 
-        if(focused != null && focused.mouse_enabled) {
-            focused.onmousedown(e);
+        if(focused != null && focused.mouse_input) {
+            focused.mousedown(e);
         } //focused
 
-    } //onmousedown
+    } //mousedown
 
     public override function add( child:Control ) {
 

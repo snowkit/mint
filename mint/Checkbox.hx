@@ -47,11 +47,11 @@ class Checkbox extends Control {
 
         onchange = new Signal();
 
-        mouse_enabled = def(options.mouse_enabled, true);
+        mouse_input = def(options.mouse_input, true);
 
-        render = canvas.renderer.render(Checkbox, this);
+        renderinst = canvas.renderer.render(Checkbox, this);
 
-        mouseup.listen(onclick);
+        onmouseup.listen(onclick);
 
         if(options.state != null) {
             state = options.state;

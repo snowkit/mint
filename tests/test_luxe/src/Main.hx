@@ -29,6 +29,8 @@ class Main extends luxe.Game {
 
     override function ready() {
 
+        Luxe.snow.windowing.enable_vsync(false);
+
         var load = Luxe.resources.load_texture('assets/960.png');
             load.then(function(grid) {
                 new luxe.Sprite({ texture:grid, centered:false, depth:-1 });
@@ -154,6 +156,7 @@ class Main extends luxe.Game {
                 parent: window2,
                 name: 'textedit1',
                 text: 'type anything',
+                does_render: true,
                 x: 10, y:32, w: 256-10-10, h: 22
             });
 
@@ -196,7 +199,7 @@ class Main extends luxe.Game {
         new mint.Image({
             name: 'icon_${idx}',
             parent: _panel,
-            mouse_enabled:true,
+            mouse_input:true,
             x:8, y:8, w:80, h:80,
             path: 'assets/transparency.png'
         });
@@ -204,7 +207,7 @@ class Main extends luxe.Game {
         new mint.Label({
             name: 'label_${idx}',
             parent: _panel,
-            mouse_enabled:true,
+            mouse_input:true,
             x:96, y:8, w:148, h:18,
             point_size: 16,
             align: TextAlign.left,
@@ -215,7 +218,7 @@ class Main extends luxe.Game {
         new mint.Label({
             name: 'desc_${idx}',
             parent: _panel,
-            mouse_enabled:true,
+            mouse_input:true,
             bounds_wrap: true,
             x:96, y:30, w:132, h:18,
             point_size: 12,
@@ -230,7 +233,7 @@ class Main extends luxe.Game {
     override function onmousemove(e) {
 
         if(canvas!=null) {
-            canvas.onmousemove( Convert.mouse_event(e) );
+            canvas.mousemove( Convert.mouse_event(e) );
 
             var s = 'debug:\n';
 
@@ -253,23 +256,23 @@ class Main extends luxe.Game {
     }
 
     override function onmousewheel(e) {
-        if(canvas!=null) canvas.onmousewheel( Convert.mouse_event(e) );
+        if(canvas!=null) canvas.mousewheel( Convert.mouse_event(e) );
     }
 
     override function onmouseup(e) {
-        if(canvas!=null) canvas.onmouseup( Convert.mouse_event(e) );
+        if(canvas!=null) canvas.mouseup( Convert.mouse_event(e) );
     }
 
     override function onmousedown(e) {
-        if(canvas!=null) canvas.onmousedown( Convert.mouse_event(e) );
+        if(canvas!=null) canvas.mousedown( Convert.mouse_event(e) );
     }
 
     override function onkeydown(e:luxe.Input.KeyEvent) {
-        if(canvas!=null) canvas.onkeydown( Convert.key_event(e) );
+        if(canvas!=null) canvas.keydown( Convert.key_event(e) );
     }
 
     override function ontextinput(e:luxe.Input.TextEvent) {
-        if(canvas!=null) canvas.ontextinput( Convert.text_event(e) );
+        if(canvas!=null) canvas.textinput( Convert.text_event(e) );
     }
 
     override function onkeyup(e:luxe.Input.KeyEvent) {
@@ -293,7 +296,7 @@ class Main extends luxe.Game {
             Luxe.shutdown();
         }
 
-        if(canvas!=null) canvas.onkeyup( Convert.key_event(e) );
+        if(canvas!=null) canvas.keyup( Convert.key_event(e) );
 
     } //onkeyup
 
@@ -316,6 +319,12 @@ class Main extends luxe.Game {
         }
 
     } //drawc
+
+    override function onrender() {
+
+        canvas.render();
+
+    } //onrender
 
     override function update(dt:Float) {
         if(canvas!=null) {

@@ -47,18 +47,33 @@ class TextEdit extends mint.render.Base {
 
         connect();
 
-        textedit.mouseenter.listen(function(e,c) {
+        textedit.onmouseenter.listen(function(e,c) {
             visual.color.rgb(0x444449);
             start_cursor();
         });
 
-        textedit.mouseleave.listen(function(e,c) {
+        textedit.onmouseleave.listen(function(e,c) {
             visual.color.rgb(0x646469);
             stop_cursor();
         });
 
         textedit.onchangeindex.listen(function(index:Int) {
             update_cursor();
+        });
+
+        textedit.onrender.listen(function() {
+
+            if(textedit.isfocused) {
+                Luxe.draw.rectangle({
+                    x:textedit.x,
+                    y:textedit.y,
+                    w:textedit.w,
+                    h:textedit.h,
+                    immediate: true,
+                    color: new Color(0,0,0,1).rgb(0x9dca63),
+                    depth: textedit.depth+0.0001
+                });
+            }
         });
 
     } //new
@@ -77,12 +92,13 @@ class TextEdit extends mint.render.Base {
     }
 
     function blink_cursor() {
+        if(timer == null) return;
         cursor.visible = !cursor.visible;
     }
 
     function update_cursor() {
 
-        var text = (cast textedit.label.render:mint.render.luxe.Label).text;
+        var text = (cast textedit.label.renderinst:mint.render.luxe.Label).text;
         var _t = textedit.before(textedit.index);
 
         var _tw = text.font.width_of(textedit.edit, text.point_size, text.letter_spacing);

@@ -33,7 +33,7 @@ class Button extends Control {
 
         super(options);
 
-        mouse_enabled = def(options.mouse_enabled, true);
+        mouse_input = def(options.mouse_input, true);
 
         label = new Label({
             parent : this,
@@ -41,14 +41,14 @@ class Button extends Control {
             text: options.text,
             point_size: options.point_size,
             name : name + '.label',
-            mouse_enabled: false
+            mouse_input: false
         });
 
         if(options.onclick != null) {
-            mouseup.listen(options.onclick);
+            onmouseup.listen(options.onclick);
         }
 
-        render = canvas.renderer.render( Button, this );
+        renderinst = canvas.renderer.render( Button, this );
 
     } //new
 

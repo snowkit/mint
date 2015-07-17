@@ -15,6 +15,7 @@ typedef WindowOptions = {
     ? onclose: Void->Bool,
 }
 
+@:allow(mint.ControlRenderer)
 class Window extends Control {
 
     public var title : Label;
@@ -27,14 +28,11 @@ class Window extends Control {
     public var onclose : Signal<Void->Bool>;
 
     var dragging : Bool = false;
-    var drag_start : Point;
-    var down_start : Point;
-    var _mouse:Point;
+    var drag_start_x : Float = 0;
+    var drag_start_y : Float = 0;
 
     var resize_handle : Control;
-
-    @:allow(mint.ControlRenderer)
-        var options : WindowOptions;
+    var options : WindowOptions;
 
     public function new( _options:WindowOptions ) {
 
@@ -45,13 +43,9 @@ class Window extends Control {
 
         super(_options);
 
-        if(options.mouse_enabled == null){
-            mouse_enabled = true;
+        if(options.mouse_input == null){
+            mouse_input = true;
         }
-
-        _mouse = new Point();
-        drag_start = new Point();
-        down_start = new Point();
 
         if(_options.moveable != null) { moveable = _options.moveable; }
         if(_options.closeable != null) { closeable = _options.closeable; }
@@ -63,9 +57,9 @@ class Window extends Control {
             name : name + '.resize_handle',
         });
 
-        resize_handle.mouse_enabled = true;//options.resizable
-        resize_handle.mousedown.listen(on_resize_down);
-        resize_handle.mouseup.listen(on_resize_up);
+        resize_handle.mouse_input = true;//options.resizable
+        resize_handle.onmousedown.listen(on_resize_down);
+        resize_handle.onmouseup.listen(on_resize_up);
 
             //create the title label
         title = new Label({
@@ -89,13 +83,13 @@ class Window extends Control {
             name : name + '.closelabel'
         });
 
-        close_button.mouse_enabled = true;
-        close_button.mousedown.listen(function(e:MouseEvent, _) {
+        close_button.mouse_input = true;
+        close_button.onmousedown.listen(function(e:MouseEvent, _) {
             on_close();
         });
 
             //update
-        render = canvas.renderer.render( Window, this );
+        renderinst = canvas.renderer.render( Window, this );
 
     } //new
 
@@ -136,7 +130,7 @@ class Window extends Control {
 
     } //open
 
-    public override function onmousemove(e:MouseEvent)  {
+    public override function mousemove(e:MouseEvent)  {
 
         if(resizing) {
 
@@ -152,16 +146,17 @@ class Window extends Control {
 
         } else if(dragging) {
 
-            var diff_x = e.x - drag_start.x;
-            var diff_y = e.y - drag_start.y;
+            var diff_x = e.x - drag_start_x;
+            var diff_y = e.y - drag_start_y;
 
-            drag_start.set(e.x,e.y);
+            drag_start_x = e.x;
+            drag_start_y = e.y;
 
             set_pos(x + diff_x, y + diff_y);
 
         } else { //dragging
 
-            super.onmousemove(e);
+            super.mousemove(e);
 
         }
 
@@ -173,14 +168,12 @@ class Window extends Control {
         }
     }
 
-    public override function onmousedown(e:MouseEvent)  {
+    public override function mousedown(e:MouseEvent)  {
 
-        _mouse.set(e.x,e.y);
-
-        var in_title = title.contains(_mouse.x, _mouse.y);
+        var in_title = title.contains(e.x, e.y);
 
         if(!in_title) {
-            super.onmousedown(e);
+            super.mousedown(e);
         }
 
         if(focusable) bring_to_front();
@@ -188,26 +181,24 @@ class Window extends Control {
             if(!dragging && moveable) {
                 if( in_title ) {
                     dragging = true;
-                    drag_start.set(_mouse.x, _mouse.y);
-                    down_start.set(x, y);
+                    drag_start_x = e.x;
+                    drag_start_y = e.y;
                     canvas.dragged = this;
                 } //if inside title bounds
             } //!dragging
 
     } //onmousedown
 
-    public override function onmouseup(e:MouseEvent) {
+    public override function mouseup(e:MouseEvent) {
 
-        super.onmouseup(e);
-
-        _mouse.set(e.x,e.y);
+        super.mouseup(e);
 
         if(dragging) {
             dragging = false;
             canvas.dragged = null;
         } //dragging
 
-    } //onmouseup
+    } //mouseup
 
     override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
 
@@ -216,7 +207,6 @@ class Window extends Control {
         if(close_button != null) close_button.x_local = w - 24;
         if(title != null) title.w = w - 4;
         if(resize_handle != null) resize_handle.set_pos(x + w - 24, y + h - 24);
-
 
     } //bounds_changed
 

@@ -28,7 +28,7 @@ class Dropdown extends Control {
             //create the base control
         super(_options);
             //dropdowns can be clicked
-        mouse_enabled = true;
+        mouse_input = true;
             //set the text size from the default or the options
         if(_options.point_size != null) _point_size = _options.point_size;
         if(_options.height != null) _height = _options.height;
@@ -52,7 +52,7 @@ class Dropdown extends Control {
             align : TextAlign.left
         });
 
-        render = renderer.dropdown.init( this, _options );
+        renderinst = renderer.dropdown.init( this, _options );
 
             //the list is hidden at start
         list.set_visible(false);
@@ -135,9 +135,9 @@ class Dropdown extends Control {
 
     } //open_list
 
-    public override function onmousedown(e) {
+    public override function mousedown(e) {
 
-        super.onmousedown(e);
+        super.mousedown(e);
 
         if(e.button == MouseButton.left) {
 
@@ -156,8 +156,8 @@ class Dropdown extends Control {
 
     } //onmousedown
 
-    public override function onmouseup(e) {
-        super.onmouseup(e);
+    public override function mouseup(e) {
+        super.mouseup(e);
     }
 
 #end

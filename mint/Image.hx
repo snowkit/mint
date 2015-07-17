@@ -40,9 +40,9 @@ class Image extends Control {
 
         super(_options);
 
-        mouse_enabled = def(options.mouse_enabled, false);
+        mouse_input = def(options.mouse_input, false);
 
-        render = canvas.renderer.render(Image, this);
+        renderinst = canvas.renderer.render(Image, this);
 
     } //new
 

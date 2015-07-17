@@ -46,8 +46,8 @@ class TextEdit extends Control {
 
         onchangeindex = new Signal();
 
-        mouse_enabled = def(options.mouse_enabled, true);
-        key_enabled = def(options.key_enabled, true);
+        mouse_input = def(options.mouse_input, true);
+        key_input = def(options.key_input, true);
         filter = def(options.filter, null);
 
         def(options.text, 'mint.TextEdit');
@@ -61,25 +61,25 @@ class TextEdit extends Control {
             align: TextAlign.left,
             align_vertical: TextAlign.center,
             name : name + '.label',
-            mouse_enabled: false
+            mouse_input: false
         });
 
         edit = label.text;
         index = edit.uLength();
 
-        render = canvas.renderer.render(TextEdit, this);
+        renderinst = canvas.renderer.render(TextEdit, this);
 
         refresh(edit);
 
     } //new
 
-    override function onmousedown( event:MouseEvent ) {
+    override function mousedown( event:MouseEvent ) {
 
-        super.onmousedown(event);
+        super.mousedown(event);
 
     } //onmousedown
 
-    override function ontextinput( event:TextEvent ) {
+    override function textinput( event:TextEvent ) {
 
         if(filter != null) {
             if(!filter.match(event.text)) {
@@ -94,11 +94,11 @@ class TextEdit extends Control {
         refresh( b + event.text + a );
 
         // event.bubble = false;
-        // super.ontextinput(event);
+        // super.textinput(event);
 
     } //ontextinput
 
-    override function onkeydown( event:KeyEvent ) {
+    override function keydown( event:KeyEvent ) {
 
         switch(event.key) {
             case KeyCode.backspace:
@@ -118,7 +118,7 @@ class TextEdit extends Control {
         }
 
         // event.bubble = false;
-        // super.onkeydown(event);
+        // super.keydown(event);
 
     } //onkeydown
 

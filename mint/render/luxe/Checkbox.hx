@@ -45,10 +45,10 @@ class Checkbox extends mint.render.Base {
         visual.clip_rect = Convert.rect(control.clip_rect);
         node.clip_rect = Convert.rect(control.clip_rect);
 
-        box.mouseenter.listen(function(e,c) { node.color.rgb(0xadca63); visual.color.rgb(0x445158); });
-        box.mouseleave.listen(function(e,c) { node.color.rgb(0x9dca63); visual.color.rgb(0x373737); });
-        box.mousedown.listen(function(e,c) { node.color.rgb(0x444444); visual.color.rgb(0x444444); });
-        box.mouseup.listen(function(e,c) { node.color.rgb(0x9dca63); visual.color.rgb(0x445158); });
+        box.onmouseenter.listen(function(e,c) { node.color.rgb(0xadca63); visual.color.rgb(0x445158); });
+        box.onmouseleave.listen(function(e,c) { node.color.rgb(0x9dca63); visual.color.rgb(0x373737); });
+        box.onmousedown.listen(function(e,c) { node.color.rgb(0x444444); visual.color.rgb(0x444444); });
+        box.onmouseup.listen(function(e,c) { node.color.rgb(0x9dca63); visual.color.rgb(0x445158); });
 
         connect();
         box.onchange.listen(oncheck);

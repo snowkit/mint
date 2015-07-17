@@ -27,9 +27,11 @@ typedef ControlOptions = {
         /** Whether or not the control is visible at creation */
     @:optional var visible: Bool;
         /** Whether or not the control responds to mouse input */
-    @:optional var mouse_enabled: Bool;
+    @:optional var mouse_input: Bool;
         /** Whether or not the control responds to key input */
-    @:optional var key_enabled: Bool;
+    @:optional var key_input: Bool;
+        /** Whether or not the control emits render signals from the canvas render call */
+    @:optional var does_render: Bool;
 
 } //ControlOptions
 
@@ -65,14 +67,17 @@ class Control {
     public var clip_rect : Rect;
         //the list of children added to this control
     public var children : Array<Control>;
+
         //if the control is under the mouse
     public var isfocused : Bool = false;
         //if the control is under the mouse
     public var ishovered : Bool = false;
         //if the control accepts mouse events
-    public var mouse_enabled : Bool = false;
+    public var mouse_input : Bool = false;
         //if the control accepts key events
-    public var key_enabled : Bool = false;
+    public var key_input : Bool = false;
+        //if the control emits a render signal
+    public var does_render : Bool = false;
 
         //if the control is visible
     @:isVar public var visible (default, set) : Bool = true;
@@ -80,21 +85,22 @@ class Control {
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
 
-    public var onbounds    : Signal<Void->Void>;
-    public var ondestroy   : Signal<Void->Void>;
-    public var onvisible   : Signal<Bool->Void>;
-    public var ondepth     : Signal<Float->Void>;
-    public var onclip      : Signal<Rect->Void>;
-    public var onchild     : Signal<Control->Void>;
-    public var mousedown   : Signal<MouseSignal>;
-    public var mouseup     : Signal<MouseSignal>;
-    public var mousemove   : Signal<MouseSignal>;
-    public var mousewheel  : Signal<MouseSignal>;
-    public var mouseenter  : Signal<MouseSignal>;
-    public var mouseleave  : Signal<MouseSignal>;
-    public var keydown     : Signal<KeySignal>;
-    public var keyup       : Signal<KeySignal>;
-    public var textinput   : Signal<TextSignal>;
+    public var onrender     : Signal<Void->Void>;
+    public var onbounds     : Signal<Void->Void>;
+    public var ondestroy    : Signal<Void->Void>;
+    public var onvisible    : Signal<Bool->Void>;
+    public var ondepth      : Signal<Float->Void>;
+    public var onclip       : Signal<Rect->Void>;
+    public var onchild      : Signal<Control->Void>;
+    public var onmousedown  : Signal<MouseSignal>;
+    public var onmouseup    : Signal<MouseSignal>;
+    public var onmousemove  : Signal<MouseSignal>;
+    public var onmousewheel : Signal<MouseSignal>;
+    public var onmouseenter : Signal<MouseSignal>;
+    public var onmouseleave : Signal<MouseSignal>;
+    public var onkeydown    : Signal<KeySignal>;
+    public var onkeyup      : Signal<KeySignal>;
+    public var ontextinput  : Signal<TextSignal>;
 
 
         //the parent control, null if no parent
@@ -102,7 +108,7 @@ class Control {
         //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
         //The concrete renderer for this control instance
-    public var render: mint.Renderer.ControlRenderer;
+    public var renderinst : mint.Renderer.ControlRenderer;
 
     var ctrloptions : ControlOptions;
 
@@ -110,21 +116,22 @@ class Control {
 
         ctrloptions = _options;
 
-        onbounds    = new Signal();
-        ondestroy   = new Signal();
-        onvisible   = new Signal();
-        ondepth     = new Signal();
-        onclip      = new Signal();
-        onchild     = new Signal();
-        mousedown   = new Signal();
-        mouseup     = new Signal();
-        mousemove   = new Signal();
-        mousewheel  = new Signal();
-        mouseleave  = new Signal();
-        mouseenter  = new Signal();
-        keydown     = new Signal();
-        keyup       = new Signal();
-        textinput   = new Signal();
+        onrender     = new Signal();
+        onbounds     = new Signal();
+        ondestroy    = new Signal();
+        onvisible    = new Signal();
+        ondepth      = new Signal();
+        onclip       = new Signal();
+        onchild      = new Signal();
+        onmousedown  = new Signal();
+        onmouseup    = new Signal();
+        onmousemove  = new Signal();
+        onmousewheel = new Signal();
+        onmouseleave = new Signal();
+        onmouseenter = new Signal();
+        onkeydown    = new Signal();
+        onkeyup      = new Signal();
+        ontextinput  = new Signal();
 
         children = [];
 
@@ -139,8 +146,9 @@ class Control {
         y_local = y;
 
         name = def(ctrloptions.name, 'control');
-        if(ctrloptions.mouse_enabled != null) mouse_enabled = ctrloptions.mouse_enabled;
-        if(ctrloptions.key_enabled != null) key_enabled = ctrloptions.key_enabled;
+
+        if(ctrloptions.mouse_input != null) mouse_input = ctrloptions.mouse_input;
+        if(ctrloptions.key_input != null) key_input = ctrloptions.key_input;
 
         children_bounds = {
             x:0,
@@ -169,11 +177,20 @@ class Control {
 
         closest_to_canvas = find_top_parent();
 
-        if(ctrloptions.visible != null)         { visible = ctrloptions.visible; }
+
+        if(ctrloptions.does_render != null) {
+            does_render = ctrloptions.does_render;
+        } else {
+            if(canvas != null) {
+                does_render = canvas.does_render;
+            }
+        }
+
+        if(ctrloptions.visible != null) visible = ctrloptions.visible;
 
     } //new
 
-    public function topmost_child_at_point( _p:Point ) : Control {
+    public function topmost_child_at_point( _x:Float, _y:Float ) : Control {
 
             //if we have no children, we are the topmost child
         if(children.length == 0) return this;
@@ -185,7 +202,7 @@ class Control {
         var highest_depth : Float = 0;
 
         for(_child in children) {
-            if(_child.contains(_p.x, _p.y) && _child.mouse_enabled && _child.visible) {
+            if(_child.contains(_x, _y) && _child.mouse_input && _child.visible) {
 
                 if(_child.depth >= highest_depth) {
                     highest_child = _child;
@@ -196,7 +213,7 @@ class Control {
         } //child in children
 
         if(highest_child != this && highest_child.children.length != 0) {
-            return highest_child.topmost_child_at_point(_p);
+            return highest_child.topmost_child_at_point(_x, _y);
         } else {
             return highest_child;
         }
@@ -365,113 +382,123 @@ class Control {
 
     } //children_bounds
 
-    public function onkeyup( e:KeyEvent ) {
+    public function render() {
 
-        keyup.emit(e, this);
+        if(does_render) onrender.emit();
 
-        if( parent != null &&
-            parent != canvas &&
-            canvas != this &&
-            e.bubble )
-        {
-            parent.onkeyup(e);
-        }
+        for(child in children) child.render();
 
-    } //onkeyup
+    } //render
 
-    public function onkeydown( e:KeyEvent ) {
+    public function keyup( e:KeyEvent ) {
 
-        keydown.emit(e, this);
+        onkeyup.emit(e, this);
 
         if( parent != null &&
             parent != canvas &&
             canvas != this &&
             e.bubble )
         {
-            parent.onkeydown(e);
+            parent.keyup(e);
         }
 
-    } //onkeydown
+    } //keyup
 
-    public function ontextinput( e:TextEvent ) {
+    public function keydown( e:KeyEvent ) {
 
-        textinput.emit(e, this);
+        onkeydown.emit(e, this);
 
         if( parent != null &&
             parent != canvas &&
             canvas != this &&
             e.bubble )
         {
-            parent.ontextinput(e);
+            parent.keydown(e);
         }
 
-    } //ontextinput
+    } //keydown
 
-    public function onmousemove( e:MouseEvent ) {
+    public function textinput( e:TextEvent ) {
 
-        mousemove.emit(e, this);
+        ontextinput.emit(e, this);
 
         if( parent != null &&
             parent != canvas &&
             canvas != this &&
             e.bubble )
         {
-            parent.onmousemove(e);
+            parent.textinput(e);
         }
 
-    } //onmousemove
+    } //textinput
 
-    public function onmouseup( e:MouseEvent ) {
+    public function mousemove( e:MouseEvent ) {
 
-        mouseup.emit(e, this);
+        onmousemove.emit(e, this);
 
         if( parent != null &&
             parent != canvas &&
             canvas != this &&
             e.bubble )
         {
-            parent.onmouseup(e);
+            parent.mousemove(e);
         }
 
-    } //onmouseup
+    } //mousemove
 
-    public function onmousewheel( e:MouseEvent ) {
+    public function mouseup( e:MouseEvent ) {
 
-        mousewheel.emit(e, this);
+        onmouseup.emit(e, this);
 
         if( parent != null &&
             parent != canvas &&
             canvas != this &&
             e.bubble )
         {
-            parent.onmousewheel(e);
+            parent.mouseup(e);
         }
 
-    } //onmousewheel
+    } //mouseup
 
-    public function onmousedown( e:MouseEvent ) {
+    public function mousewheel( e:MouseEvent ) {
 
-        mousedown.emit(e, this);
+        onmousewheel.emit(e, this);
 
         if( parent != null &&
             parent != canvas &&
             canvas != this &&
             e.bubble )
         {
-            parent.onmousedown(e);
+            parent.mousewheel(e);
         }
 
-    } //onmousedown
+    } //mousewheel
 
-    public function onmouseenter( e:MouseEvent ) {
+    public function mousedown( e:MouseEvent ) {
 
-        mouseenter.emit(e, tohis);
+        onmousedown.emit(e, this);
 
-    }
+        if( parent != null &&
+            parent != canvas &&
+            canvas != this &&
+            e.bubble )
+        {
+            parent.mousedown(e);
+        }
 
-    public function onmouseleave( e:MouseEvent ) {
-        mouseleave.emit(e, this);
-    }
+    } //mousedown
+
+    public function mouseenter( e:MouseEvent ) {
+
+        onmouseenter.emit(e, this);
+
+    } //mouseenter
+
+    public function mouseleave( e:MouseEvent ) {
+
+        onmouseleave.emit(e, this);
+
+    } //mouseleave
 
     public function destroy() {
 
@@ -494,8 +521,6 @@ class Control {
 
         if(updating) return;
 
-        onbounds.emit();
-
         if(_dx != 0.0 || _dy != 0.0) {
             for(child in children) {
                 child.set_pos(child.x + _dx, child.y + _dy);
@@ -506,6 +531,8 @@ class Control {
                 }
             }
         }
+
+        onbounds.emit();
 
     } //bounds_changed
 

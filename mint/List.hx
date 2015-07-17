@@ -35,8 +35,8 @@ class List extends Control {
         onitemleave = new Signal();
         onitementer = new Signal();
 
-        if(options.mouse_enabled == null){
-            mouse_enabled = true;
+        if(options.mouse_input == null){
+            mouse_input = true;
         }
 
         if(options.multiselect != null) {
@@ -49,9 +49,9 @@ class List extends Control {
             name : name + '.view'
         });
 
-        view.mousedown.listen(click_deselect);
+        view.onmousedown.listen(click_deselect);
 
-        render = canvas.renderer.render(List, this);
+        renderinst = canvas.renderer.render(List, this);
 
     } //new
 
@@ -68,12 +68,12 @@ class List extends Control {
 
         view.add(item);
 
-        item.mouse_enabled = true;
+        item.mouse_input = true;
         items.push(item);
 
-        item.mouseup.listen(item_mousedown);
-        item.mouseenter.listen(item_mouseenter);
-        item.mouseleave.listen(item_mouseleave);
+        item.onmouseup.listen(item_mousedown);
+        item.onmouseenter.listen(item_mouseenter);
+        item.onmouseleave.listen(item_mouseleave);
 
     } //add_item
 

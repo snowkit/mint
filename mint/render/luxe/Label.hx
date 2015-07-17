@@ -41,12 +41,8 @@ class Label extends mint.render.Base {
 
         connect();
         label.onchange.listen(ontext);
-        control.mouseenter.listen(function(e,c){
-            text.color.rgb(hover_color);
-        });
-        control.mouseleave.listen(function(e,c){
-            text.color.rgb(normal_color);
-        });
+        control.onmouseenter.listen(function(e,c){ text.color.rgb(hover_color); });
+        control.onmouseleave.listen(function(e,c){ text.color.rgb(normal_color); });
     }
 
     override function onbounds() {

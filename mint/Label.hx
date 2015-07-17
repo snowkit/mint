@@ -51,18 +51,18 @@ class Label extends Control {
 
         onchange = new Signal();
 
-        mouse_enabled = def(options.mouse_enabled, false);
+        mouse_input = def(options.mouse_input, false);
 
         def(options.align, TextAlign.center);
         def(options.align_vertical, TextAlign.center);
 
         if(options.onclick != null) {
-            mouse_enabled = true;
-            mouseup.listen(options.onclick);
+            mouse_input = true;
+            onmouseup.listen(options.onclick);
         }
 
         text = options.text;
-        render = canvas.renderer.render(Label, this);
+        renderinst = canvas.renderer.render(Label, this);
 
     } //new
 
