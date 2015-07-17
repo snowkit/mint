@@ -101,7 +101,22 @@ class Main extends luxe.Game {
                 parent: canvas,
                 name: 'window2',
                 title: 'window',
-                bounds: new Rect(460,10,256,100)
+                bounds: new Rect(460,10,256,95)
+            });
+
+            new mint.TextEdit({
+                parent: window2,
+                name: 'textedit1',
+                text: 'type anything',
+                bounds: new Rect(10,32,256-10-10,22)
+            });
+
+            new mint.TextEdit({
+                parent: window2,
+                name: 'textnumbersonly',
+                text: 'numbers only',
+                bounds: new Rect(10,32+22+10,256-10-10,22),
+                filter: new EReg('[0-9]+','gi'),
             });
 
             list = new mint.List({
@@ -184,23 +199,36 @@ class Main extends luxe.Game {
         if(canvas!=null) canvas.onmousedown( Convert.mouse_event(e) );
     }
 
+    override function onkeydown(e:luxe.Input.KeyEvent) {
+        if(canvas!=null) canvas.onkeydown( Convert.key_event(e) );
+    }
+
+    override function ontextinput(e:luxe.Input.TextEvent) {
+        if(canvas!=null) canvas.ontextinput( Convert.text_event(e) );
+    }
+
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
-        if(e.keycode == Key.key_3) {
+        if(e.keycode == Key.key_1) {
             if(window != null) window.open();
         }
-
         if(e.keycode == Key.key_2) {
+            if(window2 != null) window2.open();
+        }
+
+        if(e.keycode == Key.key_d && e.mod.ctrl) {
             debug = !debug;
         }
 
-        if(e.keycode == Key.key_1) {
+        if(e.keycode == Key.key_v && e.mod.ctrl) {
             if(canvas!=null) canvas.visible = !canvas.visible;
         }
 
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }
+
+        if(canvas!=null) canvas.onkeyup( Convert.key_event(e) );
 
     } //onkeyup
 
