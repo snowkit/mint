@@ -28,7 +28,7 @@ class Canvas extends mint.render.Base {
             y:control.real_bounds.y,
             w:control.real_bounds.w,
             h:control.real_bounds.h,
-            color: new Color(0,0,0,0).rgb(0x0c0c0c),
+            color: new Color(0,0,0,1).rgb(0x0c0c0c),
             depth: control.depth,
             visible: control.visible,
             clip_rect: Convert.rect(control.clip_rect),
