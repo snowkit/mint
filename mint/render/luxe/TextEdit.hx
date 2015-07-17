@@ -146,11 +146,17 @@ class TextEdit extends mint.render.Base {
     override function onvisible( _visible:Bool ) {
         _debug('visible / $_visible');
         visual.visible = _visible;
+        if(!_visible) {
+            stop_cursor();
+        } else if(_visible && textedit.isfocused) {
+            start_cursor();
+        }
     } //onvisible
 
     override function ondepth( _depth:Float ) {
         _debug('depth / $_depth');
         visual.depth = _depth;
+        cursor.depth = _depth+0.0001;
     } //ondepth
 
 } //TextEdit
