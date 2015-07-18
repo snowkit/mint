@@ -441,6 +441,9 @@ class Main extends luxe.Game {
         if(e.keycode == Key.key_3) {
             if(customwindow != null) customwindow.open();
         }
+        if(e.keycode == Key.key_4) {
+            if(check != null) check.visible = !check.visible;
+        }
 
         if(e.keycode == Key.key_d && e.mod.ctrl) {
             debug = !debug;

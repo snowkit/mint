@@ -40,6 +40,7 @@ class Dropdown extends Control {
         def(options.align, TextAlign.left);
         def(options.align_vertical, TextAlign.center);
         def(options.text_size, 14);
+
             //create the list
         list = new List({
             parent : this,

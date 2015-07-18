@@ -94,7 +94,12 @@ class Checkbox extends mint.render.Base {
 
 
     override function onvisible( _visible:Bool ) {
-        visual.visible = node.visible = _visible;
+        visual.visible = _visible;
+        if(_visible) {
+            if(checkbox.state) node.visible = _visible;
+        } else {
+            node.visible = _visible;
+        }
     } //onvisible
 
     override function ondepth( _depth:Float ) {
