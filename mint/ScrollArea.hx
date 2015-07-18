@@ -30,6 +30,8 @@ class ScrollArea extends Control {
 
     var handle_drag_v = false;
     var handle_drag_h = false;
+    var drag_offset_x = 0.0;
+    var drag_offset_y = 0.0;
 
     var last_modal : Control;
 
@@ -68,7 +70,6 @@ class ScrollArea extends Control {
         };
 
         renderinst = render_service.render( ScrollArea, this );
-        drag_offset = new Point();
         check_handle_vis();
 
     } //new
@@ -83,7 +84,6 @@ class ScrollArea extends Control {
 
     } //add
 
-    var drag_offset:Point;
     public override function mousedown(e : MouseEvent) {
 
         var forward = true;
@@ -93,7 +93,7 @@ class ScrollArea extends Control {
             var m = new Point(e.x, e.y);
 
             if(scroll.h.enabled && scroll.h.bounds.point_inside(m)) {
-                drag_offset.x = e.x - scroll.h.bounds.x;
+                drag_offset_x = e.x - scroll.h.bounds.x;
                 handle_drag_h = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
@@ -101,7 +101,7 @@ class ScrollArea extends Control {
             }
 
             if(scroll.v.enabled && scroll.v.bounds.point_inside(m)) {
-                drag_offset.y = e.y - scroll.v.bounds.y;
+                drag_offset_y = e.y - scroll.v.bounds.y;
                 handle_drag_v = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
@@ -120,7 +120,8 @@ class ScrollArea extends Control {
 
         super.mouseup(e);
 
-        drag_offset.set(0,0);
+        drag_offset_x = 0;
+        drag_offset_y = 0;
 
         if(handle_drag_v || handle_drag_h) {
             handle_drag_v = false;
@@ -135,11 +136,11 @@ class ScrollArea extends Control {
         super.mousemove(e);
 
         if(handle_drag_v) {
-            set_scroll_y( e.y-y-drag_offset.y );
+            set_scroll_y( e.y-y-drag_offset_y );
         }
 
         if(handle_drag_h) {
-            set_scroll_x( e.x-x-drag_offset.x );
+            set_scroll_x( e.x-x-drag_offset_x );
         }
 
     } //mousemove
