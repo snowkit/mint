@@ -1,0 +1,27 @@
+{
+
+  project : {
+    name : 'mint editor',
+    version : '1.0.0-alpha',
+    author : 'underscorediscovery',
+
+    app : {
+      name : 'minted',
+      package : 'org.snowkit.minted'
+    },
+
+    build : {
+      dependencies : {
+        luxe : '*',
+        mint : '*'
+      }
+    },
+
+    files : {
+      assets : 'assets/',
+      config : 'config.json',
+    }
+
+  }
+
+}
