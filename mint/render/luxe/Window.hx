@@ -25,7 +25,7 @@ class Window extends mint.render.Base {
         window = _control;
         render = _render;
 
-        super(_render, _control);
+        super(render, _control);
 
         visual = Luxe.draw.box({
             batcher: render.options.batcher,

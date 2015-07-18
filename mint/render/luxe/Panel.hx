@@ -25,7 +25,7 @@ class Panel extends mint.render.Base {
         super(render, _control);
 
         visual = Luxe.draw.box({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,

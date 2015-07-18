@@ -40,7 +40,7 @@ class Dropdown extends mint.render.Base {
         });
 
         border = Luxe.draw.rectangle({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x: control.x,
             y: control.y,
             w: control.w,

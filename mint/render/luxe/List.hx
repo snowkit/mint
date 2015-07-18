@@ -20,10 +20,14 @@ class List extends mint.render.Base {
     // public var select_rects: Array<RectangleGeometry>;
     // public var hover_rect: RectangleGeometry;
 
+    var render: LuxeMintRender;
+
     public function new( _render:LuxeMintRender, _control:mint.List ) {
 
-        super(_render, _control);
         list = _control;
+        render = _render;
+
+        super(render, _control);
 
         list.onitementer.listen(onitementer);
         list.onitemleave.listen(onitemleave);
@@ -43,6 +47,7 @@ class List extends mint.render.Base {
         // select_rects.push(r);
 
         connect();
+
     }
 
     function onitementer(idx, ctrl:mint.Control, e) {
