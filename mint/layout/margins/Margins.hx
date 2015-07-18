@@ -2,6 +2,7 @@ package mint.layout.margins;
 
 
 import mint.Control;
+import mint.Macros.*;
 
 class Margins {
 
@@ -15,27 +16,82 @@ class Margins {
         anchors = new Map();
         sizers = new Map();
 
-    }
+    } //new
 
-    public function size( child:Control, target:SizeTarget, value:Float ) {
+    public function size( self:Control, ?other:Control, target:SizeTarget, value:Float ) {
 
-        var list = sizers.get(child);
+        assertnull(self);
+        def(other, self.parent);
+
+        var list = sizers.get(self);
         if(list == null) list = [];
 
         list.push({
             target: target,
-            value: value
+            value: value,
+            other: other
         });
 
-        sizers.set(child, list);
+        sizers.set(self, list);
 
-        child.parent.onbounds.listen(function(){
-            update_sizers(child);
+        other.onbounds.listen(function(){
+            update_sizers(self);
         });
 
-        update_sizers(child);
+        update_sizers(self);
 
     } //size
+
+    public function anchor( self:Control, ?other:Control, self_anchor:AnchorType, other_anchor:AnchorType ) {
+
+        assertnull(self);
+        def(other, self.parent);
+
+        var list = anchors.get(self);
+        if(list == null) list = [];
+
+        list.push({
+            self_anchor: self_anchor,
+            other_anchor: other_anchor,
+            other: other
+        });
+
+        anchors.set(self, list);
+
+        other.onbounds.listen(function(){
+            update_anchors(self);
+        });
+
+        update_anchors(self);
+
+    } //anchor
+
+    public function margin( self:Control, ?other:Control, target:MarginTarget, type:MarginType, value:Float ) {
+
+        assertnull(self);
+        def(other, self.parent);
+
+        var list = margins.get(self);
+        if(list == null) list = [];
+
+        list.push({
+            target: target,
+            type: type,
+            value: value,
+            other: other
+        });
+
+        margins.set(self, list);
+
+        other.onbounds.listen(function(){
+            update_margins(self);
+        });
+
+        update_margins(self);
+
+    } //margin
+
+//Internal
 
     function update_sizers( child:Control ) {
 
@@ -52,98 +108,54 @@ class Margins {
 
     } //update_sizers
 
-    public function anchor( child:Control, child_anchor:AnchorType, parent_anchor:AnchorType ) {
+    function update_anchors(self:Control) {
 
-        var list = anchors.get(child);
-        if(list == null) list = [];
-
-        list.push({
-            child_anchor: child_anchor,
-            parent_anchor: parent_anchor
-        });
-
-        anchors.set(child, list);
-
-        child.parent.onbounds.listen(function(){
-            update_anchors(child);
-        });
-
-        update_anchors(child);
-
-    } //anchor
-
-    function update_anchors(child:Control) {
-
-        var list = anchors.get(child);
+        var list = anchors.get(self);
         if(list != null) {
             for(anchor in list) {
-                var ref = 0.0;
-                switch(anchor.parent_anchor) {
-                    case center_x:  ref = child.parent.x + (child.parent.w/2);
-                    case center_y:  ref = child.parent.y + (child.parent.h/2);
-                    case right:     ref = child.parent.right;
-                    case bottom:    ref = child.parent.bottom;
-                    case left:      ref = child.parent.x;
-                    case top:       ref = child.parent.y;
-                    case _:
+                var ref = switch(anchor.other_anchor) {
+                    case center_x:  anchor.other.x + (anchor.other.w/2);
+                    case center_y:  anchor.other.y + (anchor.other.h/2);
+                    case right:     anchor.other.right;
+                    case bottom:    anchor.other.bottom;
+                    case left:      anchor.other.x;
+                    case top:       anchor.other.y;
                 }
 
-                switch(anchor.child_anchor) {
-                    case center_x:  child.x = ref - (child.w/2);
-                    case center_y:  child.y = ref - (child.h/2);
-                    case right:     child.x = ref - child.w;
-                    case bottom:    child.y = ref - child.h;
-                    case left:      child.x = ref;
-                    case top:       child.y = ref;
-                    case _:
+                switch(anchor.self_anchor) {
+                    case center_x:  self.x = ref - (self.w/2);
+                    case center_y:  self.y = ref - (self.h/2);
+                    case right:     self.x = ref - self.w;
+                    case bottom:    self.y = ref - self.h;
+                    case left:      self.x = ref;
+                    case top:       self.y = ref;
                 }
             }
         } //list
 
     } //update_anchors
 
-    public function margin( child:Control, target:MarginTarget, type:MarginType, value:Float ) {
+    function update_margins( self:Control ) {
 
-        var list = margins.get(child);
-        if(list == null) list = [];
-
-        list.push({
-            target: target,
-            type: type,
-            value: value
-        });
-
-        margins.set(child, list);
-
-        child.parent.onbounds.listen(function(){
-            update_margins(child);
-        });
-
-        update_margins(child);
-
-    } //margin
-
-    function update_margins( child:Control ) {
-
-        var list = margins.get(child);
+        var list = margins.get(self);
         if(list != null) {
             for(info in list) {
                 switch(info.type) {
                     case fixed: {
                         switch(info.target) {
-                            case left:   child.x = Math.abs(child.parent.x+info.value);
-                            case top:    child.y = Math.abs(child.parent.y+info.value);
-                            case right:  child.w = Math.abs((child.parent.right-info.value) - child.x);
-                            case bottom: child.h = Math.abs((child.parent.bottom-info.value) - child.y);
+                            case left:   self.x = Math.abs(info.other.x+info.value);
+                            case top:    self.y = Math.abs(info.other.y+info.value);
+                            case right:  self.w = Math.abs((info.other.right-info.value) - self.x);
+                            case bottom: self.h = Math.abs((info.other.bottom-info.value) - self.y);
                         }
                     }
                     case percent: {
                         var per = (info.value/100);
                         switch(info.target) {
-                            case left:   child.x = Math.abs(child.parent.x+(child.parent.w*per));
-                            case top:    child.y = Math.abs(child.parent.y+(child.parent.h*per));
-                            case right:  child.w = Math.abs((child.parent.right-(child.parent.w*per)) - child.x);
-                            case bottom: child.h = Math.abs((child.parent.bottom-(child.parent.h*per)) - child.y);
+                            case left:   self.x = Math.abs(info.other.x+(info.other.w*per));
+                            case top:    self.y = Math.abs(info.other.y+(info.other.h*per));
+                            case right:  self.w = Math.abs((info.other.right-(info.other.w*per)) - self.x);
+                            case bottom: self.h = Math.abs((info.other.bottom-(info.other.h*per)) - self.y);
                         }
                     }
                 } //type
@@ -152,23 +164,8 @@ class Margins {
 
     } //update_margins
 
-}
+} //Margins
 
-typedef Margin = {
-    type: MarginType,
-    target: MarginTarget,
-    value: Float
-}
-
-typedef Sizer = {
-    target: SizeTarget,
-    value: Float
-}
-
-typedef Anchor = {
-    parent_anchor: AnchorType,
-    child_anchor: AnchorType
-}
 
 @:enum abstract AnchorType(Int) from Int to Int {
     var center_x    = 1;
@@ -195,4 +192,25 @@ typedef Anchor = {
     var right       = 2;
     var top         = 3;
     var bottom      = 4;
+}
+
+//Internal
+
+private typedef Margin = {
+    type: MarginType,
+    target: MarginTarget,
+    value: Float,
+    other: Control
+}
+
+private typedef Sizer = {
+    target: SizeTarget,
+    value: Float,
+    other: Control
+}
+
+private typedef Anchor = {
+    other_anchor: AnchorType,
+    self_anchor: AnchorType,
+    other: Control
 }

@@ -123,6 +123,12 @@ class Main extends luxe.Game {
             path: 'assets/transparency.png'
         });
 
+        var a = new mint.Image({
+            parent: canvas,
+            name: 'image2',
+            x:0, y:400, w:128, h: 128,
+            path: 'assets/transparency.png'
+        });
 
         window = new mint.Window({
             parent: canvas,
@@ -139,6 +145,9 @@ class Main extends luxe.Game {
             x:500, y:10, w:256, h: 131,
             h_max: 131, h_min: 131, w_min: 131
         });
+
+        layout.anchor(a, window2, right, left);
+        layout.anchor(a, window2, top, top);
 
         customwindow = new mint.Window({
             parent: canvas,
