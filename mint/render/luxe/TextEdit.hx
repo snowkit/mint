@@ -17,12 +17,13 @@ class TextEdit extends mint.render.Base {
     public var visual : QuadGeometry;
     public var cursor : LineGeometry;
 
-    public function new( _render:Renderer, _control:mint.TextEdit ) {
+    public function new( _render:LuxeMintRender, _control:mint.TextEdit ) {
 
         super(_render, _control);
         textedit = _control;
 
         visual = Luxe.draw.box({
+            batcher: _render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
@@ -34,6 +35,7 @@ class TextEdit extends mint.render.Base {
         });
 
         cursor = Luxe.draw.line({
+            batcher: _render.options.batcher,
             p0: new Vector(0,0),
             p1: new Vector(0,0),
             color: new Color(0,0,0,1).rgb(0x9dca63),

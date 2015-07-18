@@ -17,12 +17,13 @@ class Dropdown extends mint.render.Base {
     public var visual : QuadGeometry;
     public var border : RectangleGeometry;
 
-    public function new( _render:Renderer, _control:mint.Dropdown ) {
+    public function new( _render:LuxeMintRender, _control:mint.Dropdown ) {
 
         super(_render, _control);
         dropdown = _control;
 
         visual = Luxe.draw.box({
+            batcher: _render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
@@ -34,6 +35,7 @@ class Dropdown extends mint.render.Base {
         });
 
         border = Luxe.draw.rectangle({
+            batcher: _render.options.batcher,
             x: control.x,
             y: control.y,
             w: control.w,

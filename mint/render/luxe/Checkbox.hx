@@ -16,12 +16,13 @@ class Checkbox extends mint.render.Base {
     var visual : Sprite;
     var node : Sprite;
 
-    public function new( _render:Renderer, _control:mint.Checkbox ) {
+    public function new( _render:LuxeMintRender, _control:mint.Checkbox ) {
 
         super(_render, _control);
         box = _control;
 
         visual = new luxe.Sprite({
+            batcher: _render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
@@ -31,6 +32,7 @@ class Checkbox extends mint.render.Base {
         });
 
         node = new luxe.Sprite({
+            batcher: _render.options.batcher,
             centered: false,
             pos: new Vector(control.x+4, control.y+4),
             size: new Vector(control.w-8, control.h-8),

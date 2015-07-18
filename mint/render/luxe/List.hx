@@ -13,7 +13,6 @@ import phoenix.geometry.RectangleGeometry;
 class List extends mint.render.Base {
 
     public var list : mint.List;
-    public var text : Text;
 
     public var selected_color: Int = 0x9dca63;
     public var hover_color: Int = 0xffffff;
@@ -21,7 +20,7 @@ class List extends mint.render.Base {
     // public var select_rects: Array<RectangleGeometry>;
     // public var hover_rect: RectangleGeometry;
 
-    public function new( _render:Renderer, _control:mint.List ) {
+    public function new( _render:LuxeMintRender, _control:mint.List ) {
 
         super(_render, _control);
         list = _control;

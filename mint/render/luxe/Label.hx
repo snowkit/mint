@@ -17,12 +17,13 @@ class Label extends mint.render.Base {
     public var hover_color: Int = 0x9dca63;
     public var normal_color: Int = 0xffffff;
 
-    public function new( _render:Renderer, _control:mint.Label ) {
+    public function new( _render:LuxeMintRender, _control:mint.Label ) {
 
         super(_render, _control);
         label = _control;
 
         text = new luxe.Text({
+            batcher: _render.options.batcher,
             bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
             color: new Color(),
             text: label.text,

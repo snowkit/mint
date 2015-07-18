@@ -15,7 +15,7 @@ class Image extends mint.render.Base {
     var image : mint.Image;
     var visual : Sprite;
 
-    public function new( _render:Renderer, _control:mint.Image ) {
+    public function new( _render:LuxeMintRender, _control:mint.Image ) {
 
         super(_render, _control);
         image = _control;
@@ -25,6 +25,7 @@ class Image extends mint.render.Base {
         get.then(function(texture){
 
             visual = new luxe.Sprite({
+                batcher: _render.options.batcher,
                 centered: false,
                 // color: Color.random(),
                 texture: texture,

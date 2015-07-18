@@ -17,12 +17,13 @@ class Scroll extends mint.render.Base {
     public var scrollh : Sprite;
     public var scrollv : Sprite;
 
-    public function new( _render:Renderer, _control:mint.ScrollArea ) {
+    public function new( _render:LuxeMintRender, _control:mint.ScrollArea ) {
 
         super(_render, _control);
         scroll = _control;
 
         visual = new luxe.Sprite({
+            batcher: _render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
@@ -32,6 +33,7 @@ class Scroll extends mint.render.Base {
         });
 
         scrollh = new luxe.Sprite({
+            batcher: _render.options.batcher,
             centered: false,
             pos: new Vector(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y),
             size: new Vector(scroll.scroll.h.bounds.w, scroll.scroll.h.bounds.h),
@@ -39,7 +41,9 @@ class Scroll extends mint.render.Base {
             depth: control.depth+0.00001,
             visible: control.visible,
         });
+
         scrollv = new luxe.Sprite({
+            batcher: _render.options.batcher,
             centered: false,
             pos: new Vector(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y),
             size: new Vector(scroll.scroll.v.bounds.w, scroll.scroll.v.bounds.h),

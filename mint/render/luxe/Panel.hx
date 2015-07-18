@@ -15,12 +15,13 @@ class Panel extends mint.render.Base {
     var panel : mint.Panel;
     public var visual : QuadGeometry;
 
-    public function new( _render:Renderer, _control:mint.Panel ) {
+    public function new( _render:LuxeMintRender, _control:mint.Panel ) {
 
         super(_render, _control);
         panel = _control;
 
         visual = Luxe.draw.box({
+            batcher: _render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,

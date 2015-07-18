@@ -18,12 +18,13 @@ class Window extends mint.render.Base {
     public var top : QuadGeometry;
     public var border : RectangleGeometry;
 
-    public function new( _render:Renderer, _control:mint.Window ) {
+    public function new( _render:LuxeMintRender, _control:mint.Window ) {
 
         super(_render, _control);
         window = _control;
 
         visual = Luxe.draw.box({
+            batcher: _render.options.batcher,
             x:window.x,
             y:window.y,
             w:window.w,
@@ -35,6 +36,7 @@ class Window extends mint.render.Base {
         });
 
         top = Luxe.draw.box({
+            batcher: _render.options.batcher,
             x: window.title.x,
             y:window.title.y,
             w:window.title.w,
@@ -46,6 +48,7 @@ class Window extends mint.render.Base {
         });
 
         border = Luxe.draw.rectangle({
+            batcher: _render.options.batcher,
             x: window.x,
             y: window.y,
             w: window.w,

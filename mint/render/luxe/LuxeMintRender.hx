@@ -8,6 +8,20 @@ import luxe.Input;
 
 class LuxeMintRender extends mint.Renderer {
 
+    public var options: luxe.options.RenderProperties;
+
+    public function new( ?_options:luxe.options.RenderProperties ) {
+
+        super();
+
+        if(_options == null) _options = {};
+
+        options = _options;
+
+        if(options.batcher == null) options.batcher = Luxe.renderer.batcher;
+
+    } //new
+
     override function render<T:Control, T1>( type:Class<T>, control:T ) : T1 {
         return cast switch(type) {
             case mint.Canvas:       follow(control, new mint.render.luxe.Canvas(this, cast control));

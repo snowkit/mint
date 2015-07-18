@@ -15,12 +15,13 @@ class Button extends mint.render.Base {
     var button : mint.Button;
     var visual : Sprite;
 
-    public function new( _render:Renderer, _control:mint.Button ) {
+    public function new( _render:LuxeMintRender, _control:mint.Button ) {
 
         super(_render, _control);
         button = _control;
 
         visual = new luxe.Sprite({
+            batcher: _render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),

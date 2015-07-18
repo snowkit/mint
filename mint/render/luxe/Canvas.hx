@@ -15,12 +15,13 @@ class Canvas extends mint.render.Base {
     var canvas : mint.Canvas;
     var visual : QuadGeometry;
 
-    public function new( _render:Renderer, _control:mint.Canvas ) {
+    public function new( _render:LuxeMintRender, _control:mint.Canvas ) {
 
         super(_render, _control);
         canvas = _control;
 
         visual = Luxe.draw.box({
+            batcher: _render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
