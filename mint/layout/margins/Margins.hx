@@ -34,9 +34,7 @@ class Margins {
 
         sizers.set(self, list);
 
-        other.onbounds.listen(function(){
-            update_sizers(self);
-        });
+        other.onbounds.listen( update_sizers.bind(self) );
 
         update_sizers(self);
 
@@ -58,9 +56,7 @@ class Margins {
 
         anchors.set(self, list);
 
-        other.onbounds.listen(function(){
-            update_anchors(self);
-        });
+        other.onbounds.listen( update_anchors.bind(self) );
 
         update_anchors(self);
 
@@ -83,9 +79,7 @@ class Margins {
 
         margins.set(self, list);
 
-        other.onbounds.listen(function(){
-            update_margins(self);
-        });
+        other.onbounds.listen( update_margins.bind(self) );
 
         update_margins(self);
 
