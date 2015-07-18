@@ -1,4 +1,4 @@
-mïnt | http://snowkit.org/mint/
+mínt | http://snowkit.org/mint/
 
 ![mint](mint.png)
 
