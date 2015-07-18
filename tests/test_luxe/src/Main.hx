@@ -158,6 +158,17 @@ class Main extends luxe.Game {
             w_min: 128, h_min:128
         });
 
+        //reach into the rendering specifics and change stuff
+        var _title_render = (cast customwindow.title.renderinst:mint.render.luxe.Label);
+            _title_render.text.color.rgb(0x7d5956);
+            _title_render.text.point_size = 13;
+
+        var _close_render = (cast customwindow.close_button.renderinst:mint.render.luxe.Label);
+            _close_render.text.color.rgb(0x7d5956);
+            _close_render.color_normal = 0x7d5956;
+            _close_render.color_hover = 0xf6007b;
+            _close_render.text.point_size = 16;
+
         var platform = new mint.Dropdown({
             parent: window2,
             name: 'dropdown',
@@ -208,11 +219,14 @@ class Main extends luxe.Game {
             list2.add_item(
                 new mint.Label({
                     parent: list2,
+                    options: {
+                        color_normal: 0xf6007b,
+                        color_hover: 0xffffff
+                    },
                     name: 'label$i',
                     w:140, h:20,
                     text: 'label $i',
-                    point_size: 14,
-                    onclick: function(e,c) { trace('label $i! ${Luxe.time}'); }
+                    point_size: 14
                 }),
                 0, i == 0 ? 0 : 10
             );
