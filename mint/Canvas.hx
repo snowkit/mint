@@ -160,7 +160,7 @@ class Canvas extends Control {
 
         var _inside = in_rect(e.x, e.y, x, y, w, h);
 
-        if(!_inside) {
+        if(!_inside && _mouse_down) {
             mouseup(e);
         }
 
@@ -221,6 +221,8 @@ class Canvas extends Control {
 
     public override function mouseup( e:MouseEvent ) {
 
+        _mouse_down = false;
+
         if(focus_invalid) {
             find_focus(e);
         }
@@ -275,9 +277,13 @@ class Canvas extends Control {
 
     } //textinput
 
+    var _mouse_down = false;
+
     public override function mousedown( e:MouseEvent ) {
 
         super.mousedown(e);
+
+        _mouse_down = true;
 
         if(focus_invalid) {
             find_focus(e);
