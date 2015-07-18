@@ -42,6 +42,8 @@ class Slider extends Control {
     public var bar : Panel;
     public var label : Label;
 
+    public var onchange: Signal<Float->Float->Void>;
+
     public function new( _options:SliderOptions ) {
 
         options = _options;
@@ -54,6 +56,8 @@ class Slider extends Control {
         step = options.step;
 
         super(options);
+
+        onchange = new Signal();
 
         mouse_input = true;
 
@@ -103,6 +107,8 @@ class Slider extends Control {
 
     inline function update_value(e:MouseEvent) {
 
+        var prev = value;
+
         if(!vertical) {
 
             var _bar_w = e.x - x;
@@ -135,6 +141,8 @@ class Slider extends Control {
         } //vertical
 
         label.text = Std.string(value);
+
+        onchange.emit(value, prev);
 
     } //update_value
 
