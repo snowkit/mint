@@ -20,6 +20,15 @@ typedef ControlOptions = {
         /** The control height */
     @:optional var h: Float;
 
+        /** The control minimum width */
+    @:optional var w_min: Float;
+        /** The control maximum width */
+    @:optional var w_max: Float;
+        /** The control minimum height */
+    @:optional var h_min: Float;
+        /** The control maximum height */
+    @:optional var h_max: Float;
+
         /** The control parent, if any */
     @:optional var parent: Control;
         /** The control depth. Usually set internally */
@@ -61,6 +70,15 @@ class Control {
     @:isVar public var w (default, set) : Float;
         /** The height of the control bounds */
     @:isVar public var h (default, set) : Float;
+
+        /** The minimum width*/
+    @:isVar public var w_min (default, set) : Float = 8;
+        /** The minimum height */
+    @:isVar public var h_min (default, set) : Float = 8;
+        /** The maximum width*/
+    @:isVar public var w_max (default, set) : Float = 0;
+        /** The maximum height */
+    @:isVar public var h_max (default, set) : Float = 0;
 
         /** The right edge of the control bounds */
     public var right (get, never) : Float;
@@ -147,6 +165,11 @@ class Control {
         children = [];
 
         // bounds = ctrloptions.bounds == null ? new Rect(0,0,32,32) : ctrloptions.bounds;
+
+        w_min = def(ctrloptions.w_min, 8);
+        h_min = def(ctrloptions.h_min, 8);
+        w_max = def(ctrloptions.w_max, 0);
+        h_max = def(ctrloptions.h_max, 0);
 
         x = def(ctrloptions.x, 0);
         y = def(ctrloptions.y, 0);
@@ -610,6 +633,7 @@ class Control {
     function set_y(_y:Float) : Float {
 
         var _dy = _y - y;
+
         y = _y;
 
         bounds_changed(0, _dy);
@@ -618,10 +642,55 @@ class Control {
 
     } //set_y
 
+    function set_w_min(_w_min:Float) : Float {
+
+        w_min = _w_min;
+
+        if(w < w_min) w = w_min;
+
+        return w_min;
+
+    } //set_w_min
+
+    function set_h_min(_h_min:Float) : Float {
+
+        h_min = _h_min;
+
+        if(h < h_min) h = h_min;
+
+        return h_min;
+
+    } //set_h_min
+
+    function set_w_max(_w_max:Float) : Float {
+
+        w_max = _w_max;
+
+        if(w > w_max) w = w_max;
+
+        return w_max;
+
+    } //set_w_max
+
+    function set_h_max(_h_max:Float) : Float {
+
+        h_max = _h_max;
+
+        if(h > h_max) h = h_max;
+
+        return h_max;
+
+    } //set_h_max
+
     function set_w(_w:Float) : Float {
 
+        if(_w < w_min) _w = w_min;
+        if(_w > w_max && w_max != 0) _w = w_max;
+
         var _dw = _w - w;
+
         w = _w;
+
         bounds_changed(0,0, _dw);
 
         return w;
@@ -630,8 +699,13 @@ class Control {
 
     function set_h(_h:Float) : Float {
 
+        if(_h < h_min) _h = h_min;
+        if(_h > h_max && h_max != 0) _h = h_max;
+
         var _dh = _h - h;
+
         h = _h;
+
         bounds_changed(0,0,0, _dh);
 
         return h;
