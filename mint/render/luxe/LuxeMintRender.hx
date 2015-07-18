@@ -38,6 +38,7 @@ class LuxeMintRender extends mint.Renderer {
             case mint.TextEdit:     follow(control, new mint.render.luxe.TextEdit(this, cast control));
             case mint.Dropdown:     follow(control, new mint.render.luxe.Dropdown(this, cast control));
             case mint.Slider:       follow(control, new mint.render.luxe.Slider(this, cast control));
+            case mint.Progress:       follow(control, new mint.render.luxe.Progress(this, cast control));
             case _:                 null;
         }
     } //render

@@ -25,6 +25,7 @@ class Main extends luxe.Game {
     var window: mint.Window;
     var window2: mint.Window;
     var customwindow: mint.Window;
+    var progress: mint.Progress;
 
     var render: LuxeMintRender;
     var layout: Margins;
@@ -71,6 +72,8 @@ class Main extends luxe.Game {
     }
 
 
+    var progress_dir = -1;
+
     function test1() {
 
         label = new mint.Label({
@@ -88,26 +91,33 @@ class Main extends luxe.Game {
             x: 120, y: 16, w: 24, h: 24
         });
 
+        progress = new mint.Progress({
+            parent: canvas,
+            name: 'progress1',
+            progress: 0.2,
+            x: 10, y:95 , w:128, h: 16
+        });
+
         var sh1 = new mint.Slider({
             parent: canvas,
             name: 'slider1',
             min: 0,
             max: 100,
             step: 10,
-            x: 10, y:325 , w: 128, h: 24
+            x: 10, y:330 , w: 128, h: 24
         });
 
         var sh2 = new mint.Slider({
             parent: canvas,
             name: 'slider2',
             min: 0, max: 100, step: 1,
-            x:10, y:352, w:128, h:24
+            x:10, y:357, w:128, h:24
         });
 
         var sh3 = new mint.Slider({
             parent: canvas,
             name: 'slider3',
-            x:10, y:380, w:128, h:24
+            x:10, y:385, w:128, h:24
         });
 
         (cast sh1.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
@@ -153,20 +163,20 @@ class Main extends luxe.Game {
         image = new mint.Image({
             parent: canvas,
             name: 'image1',
-            x: 10, y: 102, w: 64, h: 64,
+            x: 10, y: 120, w: 64, h: 64,
             path: 'assets/transparency.png'
         });
 
         panel = new mint.Panel({
             parent: canvas,
             name: 'panel1',
-            x:84, y:102, w:64, h: 64,
+            x:84, y:120, w:64, h: 64,
         });
 
         scroll = new mint.ScrollArea({
             parent: canvas,
             name: 'scroll1',
-            x:10, y:180, w: 128, h: 128,
+            x:16, y:190, w: 128, h: 128,
         });
 
         new mint.Image({
@@ -478,6 +488,10 @@ class Main extends luxe.Game {
         if(canvas!=null) {
             canvas.update(dt);
         }
+
+        progress.progress += (0.2 * dt) * progress_dir;
+        if(progress.progress >= 1) progress_dir = -1;
+        if(progress.progress <= 0) progress_dir = 1;
 
         if(debug) {
             for(c in canvas.children) {
