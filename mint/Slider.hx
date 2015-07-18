@@ -152,7 +152,6 @@ class Slider extends Control {
 
         dragging = false;
         canvas.dragged = null;
-        update_value(e);
 
         super.mouseup(e);
 
