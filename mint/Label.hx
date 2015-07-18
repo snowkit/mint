@@ -18,8 +18,8 @@ typedef LabelOptions = {
     @:optional var align_vertical: mint.Types.TextAlign;
         /** Whether or not to wrap the text by the bounds for the renderer to apply */
     @:optional var bounds_wrap: Bool;
-        /** The point size of the text for the renderer to use */
-    @:optional var point_size: Float;
+        /** The text size of the text  */
+    @:optional var text_size: Float;
         /** An optional mouseup handler for convenience */
     @:optional var onclick: MouseSignal;
 
@@ -55,6 +55,7 @@ class Label extends Control {
 
         def(options.align, TextAlign.center);
         def(options.align_vertical, TextAlign.center);
+        def(options.text_size, 14);
 
         if(options.onclick != null) {
             mouse_input = true;

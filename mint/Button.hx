@@ -35,11 +35,15 @@ class Button extends Control {
 
         mouse_input = def(options.mouse_input, true);
 
+        def(options.align, TextAlign.center);
+        def(options.align_vertical, TextAlign.center);
+        def(options.text_size, 14);
+
         label = new Label({
             parent : this,
             x: 0, y:0, w: w, h: h,
             text: options.text,
-            point_size: options.point_size,
+            text_size: options.text_size,
             name : name + '.label',
             mouse_input: false,
             visible: options.visible

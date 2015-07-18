@@ -13,8 +13,11 @@ typedef TextEditOptions = {
 
     > ControlOptions,
 
+        /** The default text value */
     @:optional var text: String;
-    @:optional var point_size: Float;
+        /** The text size of the text for the renderer to use */
+    @:optional var text_size: Float;
+        /** A filter to apply to text on input, inclusive */
     @:optional var filter: EReg;
 
 } //TextEditOptions
@@ -51,13 +54,13 @@ class TextEdit extends Control {
         filter = def(options.filter, null);
 
         def(options.text, 'mint.TextEdit');
-        def(options.point_size, options.h * 0.8);
+        def(options.text_size, options.h * 0.8);
 
         label = new Label({
             parent : this,
             x: 2, y: 0, w: w, h: h,
             text: options.text,
-            point_size: options.point_size,
+            text_size: options.text_size,
             align: TextAlign.left,
             align_vertical: TextAlign.center,
             name : name + '.label',

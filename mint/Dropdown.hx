@@ -22,7 +22,6 @@ class Dropdown extends Control {
 
     public var is_open : Bool = false;
 
-    var _point_size : Float = 14;
     var _height : Float = 110;
 
     var options: DropdownOptions;
@@ -35,11 +34,12 @@ class Dropdown extends Control {
 
             //create the base control
         super(options);
-            //dropdowns can be clicked
-        mouse_input = true;
-            //set the text size from the default or the options
-        if(options.point_size != null) _point_size = options.point_size;
 
+        mouse_input = true;
+
+        def(options.align, TextAlign.left);
+        def(options.align_vertical, TextAlign.center);
+        def(options.text_size, 14);
             //create the list
         list = new List({
             parent : this,
@@ -54,9 +54,10 @@ class Dropdown extends Control {
             parent : this,
             x:5, y:0, w:w-10, h:h,
             text: options.text,
-            point_size: _point_size,
+            text_size: options.text_size,
             name : name + '.selected_label',
-            align : TextAlign.left,
+            align : options.align,
+            align_vertical : options.align,
             visible : options.visible
         });
 

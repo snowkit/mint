@@ -38,7 +38,7 @@ class Label extends mint.render.Base {
             bounds_wrap: label.options.bounds_wrap,
             align: Convert.text_align(label.options.align),
             align_vertical: Convert.text_align(label.options.align_vertical),
-            point_size: label.options.point_size,
+            point_size: label.options.text_size,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,

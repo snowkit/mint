@@ -7,13 +7,21 @@ import mint.Signal;
 import mint.Macros.*;
 
 typedef WindowOptions = {
+
     > ControlOptions,
-    ? title: String,
-    ? moveable: Bool,
-    ? closeable: Bool,
-    ? focusable: Bool,
-    ? onclose: Void->Bool,
-}
+
+        /** The title of the window to display as a label */
+    @:optional var title: String;
+        /** The text size for the title text */
+    @:optional var text_size: Float;
+        /** Whether or not the window can be moved by it's title bar */
+    @:optional var moveable: Bool;
+        /** Whether or not the window can be closed by the top right corner */
+    @:optional var closeable: Bool;
+        /** Whether or not the window is focusable (bring to front on click) */
+    @:optional var focusable: Bool;
+
+} //WindowOptions
 
 @:allow(mint.ControlRenderer)
 class Window extends Control {
@@ -68,7 +76,7 @@ class Window extends Control {
             text: options.title,
             align : TextAlign.center,
             align_vertical : TextAlign.center,
-            point_size: 14,
+            text_size: options.text_size,
             name: name + '.titlelabel',
             visible: options.visible
         });
@@ -80,7 +88,7 @@ class Window extends Control {
             text:'x',
             align : TextAlign.center,
             align_vertical : TextAlign.center,
-            point_size:15,
+            text_size: options.text_size,
             name : name + '.closelabel',
             visible: options.visible
         });

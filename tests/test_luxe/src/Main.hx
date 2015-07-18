@@ -81,7 +81,7 @@ class Main extends luxe.Game {
             name: 'label1',
             x:10, y:10, w:100, h:32,
             text: 'hello mint',
-            point_size: 14,
+            text_size: 14,
             onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
         });
 
@@ -156,7 +156,7 @@ class Main extends luxe.Game {
             name: 'button1',
             x: 10, y: 52, w: 100, h: 32,
             text: 'mint button',
-            point_size: 14,
+            text_size: 14,
             onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
 
@@ -216,6 +216,7 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'customwindow',
             title: 'custom window',
+            text_size: 13,
             renderer: new CustomWindowRender(),
             x:500, y:150, w:256, h:180+42+32,
             w_min: 128, h_min:128
@@ -224,7 +225,6 @@ class Main extends luxe.Game {
         //reach into the rendering specifics and change stuff
         var _title_render = (cast customwindow.title.renderinst:mint.render.luxe.Label);
             _title_render.text.color.rgb(0x7d5956);
-            _title_render.text.point_size = 13;
 
         var _close_render = (cast customwindow.close_button.renderinst:mint.render.luxe.Label);
             _close_render.text.color.rgb(0x7d5956);
@@ -248,7 +248,7 @@ class Main extends luxe.Game {
                     align: TextAlign.left,
                     text: '$name',
                     name: 'plat-$name',
-                    w:225, h:24, point_size: 14
+                    w:225, h:24, text_size: 14
                 }),
                 10, (first) ? 0 : 10
             );
@@ -287,7 +287,7 @@ class Main extends luxe.Game {
                     name: 'label$i',
                     w:100, h:30,
                     text: 'label $i',
-                    point_size: 14
+                    text_size: 14
                 }),
                 10, i == 0 ? 0 : 10
             );
@@ -359,7 +359,7 @@ class Main extends luxe.Game {
             parent: _panel,
             mouse_input:true,
             x:96, y:8, w:148, h:18,
-            point_size: 16,
+            text_size: 16,
             align: TextAlign.left,
             align_vertical: TextAlign.top,
             text: titles[idx]
@@ -373,7 +373,7 @@ class Main extends luxe.Game {
             mouse_input:true,
             bounds_wrap: true,
             x:96, y:30, w:132, h:18,
-            point_size: 12,
+            text_size: 12,
             align: TextAlign.left,
             align_vertical: TextAlign.top,
             text: desc[idx]
@@ -526,8 +526,8 @@ class CustomWindow extends mint.render.Base {
 
         visual.create(new Vector(window.x, window.y), window.w, window.h);
 
-        window.title.y_local += 2;
-        window.close_button.y_local += 2;
+        window.title.y_local += 3;
+        window.close_button.y_local += 1;
 
     } //new
 

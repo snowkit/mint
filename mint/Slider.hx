@@ -72,7 +72,7 @@ class Slider extends Control {
             align: TextAlign.center,
             align_vertical: TextAlign.center,
             text: '${options.value}',
-            point_size: 12,
+            text_size: 12,
             name : name + '.label',
             mouse_input: false,
             visible: options.visible
