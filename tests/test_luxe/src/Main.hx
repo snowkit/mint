@@ -154,9 +154,21 @@ class Main extends luxe.Game {
         button = new mint.Button({
             parent: canvas,
             name: 'button1',
-            x: 10, y: 52, w: 100, h: 32,
-            text: 'mint button',
+            x: 10, y: 52, w: 60, h: 32,
+            text: 'mint',
             text_size: 14,
+            onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
+        });
+
+        new mint.Button({
+            parent: canvas,
+            name: 'button2',
+            x: 76, y: 52, w: 32, h: 32,
+            text: 'O',
+            options: {
+                color_hover: new Color().rgb(0xf6007b)
+            },
+            text_size: 16,
             onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
 
@@ -228,8 +240,8 @@ class Main extends luxe.Game {
 
         var _close_render = (cast customwindow.close_button.renderinst:mint.render.luxe.Label);
             _close_render.text.color.rgb(0x7d5956);
-            _close_render.color_normal = 0x7d5956;
-            _close_render.color_hover = 0xf6007b;
+            _close_render.color_normal.rgb(0x7d5956);
+            _close_render.color_hover.rgb(0xf6007b);
             _close_render.text.point_size = 16;
 
         var platform = new mint.Dropdown({
@@ -281,8 +293,8 @@ class Main extends luxe.Game {
                     parent: list2,
                     align: TextAlign.left,
                     options: {
-                        color_normal: 0xf6007b,
-                        color_hover: 0xffffff
+                        color_normal: new Color().rgb(0xf6007b),
+                        color_hover: new Color().rgb(0xffffff)
                     },
                     name: 'label$i',
                     w:100, h:30,
