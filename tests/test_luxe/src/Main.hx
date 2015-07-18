@@ -88,6 +88,17 @@ class Main extends luxe.Game {
             x: 120, y: 16, w: 24, h: 24
         });
 
+        var s = new mint.Slider({
+            parent: canvas,
+            name: 'slider1',
+            min: 0,
+            max: 100,
+            step: 10,
+            x: 10, y:325 , w: 128, h: 24
+        });
+
+        (cast s.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+
         button = new mint.Button({
             parent: canvas,
             name: 'button1',
@@ -126,7 +137,7 @@ class Main extends luxe.Game {
         var a = new mint.Image({
             parent: canvas,
             name: 'image2',
-            x:0, y:400, w:128, h: 128,
+            x:0, y:400, w:32, h: 32,
             path: 'assets/transparency.png'
         });
 
@@ -212,7 +223,7 @@ class Main extends luxe.Game {
         var list2 = new mint.List({
             parent: canvas,
             name: 'list',
-            x: 10, y: 320, w: 140, h: 140
+            x: 10, y: 380, w: 140, h: 140
         });
 
         for(i in 0 ... 20) {
