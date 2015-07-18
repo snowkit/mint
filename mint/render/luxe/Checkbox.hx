@@ -42,7 +42,7 @@ class Checkbox extends mint.render.Base {
             pos: new Vector(control.x+4, control.y+4),
             size: new Vector(control.w-8, control.h-8),
             color: new Color().rgb(0x9dca63),
-            depth: render.options.depth + control.depth,
+            depth: render.options.depth + control.depth + 0.001,
             group: render.options.group,
             visible: control.visible
         });
@@ -103,7 +103,8 @@ class Checkbox extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = node.depth = render.options.depth + _depth;
+        visual.depth = render.options.depth + _depth;
+        node.depth = visual.depth + 0.001;
     } //ondepth
 
 } //Checkbox
