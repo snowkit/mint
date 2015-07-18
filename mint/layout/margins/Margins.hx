@@ -7,13 +7,50 @@ class Margins {
 
     var margins : Map<Control, Array<Margin> >;
     var anchors : Map<Control, Array<Anchor> >;
+    var sizers : Map<Control, Array<Sizer> >;
 
     public function new() {
 
         margins = new Map();
         anchors = new Map();
+        sizers = new Map();
 
     }
+
+    public function size( child:Control, target:SizeTarget, value:Float ) {
+
+        var list = sizers.get(child);
+        if(list == null) list = [];
+
+        list.push({
+            target: target,
+            value: value
+        });
+
+        sizers.set(child, list);
+
+        child.parent.onbounds.listen(function(){
+            update_sizers(child);
+        });
+
+        update_sizers(child);
+
+    } //size
+
+    function update_sizers( child:Control ) {
+
+        var list = sizers.get(child);
+        if(list != null) {
+            for(sizer in list) {
+                var per = (sizer.value/100);
+                switch(sizer.target) {
+                    case width:   child.w = (child.parent.w * per);
+                    case height:  child.h = (child.parent.h * per);
+                }
+            } //each sizer
+        } //list
+
+    } //update_sizers
 
     public function anchor( child:Control, child_anchor:AnchorType, parent_anchor:AnchorType ) {
 
@@ -94,6 +131,8 @@ class Margins {
                 switch(info.type) {
                     case fixed: {
                         switch(info.target) {
+                            case left:   child.x = Math.abs(child.parent.x+info.value);
+                            case top:    child.y = Math.abs(child.parent.y+info.value);
                             case right:  child.w = Math.abs((child.parent.right-info.value) - child.x);
                             case bottom: child.h = Math.abs((child.parent.bottom-info.value) - child.y);
                         }
@@ -101,6 +140,8 @@ class Margins {
                     case percent: {
                         var per = (info.value/100);
                         switch(info.target) {
+                            case left:   child.x = Math.abs(child.parent.x+(child.parent.w*per));
+                            case top:    child.y = Math.abs(child.parent.y+(child.parent.h*per));
                             case right:  child.w = Math.abs((child.parent.right-(child.parent.w*per)) - child.x);
                             case bottom: child.h = Math.abs((child.parent.bottom-(child.parent.h*per)) - child.y);
                         }
@@ -119,30 +160,39 @@ typedef Margin = {
     value: Float
 }
 
+typedef Sizer = {
+    target: SizeTarget,
+    value: Float
+}
+
 typedef Anchor = {
     parent_anchor: AnchorType,
     child_anchor: AnchorType
 }
 
 @:enum abstract AnchorType(Int) from Int to Int {
-    var center_x  = 1;
-    var center_y  = 2;
-    var left    = 3;
-    var right   = 4;
-    var top     = 5;
-    var bottom  = 6;
+    var center_x    = 1;
+    var center_y    = 2;
+    var left        = 3;
+    var right       = 4;
+    var top         = 5;
+    var bottom      = 6;
 }
 
 @:enum abstract MarginType(Int) from Int to Int {
+    var percent     = 1;
+    var fixed       = 2;
+}
 
-    var percent = 1;
-    var fixed = 2;
 
+@:enum abstract SizeTarget(Int) from Int to Int {
+    var width       = 1;
+    var height      = 2;
 }
 
 @:enum abstract MarginTarget(Int) from Int to Int {
-
-    var right = 1;
-    var bottom = 2;
-
+    var left        = 1;
+    var right       = 2;
+    var top         = 3;
+    var bottom      = 4;
 }
