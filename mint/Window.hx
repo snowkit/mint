@@ -96,7 +96,8 @@ class Window extends Control {
     } //new
 
     var resizing = false;
-    var resize_start : Point;
+    var resize_start_x = 0.0;
+    var resize_start_y = 0.0;
 
     function on_resize_up(e:MouseEvent, _) {
         resizing = false;
@@ -106,7 +107,8 @@ class Window extends Control {
     function on_resize_down(e:MouseEvent, _) {
         if(resizing) return;
         resizing = true;
-        resize_start = new Point(e.x, e.y);
+        resize_start_x = e.x;
+        resize_start_y = e.y;
         canvas.dragged = resize_handle;
     }
 
@@ -136,15 +138,25 @@ class Window extends Control {
 
         if(resizing) {
 
-            var diff_x = e.x - resize_start.x;
-            var diff_y = e.y - resize_start.y;
+            var diff_x = e.x - resize_start_x;
+            var diff_y = e.y - resize_start_y;
 
             var ww = w + diff_x;
             var hh = h + diff_y;
 
-            resize_start.set(e.x, e.y);
+            var resized = false;
 
-            set_size(ww, hh);
+            if(ww >= w_min || ww <= w_max) {
+                resize_start_x = e.x;
+                resized = true;
+            }
+
+            if(hh >= h_min || hh <= h_max) {
+                resize_start_y = e.y;
+                resized = true;
+            }
+
+            if(resized) set_size(ww, hh);
 
         } else if(dragging) {
 
