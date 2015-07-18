@@ -49,17 +49,17 @@ class Checkbox extends Control {
 
         mouse_input = def(options.mouse_input, true);
 
-        renderinst = render_service.render(Checkbox, this);
-
-        onmouseup.listen(onclick);
-
         if(options.state != null) {
             state = options.state;
         }
 
+        renderinst = render_service.render(Checkbox, this);
+
         if(options.onchange != null) {
             onchange.listen( options.onchange );
         }
+
+        onmouseup.listen(onclick);
 
     } //new
 
