@@ -128,7 +128,8 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'window1',
             title: 'window',
-            x:160, y:10, w:256, h: 400
+            x:160, y:10, w:256, h: 400,
+            w_min: 256, h_min:256
         });
 
         window2 = new mint.Window({
@@ -136,7 +137,7 @@ class Main extends luxe.Game {
             name: 'window2',
             title: 'window',
             x:500, y:10, w:256, h: 131,
-            h_max: 131, h_min: 131
+            h_max: 131, h_min: 131, w_min: 131
         });
 
         customwindow = new mint.Window({
@@ -144,7 +145,8 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             renderer: new CustomWindowRender(),
-            x:500, y:270, w:256, h: 180+42+32
+            x:500, y:270, w:256, h: 180+42+32,
+            w_min: 128, h_min:128
         });
 
         var platform = new mint.Dropdown({
