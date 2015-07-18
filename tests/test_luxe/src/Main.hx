@@ -135,7 +135,8 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'window2',
             title: 'window',
-            x:500, y:10, w:256, h: 95+36
+            x:500, y:10, w:256, h: 131,
+            h_max: 131, h_min: 131
         });
 
         customwindow = new mint.Window({
@@ -152,6 +153,8 @@ class Main extends luxe.Game {
             text: 'Platform...',
             x:10, y:32+22+10+32, w:256-10-10, h:24,
         });
+
+        layout.margin(platform, right, fixed, 10);
 
         inline function add_plat(name:String, first:Bool = false) {
             platform.add_item(
@@ -172,24 +175,17 @@ class Main extends luxe.Game {
         add_plat('android');
         add_plat('web');
 
-        var p1 = new mint.Panel({
-            parent: customwindow, name: 'p1', x: 32, y: 56, w: 32, h: 32
-        });
-
-        var p2 = new mint.Panel({
-            parent: customwindow, name: 'p2', x: 32, y: 96, w: 32, h: 32
-        });
-
-        var p3 = new mint.Panel({
-            parent: customwindow, name: 'p3', x: 32, y: 136, w: 32, h: 32
-        });
+        var p1 = new mint.Panel({ parent: customwindow, name: 'p1', x: 32, y: 56, w: 32, h: 32 });
+        var p2 = new mint.Panel({ parent: customwindow, name: 'p2', x: 32, y: 96, w: 8, h: 8 });
+        var p3 = new mint.Panel({ parent: customwindow, name: 'p3', x: 32, y: 136, w: 32, h: 32 });
 
         // layout.margin(p1, right, fixed, 32);
         // layout.margin(p1, bottom, fixed, 32);
         layout.anchor(p1, center_x, center_x);
         layout.anchor(p1, center_y, center_y);
-        layout.anchor(p2, left, center_x);
-        layout.anchor(p3, right, center_x);
+
+        layout.size(p2, width, 90);
+        layout.anchor(p2, center_x, center_x);
 
         var list2 = new mint.List({
             parent: canvas,
@@ -437,6 +433,9 @@ class CustomWindow extends mint.render.Base {
         });
 
         visual.create(new Vector(window.x, window.y), window.w, window.h);
+
+        window.title.y_local += 2;
+        window.close_button.y_local += 2;
 
     } //new
 

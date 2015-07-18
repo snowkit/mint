@@ -31,7 +31,6 @@ class Image extends mint.render.Base {
             visual = new luxe.Sprite({
                 batcher: render.options.batcher,
                 centered: false,
-                // color: Color.random(),
                 texture: texture,
                 pos: new Vector(control.x, control.y),
                 size: new Vector(control.w, control.h),
