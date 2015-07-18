@@ -8,14 +8,15 @@ import mint.render.luxe.Convert;
 
 import luxe.Text;
 import luxe.Color;
+import luxe.Log.*;
 
 class Label extends mint.render.Base {
 
     public var label : mint.Label;
     public var text : Text;
 
-    public var hover_color: Int = 0x9dca63;
-    public var normal_color: Int = 0xffffff;
+    public var color_hover: Int = 0x9dca63;
+    public var color_normal: Int = 0xffffff;
 
     var render: LuxeMintRender;
 
@@ -24,12 +25,15 @@ class Label extends mint.render.Base {
         label = _control;
         render = _render;
 
-        super(_render, _control);
+        super(render, _control);
+
+        color_normal = def(label.options.options.color_normal, 0xffffff);
+        color_hover = def(label.options.options.color_hover, 0x9dca63);
 
         text = new luxe.Text({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
-            color: new Color(),
+            color: new Color().rgb(color_normal),
             text: label.text,
             bounds_wrap: label.options.bounds_wrap,
             align: Convert.text_align(label.options.align),
@@ -44,8 +48,8 @@ class Label extends mint.render.Base {
 
         connect();
         label.onchange.listen(ontext);
-        control.onmouseenter.listen(function(e,c){ text.color.rgb(hover_color); });
-        control.onmouseleave.listen(function(e,c){ text.color.rgb(normal_color); });
+        control.onmouseenter.listen(function(e,c){ text.color.rgb(color_hover); });
+        control.onmouseleave.listen(function(e,c){ text.color.rgb(color_normal); });
     }
 
     override function onbounds() {
