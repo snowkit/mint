@@ -8,9 +8,12 @@ import mint.Types.Utils.in_rect;
 
 typedef ControlOptions = {
 
+        /** Generic framework/user specific options,
+            which can be strong typed on the receiving end. */
+    @:optional var options: Dynamic;
+
         /** The control name */
     @:optional var name: String;
-
         /** The control x position, relative to its container */
     @:optional var x: Float;
         /** The control y position, relative to its container */
@@ -144,6 +147,7 @@ class Control {
     public function new( _options:ControlOptions ) {
 
         ctrloptions = _options;
+        def(ctrloptions.options, {});
 
         onrender     = new Signal();
         onbounds     = new Signal();
