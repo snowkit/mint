@@ -88,7 +88,7 @@ class Main extends luxe.Game {
             x: 120, y: 16, w: 24, h: 24
         });
 
-        var s = new mint.Slider({
+        var sh1 = new mint.Slider({
             parent: canvas,
             name: 'slider1',
             min: 0,
@@ -97,7 +97,49 @@ class Main extends luxe.Game {
             x: 10, y:325 , w: 128, h: 24
         });
 
-        (cast s.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        var sh2 = new mint.Slider({
+            parent: canvas,
+            name: 'slider2',
+            min: 0, max: 100, step: 1,
+            x:10, y:352, w:128, h:24
+        });
+
+        var sh3 = new mint.Slider({
+            parent: canvas,
+            name: 'slider3',
+            x:10, y:380, w:128, h:24
+        });
+
+        (cast sh1.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sh2.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sh3.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
+
+        var sv1 = new mint.Slider({
+            parent: canvas,
+            name: 'slider1',
+            vertical: true,
+            min: 0, max: 100, step: 10,
+            x:14, y:424 , w:32, h:128
+        });
+
+        var sv2 = new mint.Slider({
+            parent: canvas,
+            name: 'slider2',
+            vertical: true,
+            min: 0, max: 100, step: 1,
+            x:56, y:424, w:32, h:128
+        });
+
+        var sv3 = new mint.Slider({
+            parent: canvas,
+            name: 'slider3',
+            vertical: true,
+            x:98, y:424, w:32, h:128
+        });
+
+        (cast sv1.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sv2.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sv3.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
 
         button = new mint.Button({
             parent: canvas,
@@ -157,7 +199,7 @@ class Main extends luxe.Game {
             h_max: 131, h_min: 131, w_min: 131
         });
 
-        layout.anchor(a, window2, right, left);
+        layout.anchor(a, window2, left, right);
         layout.anchor(a, window2, top, top);
 
         customwindow = new mint.Window({
@@ -165,7 +207,7 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             renderer: new CustomWindowRender(),
-            x:500, y:270, w:256, h: 180+42+32,
+            x:500, y:150, w:256, h:180+42+32,
             w_min: 128, h_min:128
         });
 
@@ -208,40 +250,40 @@ class Main extends luxe.Game {
         add_plat('android');
         add_plat('web');
 
-        var p1 = new mint.Panel({ parent: customwindow, name: 'p1', x: 32, y: 56, w: 32, h: 32 });
-        var p2 = new mint.Panel({ parent: customwindow, name: 'p2', x: 32, y: 96, w: 8, h: 8 });
-        var p3 = new mint.Panel({ parent: customwindow, name: 'p3', x: 32, y: 136, w: 32, h: 32 });
+        var p1 = new mint.Panel({ parent: customwindow, name: 'p1', x: 32, y: 120, w: 32, h: 32 });
+        var p2 = new mint.Panel({ parent: customwindow, name: 'p2', x: 32, y: 36, w: 8, h: 8 });
 
-        // layout.margin(p1, right, fixed, 32);
-        // layout.margin(p1, bottom, fixed, 32);
         layout.anchor(p1, center_x, center_x);
         layout.anchor(p1, center_y, center_y);
 
-        layout.size(p2, width, 90);
+        layout.size(p2, width, 50);
         layout.anchor(p2, center_x, center_x);
 
         var list2 = new mint.List({
-            parent: canvas,
+            parent: customwindow,
             name: 'list',
-            x: 10, y: 380, w: 140, h: 140
+            x: 10, y: 50, w: 236, h: 64
         });
 
         for(i in 0 ... 20) {
             list2.add_item(
                 new mint.Label({
                     parent: list2,
+                    align: TextAlign.left,
                     options: {
                         color_normal: 0xf6007b,
                         color_hover: 0xffffff
                     },
                     name: 'label$i',
-                    w:140, h:20,
+                    w:100, h:30,
                     text: 'label $i',
                     point_size: 14
                 }),
-                0, i == 0 ? 0 : 10
+                10, i == 0 ? 0 : 10
             );
         }
+
+        layout.margin(list2, right, fixed, 10);
 
         var text1 = new mint.TextEdit({
             parent: window2,

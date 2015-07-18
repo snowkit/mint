@@ -37,6 +37,7 @@ class Slider extends Control {
     public var max : Float = 1;
     public var value : Float = 1;
     public var step : Null<Float>;
+    public var vertical : Bool = false;
 
     public var bar : Panel;
     public var label : Label;
@@ -48,7 +49,8 @@ class Slider extends Control {
         def(options.name, 'slider');
         max = def(options.max, 1);
         min = def(options.min, 0);
-        value = def(options.value, 1);
+        value = def(options.value, max);
+        vertical = def(options.vertical, false);
         step = options.step;
 
         super(options);
@@ -59,7 +61,7 @@ class Slider extends Control {
             parent : this,
             x: 2, y:2, w: w-4, h: h-4,
             name : name + '.bar',
-            w_min : 1,
+            w_min : 1, h_min : 1,
             mouse_input: false,
             visible: options.visible
         });
@@ -95,23 +97,52 @@ class Slider extends Control {
 
     } //mousedown
 
-    function get_amount() {
-        var a = ((max-min) * value);
-        return a;
+    inline function get_amount() {
+        return (max-min) * value;
+    }
+
+    inline function get_range() {
+        return max-min;
     }
 
     override function mousemove(e:MouseEvent) {
 
         if(dragging) {
-            var ww = e.x - x;
-            if(ww < 1) ww = 1;
-            if(ww >= w-4) ww = w-4;
-            var dw = (ww - bar.w);
-            ww = bar.w + dw;
-            bar.w = ww;
-            value = (ww - 1) / (w - 5);
-            label.text = Std.string(get_amount());
-        }
+
+            if(!vertical) {
+
+                var _bar_w = e.x - x;
+
+                if(_bar_w < 1) _bar_w = 1;
+                if(_bar_w >= w-4) _bar_w = w-4;
+
+                _bar_w = bar.w + (_bar_w - bar.w);
+                value = ((_bar_w - 1) / (w - 5)) * get_range();
+
+                if(step != null) value = Math.round(value/step) * step;
+
+                bar.w = _bar_w;
+
+            } else {
+
+                var _bar_h = (h) - (e.y - y);
+
+                if(_bar_h < 1) _bar_h = 1;
+                if(_bar_h >= h-4) _bar_h = h-4;
+
+                _bar_h = bar.h + (_bar_h - bar.h);
+                value = ((_bar_h - 1) / (h - 5)) * get_range();
+
+                if(step != null) value = Math.round(value/step) * step;
+
+                bar.h = _bar_h;
+                bar.y_local = (h - _bar_h) - 2;
+
+            } //vertical
+
+            label.text = Std.string(value);
+
+        } //dragging
 
     } //mousemove
 
