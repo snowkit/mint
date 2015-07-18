@@ -91,6 +91,19 @@ class Main extends luxe.Game {
             x: 120, y: 16, w: 24, h: 24
         });
 
+        new mint.Checkbox({
+            parent: canvas,
+            name: 'check2',
+            options: {
+                color_node: new Color().rgb(0xf6007b),
+                color_node_off: new Color().rgb(0xcecece),
+                color_normal: new Color().rgb(0xefefef),
+                color_hover: new Color().rgb(0xffffff),
+                color_node_hover: new Color().rgb(0xe2005a)
+            },
+            x: 120, y: 48, w: 24, h: 24
+        });
+
         progress = new mint.Progress({
             parent: canvas,
             name: 'progress1',
@@ -165,9 +178,7 @@ class Main extends luxe.Game {
             name: 'button2',
             x: 76, y: 52, w: 32, h: 32,
             text: 'O',
-            options: {
-                color_hover: new Color().rgb(0xf6007b)
-            },
+            options: { color_hover: new Color().rgb(0xf6007b) },
             text_size: 16,
             onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
