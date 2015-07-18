@@ -4,55 +4,63 @@ import mint.Types;
 import mint.Control;
 import mint.Label;
 import mint.List;
+import mint.Macros.*;
+
+/** Options for constructing a Button */
+typedef DropdownOptions = {
+
+    > LabelOptions,
+
+} //DropdownOptions
+
+
 
 class Dropdown extends Control {
-#if no
 
     public var list : List;
     public var selected_label : Label;
-    public var selected : String = '';
 
     public var is_open : Bool = false;
-
-    public var onselect : String->Control->?MouseEvent->Void;
 
     var _point_size : Float = 14;
     var _height : Float = 110;
 
-    public function new(_options:Dynamic) {
+    var options: DropdownOptions;
+
+    public function new( _options:DropdownOptions ) {
 
         options = _options;
 
         def(options.name, 'dropdown');
 
             //create the base control
-        super(_options);
+        super(options);
             //dropdowns can be clicked
         mouse_input = true;
             //set the text size from the default or the options
-        if(_options.point_size != null) _point_size = _options.point_size;
-        if(_options.height != null) _height = _options.height;
+        if(options.point_size != null) _point_size = options.point_size;
 
             //create the list
         list = new List({
             parent : this,
             name : name + '.list',
-            x: 0, y: h, w: w, h: _height,
-            align : TextAlign.left,
-            point_size : _point_size,
-            onselect : onselected
+            x: 0, y: options.h+8, w: w-1, h: _height,
+            visible : options.visible
         });
+
+        list.onselect.listen(onselected);
 
         selected_label = new Label({
             parent : this,
-            bounds : new Rect(5,0,bounds.w-10, bounds.h),
-            text:_options.text,
+            x:5, y:0, w:w-10, h:h,
+            text: options.text,
             point_size: _point_size,
             name : name + '.selected_label',
-            align : TextAlign.left
+            align : TextAlign.left,
+            visible : options.visible
         });
 
-        renderinst = renderer.dropdown.init( this, _options );
+        renderinst = render_service.render( Dropdown, this );
 
             //the list is hidden at start
         list.set_visible(false);
@@ -61,51 +69,27 @@ class Dropdown extends Control {
 
     public function select(index:Int) {
 
-        list.select(index);
+        // list.select(index);
 
     }
 
-    function onselected(v:String, l:List, e:MouseEvent) {
+    function onselected(idx:Int, c:Control, e:MouseEvent) {
 
-        selected = v;
-        selected_label.text = selected;
+        trace('selected $idx');
+        selected_label.text = '$idx';
         close_list();
 
-        if(onselect != null) {
-            onselect(selected, this, e);
-        }
+    } //onselected
 
-    } //onselect
-
-    public function add_item( _item:String ) {
-        list.add_item(_item);
+    public function add_item( _item:Control, offset_x:Float = 0.0, offset_y:Float = 0.0 ) {
+        list.add_item(_item, offset_x, offset_y);
         list.set_visible(is_open);
-    }
-
-    public function add_items( _items:Array<String> ) {
-        list.add_items(_items);
-        list.set_visible(is_open);
-    }
-
-    override function set_depth( _depth:Float ) : Float {
-
-        super.set_depth(_depth);
-
-        renderer.dropdown.set_depth(this, _depth);
-
-        return depth;
-
-    } //set_depth
-
-    public override function set_visible( ?_visible:Bool = true ) {
-        super.set_visible(_visible);
-        renderer.dropdown.set_visible(this,_visible);
     }
 
     public function close_list() {
 
         canvas.modal = null;
-        real_bounds.h = bounds.h;
+        h = options.h;
 
         list.set_visible(false);
         list.depth = depth+0.001;
@@ -116,14 +100,14 @@ class Dropdown extends Control {
     public function open_list() {
 
             //make sure it's always on top
-        list.depth = canvas.depth+1;
+        list.depth = canvas.next_depth();
         canvas.modal = list;
 
             //make it visible
         list.set_visible(true);
 
             //adjust the bounds so we get mouse events still
-        real_bounds.h = bounds.h + list.bounds.h;
+        h = options.h + 9 + list.h;
 
             //and flag it
         is_open = true;
@@ -141,9 +125,7 @@ class Dropdown extends Control {
                 return;
             }
 
-            var m = new Point(e.x, e.y);
-
-            if( selected_label.contains(m.x, m.y) ) {
+            if( selected_label.contains(e.x, e.y) ) {
                 open_list();
             }
 
@@ -151,9 +133,4 @@ class Dropdown extends Control {
 
     } //onmousedown
 
-    public override function mouseup(e) {
-        super.mouseup(e);
-    }
-
-#end
-}
+} //Dropdown

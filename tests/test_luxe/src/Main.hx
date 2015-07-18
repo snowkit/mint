@@ -135,7 +135,7 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'window2',
             title: 'window',
-            x:500, y:10, w:256, h: 95
+            x:500, y:10, w:256, h: 95+36
         });
 
         customwindow = new mint.Window({
@@ -143,8 +143,34 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             renderer: new CustomWindowRender(),
-            x:500, y:140, w:256, h: 180+42+32
+            x:500, y:270, w:256, h: 180+42+32
         });
+
+        var platform = new mint.Dropdown({
+            parent: window2,
+            name: 'dropdown',
+            text: 'Platform...',
+            x:10, y:32+22+10+32, w:256-10-10, h:24,
+        });
+
+        inline function add_plat(name:String, first:Bool = false) {
+            platform.add_item(
+                new mint.Label({
+                    parent: canvas,
+                    align: TextAlign.left,
+                    text: '$name',
+                    name: 'plat-$name',
+                    w:225, h:24, point_size: 14
+                }),
+                10, (first) ? 0 : 10
+            );
+        }
+
+        add_plat('windows', true);
+        add_plat('linux');
+        add_plat('ios');
+        add_plat('android');
+        add_plat('web');
 
         var p1 = new mint.Panel({
             parent: customwindow, name: 'p1', x: 32, y: 56, w: 32, h: 32
@@ -173,7 +199,7 @@ class Main extends luxe.Game {
 
         for(i in 0 ... 20) {
             list2.add_item(
-                label = new mint.Label({
+                new mint.Label({
                     parent: list2,
                     name: 'label$i',
                     w:140, h:20,
