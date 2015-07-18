@@ -12,15 +12,19 @@ import luxe.Vector;
 
 class Scroll extends mint.render.Base {
 
-    var scroll : mint.ScrollArea;
+    public var scroll : mint.ScrollArea;
     public var visual : Sprite;
     public var scrollh : Sprite;
     public var scrollv : Sprite;
 
+    var render: LuxeMintRender;
+
     public function new( _render:LuxeMintRender, _control:mint.ScrollArea ) {
 
-        super(_render, _control);
         scroll = _control;
+        render = _render;
+
+        super(_render, _control);
 
         visual = new luxe.Sprite({
             batcher: _render.options.batcher,
@@ -28,7 +32,8 @@ class Scroll extends mint.render.Base {
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
             color: new Color().rgb(0x343434),
-            depth: control.depth,
+            depth: render.options.depth + control.depth,
+            group: render.options.group,
             visible: control.visible,
         });
 
@@ -38,7 +43,8 @@ class Scroll extends mint.render.Base {
             pos: new Vector(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y),
             size: new Vector(scroll.scroll.h.bounds.w, scroll.scroll.h.bounds.h),
             color: new Color().rgb(0x9dca63),
-            depth: control.depth+0.00001,
+            depth: render.options.depth + control.depth+0.00001,
+            group: render.options.group,
             visible: control.visible,
         });
 
@@ -48,7 +54,8 @@ class Scroll extends mint.render.Base {
             pos: new Vector(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y),
             size: new Vector(scroll.scroll.v.bounds.w, scroll.scroll.v.bounds.h),
             color: new Color().rgb(0x9dca63),
-            depth: control.depth+0.00001,
+            depth: render.options.depth + control.depth+0.00001,
+            group: render.options.group,
             visible: control.visible,
         });
 
@@ -108,9 +115,9 @@ class Scroll extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
-        scrollv.depth = _depth+(scroll.nodes*0.001)+0.00001;
-        scrollh.depth = _depth+(scroll.nodes*0.001)+0.00001;
+        visual.depth = render.options.depth + _depth;
+        scrollv.depth = render.options.depth + _depth+(scroll.nodes*0.001)+0.00001;
+        scrollh.depth = render.options.depth + _depth+(scroll.nodes*0.001)+0.00001;
     } //ondepth
 
 } //Scroll

@@ -12,21 +12,26 @@ import luxe.Vector;
 
 class Button extends mint.render.Base {
 
-    var button : mint.Button;
-    var visual : Sprite;
+    public var button : mint.Button;
+    public var visual : Sprite;
+
+    var render: LuxeMintRender;
 
     public function new( _render:LuxeMintRender, _control:mint.Button ) {
 
-        super(_render, _control);
+        render = _render;
         button = _control;
 
+        super(render, _control);
+
         visual = new luxe.Sprite({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
             color: new Color().rgb(0x373737),
-            depth: control.depth,
+            depth: render.options.depth + control.depth,
+            group: render.options.group,
             visible: control.visible,
         });
 
@@ -69,7 +74,7 @@ class Button extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
+        visual.depth = render.options.depth + _depth;
     } //ondepth
 
 } //Button

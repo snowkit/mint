@@ -13,33 +13,39 @@ import luxe.Color;
 
 class TextEdit extends mint.render.Base {
 
-    var textedit : mint.TextEdit;
+    public var textedit : mint.TextEdit;
     public var visual : QuadGeometry;
     public var cursor : LineGeometry;
 
+    var render: LuxeMintRender;
+
     public function new( _render:LuxeMintRender, _control:mint.TextEdit ) {
 
-        super(_render, _control);
         textedit = _control;
+        render = _render;
+
+        super(render, _control);
 
         visual = Luxe.draw.box({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
             color: new Color(0,0,0,1).rgb(0x646469),
-            depth: control.depth,
+            depth: render.options.depth + control.depth,
+            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });
 
         cursor = Luxe.draw.line({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             p0: new Vector(0,0),
             p1: new Vector(0,0),
             color: new Color(0,0,0,1).rgb(0x9dca63),
-            depth: control.depth+0.0001,
+            depth: render.options.depth + control.depth+0.0001,
+            group: render.options.group,
             visible: false,
             clip_rect: Convert.bounds(control.clip_with)
         });
@@ -64,13 +70,15 @@ class TextEdit extends mint.render.Base {
 
             if(textedit.isfocused) {
                 Luxe.draw.rectangle({
+                    batcher: render.options.batcher,
                     x:textedit.x,
                     y:textedit.y,
                     w:textedit.w,
                     h:textedit.h,
                     immediate: true,
                     color: new Color(0,0,0,1).rgb(0x9dca63),
-                    depth: textedit.depth+0.0001
+                    depth: render.options.depth+textedit.depth+0.0001,
+                    group: render.options.group
                 });
             }
         });
@@ -161,8 +169,8 @@ class TextEdit extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
-        cursor.depth = _depth+0.0001;
+        visual.depth = render.options.depth+_depth;
+        cursor.depth = render.options.depth+_depth+0.0001;
     } //ondepth
 
 } //TextEdit

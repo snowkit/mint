@@ -12,22 +12,27 @@ import luxe.Color;
 
 class Canvas extends mint.render.Base {
 
-    var canvas : mint.Canvas;
-    var visual : QuadGeometry;
+    public var canvas : mint.Canvas;
+    public var visual : QuadGeometry;
+
+    var render: LuxeMintRender;
 
     public function new( _render:LuxeMintRender, _control:mint.Canvas ) {
 
-        super(_render, _control);
         canvas = _control;
+        render = _render;
+
+        super(render, _control);
 
         visual = Luxe.draw.box({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
             color: new Color(0,0,0,0).rgb(0x0c0c0c),
-            depth: control.depth,
+            depth: render.options.depth + control.depth,
+            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with),
         });
@@ -64,7 +69,7 @@ class Canvas extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
+        visual.depth = render.options.depth + _depth;
     } //ondepth
 
 } //Canvas

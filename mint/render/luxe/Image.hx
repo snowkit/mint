@@ -12,26 +12,31 @@ import luxe.Vector;
 
 class Image extends mint.render.Base {
 
-    var image : mint.Image;
-    var visual : Sprite;
+    public var image : mint.Image;
+    public var visual : Sprite;
+
+    var render: LuxeMintRender;
 
     public function new( _render:LuxeMintRender, _control:mint.Image ) {
 
-        super(_render, _control);
         image = _control;
+        render = _render;
+
+        super(render, _control);
 
         var get = Luxe.resources.load_texture(image.options.path);
 
         get.then(function(texture){
 
             visual = new luxe.Sprite({
-                batcher: _render.options.batcher,
+                batcher: render.options.batcher,
                 centered: false,
                 // color: Color.random(),
                 texture: texture,
                 pos: new Vector(control.x, control.y),
                 size: new Vector(control.w, control.h),
-                depth: control.depth,
+                depth: render.options.depth + control.depth,
+                group: render.options.group,
                 visible: control.visible,
             });
 
@@ -70,7 +75,7 @@ class Image extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
+        visual.depth = render.options.depth + _depth;
     } //ondepth
 
 } //Image

@@ -12,13 +12,17 @@ import luxe.Color;
 
 class Panel extends mint.render.Base {
 
-    var panel : mint.Panel;
+    public var panel : mint.Panel;
     public var visual : QuadGeometry;
+
+    var render: LuxeMintRender;
 
     public function new( _render:LuxeMintRender, _control:mint.Panel ) {
 
-        super(_render, _control);
         panel = _control;
+        render = _render;
+
+        super(render, _control);
 
         visual = Luxe.draw.box({
             batcher: _render.options.batcher,
@@ -27,7 +31,8 @@ class Panel extends mint.render.Base {
             w:control.w,
             h:control.h,
             color: new Color(0,0,0,1).rgb(0x242424),
-            depth: control.depth,
+            depth: render.options.depth + control.depth,
+            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });
@@ -63,7 +68,7 @@ class Panel extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
+        visual.depth = render.options.depth + _depth;
     } //ondepth
 
 } //Panel

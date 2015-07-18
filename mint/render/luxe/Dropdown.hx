@@ -17,19 +17,24 @@ class Dropdown extends mint.render.Base {
     public var visual : QuadGeometry;
     public var border : RectangleGeometry;
 
+    var render: LuxeMintRender;
+
     public function new( _render:LuxeMintRender, _control:mint.Dropdown ) {
 
-        super(_render, _control);
         dropdown = _control;
+        render = _render;
+
+        super(render, _control);
 
         visual = Luxe.draw.box({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
             color: new Color(0,0,0,1).rgb(0x373737),
-            depth: control.depth,
+            depth: render.options.depth + control.depth,
+            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });
@@ -41,7 +46,8 @@ class Dropdown extends mint.render.Base {
             w: control.w,
             h: control.h,
             color: new Color(0,0,0,1).rgb(0x121212),
-            depth: control.depth+0.002,
+            depth: render.options.depth + control.depth+0.002,
+            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });
@@ -53,7 +59,9 @@ class Dropdown extends mint.render.Base {
     override function ondestroy() {
         disconnect();
         visual.drop();
+        border.drop();
         visual = null;
+        border = null;
         destroy();
     }
 
@@ -65,22 +73,19 @@ class Dropdown extends mint.render.Base {
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
         if(_disable) {
-            visual.clip_rect = null;
-            border.clip_rect = null;
+            visual.clip_rect = border.clip_rect = null;
         } else {
-            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-            border.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
+            visual.clip_rect = border.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
         }
     } //onclip
 
     override function onvisible( _visible:Bool ) {
-        visual.visible = _visible;
-        border.visible = _visible;
+        visual.visible = border.visible = _visible;
     }
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
-        border.depth = _depth+0.002;
+        visual.depth = render.options.depth + _depth;
+        border.depth = render.options.depth + _depth+0.002;
     }
 
 

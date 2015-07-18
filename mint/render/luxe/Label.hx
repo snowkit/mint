@@ -17,10 +17,14 @@ class Label extends mint.render.Base {
     public var hover_color: Int = 0x9dca63;
     public var normal_color: Int = 0xffffff;
 
+    var render: LuxeMintRender;
+
     public function new( _render:LuxeMintRender, _control:mint.Label ) {
 
-        super(_render, _control);
         label = _control;
+        render = _render;
+
+        super(_render, _control);
 
         text = new luxe.Text({
             batcher: _render.options.batcher,
@@ -31,7 +35,8 @@ class Label extends mint.render.Base {
             align: Convert.text_align(label.options.align),
             align_vertical: Convert.text_align(label.options.align_vertical),
             point_size: label.options.point_size,
-            depth: control.depth,
+            depth: render.options.depth + control.depth,
+            group: render.options.group,
             visible: control.visible,
         });
 
@@ -75,7 +80,7 @@ class Label extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        text.depth = _depth;
+        text.depth = render.options.depth + _depth;
     } //ondepth
 
 } //Label

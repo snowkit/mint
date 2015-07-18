@@ -5,6 +5,7 @@ import luxe.Rectangle;
 import luxe.Text;
 import luxe.Vector;
 import luxe.Input;
+import luxe.Log.*;
 
 class LuxeMintRender extends mint.Renderer {
 
@@ -14,11 +15,12 @@ class LuxeMintRender extends mint.Renderer {
 
         super();
 
-        if(_options == null) _options = {};
-
-        options = _options;
-
-        if(options.batcher == null) options.batcher = Luxe.renderer.batcher;
+        options = def(_options, {});
+        def(options.batcher, Luxe.renderer.batcher);
+        def(options.depth, 0);
+        def(options.group, 0);
+        def(options.immediate, false);
+        def(options.visible, true);
 
     } //new
 

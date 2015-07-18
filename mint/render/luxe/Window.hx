@@ -18,43 +18,50 @@ class Window extends mint.render.Base {
     public var top : QuadGeometry;
     public var border : RectangleGeometry;
 
+    var render: LuxeMintRender;
+
     public function new( _render:LuxeMintRender, _control:mint.Window ) {
 
-        super(_render, _control);
         window = _control;
+        render = _render;
+
+        super(_render, _control);
 
         visual = Luxe.draw.box({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x:window.x,
             y:window.y,
             w:window.w,
             h:window.h,
             color: new Color(0,0,0,1).rgb(0x242424),
-            depth: window.depth,
+            depth: render.options.depth + window.depth,
+            group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
         });
 
         top = Luxe.draw.box({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x: window.title.x,
             y:window.title.y,
             w:window.title.w,
             h:window.title.h,
             color: new Color(0,0,0,1).rgb(0x373737),
-            depth: window.depth,
+            depth: render.options.depth + window.depth,
+            group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
         });
 
         border = Luxe.draw.rectangle({
-            batcher: _render.options.batcher,
+            batcher: render.options.batcher,
             x: window.x,
             y: window.y,
             w: window.w,
             h: window.h,
             color: new Color(0,0,0,1).rgb(0x373739),
-            depth: window.depth+0.001,
+            depth: render.options.depth + window.depth+0.001,
+            group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
         });
@@ -99,9 +106,9 @@ class Window extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = _depth;
-        top.depth = _depth;
-        border.depth = _depth+0.001;
+        visual.depth = render.options.depth + _depth;
+        top.depth = render.options.depth + _depth;
+        border.depth = render.options.depth + _depth+0.001;
     } //ondepth
 
 } //Window
