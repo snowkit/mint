@@ -9,8 +9,6 @@ import mint.render.luxe.Convert;
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class Checkbox extends mint.render.Base {
 
@@ -23,7 +21,6 @@ class Checkbox extends mint.render.Base {
         super(_render, _control);
         box = _control;
 
-        _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
             pos: new Vector(control.x, control.y),
@@ -92,13 +89,11 @@ class Checkbox extends mint.render.Base {
 
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         visual.visible = _visible;
         node.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         visual.depth = _depth;
         node.depth = _depth;
     } //ondepth

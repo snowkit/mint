@@ -9,8 +9,6 @@ import mint.render.luxe.Convert;
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class Image extends mint.render.Base {
 
@@ -26,7 +24,6 @@ class Image extends mint.render.Base {
 
         get.then(function(texture){
 
-            _debug('create / ${control.name}');
             visual = new luxe.Sprite({
                 centered: false,
                 // color: Color.random(),
@@ -68,12 +65,10 @@ class Image extends mint.render.Base {
     } //onclip
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         visual.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         visual.depth = _depth;
     } //ondepth
 

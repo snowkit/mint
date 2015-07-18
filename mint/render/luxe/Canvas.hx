@@ -9,8 +9,6 @@ import mint.render.luxe.Convert;
 
 import phoenix.geometry.QuadGeometry;
 import luxe.Color;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class Canvas extends mint.render.Base {
 
@@ -22,7 +20,6 @@ class Canvas extends mint.render.Base {
         super(_render, _control);
         canvas = _control;
 
-        _debug('create / ${control.name}');
         visual = Luxe.draw.box({
             x:control.x,
             y:control.y,
@@ -39,8 +36,6 @@ class Canvas extends mint.render.Base {
     } //new
 
     override function ondestroy() {
-        _debug('destroy');
-
         disconnect();
 
         visual.drop();
@@ -64,12 +59,10 @@ class Canvas extends mint.render.Base {
 
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         visual.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         visual.depth = _depth;
     } //ondepth
 

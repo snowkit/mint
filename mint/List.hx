@@ -7,8 +7,7 @@ import mint.Macros.*;
 
 typedef ListOptions = {
     > ControlOptions,
-    ? multiselect: Bool,
-    ? onselect: Int->MouseEvent->Void,
+    ? multiselect: Bool
 }
 
 class List extends Control {

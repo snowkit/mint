@@ -9,8 +9,6 @@ import mint.render.luxe.Convert;
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class Scroll extends mint.render.Base {
 
@@ -24,7 +22,6 @@ class Scroll extends mint.render.Base {
         super(_render, _control);
         scroll = _control;
 
-        _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
             pos: new Vector(control.x, control.y),
@@ -59,8 +56,6 @@ class Scroll extends mint.render.Base {
     }
 
     override function ondestroy() {
-        _debug('destroy');
-
         disconnect();
         scroll.onscroll.remove(onscroll);
 
@@ -84,7 +79,6 @@ class Scroll extends mint.render.Base {
     }
 
     function onscroll(_dx:Float=0.0, _dy:Float=0.0) {
-        _debug('scroll / $_dx / $_dy');
         scrollh.pos.x = scroll.scroll.h.bounds.x;
         scrollv.pos.y = scroll.scroll.v.bounds.y;
     }
@@ -104,14 +98,12 @@ class Scroll extends mint.render.Base {
 
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         visual.visible = _visible;
         scrollh.visible = scroll.scroll.h.enabled && _visible;
         scrollv.visible = scroll.scroll.v.enabled && _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         visual.depth = _depth;
         scrollv.depth = _depth+(scroll.nodes*0.001)+0.00001;
         scrollh.depth = _depth+(scroll.nodes*0.001)+0.00001;

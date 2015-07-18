@@ -10,8 +10,6 @@ import mint.render.luxe.Convert;
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.LineGeometry;
 import luxe.Color;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class TextEdit extends mint.render.Base {
 
@@ -24,7 +22,6 @@ class TextEdit extends mint.render.Base {
         super(_render, _control);
         textedit = _control;
 
-        _debug('create / ${control.name}');
         visual = Luxe.draw.box({
             x:control.x,
             y:control.y,
@@ -128,16 +125,12 @@ class TextEdit extends mint.render.Base {
     } //
 
     override function ondestroy() {
-
-        _debug('destroy');
-
         disconnect();
 
         visual.drop();
         visual = null;
 
         destroy();
-
     }
 
     override function onbounds() {
@@ -166,7 +159,6 @@ class TextEdit extends mint.render.Base {
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         visual.depth = _depth;
         cursor.depth = _depth+0.0001;
     } //ondepth

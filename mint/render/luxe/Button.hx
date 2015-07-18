@@ -9,8 +9,6 @@ import mint.render.luxe.Convert;
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class Button extends mint.render.Base {
 
@@ -22,7 +20,6 @@ class Button extends mint.render.Base {
         super(_render, _control);
         button = _control;
 
-        _debug('create / ${control.name}');
         visual = new luxe.Sprite({
             centered: false,
             pos: new Vector(control.x, control.y),
@@ -67,12 +64,10 @@ class Button extends mint.render.Base {
 
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         visual.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         visual.depth = _depth;
     } //ondepth
 

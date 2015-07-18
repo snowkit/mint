@@ -8,8 +8,6 @@ import mint.render.luxe.Convert;
 
 import luxe.Text;
 import luxe.Color;
-import luxe.Log.log;
-import luxe.Log._debug;
 import phoenix.geometry.RectangleGeometry;
 
 class List extends mint.render.Base {
@@ -27,8 +25,6 @@ class List extends mint.render.Base {
 
         super(_render, _control);
         list = _control;
-
-        _debug('create / ${control.name}');
 
         list.onitementer.listen(onitementer);
         list.onitemleave.listen(onitemleave);
@@ -95,13 +91,11 @@ class List extends mint.render.Base {
 
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         // hover_rect.visible = _visible;
         // select_rects[0].visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         // select_rects[0].depth = list.depth+(list.nodes*0.001)+0.00002;
         // hover_rect.depth = list.depth+(list.nodes*0.001)+0.00002;
     } //ondepth

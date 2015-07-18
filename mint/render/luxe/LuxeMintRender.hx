@@ -20,6 +20,7 @@ class LuxeMintRender extends mint.Renderer {
             case mint.Checkbox:     follow(control, new mint.render.luxe.Checkbox(this, cast control));
             case mint.Window:       follow(control, new mint.render.luxe.Window(this, cast control));
             case mint.TextEdit:     follow(control, new mint.render.luxe.TextEdit(this, cast control));
+            case mint.Dropdown:     follow(control, new mint.render.luxe.Dropdown(this, cast control));
             case _:                 null;
         }
     } //render

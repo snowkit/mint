@@ -10,22 +10,19 @@ import mint.render.luxe.Convert;
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
 import luxe.Color;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class Window extends mint.render.Base {
 
-    var window : mint.Window;
-    var visual : QuadGeometry;
-    var top : QuadGeometry;
-    var border : RectangleGeometry;
+    public var window : mint.Window;
+    public var visual : QuadGeometry;
+    public var top : QuadGeometry;
+    public var border : RectangleGeometry;
 
     public function new( _render:Renderer, _control:mint.Window ) {
 
         super(_render, _control);
         window = _control;
 
-        _debug('create / ${control.name}');
         visual = Luxe.draw.box({
             x:window.x,
             y:window.y,
@@ -64,8 +61,6 @@ class Window extends mint.render.Base {
     } //new
 
     override function ondestroy() {
-        _debug('destroy');
-
         disconnect();
 
         visual.drop();
@@ -95,14 +90,12 @@ class Window extends mint.render.Base {
     } //onclip
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         visual.visible = _visible;
         top.visible = _visible;
         border.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         visual.depth = _depth;
         top.depth = _depth;
         border.depth = _depth+0.001;

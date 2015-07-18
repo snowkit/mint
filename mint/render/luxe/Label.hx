@@ -8,8 +8,6 @@ import mint.render.luxe.Convert;
 
 import luxe.Text;
 import luxe.Color;
-import luxe.Log.log;
-import luxe.Log._debug;
 
 class Label extends mint.render.Base {
 
@@ -24,7 +22,6 @@ class Label extends mint.render.Base {
         super(_render, _control);
         label = _control;
 
-        _debug('create / ${control.name}');
         text = new luxe.Text({
             bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
             color: new Color(),
@@ -73,12 +70,10 @@ class Label extends mint.render.Base {
 
 
     override function onvisible( _visible:Bool ) {
-        _debug('visible / $_visible');
         text.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        _debug('depth / $_depth');
         text.depth = _depth;
     } //ondepth
 
