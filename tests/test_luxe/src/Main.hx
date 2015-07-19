@@ -59,7 +59,7 @@ class Main extends luxe.Game {
         });
 
         td = new Text({
-            text: 'debug',
+            text: 'debug:  (${Luxe.snow.os} / ${Luxe.snow.platform})',
             point_size: 14,
             pos: new Vector(950, 10),
             align: right,
@@ -69,8 +69,7 @@ class Main extends luxe.Game {
 
         test1();
 
-    }
-
+    } //ready
 
     var progress_dir = -1;
 
@@ -277,11 +276,16 @@ class Main extends luxe.Game {
             );
         }
 
-        add_plat('windows', true);
-        add_plat('linux');
-        add_plat('ios');
-        add_plat('android');
-        add_plat('web');
+        var plist = ['windows', 'linux', 'ios', 'android', 'web'];
+        var f = true;
+        for(p in plist) {
+            add_plat(p, f);
+            f = false;
+        }
+
+        platform.onselect.listen(function(idx,_,_){
+            platform.label.text = plist[idx];
+        });
 
         var p1 = new mint.Panel({ parent: customwindow, name: 'p1', x: 32, y: 120, w: 32, h: 32 });
         var p2 = new mint.Panel({ parent: customwindow, name: 'p2', x: 32, y: 36, w: 8, h: 8 });
@@ -413,7 +417,7 @@ class Main extends luxe.Game {
         if(canvas!=null) {
             canvas.mousemove( Convert.mouse_event(e) );
 
-            var s = 'debug:\n';
+            var s = 'debug:  (${Luxe.snow.os} / ${Luxe.snow.platform})\n';
 
             s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none');
             s += '\n';
