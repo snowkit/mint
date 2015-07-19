@@ -1,8 +1,11 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
+
+import mint.types.Types;
+import mint.core.Signal;
 import mint.core.Macros.*;
+
 
 /** Options for constructing a Panel */
 typedef PanelOptions = {
@@ -10,6 +13,7 @@ typedef PanelOptions = {
     > ControlOptions,
 
 } //PanelOptions
+
 
 /**
     A simple blank panel control

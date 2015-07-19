@@ -1,8 +1,11 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
+
+import mint.types.Types;
+import mint.core.Signal;
 import mint.core.Macros.*;
+
 
 /** Options for constructing a Progress */
 typedef ProgressOptions = {
@@ -13,6 +16,7 @@ typedef ProgressOptions = {
     @:optional var progress : Float;
 
 } //ProgressOptions
+
 
 /**
     A simple progress control, ranging from 0 to 1.

@@ -1,8 +1,11 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
+
+import mint.types.Types;
+import mint.core.Signal;
 import mint.core.Macros.*;
+
 
 /** Options for constructing an Image */
 typedef ImageOptions = {
@@ -14,6 +17,7 @@ typedef ImageOptions = {
     path: String,
 
 } //ImageOptions
+
 
 /**
     A simple image control

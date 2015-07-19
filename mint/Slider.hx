@@ -1,9 +1,12 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
 import mint.Panel;
+
+import mint.types.Types;
+import mint.core.Signal;
 import mint.core.Macros.*;
+
 
 /** Options for constructing a Slider */
 typedef SliderOptions = {
@@ -23,6 +26,7 @@ typedef SliderOptions = {
     @:optional var step: Null<Float>;
 
 } //SliderOptions
+
 
 /**
     A simple slider control

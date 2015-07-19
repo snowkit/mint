@@ -1,26 +1,20 @@
 package mint;
 
 import mint.Control;
-import mint.Signal;
-import mint.core.Macros.*;
+
 import mint.types.Types;
 import mint.types.Types.Helper.in_rect;
+import mint.core.Signal;
+import mint.core.Macros.*;
 
-typedef ScrollInfo = {
-    enabled: Bool,
-    percent: Float,
-    amount: Float,
-    x:Float,
-    y:Float,
-    w:Float,
-    h:Float
-}
 
+/** Options for constructing a scroll area */
 typedef ScrollAreaOptions = {
+
     > ControlOptions,
 
-    ? onscroll: Float->Float->Void
-}
+} //ScrollAreaOptions
+
 
 @:allow(mint.render.Renderer)
 class ScrollArea extends Control {
@@ -263,3 +257,14 @@ class ScrollArea extends Control {
     } //set_scroll_x
 
 } //ScrollArea
+
+
+private typedef ScrollInfo = {
+    enabled: Bool,
+    percent: Float,
+    amount: Float,
+    x:Float,
+    y:Float,
+    w:Float,
+    h:Float
+}

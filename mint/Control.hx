@@ -1,11 +1,14 @@
 package mint;
 
-import mint.types.Types;
-import mint.Signal;
 import mint.render.Rendering;
-import mint.core.Macros.*;
-import mint.types.Types.Helper.in_rect;
 
+import mint.types.Types;
+import mint.types.Types.Helper.in_rect;
+import mint.core.Signal;
+import mint.core.Macros.*;
+
+
+/** Options for constructing a control */
 typedef ControlOptions = {
 
         /** Generic framework/user specific options,
@@ -50,6 +53,7 @@ typedef ControlOptions = {
     @:optional var rendering: Rendering;
 
 } //ControlOptions
+
 
 /** An empty control.
     Base class for all controls

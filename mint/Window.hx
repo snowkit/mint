@@ -1,11 +1,14 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
 import mint.Label;
-import mint.Signal;
+
+import mint.types.Types;
+import mint.core.Signal;
 import mint.core.Macros.*;
 
+
+/** Options for constructing a window */
 typedef WindowOptions = {
 
     > ControlOptions,
@@ -24,6 +27,7 @@ typedef WindowOptions = {
     @:optional var focusable: Bool;
 
 } //WindowOptions
+
 
 @:allow(mint.render.Renderer)
 class Window extends Control {

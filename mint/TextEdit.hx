@@ -1,12 +1,14 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
 import mint.Label;
-import mint.Signal;
+
+import mint.types.Types;
+import mint.core.Signal;
 import mint.core.Macros.*;
 
 using mint.core.unifill.Unifill;
+
 
 /** Options for constructing a TextEdit */
 typedef TextEditOptions = {
@@ -21,6 +23,7 @@ typedef TextEditOptions = {
     @:optional var filter: EReg;
 
 } //TextEditOptions
+
 
 /**
     A simple text edit control

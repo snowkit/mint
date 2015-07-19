@@ -1,10 +1,13 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
 import mint.render.Rendering;
-import mint.core.Macros.*;
+
+import mint.types.Types;
 import mint.types.Types.Helper.in_rect;
+import mint.core.Signal;
+import mint.core.Macros.*;
+
 
 /** Options for constructing a Canvas */
 typedef CanvasOptions = {
@@ -12,6 +15,7 @@ typedef CanvasOptions = {
     > ControlOptions,
 
 } //CanvasOptions
+
 
 /**
     A canvas is a root object in mint.

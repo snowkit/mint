@@ -1,9 +1,12 @@
 package mint;
 
-import mint.types.Types;
 import mint.Control;
 import mint.Label;
+
+import mint.types.Types;
+import mint.core.Signal;
 import mint.core.Macros.*;
+
 
 /** Options for constructing a Button */
 typedef ButtonOptions = {
