@@ -10,12 +10,14 @@ import luxe.Text;
 import luxe.Color;
 import phoenix.geometry.RectangleGeometry;
 
+private typedef LuxeMintListOptions = {
+    var color_selected: Color;
+    var color_hover: Color;
+}
+
 class List extends mint.render.Render {
 
     public var list : mint.List;
-
-    public var selected_color: Int = 0x9dca63;
-    public var hover_color: Int = 0xffffff;
 
     // public var select_rects: Array<RectangleGeometry>;
     // public var hover_rect: RectangleGeometry;

@@ -186,6 +186,7 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'image1',
             x: 10, y: 120, w: 64, h: 64,
+            options: { uv: new luxe.Rectangle(0,0,32,32) },
             path: 'assets/transparency.png'
         });
 
@@ -204,8 +205,8 @@ class Main extends luxe.Game {
         new mint.Image({
             parent: scroll,
             name: 'image2',
-            x:0, y:100, w:256, h: 256,
-            path: 'assets/transparency.png'
+            x:0, y:100, w:512, h: 512,
+            path: 'assets/image.png'
         });
 
         var a = new mint.Image({

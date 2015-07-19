@@ -1,6 +1,7 @@
 package mint.render.luxe;
 
 import mint.types.Types;
+import mint.core.Macros.*;
 import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
@@ -9,6 +10,10 @@ import mint.render.luxe.Convert;
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
+
+private typedef LuxeMintImageOptions = {
+    @:optional var uv: luxe.Rectangle;
+}
 
 class Image extends mint.render.Render {
 
@@ -24,6 +29,8 @@ class Image extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintImageOptions = image.options.options;
+
         var get = Luxe.resources.load_texture(image.options.path);
 
         get.then(function(texture){
@@ -37,11 +44,12 @@ class Image extends mint.render.Render {
                 depth: render.options.depth + control.depth,
                 group: render.options.group,
                 visible: control.visible,
+                uv: _opt.uv
             });
 
             visual.clip_rect = Convert.bounds(control.clip_with);
 
-        }); //
+        }); //get
 
     } //new
 
