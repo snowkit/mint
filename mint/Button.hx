@@ -47,14 +47,13 @@ class Button extends Control {
             x: 0, y:0, w: w, h: h,
             text: options.text,
             text_size: options.text_size,
-            name : name + '.label',
+            name: name + '.label',
+            options: options.options.label,
             mouse_input: false,
             visible: options.visible
         });
 
-        if(options.onclick != null) {
-            onmouseup.listen(options.onclick);
-        }
+        if(options.onclick != null) onmouseup.listen(options.onclick);
 
         renderer = rendering.get( Button, this );
 

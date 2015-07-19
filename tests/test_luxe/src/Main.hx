@@ -169,6 +169,7 @@ class Main extends luxe.Game {
             x: 10, y: 52, w: 60, h: 32,
             text: 'mint',
             text_size: 14,
+            options: { label: { color_normal:new Color().rgb(0x9dca63) } },
             onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
 
