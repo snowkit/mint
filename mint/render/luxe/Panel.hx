@@ -37,8 +37,6 @@ class Panel extends mint.render.Render {
             clip_rect: Convert.bounds(control.clip_with)
         });
 
-        connect();
-
     } //new
 
     override function ondestroy() {

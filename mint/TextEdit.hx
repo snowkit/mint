@@ -78,6 +78,8 @@ class TextEdit extends Control {
 
         refresh(edit);
 
+        oncreate.emit();
+
     } //new
 
     override function mousedown( event:MouseEvent ) {

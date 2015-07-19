@@ -41,36 +41,54 @@ class Image extends mint.render.Render {
 
             visual.clip_rect = Convert.bounds(control.clip_with);
 
-            connect();
-
         }); //
 
-    }
+    } //new
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.geometry_quad.resize_xy( control.w, control.h );
-    }
+
+        if(visual != null) {
+            visual.transform.pos.set_xy(control.x, control.y);
+            visual.geometry_quad.resize_xy( control.w, control.h );
+        }
+
+    } //onbounds
 
     override function ondestroy() {
-        visual.destroy();
-        visual = null;
-    }
+
+        if(visual != null) {
+            visual.destroy();
+            visual = null;
+        }
+
+    } //ondestroy
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
-        if(_disable) {
-            visual.clip_rect = null;
-        } else {
-            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
+
+        if(visual != null) {
+            if(_disable) {
+                visual.clip_rect = null;
+            } else {
+                visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
+            }
         }
+
     } //onclip
 
     override function onvisible( _visible:Bool ) {
-        visual.visible = _visible;
+
+        if(visual != null) {
+            visual.visible = _visible;
+        }
+
     } //onvisible
 
     override function ondepth( _depth:Float ) {
-        visual.depth = render.options.depth + _depth;
+
+        if(visual != null) {
+            visual.depth = render.options.depth + _depth;
+        }
+
     } //ondepth
 
 } //Image

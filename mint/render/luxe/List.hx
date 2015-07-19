@@ -46,8 +46,6 @@ class List extends mint.render.Render {
         // });
         // select_rects.push(r);
 
-        connect();
-
     }
 
     function onitementer(idx, ctrl:mint.Control, e) {

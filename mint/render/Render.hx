@@ -21,11 +21,13 @@ class Render implements Renderer {
         control = _control;
         rendering = _render;
 
+        control.oncreate.listen(internal_connect);
         control.ondestroy.listen(internal_disconnect);
 
     } //new
 
-    function connect() {
+        /** Don't need to call this from Render subclasses */
+    function internal_connect() {
 
         control.onvisible.listen(onvisible);
         control.ondepth.listen(ondepth);
@@ -34,7 +36,7 @@ class Render implements Renderer {
         control.onchild.listen(onchild);
         control.onbounds.listen(onbounds);
 
-    } //connect
+    } //internal_connect
 
         /** Don't need to call this from Render subclasses */
     function internal_disconnect() {
@@ -46,16 +48,17 @@ class Render implements Renderer {
         control.onchild.remove(onchild);
         control.onbounds.remove(onbounds);
 
+        control.oncreate.remove(internal_connect);
         control.ondestroy.remove(internal_disconnect);
 
     } //internal_disconnect
 
-    function onvisible(_v:Bool){}
-    function ondepth(_d:Float){}
-    function ondestroy(){}
-    function onbounds(){}
+    function onvisible(_v:Bool) {}
+    function ondepth(_d:Float) {}
+    function ondestroy() {}
+    function onbounds() {}
     function onclip(_disable:Bool,_x:Float,_y:Float,_w:Float,_h:Float){}
-    function onchild(_c:Control){}
+    function onchild(_c:Control) {}
 
 } //Render
 

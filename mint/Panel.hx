@@ -34,6 +34,8 @@ class Panel extends Control {
 
         renderer = rendering.get(Panel, this);
 
+        oncreate.emit();
+
     } //new
 
 } //Panel

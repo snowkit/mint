@@ -119,6 +119,7 @@ class Control {
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
 
+    public var oncreate     : Signal<Void->Void>;
     public var onrender     : Signal<Void->Void>;
     public var onbounds     : Signal<Void->Void>;
     public var ondestroy    : Signal<Void->Void>;
@@ -146,13 +147,17 @@ class Control {
         /** The rendering service that this instance uses, defaults to the canvas render service */
     public var rendering : Rendering;
 
-    var ctrloptions : ControlOptions;
+        /** The control specific options */
+    var _options_ : ControlOptions;
 
-    public function new( _options:ControlOptions ) {
+        /** Create a Control with the given options.
+            The emit_oncreate flag will fire the oncreate signal at the end of this function default:false */
+    public function new( _options:ControlOptions, _emit_oncreate:Bool = false ) {
 
-        ctrloptions = _options;
-        def(ctrloptions.options, {});
+        _options_ = _options;
+        def(_options_.options, {});
 
+        oncreate     = new Signal();
         onrender     = new Signal();
         onbounds     = new Signal();
         ondestroy    = new Signal();
@@ -172,25 +177,25 @@ class Control {
 
         children = [];
 
-        // bounds = ctrloptions.bounds == null ? new Rect(0,0,32,32) : ctrloptions.bounds;
+        // bounds = _options_.bounds == null ? new Rect(0,0,32,32) : _options_.bounds;
 
-        w_min = def(ctrloptions.w_min, 8);
-        h_min = def(ctrloptions.h_min, 8);
-        w_max = def(ctrloptions.w_max, 0);
-        h_max = def(ctrloptions.h_max, 0);
+        w_min = def(_options_.w_min, 8);
+        h_min = def(_options_.h_min, 8);
+        w_max = def(_options_.w_max, 0);
+        h_max = def(_options_.h_max, 0);
 
-        x = def(ctrloptions.x, 0);
-        y = def(ctrloptions.y, 0);
-        w = def(ctrloptions.w, 32);
-        h = def(ctrloptions.h, 32);
+        x = def(_options_.x, 0);
+        y = def(_options_.y, 0);
+        w = def(_options_.w, 32);
+        h = def(_options_.h, 32);
 
         x_local = x;
         y_local = y;
 
-        name = def(ctrloptions.name, 'control');
+        name = def(_options_.name, 'control');
 
-        if(ctrloptions.mouse_input != null) mouse_input = ctrloptions.mouse_input;
-        if(ctrloptions.key_input != null) key_input = ctrloptions.key_input;
+        if(_options_.mouse_input != null) mouse_input = _options_.mouse_input;
+        if(_options_.key_input != null) key_input = _options_.key_input;
 
         children_bounds = {
             x:0,
@@ -203,16 +208,16 @@ class Control {
             real_h : 0
         };
 
-        if(ctrloptions.parent != null) {
+        if(_options_.parent != null) {
 
-            canvas = ctrloptions.parent.canvas;
+            canvas = _options_.parent.canvas;
             depth = canvas.next_depth();
-            ctrloptions.parent.add(this);
+            _options_.parent.add(this);
 
         } else { //parent != null
 
             if( !Std.is(this, Canvas) && canvas == null) {
-                throw "Control without a canvas " + ctrloptions;
+                throw "Control without a canvas " + _options_;
             } //canvas
 
         }
@@ -223,15 +228,17 @@ class Control {
 
         rendering = def(_options.rendering, canvas.rendering);
 
-        if(ctrloptions.renderable != null) {
-            renderable = ctrloptions.renderable;
+        if(_options_.renderable != null) {
+            renderable = _options_.renderable;
         } else {
             if(canvas != null) {
                 renderable = canvas.renderable;
             }
         }
 
-        if(ctrloptions.visible != null) visible = ctrloptions.visible;
+        if(_options_.visible != null) visible = _options_.visible;
+
+        if(_emit_oncreate) oncreate.emit();
 
     } //new
 

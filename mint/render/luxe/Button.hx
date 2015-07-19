@@ -59,8 +59,6 @@ class Button extends mint.render.Render {
         button.onmousedown.listen(function(e,c) { visual.color = color_down; });
         button.onmouseup.listen(function(e,c) { visual.color = color_hover; });
 
-        connect();
-
     } //new
 
     override function onbounds() {

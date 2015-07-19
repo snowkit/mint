@@ -64,6 +64,8 @@ class Canvas extends Control {
 
         renderer = rendering.get( Canvas, this );
 
+        oncreate.emit();
+
     } //new
 
         /** Get the top most control under the given point, or null if there is none (or is the canvas itself) */

@@ -55,6 +55,8 @@ class List extends Control {
 
         renderer = rendering.get(List, this);
 
+        oncreate.emit();
+
     } //new
 
     function click_deselect(e:MouseEvent, ctrl) {

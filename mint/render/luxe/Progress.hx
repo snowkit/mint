@@ -52,8 +52,6 @@ class Progress extends mint.render.Render {
             clip_rect: Convert.bounds(control.clip_with)
         });
 
-        connect();
-
         progress.onchange.listen(function(cur, prev){
             bar.resize_xy(get_bar_width(cur), control.h-(margin*2));
         });

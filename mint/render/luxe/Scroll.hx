@@ -61,7 +61,6 @@ class Scroll extends mint.render.Render {
 
         visual.clip_rect = Convert.bounds(control.clip_with);
 
-        connect();
         scroll.onscroll.listen(onscroll);
         scroll.onhandlevis.listen(onhandlevis);
     }

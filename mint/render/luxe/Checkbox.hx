@@ -86,8 +86,6 @@ class Checkbox extends mint.render.Render {
         checkbox.onmouseenter.listen(function(e,c) { node.color = color_node_hover; visual.color = color_hover; });
         checkbox.onmouseleave.listen(function(e,c) { node.color = color_node; visual.color = color_normal; });
 
-        connect();
-
         checkbox.onchange.listen(oncheck);
 
     } //new

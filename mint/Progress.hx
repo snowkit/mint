@@ -45,6 +45,8 @@ class Progress extends Control {
 
         renderer = rendering.get(Progress, this);
 
+        oncreate.emit();
+
     } //new
 
     function set_progress(_value:Float) : Float {

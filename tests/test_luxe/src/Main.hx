@@ -558,8 +558,6 @@ class CustomWindowRenderer extends mint.render.Render {
         window.title.y_local += 3;
         window.close_button.y_local += 1;
 
-        connect();
-
     } //new
 
     override function ondestroy() {

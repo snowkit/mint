@@ -114,6 +114,8 @@ class Window extends Control {
 
         renderer = rendering.get( Window, this );
 
+        oncreate.emit();
+
     } //new
 
     var resizing = false;

@@ -48,6 +48,8 @@ class Image extends Control {
 
         renderer = rendering.get(Image, this);
 
+        oncreate.emit();
+
     } //new
 
 //Internal

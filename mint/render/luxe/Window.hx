@@ -66,8 +66,6 @@ class Window extends mint.render.Render {
             clip_rect: Convert.bounds(window.clip_with)
         });
 
-        connect();
-
     } //new
 
     override function ondestroy() {

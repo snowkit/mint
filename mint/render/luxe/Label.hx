@@ -53,8 +53,6 @@ class Label extends mint.render.Render {
 
         text.clip_rect = Convert.bounds(control.clip_with);
 
-        connect();
-
         label.onchange.listen(ontext);
 
         control.onmouseenter.listen(function(e,c){ text.color = color_hover; });

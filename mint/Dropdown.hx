@@ -70,6 +70,8 @@ class Dropdown extends Control {
 
         list.set_visible(false);
 
+        oncreate.emit();
+
     } //new
 
     public function select(index:Int) {

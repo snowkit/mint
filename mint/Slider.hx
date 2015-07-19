@@ -88,6 +88,8 @@ class Slider extends Control {
 
         renderer = rendering.get(Slider, this);
 
+        oncreate.emit();
+
     } //new
 
     var dragging = false;

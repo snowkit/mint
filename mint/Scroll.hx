@@ -64,6 +64,8 @@ class Scroll extends Control {
         renderer = rendering.get( Scroll, this );
         check_handle_vis();
 
+        oncreate.emit();
+
     } //new
 
     public override function add(child:Control) {

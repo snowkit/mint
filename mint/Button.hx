@@ -58,6 +58,8 @@ class Button extends Control {
 
         renderer = rendering.get( Button, this );
 
+        oncreate.emit();
+
     } //new
 
 

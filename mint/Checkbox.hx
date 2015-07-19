@@ -63,6 +63,8 @@ class Checkbox extends Control {
 
         onmouseup.listen(onclick);
 
+        oncreate.emit();
+
     } //new
 
 //Internal

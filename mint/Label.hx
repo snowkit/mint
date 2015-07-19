@@ -66,7 +66,10 @@ class Label extends Control {
         }
 
         text = options.text;
+
         renderer = rendering.get(Label, this);
+
+        oncreate.emit();
 
     } //new
 

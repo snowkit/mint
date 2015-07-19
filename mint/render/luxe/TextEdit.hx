@@ -50,8 +50,6 @@ class TextEdit extends mint.render.Render {
             clip_rect: Convert.bounds(control.clip_with)
         });
 
-        connect();
-
         textedit.onmouseenter.listen(function(e,c) {
             visual.color.rgb(0x444449);
             start_cursor();
