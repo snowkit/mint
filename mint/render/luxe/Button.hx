@@ -12,7 +12,7 @@ import luxe.Vector;
 import luxe.Log.*;
 
 private typedef LuxeMintButtonOptions = {
-    var color_normal: Color;
+    var color: Color;
     var color_hover: Color;
     var color_down: Color;
 }
@@ -22,7 +22,7 @@ class Button extends mint.render.Render {
     public var button : mint.Button;
     public var visual : Sprite;
 
-    public var color_normal: Color;
+    public var color: Color;
     public var color_hover: Color;
     public var color_down: Color;
 
@@ -37,7 +37,7 @@ class Button extends mint.render.Render {
 
         var _opt: LuxeMintButtonOptions = button.options.options;
 
-        color_normal = def(_opt.color_normal, new Color().rgb(0x373737));
+        color = def(_opt.color, new Color().rgb(0x373737));
         color_hover = def(_opt.color_hover, new Color().rgb(0x445158));
         color_down = def(_opt.color_down, new Color().rgb(0x444444));
 
@@ -46,7 +46,7 @@ class Button extends mint.render.Render {
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
-            color: color_normal,
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,
@@ -55,7 +55,7 @@ class Button extends mint.render.Render {
         visual.clip_rect = Convert.bounds(control.clip_with);
 
         button.onmouseenter.listen(function(e,c) { visual.color = color_hover; });
-        button.onmouseleave.listen(function(e,c) { visual.color = color_normal; });
+        button.onmouseleave.listen(function(e,c) { visual.color = color; });
         button.onmousedown.listen(function(e,c) { visual.color = color_down; });
         button.onmouseup.listen(function(e,c) { visual.color = color_hover; });
 

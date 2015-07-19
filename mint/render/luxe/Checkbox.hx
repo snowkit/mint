@@ -12,7 +12,7 @@ import luxe.Vector;
 import luxe.Log.*;
 
 private typedef LuxeMintCheckboxOptions = {
-    var color_normal: Color;
+    var color: Color;
     var color_hover: Color;
     var color_node: Color;
     var color_node_hover: Color;
@@ -25,7 +25,7 @@ class Checkbox extends mint.render.Render {
     public var node : Sprite;
     public var node_off : Sprite;
 
-    public var color_normal: Color;
+    public var color: Color;
     public var color_hover: Color;
     public var color_node: Color;
     public var color_node_hover: Color;
@@ -41,7 +41,7 @@ class Checkbox extends mint.render.Render {
 
         var _opt: LuxeMintCheckboxOptions = checkbox.options.options;
 
-        color_normal = def(_opt.color_normal, new Color().rgb(0x373737));
+        color = def(_opt.color, new Color().rgb(0x373737));
         color_hover = def(_opt.color_hover, new Color().rgb(0x445158));
         color_node = def(_opt.color_node, new Color().rgb(0x9dca63));
         color_node_hover = def(_opt.color_node_hover, new Color().rgb(0xadca63));
@@ -51,7 +51,7 @@ class Checkbox extends mint.render.Render {
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
-            color: color_normal,
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,
@@ -84,7 +84,7 @@ class Checkbox extends mint.render.Render {
         node.clip_rect = Convert.bounds(control.clip_with);
 
         checkbox.onmouseenter.listen(function(e,c) { node.color = color_node_hover; visual.color = color_hover; });
-        checkbox.onmouseleave.listen(function(e,c) { node.color = color_node; visual.color = color_normal; });
+        checkbox.onmouseleave.listen(function(e,c) { node.color = color_node; visual.color = color; });
 
         checkbox.onchange.listen(oncheck);
 

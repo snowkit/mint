@@ -96,7 +96,7 @@ class Main extends luxe.Game {
             options: {
                 color_node: new Color().rgb(0xf6007b),
                 color_node_off: new Color().rgb(0xcecece),
-                color_normal: new Color().rgb(0xefefef),
+                color: new Color().rgb(0xefefef),
                 color_hover: new Color().rgb(0xffffff),
                 color_node_hover: new Color().rgb(0xe2005a)
             },
@@ -169,7 +169,7 @@ class Main extends luxe.Game {
             x: 10, y: 52, w: 60, h: 32,
             text: 'mint',
             text_size: 14,
-            options: { label: { color_normal:new Color().rgb(0x9dca63) } },
+            options: { label: { color:new Color().rgb(0x9dca63) } },
             onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
 
@@ -224,8 +224,8 @@ class Main extends luxe.Game {
             options: {
                 color:new Color().rgb(0x121212),
                 color_titlebar:new Color().rgb(0x191919),
-                label: { color_normal:new Color().rgb(0x06b4fb) },
-                close_button: { color_normal:new Color().rgb(0x06b4fb) },
+                label: { color:new Color().rgb(0x06b4fb) },
+                close_button: { color:new Color().rgb(0x06b4fb) },
             },
             x:160, y:10, w:256, h: 400,
             w_min: 256, h_min:256
@@ -259,7 +259,7 @@ class Main extends luxe.Game {
 
         var _close_render = (cast customwindow.close_button.renderer:mint.render.luxe.Label);
             _close_render.text.color.rgb(0x7d5956);
-            _close_render.color_normal.rgb(0x7d5956);
+            _close_render.color.rgb(0x7d5956);
             _close_render.color_hover.rgb(0xf6007b);
             _close_render.text.point_size = 16;
 
@@ -317,7 +317,7 @@ class Main extends luxe.Game {
                     parent: list2,
                     align: TextAlign.left,
                     options: {
-                        color_normal: new Color().rgb(0xf6007b),
+                        color: new Color().rgb(0xf6007b),
                         color_hover: new Color().rgb(0xffffff)
                     },
                     name: 'label$i',
@@ -345,6 +345,12 @@ class Main extends luxe.Game {
             parent: window2,
             name: 'textnumbersonly',
             text: 'numbers only',
+            options: {
+                color: new Color(0.96,0.96,0.96),
+                color_hover: new Color(),
+                color_cursor: new Color().rgb(0xf6007b),
+                label:{ color: new Color().rgb(0xf6007b) }
+            },
             x: 10, y:32+22+10, w: 256-10-10, h: 22,
             filter: new EReg('[0-9]+','gi'),
         });
