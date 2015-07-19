@@ -2,6 +2,7 @@ package mint.render.luxe;
 
 import luxe.Vector;
 import mint.types.Types;
+import mint.core.Macros.*;
 import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
@@ -11,11 +12,21 @@ import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.LineGeometry;
 import luxe.Color;
 
+private typedef LuxeMintTextEditOptions = {
+    var color: Color;
+    var color_hover: Color;
+    var color_cursor: Color;
+}
+
 class TextEdit extends mint.render.Render {
 
     public var textedit : mint.TextEdit;
     public var visual : QuadGeometry;
     public var cursor : LineGeometry;
+
+    public var color: Color;
+    public var color_hover: Color;
+    public var color_cursor: Color;
 
     var render: LuxeMintRender;
 
@@ -26,13 +37,19 @@ class TextEdit extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintTextEditOptions = textedit.options.options;
+
+        color = def(_opt.color, new Color().rgb(0x646469));
+        color_hover = def(_opt.color_hover, new Color().rgb(0x444449));
+        color_cursor = def(_opt.color_cursor, new Color().rgb(0x9dca63));
+
         visual = Luxe.draw.box({
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
-            color: new Color(0,0,0,1).rgb(0x646469),
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,
@@ -43,7 +60,7 @@ class TextEdit extends mint.render.Render {
             batcher: render.options.batcher,
             p0: new Vector(0,0),
             p1: new Vector(0,0),
-            color: new Color(0,0,0,1).rgb(0x9dca63),
+            color: color_cursor,
             depth: render.options.depth + control.depth+0.0001,
             group: render.options.group,
             visible: false,
@@ -51,12 +68,12 @@ class TextEdit extends mint.render.Render {
         });
 
         textedit.onmouseenter.listen(function(e,c) {
-            visual.color.rgb(0x444449);
+            visual.color = color_hover;
             start_cursor();
         });
 
         textedit.onmouseleave.listen(function(e,c) {
-            visual.color.rgb(0x646469);
+            visual.color = color;
             stop_cursor();
         });
 
@@ -74,7 +91,7 @@ class TextEdit extends mint.render.Render {
                     w:textedit.w,
                     h:textedit.h,
                     immediate: true,
-                    color: new Color(0,0,0,1).rgb(0x9dca63),
+                    color: color_cursor,
                     depth: render.options.depth+textedit.depth+0.0001,
                     group: render.options.group
                 });
