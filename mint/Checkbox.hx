@@ -55,7 +55,7 @@ class Checkbox extends Control {
             state = options.state;
         }
 
-        renderer = rendering.render(Checkbox, this);
+        renderer = rendering.get(Checkbox, this);
 
         if(options.onchange != null) {
             onchange.listen( options.onchange );

@@ -42,12 +42,10 @@ class Canvas extends mint.render.Render {
     } //new
 
     override function ondestroy() {
-        disconnect();
 
         visual.drop();
         visual = null;
 
-        destroy();
     }
 
     override function onbounds() {

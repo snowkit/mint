@@ -32,7 +32,7 @@ class Panel extends Control {
 
         super(options);
 
-        renderer = rendering.render(Panel, this);
+        renderer = rendering.get(Panel, this);
 
     } //new
 

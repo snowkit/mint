@@ -1,46 +1,25 @@
 package mint.render;
 
+
+/** A rendering provider for a mint Control.
+    Controls will typically ask the rendering provider
+    for a concrete control `Renderer` instance to associate
+    with a given control. Framework specific rendering providers
+    will extend this class and return a `Renderer` instance for
+    the requested type. i.e `if(type == mint.Canvas) return MyCanvasRenderer()` */
 class Rendering {
 
-        /** A list of Renderers, mapped to unique control instances.
-            Modify this via follow/unfollow. */
-    public var renderers : Map<mint.Control, mint.render.Renderer>;
+    public function new() {}
 
-    public function new() {
+        /** Overridden in subclass.
+            Asks the Rendering service for a Renderer instance,
+            For a given control class type and instance. */
+    public function get<T:mint.Control, T1>( type:Class<T>, control:T ) : T1 {
 
-        renderers = new Map();
-
-    } //new
-
-        /** Overridden in subclass, tells this Rendering to render this control */
-    public function render<T:mint.Control, T1>( type:Class<T>, control:T ) : T1 {
-
-        trace('$type / $control in base Rendering implementation. This is probably not expected');
+        trace('$type / $control / This is probably not expected : landed in root Rendering class.');
 
         return null;
 
-    } //render
-
-    public inline function stat() {
-
-        return ' ${Lambda.count(renderers)}';
-
-    } //state
-
-    public function follow<T:mint.Control, TR:mint.render.Renderer>( control:T, renderer:TR ) {
-
-        renderers.set( control, renderer );
-
-        return renderer;
-
-    } //follow
-
-    public function unfollow<T:mint.Control, TR:mint.render.Renderer>( control:T, renderer:TR ) {
-
-        renderers.remove( control );
-
-        renderer = null;
-
-    } //unfollow
+    } //get
 
 } //Rendering

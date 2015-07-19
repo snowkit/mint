@@ -62,7 +62,7 @@ class Canvas extends Control {
         modal = null;
         dragged = null;
 
-        renderer = rendering.render( Canvas, this );
+        renderer = rendering.get( Canvas, this );
 
     } //new
 

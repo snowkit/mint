@@ -86,7 +86,7 @@ class Slider extends Control {
             visible: options.visible
         });
 
-        renderer = rendering.render(Slider, this);
+        renderer = rendering.get(Slider, this);
 
     } //new
 

@@ -66,7 +66,7 @@ class Dropdown extends Control {
             visible : options.visible
         });
 
-        renderer = rendering.render( Dropdown, this );
+        renderer = rendering.get( Dropdown, this );
 
         list.set_visible(false);
 

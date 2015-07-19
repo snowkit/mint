@@ -71,13 +71,10 @@ class Label extends mint.render.Render {
     }
 
     override function ondestroy() {
-        disconnect();
         label.onchange.remove(ontext);
 
         text.destroy();
         text = null;
-
-        destroy();
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {

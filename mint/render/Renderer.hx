@@ -1,8 +1,9 @@
 package mint.render;
 
+/** A control renderer interface. */
 interface Renderer {
 
-    @:allow(mint.render.Rendering)
-    private var rendering : Rendering;
+    private var rendering : mint.render.Rendering;
+    private var control : mint.Control;
 
 } //Renderer

@@ -69,12 +69,10 @@ class Progress extends mint.render.Render {
     }
 
     override function ondestroy() {
-        disconnect();
 
         visual.drop();
         visual = null;
 
-        destroy();
     }
 
     override function onbounds() {

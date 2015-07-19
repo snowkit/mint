@@ -43,7 +43,7 @@ class Progress extends Control {
 
         progress = def(options.progress, 0.5);
 
-        renderer = rendering.render(Progress, this);
+        renderer = rendering.get(Progress, this);
 
     } //new
 

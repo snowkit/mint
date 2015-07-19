@@ -42,13 +42,11 @@ class Slider extends mint.render.Render {
     } //new
 
     override function ondestroy() {
-        disconnect();
 
         visual.drop();
         visual = null;
 
-        destroy();
-    }
+    } //ondestroy
 
     override function onbounds() {
         visual.transform.pos.set_xy(control.x, control.y);

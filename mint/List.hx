@@ -14,7 +14,7 @@ typedef ListOptions = {
 
 class List extends Control {
 
-    public var view : ScrollArea;
+    public var view : Scroll;
     public var items : Array<Control>;
     public var multiselect : Bool = false;
     public var options : ListOptions;
@@ -44,7 +44,7 @@ class List extends Control {
             multiselect = options.multiselect;
         }
 
-        view = new ScrollArea({
+        view = new Scroll({
             parent : this,
             x: 0, y: 0, w: w, h: h,
             name : name + '.view',
@@ -53,7 +53,7 @@ class List extends Control {
 
         view.onmousedown.listen(click_deselect);
 
-        renderer = rendering.render(List, this);
+        renderer = rendering.get(List, this);
 
     } //new
 

@@ -74,7 +74,7 @@ class TextEdit extends Control {
         edit = label.text;
         index = edit.uLength();
 
-        renderer = rendering.render(TextEdit, this);
+        renderer = rendering.get(TextEdit, this);
 
         refresh(edit);
 

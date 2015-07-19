@@ -12,14 +12,14 @@ import luxe.Vector;
 
 class Scroll extends mint.render.Render {
 
-    public var scroll : mint.ScrollArea;
+    public var scroll : mint.Scroll;
     public var visual : Sprite;
     public var scrollh : Sprite;
     public var scrollv : Sprite;
 
     var render: LuxeMintRender;
 
-    public function new( _render:LuxeMintRender, _control:mint.ScrollArea ) {
+    public function new( _render:LuxeMintRender, _control:mint.Scroll ) {
 
         scroll = _control;
         render = _render;
@@ -67,13 +67,12 @@ class Scroll extends mint.render.Render {
     }
 
     override function ondestroy() {
-        disconnect();
+
         scroll.onscroll.remove(onscroll);
 
         visual.destroy();
         visual = null;
 
-        destroy();
     } //ondestroy
 
     override function onbounds() {

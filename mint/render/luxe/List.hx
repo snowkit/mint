@@ -78,8 +78,6 @@ class List extends mint.render.Render {
     }
 
     override function ondestroy() {
-        disconnect();
-        destroy();
 
         // hover_rect.drop();
         // select_rects[0].drop();

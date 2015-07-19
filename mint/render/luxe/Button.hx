@@ -72,12 +72,8 @@ class Button extends mint.render.Render {
 
     override function ondestroy() {
 
-        disconnect();
-
         visual.destroy();
         visual = null;
-
-        destroy();
 
     } //ondestroy
 

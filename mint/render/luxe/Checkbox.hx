@@ -111,15 +111,11 @@ class Checkbox extends mint.render.Render {
 
     override function ondestroy() {
 
-        disconnect();
-
         visual.destroy();
         node_off.destroy();
         node.destroy();
 
         visual = node = node_off = null;
-
-        destroy();
 
     } //ondestroy
 

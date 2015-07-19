@@ -57,12 +57,10 @@ class Dropdown extends mint.render.Render {
     } //new
 
     override function ondestroy() {
-        disconnect();
         visual.drop();
         border.drop();
         visual = null;
         border = null;
-        destroy();
     }
 
     override function onbounds() {

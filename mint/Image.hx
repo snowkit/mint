@@ -46,7 +46,7 @@ class Image extends Control {
 
         mouse_input = def(options.mouse_input, false);
 
-        renderer = rendering.render(Image, this);
+        renderer = rendering.get(Image, this);
 
     } //new
 

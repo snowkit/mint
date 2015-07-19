@@ -56,7 +56,7 @@ class Button extends Control {
             onmouseup.listen(options.onclick);
         }
 
-        renderer = rendering.render( Button, this );
+        renderer = rendering.get( Button, this );
 
     } //new
 

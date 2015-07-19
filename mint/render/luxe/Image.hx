@@ -53,12 +53,8 @@ class Image extends mint.render.Render {
     }
 
     override function ondestroy() {
-        disconnect();
-
         visual.destroy();
         visual = null;
-
-        destroy();
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
