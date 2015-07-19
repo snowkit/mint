@@ -20,7 +20,7 @@ typedef WindowOptions = {
         /** Whether or not the window can be moved by it's title bar */
     @:optional var moveable: Bool;
         /** Whether or not the window can be closed by the top right corner */
-    @:optional var closeable: Bool;
+    @:optional var closable: Bool;
         /** Whether or not the window can be resized by it's bottom right corner*/
     @:optional var resizable: Bool;
         /** Whether or not the window is focusable (bring to front on click) */
@@ -36,7 +36,7 @@ class Window extends Control {
     public var close_button : Label;
 
     public var moveable : Bool = true;
-    public var closeable : Bool = true;
+    public var closable : Bool = true;
     public var focusable : Bool = true;
     public var resizable : Bool = true;
 
@@ -63,7 +63,7 @@ class Window extends Control {
         }
 
         if(options.moveable != null) { moveable = options.moveable; }
-        if(options.closeable != null) { closeable = options.closeable; }
+        if(options.closable != null) { closable = options.closable; }
         if(options.focusable != null) { focusable = options.focusable; }
         if(options.resizable != null) { resizable = options.resizable; }
 
@@ -98,16 +98,21 @@ class Window extends Control {
             align_vertical : TextAlign.center,
             text_size: options.text_size,
             name : name + '.closelabel',
-            visible: options.visible && closeable
+            visible: options.visible
         });
 
-        close_button.mouse_input = true;
-        close_button.onmousedown.listen(function(e:MouseEvent, _) {
-            on_close();
-        });
 
-            //update
-        renderer = rendering.render( Window, this );
+        close_button.mouse_input = closable;
+
+        if(!closable) {
+            close_button.visible = false;
+        } else {
+            close_button.onmousedown.listen(function(_,_) {
+                on_close();
+            });
+        }
+
+        renderer = rendering.get( Window, this );
 
     } //new
 
@@ -140,7 +145,7 @@ class Window extends Control {
 
         onclose.emit();
 
-        if(closeable) {
+        if(closable) {
             close();
         }
 
@@ -208,7 +213,7 @@ class Window extends Control {
 
     public override function mousedown(e:MouseEvent)  {
 
-        if(close_button.contains(e.x, e.y)) return;
+        if(close_button.contains(e.x, e.y) && closable) return;
 
         var in_title = title.contains(e.x, e.y);
 

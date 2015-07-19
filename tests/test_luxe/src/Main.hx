@@ -239,7 +239,7 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             text_size: 13,
-            closeable: false,
+            closable: false,
             rendering: new CustomWindowRendering(),
             x:500, y:150, w:256, h:180+42+32,
             w_min: 128, h_min:128
