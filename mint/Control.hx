@@ -578,7 +578,7 @@ class Control {
 
 //Spatial properties
 
-    function set_pos(_x:Float, _y:Float, ?_offset:Bool = false ) {
+    public function set_pos(_x:Float, _y:Float, ?_offset:Bool = false ) {
 
         updating = true;
 
@@ -594,7 +594,7 @@ class Control {
 
     } //set_pos
 
-    function set_size(_w:Float, _h:Float) {
+    public function set_size(_w:Float, _h:Float) {
 
         updating = true;
 
