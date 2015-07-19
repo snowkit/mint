@@ -48,6 +48,7 @@ class List extends Control {
             parent : this,
             x: 0, y: 0, w: w, h: h,
             name : name + '.view',
+            options: options.options.scroll,
             visible: options.visible
         });
 

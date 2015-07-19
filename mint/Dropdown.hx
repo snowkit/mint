@@ -50,6 +50,7 @@ class Dropdown extends Control {
             parent : this,
             name : name + '.list',
             x: 0, y: options.h+1, w: w-1, h: _height,
+            options: options.options.list,
             visible : options.visible
         });
 
@@ -61,6 +62,7 @@ class Dropdown extends Control {
             text: options.text,
             text_size: options.text_size,
             name : name + '.label',
+            options: options.options.label,
             align : options.align,
             align_vertical : options.align_vertical,
             visible : options.visible

@@ -71,6 +71,7 @@ class Slider extends Control {
             name : name + '.bar',
             w_min : 1, h_min : 1,
             mouse_input: false,
+            options: options.options.bar,
             visible: options.visible
         });
 
@@ -83,6 +84,7 @@ class Slider extends Control {
             text_size: 12,
             name : name + '.label',
             mouse_input: false,
+            options: options.options.label,
             visible: options.visible
         });
 

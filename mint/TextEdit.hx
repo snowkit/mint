@@ -66,6 +66,7 @@ class TextEdit extends Control {
             text_size: options.text_size,
             align: TextAlign.left,
             align_vertical: TextAlign.center,
+            options: options.options.label,
             name : name + '.label',
             mouse_input: false,
             visible: options.visible
