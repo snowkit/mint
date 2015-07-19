@@ -85,6 +85,7 @@ class Window extends Control {
             align : TextAlign.center,
             align_vertical : TextAlign.center,
             text_size: options.text_size,
+            options: options.options.label,
             name: name + '.titlelabel',
             visible: options.visible
         });
@@ -97,6 +98,7 @@ class Window extends Control {
             align : TextAlign.center,
             align_vertical : TextAlign.center,
             text_size: options.text_size,
+            options: options.options.close_button,
             name : name + '.closelabel',
             visible: options.visible
         });
