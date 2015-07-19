@@ -2,6 +2,7 @@ package mint.render.luxe;
 
 import luxe.Vector;
 import mint.types.Types;
+import mint.core.Macros.*;
 import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
@@ -11,12 +12,22 @@ import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
 import luxe.Color;
 
+private typedef LuxeMintWindowOptions = {
+    var color: Color;
+    var color_titlebar: Color;
+    var color_border: Color;
+}
+
 class Window extends mint.render.Render {
 
     public var window : mint.Window;
     public var visual : QuadGeometry;
     public var top : QuadGeometry;
     public var border : RectangleGeometry;
+
+    public var color: Color;
+    public var color_titlebar: Color;
+    public var color_border: Color;
 
     var render: LuxeMintRender;
 
@@ -27,13 +38,19 @@ class Window extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintWindowOptions = window.options.options;
+
+        color = def(_opt.color, new Color().rgb(0x242424));
+        color_border = def(_opt.color_border, new Color().rgb(0x373739));
+        color_titlebar = def(_opt.color_titlebar, new Color().rgb(0x373737));
+
         visual = Luxe.draw.box({
             batcher: render.options.batcher,
             x:window.x,
             y:window.y,
             w:window.w,
             h:window.h,
-            color: new Color(0,0,0,1).rgb(0x242424),
+            color: color,
             depth: render.options.depth + window.depth,
             group: render.options.group,
             visible: window.visible,
@@ -46,7 +63,7 @@ class Window extends mint.render.Render {
             y:window.title.y,
             w:window.title.w,
             h:window.title.h,
-            color: new Color(0,0,0,1).rgb(0x373737),
+            color: color_titlebar,
             depth: render.options.depth + window.depth,
             group: render.options.group,
             visible: window.visible,
@@ -57,9 +74,9 @@ class Window extends mint.render.Render {
             batcher: render.options.batcher,
             x: window.x,
             y: window.y,
-            w: window.w,
-            h: window.h,
-            color: new Color(0,0,0,1).rgb(0x373739),
+            w: window.w+1,
+            h: window.h+1,
+            color: color_border,
             depth: render.options.depth + window.depth+0.001,
             group: render.options.group,
             visible: window.visible,
@@ -69,17 +86,18 @@ class Window extends mint.render.Render {
     } //new
 
     override function ondestroy() {
+
         visual.drop();
         visual = null;
 
-    }
+    } //ondestroy
 
     override function onbounds() {
         visual.transform.pos.set_xy(window.x, window.y);
         visual.resize_xy(window.w, window.h);
         top.transform.pos.set_xy(window.title.x, window.title.y);
         top.resize_xy(window.title.w, window.title.h);
-        border.set({ x:window.x, y:window.y, w:window.w, h:window.h, color:border.color });
+        border.set({ x:window.x, y:window.y, w:window.w+1, h:window.h+1, color:border.color });
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {

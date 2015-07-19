@@ -220,6 +220,12 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'window1',
             title: 'window',
+            options: {
+                color:new Color().rgb(0x121212),
+                color_titlebar:new Color().rgb(0x191919),
+                label: { color_normal:new Color().rgb(0x06b4fb) },
+                close_button: { color_normal:new Color().rgb(0x06b4fb) },
+            },
             x:160, y:10, w:256, h: 400,
             w_min: 256, h_min:256
         });
