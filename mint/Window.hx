@@ -18,6 +18,8 @@ typedef WindowOptions = {
     @:optional var moveable: Bool;
         /** Whether or not the window can be closed by the top right corner */
     @:optional var closeable: Bool;
+        /** Whether or not the window can be resized by it's bottom right corner*/
+    @:optional var resizable: Bool;
         /** Whether or not the window is focusable (bring to front on click) */
     @:optional var focusable: Bool;
 
@@ -32,6 +34,7 @@ class Window extends Control {
     public var moveable : Bool = true;
     public var closeable : Bool = true;
     public var focusable : Bool = true;
+    public var resizable : Bool = true;
 
     public var onclose : Signal<Void->Bool>;
 
@@ -58,6 +61,7 @@ class Window extends Control {
         if(options.moveable != null) { moveable = options.moveable; }
         if(options.closeable != null) { closeable = options.closeable; }
         if(options.focusable != null) { focusable = options.focusable; }
+        if(options.resizable != null) { resizable = options.resizable; }
 
         resize_handle = new Control({
             parent : this,
@@ -65,7 +69,7 @@ class Window extends Control {
             name : name + '.resize_handle',
         });
 
-        resize_handle.mouse_input = true;//options.resizable
+        resize_handle.mouse_input = resizable;
         resize_handle.onmousedown.listen(on_resize_down);
         resize_handle.onmouseup.listen(on_resize_up);
 
@@ -90,7 +94,7 @@ class Window extends Control {
             align_vertical : TextAlign.center,
             text_size: options.text_size,
             name : name + '.closelabel',
-            visible: options.visible
+            visible: options.visible && closeable
         });
 
         close_button.mouse_input = true;
@@ -108,17 +112,25 @@ class Window extends Control {
     var resize_start_y = 0.0;
 
     function on_resize_up(e:MouseEvent, _) {
+
+        if(!resizable) return;
+
         resizing = false;
         canvas.dragged = null;
-    }
+
+    } //on_resize_up
 
     function on_resize_down(e:MouseEvent, _) {
+
+        if(!resizable) return;
         if(resizing) return;
+
         resizing = true;
         resize_start_x = e.x;
         resize_start_y = e.y;
         canvas.dragged = resize_handle;
-    }
+
+    } //on_resize_down
 
     function on_close() {
 
