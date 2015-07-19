@@ -1,13 +1,13 @@
 package mint.render.luxe;
 
-import mint.Types;
+import mint.types.Types;
 import luxe.Rectangle;
 import luxe.Text;
 import luxe.Vector;
 import luxe.Input;
 import luxe.Log.*;
 
-class LuxeMintRender extends mint.Renderer {
+class LuxeMintRender extends mint.render.Rendering {
 
     public var options: luxe.options.RenderProperties;
 

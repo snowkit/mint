@@ -4,7 +4,7 @@ import luxe.Vector;
 import luxe.Input;
 import luxe.Text;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -27,7 +27,7 @@ class Main extends luxe.Game {
     var customwindow: mint.Window;
     var progress: mint.Progress;
 
-    var render: LuxeMintRender;
+    var rendering: LuxeMintRender;
     var layout: Margins;
 
     var debug : Bool = false;
@@ -50,11 +50,11 @@ class Main extends luxe.Game {
 
         Luxe.renderer.clear_color.rgb(0x161619);
 
-        render = new LuxeMintRender();
+        rendering = new LuxeMintRender();
         layout = new Margins();
 
         canvas = new mint.Canvas({
-            renderer: render,
+            rendering: rendering,
             x: 0, y:0, w: 960, h: 640
         });
 
@@ -132,9 +132,9 @@ class Main extends luxe.Game {
             x:10, y:385, w:128, h:24
         });
 
-        (cast sh1.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sh2.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sh3.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
+        (cast sh1.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sh2.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sh3.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
 
         var sv1 = new mint.Slider({
             parent: canvas,
@@ -159,9 +159,9 @@ class Main extends luxe.Game {
             x:98, y:424, w:32, h:128
         });
 
-        (cast sv1.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sv2.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sv3.bar.renderinst:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
+        (cast sv1.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sv2.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
+        (cast sv3.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
 
         button = new mint.Button({
             parent: canvas,
@@ -239,16 +239,16 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             text_size: 13,
-            renderer: new CustomWindowRender(),
+            rendering: new CustomWindowRender(),
             x:500, y:150, w:256, h:180+42+32,
             w_min: 128, h_min:128
         });
 
         //reach into the rendering specifics and change stuff
-        var _title_render = (cast customwindow.title.renderinst:mint.render.luxe.Label);
+        var _title_render = (cast customwindow.title.renderer:mint.render.luxe.Label);
             _title_render.text.color.rgb(0x7d5956);
 
-        var _close_render = (cast customwindow.close_button.renderinst:mint.render.luxe.Label);
+        var _close_render = (cast customwindow.close_button.renderer:mint.render.luxe.Label);
             _close_render.text.color.rgb(0x7d5956);
             _close_render.color_normal.rgb(0x7d5956);
             _close_render.color_hover.rgb(0xf6007b);
@@ -326,7 +326,7 @@ class Main extends luxe.Game {
             parent: window2,
             name: 'textedit1',
             text: 'snõwkit / mínt',
-            does_render: true,
+            renderable: true,
             x: 10, y:32, w: 256-10-10, h: 22
         });
 
@@ -537,12 +537,12 @@ class Main extends luxe.Game {
 
 
 
-class CustomWindow extends mint.render.Base {
+class CustomWindow extends mint.render.Render {
 
     var window : mint.Window;
     var visual : luxe.NineSlice;
 
-    public function new( _render:mint.Renderer, _control:mint.Window ) {
+    public function new( _render:mint.render.Rendering, _control:mint.Window ) {
 
         super(_render, _control);
         window = _control;
@@ -578,7 +578,7 @@ class CustomWindow extends mint.render.Base {
 
 }
 
-class CustomWindowRender extends mint.Renderer {
+class CustomWindowRender extends mint.render.Rendering {
 
     override function render<T:Control, T1>( type:Class<T>, control:T ) : T1 {
         return cast switch(type) {

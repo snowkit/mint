@@ -1,7 +1,7 @@
 package mint.render.luxe;
 
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -18,7 +18,7 @@ private typedef LuxeMintCheckboxOptions = {
     var color_node_hover: Color;
 }
 
-class Checkbox extends mint.render.Base {
+class Checkbox extends mint.render.Render {
 
     public var checkbox : mint.Checkbox;
     public var visual : Sprite;

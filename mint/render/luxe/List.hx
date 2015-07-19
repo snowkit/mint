@@ -1,7 +1,7 @@
 package mint.render.luxe;
 
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -10,7 +10,7 @@ import luxe.Text;
 import luxe.Color;
 import phoenix.geometry.RectangleGeometry;
 
-class List extends mint.render.Base {
+class List extends mint.render.Render {
 
     public var list : mint.List;
 

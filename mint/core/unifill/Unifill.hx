@@ -1,4 +1,4 @@
-package mint.utils.unifill;
+package mint.core.unifill;
 
 /**
    Unifill provides Unicode-code-point-wise methods on Strings. It is

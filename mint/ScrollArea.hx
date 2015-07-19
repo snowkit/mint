@@ -1,15 +1,19 @@
 package mint;
 
-import mint.Types;
 import mint.Control;
 import mint.Signal;
-import mint.Macros.*;
+import mint.core.Macros.*;
+import mint.types.Types;
+import mint.types.Types.Helper.in_rect;
 
 typedef ScrollInfo = {
     enabled: Bool,
     percent: Float,
     amount: Float,
-    bounds: Rect
+    x:Float,
+    y:Float,
+    w:Float,
+    h:Float
 }
 
 typedef ScrollAreaOptions = {
@@ -18,7 +22,7 @@ typedef ScrollAreaOptions = {
     ? onscroll: Float->Float->Void
 }
 
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class ScrollArea extends Control {
 
     public var scroll: { v:ScrollInfo, h:ScrollInfo };
@@ -55,21 +59,15 @@ class ScrollArea extends Control {
         scroll = {
             v: {
                 enabled: false, percent: 0, amount: 0,
-                bounds: new Rect(
-                    x+w-8,
-                    y,
-                    8,16)
+                x: x+w-8, y: y, w: 8, h: 16
             },
             h: {
                 enabled: false, percent: 0, amount: 0,
-                bounds: new Rect(
-                    x,
-                    y+h-8,
-                    16,8)
+                x: x, y: y+h-8, w: 16, h: 8
             }
         };
 
-        renderinst = render_service.render( ScrollArea, this );
+        renderer = rendering.render( ScrollArea, this );
         check_handle_vis();
 
     } //new
@@ -90,18 +88,16 @@ class ScrollArea extends Control {
 
         if(scroll.h.enabled || scroll.v.enabled) {
 
-            var m = new Point(e.x, e.y);
-
-            if(scroll.h.enabled && scroll.h.bounds.point_inside(m)) {
-                drag_offset_x = e.x - scroll.h.bounds.x;
+            if(scroll.h.enabled && in_rect(e.x, e.y, scroll.h.x, scroll.h.y, scroll.h.w, scroll.h.h)) {
+                drag_offset_x = e.x - scroll.h.x;
                 handle_drag_h = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
                 forward = false;
             }
 
-            if(scroll.v.enabled && scroll.v.bounds.point_inside(m)) {
-                drag_offset_y = e.y - scroll.v.bounds.y;
+            if(scroll.v.enabled && in_rect(e.x, e.y, scroll.v.x, scroll.v.y, scroll.v.w, scroll.v.h)) {
+                drag_offset_y = e.y - scroll.v.y;
                 handle_drag_v = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
@@ -164,10 +160,10 @@ class ScrollArea extends Control {
     override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
 
         if(scroll != null) {
-            scroll.v.bounds.x = x+w-8;
-            scroll.v.bounds.y = y+scroll.v.amount;
-            scroll.h.bounds.x = x+scroll.h.amount;
-            scroll.h.bounds.y = y+h-8;
+            scroll.v.x = x+w-8;
+            scroll.v.y = y+scroll.v.amount;
+            scroll.h.x = x+scroll.h.amount;
+            scroll.h.y = y+h-8;
         }
 
         super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
@@ -189,8 +185,8 @@ class ScrollArea extends Control {
 
         onscroll.emit(_dx, _dy);
 
-        scroll.h.bounds.x += _dx;
-        scroll.v.bounds.y += _dy;
+        scroll.h.x += _dx;
+        scroll.v.y += _dy;
 
     } //on_internal_scroll
 
@@ -229,17 +225,17 @@ class ScrollArea extends Control {
         if(!scroll.v.enabled) return;
 
             //can't go outside the bounds
-        exact = Utils.clamp( exact, 0, h );
+        exact = Helper.clamp( exact, 0, h );
 
             //for a delta
         var last_p_y = scroll.v.percent;
             //the new percent is based on the size of the control
-        scroll.v.percent = Utils.clamp(exact / (h-scroll.v.bounds.h), 0, 1);
+        scroll.v.percent = Helper.clamp(exact / (h-scroll.v.h), 0, 1);
         scroll.v.amount = exact;
             //we need the difference in scroll amount in pixels
         var pdiff = (last_p_y - scroll.v.percent) * (child_bounds.real_h - h);
             //update the real slider y value
-        scroll.v.bounds.y = Utils.clamp( y + exact, y, y+h-scroll.v.bounds.h );
+        scroll.v.y = Helper.clamp( y + exact, y, y+h-scroll.v.h );
 
         on_internal_scroll(0, pdiff);
 
@@ -250,17 +246,17 @@ class ScrollArea extends Control {
         if(!scroll.h.enabled) return;
 
             //limit to the size of the control
-        exact = Utils.clamp( exact, 0, w );
+        exact = Helper.clamp( exact, 0, w );
 
             //for a delta
         var last_p_x = scroll.h.percent;
             //the new percent is based on the size of the control
-        scroll.h.percent = Utils.clamp(exact / w, 0, 1);
+        scroll.h.percent = Helper.clamp(exact / w, 0, 1);
         scroll.h.amount = exact;
             //we need the difference in scroll amount in pixels
         var pdiff = (last_p_x - scroll.h.percent) * (child_bounds.real_w - w);
             //update the real slider x value
-        scroll.h.bounds.x = Utils.clamp( x + exact, x, x+w-scroll.h.bounds.w );
+        scroll.h.x = Helper.clamp( x + exact, x, x+w-scroll.h.w );
 
         on_internal_scroll(pdiff, 0);
 

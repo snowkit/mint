@@ -1,4 +1,4 @@
-package mint.utils.unifill;
+package mint.core.unifill;
 
 abstract CodePoint(Int) {
 

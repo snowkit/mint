@@ -1,17 +1,18 @@
 package mint.render;
 
-import mint.Renderer;
+import mint.render.Renderer;
+import mint.render.Rendering;
 import mint.Control;
-import mint.Types;
+import mint.types.Types;
 
-class Base implements ControlRenderer {
+class Render implements Renderer {
 
-    var renderer : Renderer;
+    var rendering : Rendering;
     var control : Control;
 
-    public function new( _render:Renderer, _control:mint.Control ) {
+    public function new( _render:Rendering, _control:mint.Control ) {
         control = _control;
-        renderer = _render;
+        rendering = _render;
     }
 
     function connect() {
@@ -33,7 +34,7 @@ class Base implements ControlRenderer {
     }
 
     function destroy() {
-        renderer.unfollow(control, this);
+        rendering.unfollow(control, this);
     }
 
     function onvisible(_v:Bool){}
@@ -43,5 +44,5 @@ class Base implements ControlRenderer {
     function onclip(_disable:Bool,_x:Float,_y:Float,_w:Float,_h:Float){}
     function onchild(_c:Control){}
 
-} //Base
+} //Render
 

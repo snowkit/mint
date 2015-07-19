@@ -1,7 +1,7 @@
 package mint.render.luxe;
 
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -15,7 +15,7 @@ private typedef LuxeMintLabelOptions = {
     var color_hover: Color;
 }
 
-class Label extends mint.render.Base {
+class Label extends mint.render.Render {
 
     public var label : mint.Label;
     public var text : Text;

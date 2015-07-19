@@ -2,7 +2,7 @@ package mint.layout.margins;
 
 
 import mint.Control;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 class Margins {
 

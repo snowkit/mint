@@ -1,10 +1,10 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Label;
 import mint.List;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing a Dropdown */
 typedef DropdownOptions = {
@@ -43,7 +43,6 @@ class Dropdown extends Control {
         def(options.align_vertical, TextAlign.center);
         def(options.text_size, 14);
 
-            //create the list
         list = new List({
             parent : this,
             name : name + '.list',
@@ -64,9 +63,8 @@ class Dropdown extends Control {
             visible : options.visible
         });
 
-        renderinst = render_service.render( Dropdown, this );
+        renderer = rendering.render( Dropdown, this );
 
-            //the list is hidden at start
         list.set_visible(false);
 
     } //new

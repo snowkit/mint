@@ -1,10 +1,10 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
-import mint.Renderer;
-import mint.Macros.*;
-import mint.Types.Utils.in_rect;
+import mint.render.Rendering;
+import mint.core.Macros.*;
+import mint.types.Types.Helper.in_rect;
 
 /** Options for constructing a Canvas */
 typedef CanvasOptions = {
@@ -15,7 +15,7 @@ typedef CanvasOptions = {
 
 /**
     A canvas is a root object in mint.
-    It requires a renderer and handles all incoming events,
+    It requires a rendering instance, and handles all incoming events,
     propagating them to the children. It also maintains the state
     of modality, focused controls and dragged contorls to simplify interaction.
     Additional Signals: none
@@ -40,7 +40,7 @@ class Canvas extends Control {
         options = _options;
 
         assertnull(options, "No options given to canvas, at least a Renderer is required.");
-        assertnull(options.renderer, "No Renderer(render_service) given to Canvas, cannot create a canvas without one.");
+        assertnull(options.rendering, "No Rendering given to Canvas, cannot create a canvas without one.");
 
         def(options.name, 'canvas');
         def(options.w, 800);
@@ -58,7 +58,7 @@ class Canvas extends Control {
         modal = null;
         dragged = null;
 
-        renderinst = render_service.render( Canvas, this );
+        renderer = rendering.render( Canvas, this );
 
     } //new
 

@@ -1,4 +1,4 @@
-package mint.utils.unifill;
+package mint.core.unifill;
 
 /**
    UtfTools provides primitive API to deal with strings across all

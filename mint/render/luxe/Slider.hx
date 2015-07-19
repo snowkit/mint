@@ -1,8 +1,8 @@
 package mint.render.luxe;
 
 import luxe.Vector;
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -10,7 +10,7 @@ import mint.render.luxe.Convert;
 import phoenix.geometry.QuadGeometry;
 import luxe.Color;
 
-class Slider extends mint.render.Base {
+class Slider extends mint.render.Render {
 
     public var slider : mint.Slider;
     public var visual : QuadGeometry;

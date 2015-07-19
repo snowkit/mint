@@ -1,9 +1,9 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Signal;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing a Checkbox */
 typedef CheckboxOptions = {
@@ -25,7 +25,7 @@ typedef CheckboxOptions = {
     Changing the state will trigger the signal.
     Additional Signals: onchange
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Checkbox extends Control {
 
         /** The current state. Read/Write */
@@ -53,7 +53,7 @@ class Checkbox extends Control {
             state = options.state;
         }
 
-        renderinst = render_service.render(Checkbox, this);
+        renderer = rendering.render(Checkbox, this);
 
         if(options.onchange != null) {
             onchange.listen( options.onchange );

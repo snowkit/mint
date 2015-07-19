@@ -1,10 +1,10 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Label;
 import mint.Signal;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 typedef WindowOptions = {
 
@@ -25,7 +25,7 @@ typedef WindowOptions = {
 
 } //WindowOptions
 
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Window extends Control {
 
     public var title : Label;
@@ -103,7 +103,7 @@ class Window extends Control {
         });
 
             //update
-        renderinst = render_service.render( Window, this );
+        renderer = rendering.render( Window, this );
 
     } //new
 

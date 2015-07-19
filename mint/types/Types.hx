@@ -1,33 +1,40 @@
-package mint;
-
+package mint.types;
 
 @:enum
 abstract TextAlign(Int) from Int to Int {
+
+        /** An unknown alignment */
     var unknown = 0;
+        /** (horizontal) Left aligned */
     var left = 1;
+        /** (horizontal) Right aligned */
     var right = 2;
+        /** (horizontal/vertical) Center aligned */
     var center = 3;
+        /** (vertical) Top aligned */
     var top = 4;
+        /** (vertical) Bottom aligned */
     var bottom = 5;
-}
+
+} //TextAlign
 
 /** A typed state for mouse, touch, or pressed/similar */
 @:enum
 abstract InteractState(Int) from Int to Int {
 
-/** An unknown state */
+        /** An unknown state */
     var unknown = 0;
-/** An none state */
+        /** An none state */
     var none = 1;
-/** In a pressed state */
+        /** In a pressed state */
     var down = 2;
-/** In a released state */
+        /** In a released state */
     var up = 3;
-/** In a moving state */
+        /** In a moving state */
     var move = 4;
-/** A mouse wheel state */
+        /** A mouse wheel state */
     var wheel = 5;
-/** A gamepad axis state */
+        /** A gamepad axis state */
     var axis = 6;
 
 } //InteractState
@@ -36,17 +43,17 @@ abstract InteractState(Int) from Int to Int {
 @:enum
 abstract MouseButton(Int) from Int to Int {
 
-/** no mouse buttons */
+        /** no mouse buttons */
     var none = -1;
-/** left mouse button */
+        /** left mouse button */
     var left = 0;
-/** middle mouse button */
+        /** middle mouse button */
     var middle = 1;
-/** right mouse button */
+        /** right mouse button */
     var right = 2;
-/** extra button pressed  */
+        /** extra button pressed  */
     var extra1 = 3;
-/** extra button pressed  */
+        /** extra button pressed  */
     var extra2 = 4;
 
 } //MouseButton
@@ -55,23 +62,23 @@ abstract MouseButton(Int) from Int to Int {
 @:enum
 abstract KeyCode(Int) from Int to Int {
 
-/** no known key */
+        /** no known key */
     var unknown = -1;
-/** left arrow key */
+        /** left arrow key */
     var left = 0;
-/** right arrow key */
+        /** right arrow key */
     var right = 1;
-/** up arrow key */
+        /** up arrow key */
     var up = 2;
-/** down arrow key */
+        /** down arrow key */
     var down = 3;
-/** the backspace key */
+        /** the backspace key */
     var backspace = 4;
-/** the delete key */
+        /** the delete key */
     var delete = 5;
-/** the tab key */
+        /** the tab key */
     var tab = 6;
-/** the enter key */
+        /** the enter key */
     var enter = 7;
 
 } //KeyCode
@@ -175,17 +182,18 @@ typedef TextEvent = {
 /** A typed text event type */
 enum TextEventType {
 
-/** An unknown event */
+        /** An unknown event */
     unknown;
-/** An edit text typing event */
+        /** An edit text typing event */
     edit;
-/** An input text typing event */
+        /** An input text typing event */
     input;
 
 } //TextEventType
 
 
-class Utils {
+/** A simple set of static helper functions for mint controls to use */
+class Helper {
 
     static public inline function clamp (value:Float, a:Float, b:Float) : Float {
         return ( value < a ) ? a : ( ( value > b ) ? b : value );
@@ -202,112 +210,4 @@ class Utils {
 
     } //in_rect
 
-}
-
-class Point {
-
-	public var x : Float;
-	public var y : Float;
-
-	public function new( _x:Float = 0, _y:Float = 0) {
-
-		x = _x;
-		y = _y;
-
-	} //new
-
-	public function set( ?_x:Float, ?_y:Float ) : Point {
-
-		var _setx = x;
-		var _sety = y;
-
-				//assign new values
-			if(_x != null) _setx = _x;
-			if(_y != null) _sety = _y;
-
-		x = _setx;
-		y = _sety;
-
-		return this;
-
-	} //set
-
-	public function clone() : Point {
-
-		return new Point(x,y);
-
-	} //clone
-
-	public function toString() : String {
-
-		return "{ x:"+x + ", y:" + y + " }" ;
-
-	} //toString
-
-} //Point
-
-class Rect {
-
-    public var x:Float;
-    public var y:Float;
-    public var w:Float;
-    public var h:Float;
-
-    public function new( ?_x:Float = 0,?_y:Float = 0,?_w:Float = 0,?_h : Float = 0 ) {
-
-        x = _x;
-        y = _y;
-        w = _w;
-        h = _h;
-
-    } //new
-
-    public function set( ?_x:Float, ?_y:Float, ?_w:Float, ?_h:Float ) : Rect  {
-
-        var _setx = x;
-        var _sety = y;
-        var _setw = w;
-        var _seth = h;
-
-	            //assign new values
-	        if(_x != null) _setx = _x;
-	        if(_y != null) _sety = _y;
-	        if(_w != null) _setw = _w;
-	        if(_h != null) _seth = _h;
-
-        x = _setx;
-        y = _sety;
-        w = _setw;
-        h = _seth;
-
-        return this;
-
-    } //set
-
-
-    public function clone() : Rect {
-
-        return new Rect(x,y,w,h);
-
-    } //clone
-
-    public function point_inside( _p:Point ) : Bool {
-
-	        if(_p.x < x) return false;
-	        if(_p.y < y) return false;
-	        if(_p.x > x+w) return false;
-	        if(_p.y > y+h) return false;
-
-        return true;
-
-    } //point_inside
-
-
-    public function toString() : String {
-
-        return "{ x:"+x + ", y:" + y + ", w:" + w  + ", h:" + h  + " }" ;
-
-    } //toString
-
-
-}
+} //Helper

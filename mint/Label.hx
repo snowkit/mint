@@ -1,9 +1,9 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Signal;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing a Label */
 typedef LabelOptions = {
@@ -13,10 +13,10 @@ typedef LabelOptions = {
         /** The text to display on the label */
     var text: String;
         /** The text alignment on the horizontal axis, relative to the bounds */
-    @:optional var align: mint.Types.TextAlign;
+    @:optional var align: mint.types.Types.TextAlign;
         /** The text alignment on the vertical axis, relative to the bounds */
-    @:optional var align_vertical: mint.Types.TextAlign;
-        /** Whether or not to wrap the text by the bounds for the renderer to apply */
+    @:optional var align_vertical: mint.types.Types.TextAlign;
+        /** Whether or not to wrap the text by the bounds for the rendering to apply */
     @:optional var bounds_wrap: Bool;
         /** The text size of the text  */
     @:optional var text_size: Float;
@@ -29,7 +29,7 @@ typedef LabelOptions = {
     A simple label control
     Additional Signals: onchange
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Label extends Control {
 
         /** The text displayed by the label */
@@ -63,7 +63,7 @@ class Label extends Control {
         }
 
         text = options.text;
-        renderinst = render_service.render(Label, this);
+        renderer = rendering.render(Label, this);
 
     } //new
 

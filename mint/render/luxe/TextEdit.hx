@@ -1,8 +1,8 @@
 package mint.render.luxe;
 
 import luxe.Vector;
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -11,7 +11,7 @@ import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.LineGeometry;
 import luxe.Color;
 
-class TextEdit extends mint.render.Base {
+class TextEdit extends mint.render.Render {
 
     public var textedit : mint.TextEdit;
     public var visual : QuadGeometry;
@@ -105,7 +105,7 @@ class TextEdit extends mint.render.Base {
 
     function update_cursor() {
 
-        var text = (cast textedit.label.renderinst:mint.render.luxe.Label).text;
+        var text = (cast textedit.label.renderer:mint.render.luxe.Label).text;
         var _t = textedit.before(textedit.index);
 
         var _tw = text.font.width_of(textedit.edit, text.point_size, text.letter_spacing);

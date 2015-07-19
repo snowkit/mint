@@ -1,7 +1,7 @@
 package mint.render.luxe;
 
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -17,7 +17,7 @@ private typedef LuxeMintButtonOptions = {
     var color_down: Color;
 }
 
-class Button extends mint.render.Base {
+class Button extends mint.render.Render {
 
     public var button : mint.Button;
     public var visual : Sprite;

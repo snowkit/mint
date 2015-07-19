@@ -1,4 +1,4 @@
-package mint.utils.unifill;
+package mint.core.unifill;
 
 #if (neko || php || cpp || macro)
     private typedef UtfX = Utf8;

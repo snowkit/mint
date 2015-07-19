@@ -1,6 +1,6 @@
 package mint.render.luxe;
 
-import mint.Types;
+import mint.types.Types;
 import mint.render.luxe.Convert;
 
 import luxe.Rectangle;
@@ -11,26 +11,17 @@ import luxe.Input;
 class Convert {
 
         /** from mint.TextAlign to luxe.Text.TextAlign */
-    public static function text_align( _align:mint.TextAlign ) : TextAlign {
+    public static function text_align( _align:mint.types.TextAlign ) : TextAlign {
 
         return switch(_align) {
-            case mint.TextAlign.right:  TextAlign.right;
-            case mint.TextAlign.center: TextAlign.center;
-            case mint.TextAlign.top:    TextAlign.top;
-            case mint.TextAlign.bottom: TextAlign.bottom;
-            case _:                     TextAlign.left;
+            case mint.types.TextAlign.right:  TextAlign.right;
+            case mint.types.TextAlign.center: TextAlign.center;
+            case mint.types.TextAlign.top:    TextAlign.top;
+            case mint.types.TextAlign.bottom: TextAlign.bottom;
+            case _:                           TextAlign.left;
         }
 
     } //text_align
-
-        /** from mint.Rect to luxe.Rectangle */
-    public static function rect( _rect:Rect ) : Rectangle {
-
-        if(_rect == null) return null;
-
-        return new Rectangle( _rect.x, _rect.y, _rect.w, _rect.h );
-
-    } //rect
 
         /** from mint.Control bounds to luxe.Rectangle */
     public static function bounds( _control:Control ) : Rectangle {
@@ -41,75 +32,66 @@ class Convert {
 
     } //bounds
 
-        /** from mint.Point to luxe.Vector */
-    public static function point( _point:Point ) : Vector {
-
-        if(_point == null) return null;
-
-        return new Vector( _point.x, _point.y );
-
-    } //point
-
         /** from luxe.Input.InteractState to mint.InteractState */
-    public static function interact_state( _state:InteractState ) : mint.InteractState {
+    public static function interact_state( _state:InteractState ) : mint.types.InteractState {
 
         return switch(_state) {
-            case InteractState.unknown: mint.InteractState.unknown;
-            case InteractState.none:    mint.InteractState.none;
-            case InteractState.down:    mint.InteractState.down;
-            case InteractState.up:      mint.InteractState.up;
-            case InteractState.move:    mint.InteractState.move;
-            case InteractState.wheel:   mint.InteractState.wheel;
-            case InteractState.axis:    mint.InteractState.axis;
+            case InteractState.unknown: mint.types.InteractState.unknown;
+            case InteractState.none:    mint.types.InteractState.none;
+            case InteractState.down:    mint.types.InteractState.down;
+            case InteractState.up:      mint.types.InteractState.up;
+            case InteractState.move:    mint.types.InteractState.move;
+            case InteractState.wheel:   mint.types.InteractState.wheel;
+            case InteractState.axis:    mint.types.InteractState.axis;
         } //state
 
     } //interact_state
 
         /** from luxe.Input.MouseButton to mint.MouseButton */
-    public static function mouse_button( _button:MouseButton ) : mint.MouseButton {
+    public static function mouse_button( _button:MouseButton ) : mint.types.MouseButton {
 
         return switch(_button) {
-            case MouseButton.none:      mint.MouseButton.none;
-            case MouseButton.left:      mint.MouseButton.left;
-            case MouseButton.middle:    mint.MouseButton.middle;
-            case MouseButton.right:     mint.MouseButton.right;
-            case MouseButton.extra1:    mint.MouseButton.extra1;
-            case MouseButton.extra2:    mint.MouseButton.extra2;
+            case MouseButton.none:      mint.types.MouseButton.none;
+            case MouseButton.left:      mint.types.MouseButton.left;
+            case MouseButton.middle:    mint.types.MouseButton.middle;
+            case MouseButton.right:     mint.types.MouseButton.right;
+            case MouseButton.extra1:    mint.types.MouseButton.extra1;
+            case MouseButton.extra2:    mint.types.MouseButton.extra2;
         } //state
 
     } //mouse_button
 
         /** from luxe.Input.Key to mint.KeyCode */
-    public static function key_code( _keycode:Int ) : mint.KeyCode {
+    public static function key_code( _keycode:Int ) : mint.types.KeyCode {
 
         return switch(_keycode) {
 
-            case Key.left:      mint.KeyCode.left;
-            case Key.right:     mint.KeyCode.right;
-            case Key.up:        mint.KeyCode.up;
-            case Key.down:      mint.KeyCode.down;
-            case Key.backspace: mint.KeyCode.backspace;
-            case Key.delete:    mint.KeyCode.delete;
-            case Key.tab:       mint.KeyCode.tab;
-            case Key.enter:     mint.KeyCode.enter;
-            case _:             mint.KeyCode.unknown;
+            case Key.left:      mint.types.KeyCode.left;
+            case Key.right:     mint.types.KeyCode.right;
+            case Key.up:        mint.types.KeyCode.up;
+            case Key.down:      mint.types.KeyCode.down;
+            case Key.backspace: mint.types.KeyCode.backspace;
+            case Key.delete:    mint.types.KeyCode.delete;
+            case Key.tab:       mint.types.KeyCode.tab;
+            case Key.enter:     mint.types.KeyCode.enter;
+            case _:             mint.types.KeyCode.unknown;
 
         } //_keycode
 
     } //key_code
 
-    public static function text_event_type( _type:TextEventType ) : mint.TextEventType {
+    public static function text_event_type( _type:TextEventType ) : mint.types.TextEventType {
 
         return switch(_type) {
-            case TextEventType.unknown: mint.TextEventType.unknown;
-            case TextEventType.edit:    mint.TextEventType.edit;
-            case TextEventType.input:   mint.TextEventType.input;
+            case TextEventType.unknown: mint.types.TextEventType.unknown;
+            case TextEventType.edit:    mint.types.TextEventType.edit;
+            case TextEventType.input:   mint.types.TextEventType.input;
         }
 
     } //text_event_type
 
         /** from luxe.Input.ModState to mint.ModState */
-    public static function mod_state( _mod:ModState ) : mint.ModState {
+    public static function mod_state( _mod:ModState ) : mint.types.ModState {
 
         return {
             none:   _mod.none,
@@ -133,7 +115,7 @@ class Convert {
     } //mod_state
 
         /** from luxe.Input.MouseEvent to mint.MouseEvent */
-    public static function mouse_event( _event:MouseEvent ) : mint.MouseEvent {
+    public static function mouse_event( _event:MouseEvent ) : mint.types.MouseEvent {
 
         return {
             state       : interact_state(_event.state),
@@ -149,7 +131,7 @@ class Convert {
     } //mouse_event
 
         /** from luxe.Input.KeyEvent to mint.KeyEvent */
-    public static function key_event( _event:KeyEvent ) : mint.KeyEvent {
+    public static function key_event( _event:KeyEvent ) : mint.types.KeyEvent {
 
         return {
             state       : interact_state(_event.state),
@@ -163,7 +145,7 @@ class Convert {
     } //key_event
 
         /** from luxe.Input.TextEvent to mint.TextEvent */
-    public static function text_event( _event:TextEvent ) : mint.TextEvent {
+    public static function text_event( _event:TextEvent ) : mint.types.TextEvent {
 
         return {
             text      : _event.text,

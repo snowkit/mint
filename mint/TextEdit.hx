@@ -1,12 +1,12 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Label;
 import mint.Signal;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
-using mint.utils.unifill.Unifill;
+using mint.core.unifill.Unifill;
 
 /** Options for constructing a TextEdit */
 typedef TextEditOptions = {
@@ -15,7 +15,7 @@ typedef TextEditOptions = {
 
         /** The default text value */
     @:optional var text: String;
-        /** The text size of the text for the renderer to use */
+        /** The text size of the text for the rendering to use */
     @:optional var text_size: Float;
         /** A filter to apply to text on input, inclusive */
     @:optional var filter: EReg;
@@ -26,7 +26,7 @@ typedef TextEditOptions = {
     A simple text edit control
     Additional Signals: none
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class TextEdit extends Control {
 
     public var label : Label;
@@ -71,7 +71,7 @@ class TextEdit extends Control {
         edit = label.text;
         index = edit.uLength();
 
-        renderinst = render_service.render(TextEdit, this);
+        renderer = rendering.render(TextEdit, this);
 
         refresh(edit);
 

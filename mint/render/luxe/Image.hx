@@ -1,7 +1,7 @@
 package mint.render.luxe;
 
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -10,7 +10,7 @@ import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
 
-class Image extends mint.render.Base {
+class Image extends mint.render.Render {
 
     public var image : mint.Image;
     public var visual : Sprite;

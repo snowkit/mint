@@ -1,4 +1,4 @@
-package mint.utils.unifill;
+package mint.core.unifill;
 
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;

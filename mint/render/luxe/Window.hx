@@ -1,8 +1,8 @@
 package mint.render.luxe;
 
 import luxe.Vector;
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -11,7 +11,7 @@ import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
 import luxe.Color;
 
-class Window extends mint.render.Base {
+class Window extends mint.render.Render {
 
     public var window : mint.Window;
     public var visual : QuadGeometry;

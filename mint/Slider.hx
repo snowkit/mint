@@ -1,9 +1,9 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Panel;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing a Slider */
 typedef SliderOptions = {
@@ -28,7 +28,7 @@ typedef SliderOptions = {
     A simple slider control
     Additional Signals: onchange
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Slider extends Control {
 
     var options: SliderOptions;
@@ -82,7 +82,7 @@ class Slider extends Control {
             visible: options.visible
         });
 
-        renderinst = render_service.render(Slider, this);
+        renderer = rendering.render(Slider, this);
 
     } //new
 

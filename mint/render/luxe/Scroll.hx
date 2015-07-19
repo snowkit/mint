@@ -1,7 +1,7 @@
 package mint.render.luxe;
 
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -10,7 +10,7 @@ import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
 
-class Scroll extends mint.render.Base {
+class Scroll extends mint.render.Render {
 
     public var scroll : mint.ScrollArea;
     public var visual : Sprite;
@@ -40,8 +40,8 @@ class Scroll extends mint.render.Base {
         scrollh = new luxe.Sprite({
             batcher: render.options.batcher,
             centered: false,
-            pos: new Vector(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y),
-            size: new Vector(scroll.scroll.h.bounds.w, scroll.scroll.h.bounds.h),
+            pos: new Vector(scroll.scroll.h.x, scroll.scroll.h.y),
+            size: new Vector(scroll.scroll.h.w, scroll.scroll.h.h),
             color: new Color().rgb(0x9dca63),
             depth: render.options.depth + control.depth+0.00001,
             group: render.options.group,
@@ -51,8 +51,8 @@ class Scroll extends mint.render.Base {
         scrollv = new luxe.Sprite({
             batcher: render.options.batcher,
             centered: false,
-            pos: new Vector(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y),
-            size: new Vector(scroll.scroll.v.bounds.w, scroll.scroll.v.bounds.h),
+            pos: new Vector(scroll.scroll.v.x, scroll.scroll.v.y),
+            size: new Vector(scroll.scroll.v.w, scroll.scroll.v.h),
             color: new Color().rgb(0x9dca63),
             depth: render.options.depth + control.depth+0.00001,
             group: render.options.group,
@@ -80,8 +80,8 @@ class Scroll extends mint.render.Base {
         visual.transform.pos.set_xy(control.x, control.y);
         visual.geometry_quad.resize_xy( control.w, control.h );
         //
-        scrollh.pos.set_xy(scroll.scroll.h.bounds.x, scroll.scroll.h.bounds.y);
-        scrollv.pos.set_xy(scroll.scroll.v.bounds.x, scroll.scroll.v.bounds.y);
+        scrollh.pos.set_xy(scroll.scroll.h.x, scroll.scroll.h.y);
+        scrollv.pos.set_xy(scroll.scroll.v.x, scroll.scroll.v.y);
     }
 
     function onhandlevis(_h:Bool, _v:Bool) {
@@ -90,8 +90,8 @@ class Scroll extends mint.render.Base {
     }
 
     function onscroll(_dx:Float=0.0, _dy:Float=0.0) {
-        scrollh.pos.x = scroll.scroll.h.bounds.x;
-        scrollv.pos.y = scroll.scroll.v.bounds.y;
+        scrollh.pos.x = scroll.scroll.h.x;
+        scrollv.pos.y = scroll.scroll.v.y;
     }
 
     override function onchild( _child:Control ) {

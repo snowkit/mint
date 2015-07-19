@@ -1,8 +1,8 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing a Panel */
 typedef PanelOptions = {
@@ -15,7 +15,7 @@ typedef PanelOptions = {
     A simple blank panel control
     Additional Signals: none
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Panel extends Control {
 
     var options: PanelOptions;
@@ -28,7 +28,7 @@ class Panel extends Control {
 
         super(options);
 
-        renderinst = render_service.render(Panel, this);
+        renderer = rendering.render(Panel, this);
 
     } //new
 

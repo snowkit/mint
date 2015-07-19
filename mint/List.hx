@@ -1,9 +1,9 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Signal;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 typedef ListOptions = {
     > ControlOptions,
@@ -51,7 +51,7 @@ class List extends Control {
 
         view.onmousedown.listen(click_deselect);
 
-        renderinst = render_service.render(List, this);
+        renderer = rendering.render(List, this);
 
     } //new
 

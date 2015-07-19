@@ -1,10 +1,10 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Signal;
-import mint.Renderer;
-import mint.Macros.*;
-import mint.Types.Utils.in_rect;
+import mint.render.Rendering;
+import mint.core.Macros.*;
+import mint.types.Types.Helper.in_rect;
 
 typedef ControlOptions = {
 
@@ -43,11 +43,11 @@ typedef ControlOptions = {
         /** Whether or not the control responds to key input */
     @:optional var key_input: Bool;
         /** Whether or not the control emits render signals from the canvas render call */
-    @:optional var does_render: Bool;
+    @:optional var renderable: Bool;
 
         /** The render service that provides this instance with an implementation.
             Defaults to using the owning canvas render service if not specified */
-    @:optional var renderer : Renderer;
+    @:optional var rendering: Rendering;
 
 } //ControlOptions
 
@@ -55,7 +55,7 @@ typedef ControlOptions = {
     Base class for all controls
     handles propogation of events,
     mouse handling, layout and so on */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Control {
 
         /** The name of this control. default: 'control'*/
@@ -98,7 +98,7 @@ class Control {
         //the list of children added to this control
     public var children : Array<Control>;
 
-        //if the control is under the mouse
+        //if the control has focus
     public var isfocused : Bool = false;
         //if the control is under the mouse
     public var ishovered : Bool = false;
@@ -107,7 +107,7 @@ class Control {
         //if the control accepts key events
     public var key_input : Bool = false;
         //if the control emits a render signal
-    public var does_render : Bool = false;
+    public var renderable : Bool = false;
 
         //if the control is visible
     @:isVar public var visible (default, set) : Bool = true;
@@ -138,9 +138,9 @@ class Control {
         //the depth of this control
     @:isVar public var depth(get,set) : Float = 0.0;
         //The concrete renderer for this control instance
-    public var renderinst : mint.Renderer.ControlRenderer;
-        /** The renderer service that this instance uses, defaults to the canvas render service */
-    public var render_service : Renderer;
+    public var renderer : mint.render.Renderer;
+        /** The rendering service that this instance uses, defaults to the canvas render service */
+    public var rendering : Rendering;
 
     var ctrloptions : ControlOptions;
 
@@ -217,13 +217,13 @@ class Control {
 
         //canvas is valid here
 
-        render_service = def(_options.renderer, canvas.render_service);
+        rendering = def(_options.rendering, canvas.rendering);
 
-        if(ctrloptions.does_render != null) {
-            does_render = ctrloptions.does_render;
+        if(ctrloptions.renderable != null) {
+            renderable = ctrloptions.renderable;
         } else {
             if(canvas != null) {
-                does_render = canvas.does_render;
+                renderable = canvas.renderable;
             }
         }
 
@@ -429,7 +429,7 @@ class Control {
 
     public function render() {
 
-        if(does_render) onrender.emit();
+        if(renderable) onrender.emit();
 
         for(child in children) child.render();
 

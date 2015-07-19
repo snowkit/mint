@@ -1,8 +1,8 @@
 package mint.render.luxe;
 
 import luxe.Vector;
-import mint.Types;
-import mint.Renderer;
+import mint.types.Types;
+import mint.render.Rendering;
 
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
@@ -11,7 +11,7 @@ import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
 import luxe.Color;
 
-class Dropdown extends mint.render.Base {
+class Dropdown extends mint.render.Render {
 
     public var dropdown : mint.Dropdown;
     public var visual : QuadGeometry;

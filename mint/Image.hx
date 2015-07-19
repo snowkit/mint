@@ -1,8 +1,8 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing an Image */
 typedef ImageOptions = {
@@ -10,7 +10,7 @@ typedef ImageOptions = {
     > ControlOptions,
 
         /** The image path/id.
-            The renderer should translate the id as needed. */
+            The rendering should translate the id as needed. */
     path: String,
 
 } //ImageOptions
@@ -19,7 +19,7 @@ typedef ImageOptions = {
     A simple image control
     Additional Signals: onchange
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Image extends Control {
 
     var options: ImageOptions;
@@ -42,7 +42,7 @@ class Image extends Control {
 
         mouse_input = def(options.mouse_input, false);
 
-        renderinst = render_service.render(Image, this);
+        renderer = rendering.render(Image, this);
 
     } //new
 

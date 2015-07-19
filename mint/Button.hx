@@ -1,9 +1,9 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
 import mint.Label;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing a Button */
 typedef ButtonOptions = {
@@ -17,7 +17,7 @@ typedef ButtonOptions = {
     A simple button with a label
     Additional Signals: none
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Button extends Control {
 
         /** The label the button displays */
@@ -53,7 +53,7 @@ class Button extends Control {
             onmouseup.listen(options.onclick);
         }
 
-        renderinst = render_service.render( Button, this );
+        renderer = rendering.render( Button, this );
 
     } //new
 

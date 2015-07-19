@@ -1,8 +1,8 @@
 package mint;
 
-import mint.Types;
+import mint.types.Types;
 import mint.Control;
-import mint.Macros.*;
+import mint.core.Macros.*;
 
 /** Options for constructing a Progress */
 typedef ProgressOptions = {
@@ -18,7 +18,7 @@ typedef ProgressOptions = {
     A simple progress control, ranging from 0 to 1.
     Additional Signals: onchange
 */
-@:allow(mint.ControlRenderer)
+@:allow(mint.render.Renderer)
 class Progress extends Control {
 
     @:isVar public var progress (default, set) : Float = 0.5;
@@ -39,7 +39,7 @@ class Progress extends Control {
 
         progress = def(options.progress, 0.5);
 
-        renderinst = render_service.render(Progress, this);
+        renderer = rendering.render(Progress, this);
 
     } //new
 
@@ -47,7 +47,7 @@ class Progress extends Control {
 
         var prev = progress;
 
-        _value = Utils.clamp(_value, 0.0, 1.0);
+        _value = Helper.clamp(_value, 0.0, 1.0);
 
         progress = _value;
 
