@@ -19,7 +19,7 @@ class Main extends luxe.Game {
     var check: mint.Checkbox;
     var button: mint.Button;
     var image: mint.Image;
-    var scroll: mint.ScrollArea;
+    var scroll: mint.Scroll;
     var panel: mint.Panel;
     var list: mint.List;
     var window: mint.Window;
@@ -195,7 +195,7 @@ class Main extends luxe.Game {
             x:84, y:120, w:64, h: 64,
         });
 
-        scroll = new mint.ScrollArea({
+        scroll = new mint.Scroll({
             parent: canvas,
             name: 'scroll1',
             x:16, y:190, w: 128, h: 128,
@@ -239,7 +239,8 @@ class Main extends luxe.Game {
             name: 'customwindow',
             title: 'custom window',
             text_size: 13,
-            rendering: new CustomWindowRender(),
+            closeable: false,
+            rendering: new CustomWindowRendering(),
             x:500, y:150, w:256, h:180+42+32,
             w_min: 128, h_min:128
         });
@@ -537,7 +538,7 @@ class Main extends luxe.Game {
 
 
 
-class CustomWindow extends mint.render.Render {
+class CustomWindowRenderer extends mint.render.Render {
 
     var window : mint.Window;
     var visual : luxe.NineSlice;
@@ -546,8 +547,6 @@ class CustomWindow extends mint.render.Render {
 
         super(_render, _control);
         window = _control;
-
-        connect();
 
         visual = new luxe.NineSlice({
             texture : Luxe.resources.texture('assets/mint.box.png'),
@@ -559,13 +558,13 @@ class CustomWindow extends mint.render.Render {
         window.title.y_local += 3;
         window.close_button.y_local += 1;
 
+        connect();
+
     } //new
 
     override function ondestroy() {
-        disconnect();
         visual.destroy();
         visual = null;
-        destroy();
     }
 
     override function onbounds() {
@@ -578,13 +577,13 @@ class CustomWindow extends mint.render.Render {
 
 }
 
-class CustomWindowRender extends mint.render.Rendering {
+class CustomWindowRendering extends mint.render.Rendering {
 
-    override function render<T:Control, T1>( type:Class<T>, control:T ) : T1 {
+    override function get<T:Control, T1>( type:Class<T>, control:T ) : T1 {
         return cast switch(type) {
-            case mint.Window:       follow(control, new CustomWindow(this, cast control));
-            case _:                 null;
+            case mint.Window: new CustomWindowRenderer(this, cast control);
+            case _: null;
         }
-    } //render
+    } //get
 
-} //CustomWindowRender
+} //CustomWindowRendering

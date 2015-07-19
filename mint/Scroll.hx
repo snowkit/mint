@@ -9,15 +9,15 @@ import mint.core.Macros.*;
 
 
 /** Options for constructing a scroll area */
-typedef ScrollAreaOptions = {
+typedef ScrollOptions = {
 
     > ControlOptions,
 
-} //ScrollAreaOptions
+} //ScrollOptions
 
 
 @:allow(mint.render.Renderer)
-class ScrollArea extends Control {
+class Scroll extends Control {
 
     public var scroll: { v:ScrollInfo, h:ScrollInfo };
 
@@ -33,9 +33,9 @@ class ScrollArea extends Control {
 
     var last_modal : Control;
 
-    var options: ScrollAreaOptions;
+    var options: ScrollOptions;
 
-    public function new(_options:ScrollAreaOptions) {
+    public function new(_options:ScrollOptions) {
 
         onscroll = new Signal();
         onhandlevis = new Signal();
@@ -61,7 +61,7 @@ class ScrollArea extends Control {
             }
         };
 
-        renderer = rendering.render( ScrollArea, this );
+        renderer = rendering.get( Scroll, this );
         check_handle_vis();
 
     } //new
@@ -256,7 +256,7 @@ class ScrollArea extends Control {
 
     } //set_scroll_x
 
-} //ScrollArea
+} //Scroll
 
 
 private typedef ScrollInfo = {
