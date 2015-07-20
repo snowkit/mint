@@ -115,14 +115,20 @@ class Convert {
     } //mod_state
 
         /** from luxe.Input.MouseEvent to mint.MouseEvent */
-    public static function mouse_event( _event:MouseEvent ) : mint.types.MouseEvent {
+    public static function mouse_event( _event:MouseEvent, ?view:phoenix.Camera ) : mint.types.MouseEvent {
+
+        var _pos = new Vector(_event.x, _event.y);
+
+        if(view != null) {
+            _pos = view.screen_point_to_world(_pos);
+        }
 
         return {
             state       : interact_state(_event.state),
             button      : mouse_button(_event.button),
             timestamp   : _event.timestamp,
-            x           : _event.x,
-            y           : _event.y,
+            x           : Std.int(_pos.x),
+            y           : Std.int(_pos.y),
             xrel        : _event.xrel,
             yrel        : _event.yrel,
             bubble      : true
