@@ -7,10 +7,8 @@ import mint.types.Types;
 
 /** The basic implementation for a control Renderer.
     This includes convenience functions and implementation
-    of the base control events which can be called
-    to simplify integration. Be aware of the timing,
-    as signals connected before Renderer details are ready
-    may fire from the controls ahead of your init. */
+    of the base control events which are called
+    to simplify integration. Be aware of the timing of signals. */
 class Render implements Renderer {
 
     var rendering : Rendering;

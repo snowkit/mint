@@ -472,6 +472,13 @@ class Main extends luxe.Game {
         if(canvas!=null) canvas.textinput( Convert.text_event(e) );
     }
 
+    function dump(c:Control, d:Int=0) {
+        var t = '';
+        for(i in 0 ... d) t += '    ';
+        trace('${t}${c.name}');
+        for(cc in c.children) dump(cc, d+1);
+    }
+
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
         if(e.keycode == Key.key_1) {
@@ -485,6 +492,13 @@ class Main extends luxe.Game {
         }
         if(e.keycode == Key.key_4) {
             if(check != null) check.visible = !check.visible;
+        }
+        if(e.keycode == Key.key_5) {
+            dump(canvas);
+        }
+
+        if(e.keycode == Key.key_6) {
+            window.x += 10;
         }
 
         if(e.keycode == Key.key_d && e.mod.ctrl) {
