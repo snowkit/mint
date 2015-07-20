@@ -16,7 +16,9 @@ typedef DropdownOptions = {
 
 } //DropdownOptions
 
-
+/** A simple dropdown control that can contain any other controls
+    Additional signals: onselect */
+@:allow(mint.render.Renderer)
 class Dropdown extends Control {
 
     public var list : List;

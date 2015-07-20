@@ -24,6 +24,7 @@ typedef CanvasOptions = {
     of modality, focused controls and dragged contorls to simplify interaction.
     Additional Signals: none
 */
+@:allow(mint.render.Renderer)
 class Canvas extends Control {
 
         /** The current focused control, null if none */
