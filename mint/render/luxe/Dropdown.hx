@@ -10,12 +10,21 @@ import mint.render.luxe.Convert;
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
 import luxe.Color;
+import luxe.Log.*;
+
+private typedef LuxeMintDropdownOptions = {
+    var color: Color;
+    var color_border: Color;
+}
 
 class Dropdown extends mint.render.Render {
 
     public var dropdown : mint.Dropdown;
     public var visual : QuadGeometry;
     public var border : RectangleGeometry;
+
+    public var color: Color;
+    public var color_border: Color;
 
     var render: LuxeMintRender;
 
@@ -26,13 +35,18 @@ class Dropdown extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintDropdownOptions = dropdown.options.options;
+
+        color = def(_opt.color, new Color().rgb(0x373737));
+        color_border = def(_opt.color_border, new Color().rgb(0x121212));
+
         visual = Luxe.draw.box({
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
-            color: new Color(0,0,0,1).rgb(0x373737),
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,
@@ -45,7 +59,7 @@ class Dropdown extends mint.render.Render {
             y: control.y,
             w: control.w,
             h: control.h,
-            color: new Color(0,0,0,1).rgb(0x121212),
+            color: color_border,
             depth: render.options.depth + control.depth+0.002,
             group: render.options.group,
             visible: control.visible,

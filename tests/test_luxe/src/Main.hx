@@ -55,6 +55,7 @@ class Main extends luxe.Game {
 
         canvas = new mint.Canvas({
             rendering: rendering,
+            options: { color:new Color(1,1,1,0.3) },
             x: 0, y:0, w: 960, h: 640
         });
 
@@ -107,12 +108,14 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'progress1',
             progress: 0.2,
+            options: { color:new Color(), color_bar:new Color().rgb(0x121219) },
             x: 10, y:95 , w:128, h: 16
         });
 
         var sh1 = new mint.Slider({
             parent: canvas,
             name: 'slider1',
+            options: { bar: { color:new Color().rgb(0x9dca63) } },
             min: 0,
             max: 100,
             step: 10,
@@ -122,6 +125,7 @@ class Main extends luxe.Game {
         var sh2 = new mint.Slider({
             parent: canvas,
             name: 'slider2',
+            options: { bar: { color:new Color().rgb(0x9dca63) } },
             min: 0, max: 100, step: 1,
             x:10, y:357, w:128, h:24
         });
@@ -129,17 +133,15 @@ class Main extends luxe.Game {
         var sh3 = new mint.Slider({
             parent: canvas,
             name: 'slider3',
+            options: { bar: { color:new Color().rgb(0xf6007b) } },
             x:10, y:385, w:128, h:24
         });
-
-        (cast sh1.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sh2.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sh3.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
 
         var sv1 = new mint.Slider({
             parent: canvas,
             name: 'slider1',
             vertical: true,
+            options: { bar: { color:new Color().rgb(0x9dca63) } },
             min: 0, max: 100, step: 10,
             x:14, y:424 , w:32, h:128
         });
@@ -148,6 +150,7 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'slider2',
             vertical: true,
+            options: { bar: { color:new Color().rgb(0x9dca63) } },
             min: 0, max: 100, step: 1,
             x:56, y:424, w:32, h:128
         });
@@ -156,12 +159,9 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'slider3',
             vertical: true,
+            options: { bar: { color:new Color().rgb(0xf6007b) } },
             x:98, y:424, w:32, h:128
         });
-
-        (cast sv1.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sv2.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0x9dca63);
-        (cast sv3.bar.renderer:mint.render.luxe.Panel).visual.color.rgb(0xf6007b);
 
         button = new mint.Button({
             parent: canvas,
@@ -200,6 +200,7 @@ class Main extends luxe.Game {
         scroll = new mint.Scroll({
             parent: canvas,
             name: 'scroll1',
+            options: { color_handles:new Color().rgb(0xffffff) },
             x:16, y:190, w: 128, h: 128,
         });
 
@@ -267,6 +268,7 @@ class Main extends luxe.Game {
             parent: window2,
             name: 'dropdown',
             text: 'Platform...',
+            options: { color:new Color().rgb(0x343439) },
             x:10, y:32+22+10+32, w:256-10-10, h:24,
         });
 
@@ -296,15 +298,6 @@ class Main extends luxe.Game {
             platform.label.text = plist[idx];
         });
 
-        var p1 = new mint.Panel({ parent: customwindow, name: 'p1', x: 32, y: 120, w: 32, h: 32 });
-        var p2 = new mint.Panel({ parent: customwindow, name: 'p2', x: 32, y: 36, w: 8, h: 8 });
-
-        layout.anchor(p1, center_x, center_x);
-        layout.anchor(p1, center_y, center_y);
-
-        layout.size(p2, width, 50);
-        layout.anchor(p2, center_x, center_x);
-
         var list2 = new mint.List({
             parent: customwindow,
             name: 'list',
@@ -330,6 +323,19 @@ class Main extends luxe.Game {
         }
 
         layout.margin(list2, right, fixed, 10);
+
+        var p1 = new mint.Panel({
+            parent: customwindow, name: 'p1', x: 32, y: 120, w: 32, h: 32,
+            options:{ color:new Color().rgb(0x06b4fb) }
+        });
+
+        var p2 = new mint.Panel({ parent: customwindow, name: 'p2', x: 32, y: 36, w: 8, h: 8 });
+
+        layout.anchor(p1, center_x, center_x);
+        layout.anchor(p1, center_y, center_y);
+
+        layout.size(p2, width, 50);
+        layout.anchor(p2, center_x, center_x);
 
         var text1 = new mint.TextEdit({
             parent: window2,
@@ -360,6 +366,7 @@ class Main extends luxe.Game {
         list = new mint.List({
             parent: window,
             name: 'list1',
+            options: { view: { color:new Color().rgb(0x19191c) } },
             x: 4, y: 28, w: 248, h: 400-28-4
         });
 
@@ -367,7 +374,7 @@ class Main extends luxe.Game {
         layout.margin(list, bottom, fixed, 4);
 
         for(i in 0 ... 5) {
-            list.add_item( create_block(i) );
+            list.add_item( create_block(i), 0, (i == 0) ? 0 : 8 );
         } //for
 
 
@@ -386,7 +393,7 @@ class Main extends luxe.Game {
             x:2, y:4, w:236, h:96,
         });
 
-        layout.margin(_panel, right, fixed, 2);
+        layout.margin(_panel, right, fixed, 8);
 
         var _icon = new mint.Image({
             name: 'icon_${idx}',

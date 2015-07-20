@@ -9,6 +9,12 @@ import mint.render.luxe.Convert;
 import luxe.Color;
 import luxe.Sprite;
 import luxe.Vector;
+import luxe.Log.*;
+
+private typedef LuxeMintScrollOptions = {
+    var color: Color;
+    var color_handles: Color;
+}
 
 class Scroll extends mint.render.Render {
 
@@ -16,6 +22,9 @@ class Scroll extends mint.render.Render {
     public var visual : Sprite;
     public var scrollh : Sprite;
     public var scrollv : Sprite;
+
+    public var color: Color;
+    public var color_handles: Color;
 
     var render: LuxeMintRender;
 
@@ -26,12 +35,17 @@ class Scroll extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintScrollOptions = scroll.options.options;
+
+        color = def(_opt.color, new Color().rgb(0x343434));
+        color_handles = def(_opt.color_handles, new Color().rgb(0x9dca63));
+
         visual = new luxe.Sprite({
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
-            color: new Color().rgb(0x343434),
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,
@@ -42,7 +56,7 @@ class Scroll extends mint.render.Render {
             centered: false,
             pos: new Vector(scroll.scroll.h.x, scroll.scroll.h.y),
             size: new Vector(scroll.scroll.h.w, scroll.scroll.h.h),
-            color: new Color().rgb(0x9dca63),
+            color: color_handles,
             depth: render.options.depth + control.depth+0.00001,
             group: render.options.group,
             visible: control.visible,
@@ -53,7 +67,7 @@ class Scroll extends mint.render.Render {
             centered: false,
             pos: new Vector(scroll.scroll.v.x, scroll.scroll.v.y),
             size: new Vector(scroll.scroll.v.w, scroll.scroll.v.h),
-            color: new Color().rgb(0x9dca63),
+            color: color_handles,
             depth: render.options.depth + control.depth+0.00001,
             group: render.options.group,
             visible: control.visible,

@@ -9,11 +9,18 @@ import mint.render.luxe.Convert;
 
 import phoenix.geometry.QuadGeometry;
 import luxe.Color;
+import luxe.Log.*;
+
+private typedef LuxeMintPanelOptions = {
+    var color: Color;
+}
 
 class Panel extends mint.render.Render {
 
     public var panel : mint.Panel;
     public var visual : QuadGeometry;
+
+    public var color: Color;
 
     var render: LuxeMintRender;
 
@@ -24,13 +31,17 @@ class Panel extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintPanelOptions = panel.options.options;
+
+        color = def(_opt.color, new Color().rgb(0x242424));
+
         visual = Luxe.draw.box({
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
-            color: new Color(0,0,0,1).rgb(0x242424),
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,

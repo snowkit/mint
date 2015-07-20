@@ -9,12 +9,21 @@ import mint.render.luxe.Convert;
 
 import phoenix.geometry.QuadGeometry;
 import luxe.Color;
+import luxe.Log.*;
+
+private typedef LuxeMintProgressOptions = {
+    var color: Color;
+    var color_bar: Color;
+}
 
 class Progress extends mint.render.Render {
 
     public var progress : mint.Progress;
     public var visual : QuadGeometry;
     public var bar : QuadGeometry;
+
+    public var color: Color;
+    public var color_bar: Color;
 
     var render: LuxeMintRender;
     var margin: Float = 2.0;
@@ -26,13 +35,18 @@ class Progress extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintProgressOptions = progress.options.options;
+
+        color = def(_opt.color, new Color().rgb(0x242424));
+        color_bar = def(_opt.color_bar, new Color().rgb(0x9dca63));
+
         visual = Luxe.draw.box({
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
-            color: new Color(0,0,0,1).rgb(0x242424),
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,
@@ -45,7 +59,7 @@ class Progress extends mint.render.Render {
             y:control.y+margin,
             w:get_bar_width(progress.progress),
             h:control.h-(margin*2),
-            color: new Color(0,0,0,1).rgb(0x9dca63),
+            color: color_bar,
             depth: render.options.depth + control.depth + 0.001,
             group: render.options.group,
             visible: control.visible,

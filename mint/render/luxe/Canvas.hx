@@ -9,11 +9,18 @@ import mint.render.luxe.Convert;
 
 import phoenix.geometry.QuadGeometry;
 import luxe.Color;
+import luxe.Log.*;
+
+private typedef LuxeMintCanvasOptions = {
+    var color: Color;
+}
 
 class Canvas extends mint.render.Render {
 
     public var canvas : mint.Canvas;
     public var visual : QuadGeometry;
+
+    public var color : Color;
 
     var render: LuxeMintRender;
 
@@ -24,13 +31,17 @@ class Canvas extends mint.render.Render {
 
         super(render, _control);
 
+        var _opt: LuxeMintCanvasOptions = canvas.options.options;
+
+        color = def(_opt.color, new Color(0,0,0,0).rgb(0x0c0c0c));
+
         visual = Luxe.draw.box({
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
             w:control.w,
             h:control.h,
-            color: new Color(0,0,0,0).rgb(0x0c0c0c),
+            color: color,
             depth: render.options.depth + control.depth,
             group: render.options.group,
             visible: control.visible,
