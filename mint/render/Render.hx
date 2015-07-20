@@ -20,7 +20,6 @@ class Render implements Renderer {
         rendering = _render;
 
         control.oncreate.listen(internal_connect);
-        control.ondestroy.listen(internal_disconnect);
 
     } //new
 
@@ -33,6 +32,7 @@ class Render implements Renderer {
         control.onclip.listen(onclip);
         control.onchild.listen(onchild);
         control.onbounds.listen(onbounds);
+        control.ondestroy.listen(internal_disconnect);
 
     } //internal_connect
 
