@@ -93,7 +93,7 @@ class Canvas extends Control {
 
         /** Reset the focus to nothing, if given a control will tell
             that control of itself losing focus */
-    function reset_focus( ?_control:Control, ?e:MouseEvent ) {
+    public function reset_focus( ?_control:Control, ?e:MouseEvent ) {
 
         //this happens in children want to invalidate their focus
 
