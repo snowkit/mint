@@ -317,16 +317,26 @@ class Control {
 
     } //set_clip_with
 
+        //This is set by set_visible, to allow controls to retain their logical
+        //visibility state when their parent is trying to
+        //change it against what it's set at
+    var vis_state = true;
+    var update_vis_state = true;
+
     function set_visible( _visible:Bool) {
 
         visible = _visible;
+        if(update_vis_state) vis_state = _visible;
+
         onvisible.emit(visible);
 
-        canvas.focus_invalid = true;
-
         for(_child in children) {
-            _child.visible = visible;
+            _child.update_vis_state = false;
+            _child.visible = visible && _child.vis_state;
+            _child.update_vis_state = true;
         }
+
+        canvas.focus_invalid = true;
 
         return visible;
 
