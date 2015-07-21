@@ -52,6 +52,9 @@ typedef ControlOptions = {
             Defaults to using the owning canvas render service if not specified */
     @:optional var rendering: Rendering;
 
+        /** Internal. Internal parent visibility for creating sub controls. */
+    @:noCompletion @:optional var internal_visible: Bool;
+
 } //ControlOptions
 
 
@@ -236,7 +239,13 @@ class Control {
             }
         }
 
-        if(_options_.visible != null) visible = _options_.visible;
+        if(_options_.visible != null) {
+            visible = _options_.visible;
+        } else if(_options_.internal_visible != null) {
+            set_visible_only(_options_.internal_visible);
+        } else if(parent != null) {
+            set_visible_only(parent.visible);
+        }
 
         if(_emit_oncreate) oncreate.emit();
 
@@ -323,6 +332,14 @@ class Control {
     var vis_state = true;
     var update_vis_state = true;
 
+    inline function set_visible_only(_visible:Bool) {
+
+        update_vis_state = false;
+        visible = _visible;
+        update_vis_state = true;
+
+    } //set_visible_only
+
     function set_visible( _visible:Bool) {
 
         visible = _visible;
@@ -331,9 +348,7 @@ class Control {
         onvisible.emit(visible);
 
         for(_child in children) {
-            _child.update_vis_state = false;
-            _child.visible = visible && _child.vis_state;
-            _child.update_vis_state = true;
+            _child.set_visible_only(visible && _child.vis_state);
         }
 
         canvas.focus_invalid = true;

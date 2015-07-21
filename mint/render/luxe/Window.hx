@@ -64,7 +64,7 @@ class Window extends mint.render.Render {
             w:window.title.w,
             h:window.title.h,
             color: color_titlebar,
-            depth: render.options.depth + window.depth,
+            depth: render.options.depth + window.depth+0.001,
             group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
@@ -77,7 +77,7 @@ class Window extends mint.render.Render {
             w: window.w+1,
             h: window.h+1,
             color: color_border,
-            depth: render.options.depth + window.depth+0.001,
+            depth: render.options.depth + window.depth+0.002,
             group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
@@ -97,7 +97,7 @@ class Window extends mint.render.Render {
         visual.resize_xy(window.w, window.h);
         top.transform.pos.set_xy(window.title.x, window.title.y);
         top.resize_xy(window.title.w, window.title.h);
-        border.set({ x:window.x, y:window.y, w:window.w+1, h:window.h+1, color:border.color });
+        border.set({ x:window.x, y:window.y, w:window.w+1, h:window.h+1, color:border.color, visible:control.visible });
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
@@ -120,8 +120,8 @@ class Window extends mint.render.Render {
 
     override function ondepth( _depth:Float ) {
         visual.depth = render.options.depth + _depth;
-        top.depth = render.options.depth + _depth;
-        border.depth = render.options.depth + _depth+0.001;
+        top.depth = render.options.depth + _depth+0.0001;
+        border.depth = render.options.depth + _depth+0.0002;
     } //ondepth
 
 } //Window

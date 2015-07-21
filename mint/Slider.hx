@@ -72,7 +72,7 @@ class Slider extends Control {
             w_min : 1, h_min : 1,
             mouse_input: false,
             options: options.options.bar,
-            visible: options.visible
+            internal_visible: options.visible
         });
 
         label = new Label({
@@ -85,7 +85,7 @@ class Slider extends Control {
             name : name + '.label',
             mouse_input: false,
             options: options.options.label,
-            visible: options.visible
+            internal_visible: options.visible
         });
 
         renderer = rendering.get(Slider, this);

@@ -50,7 +50,7 @@ class Button extends Control {
             name: name + '.label',
             options: options.options.label,
             mouse_input: false,
-            visible: options.visible
+            internal_visible: options.visible
         });
 
         if(options.onclick != null) onmouseup.listen(options.onclick);

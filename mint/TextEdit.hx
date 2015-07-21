@@ -69,7 +69,7 @@ class TextEdit extends Control {
             options: options.options.label,
             name : name + '.label',
             mouse_input: false,
-            visible: options.visible
+            internal_visible: options.visible
         });
 
         edit = label.text;

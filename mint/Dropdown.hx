@@ -53,7 +53,7 @@ class Dropdown extends Control {
             name : name + '.list',
             x: 0, y: options.h+1, w: w-1, h: _height,
             options: options.options.list,
-            visible : options.visible
+            internal_visible : options.visible
         });
 
         list.onselect.listen(onselected);
@@ -67,7 +67,7 @@ class Dropdown extends Control {
             options: options.options.label,
             align : options.align,
             align_vertical : options.align_vertical,
-            visible : options.visible
+            internal_visible : options.visible
         });
 
         renderer = rendering.get( Dropdown, this );

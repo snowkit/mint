@@ -49,7 +49,7 @@ class List extends Control {
             x: 0, y: 0, w: w, h: h,
             name : name + '.view',
             options: options.options.view,
-            visible: options.visible
+            internal_visible: options.visible
         });
 
         view.onmousedown.listen(click_deselect);

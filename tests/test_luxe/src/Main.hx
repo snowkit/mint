@@ -236,12 +236,15 @@ class Main extends luxe.Game {
             parent: canvas,
             name: 'window2',
             title: 'window',
+            visible: false,
             x:500, y:10, w:256, h: 131,
             h_max: 131, h_min: 131, w_min: 131
         });
 
         layout.anchor(a, window2, left, right);
         layout.anchor(a, window2, top, top);
+
+        Luxe.timer.schedule(2, function(){ window2.visible = true; });
 
         customwindow = new mint.Window({
             parent: canvas,

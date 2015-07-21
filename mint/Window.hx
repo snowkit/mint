@@ -71,6 +71,7 @@ class Window extends Control {
             parent : this,
             x: w-24, y: h-24, w: 24, h: 24,
             name : name + '.resize_handle',
+            internal_visible: options.visible
         });
 
         resize_handle.mouse_input = resizable;
@@ -87,7 +88,7 @@ class Window extends Control {
             text_size: options.text_size,
             options: options.options.label,
             name: name + '.titlelabel',
-            visible: options.visible
+            internal_visible: options.visible
         });
 
             //create the close label
@@ -100,7 +101,7 @@ class Window extends Control {
             text_size: options.text_size,
             options: options.options.close_button,
             name : name + '.closelabel',
-            visible: options.visible
+            internal_visible: options.visible
         });
 
 
