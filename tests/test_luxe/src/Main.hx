@@ -4,10 +4,11 @@ import luxe.Vector;
 import luxe.Input;
 import luxe.Text;
 
-import mint.types.Types;
 import mint.Control;
+import mint.types.Types;
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
+import mint.render.luxe.Label;
 
 
 import mint.layout.margins.Margins;
@@ -15,20 +16,16 @@ import mint.layout.margins.Margins;
 class Main extends luxe.Game {
 
     var canvas: mint.Canvas;
-    var label: mint.Label;
-    var check: mint.Checkbox;
-    var button: mint.Button;
-    var image: mint.Image;
-    var scroll: mint.Scroll;
-    var panel: mint.Panel;
-    var list: mint.List;
-    var window: mint.Window;
-    var window2: mint.Window;
-    var customwindow: mint.Window;
-    var progress: mint.Progress;
-
     var rendering: LuxeMintRender;
     var layout: Margins;
+
+//some controls we want to edit outside of their scope
+    var window1: mint.Window;
+    var window2: mint.Window;
+    var window3: mint.Window;
+    var check: mint.Checkbox;
+    var progress: mint.Progress;
+
 
     var debug : Bool = false;
     var td : Text;
@@ -68,15 +65,207 @@ class Main extends luxe.Game {
             color: new Color()
         });
 
-        test1();
+        create_basics();
+        create_window1();
+        create_window2();
+        create_window3();
 
     } //ready
 
     var progress_dir = -1;
 
-    function test1() {
+    function create_window1() {
 
-        label = new mint.Label({
+        window1 = new mint.Window({
+            parent: canvas,
+            name: 'window1',
+            title: 'window',
+            options: {
+                color:new Color().rgb(0x121212),
+                color_titlebar:new Color().rgb(0x191919),
+                label: { color:new Color().rgb(0x06b4fb) },
+                close_button: { color:new Color().rgb(0x06b4fb) },
+            },
+            x:160, y:10, w:256, h: 400,
+            w_min: 256, h_min:256
+        });
+
+        var _list = new mint.List({
+            parent: window1,
+            name: 'list1',
+            options: { view: { color:new Color().rgb(0x19191c) } },
+            x: 4, y: 28, w: 248, h: 400-28-4
+        });
+
+        layout.margin(_list, right, fixed, 4);
+        layout.margin(_list, bottom, fixed, 4);
+
+        var titles = ['Sword of Extraction', 'Fortitude', 'Wisdom stone', 'Cursed Blade', 'Risen Staff' ];
+        var desc = ['Steals 30% life of every hit from the target',
+                    '3 second Invulnerability', 'Passive: intelligence +5',
+                    'Each attack deals 1 damage to the weilder', 'Undead staff deals 3x damage to human enemies' ];
+
+        inline function create_block(idx:Int) {
+
+            var _panel = new mint.Panel({
+                parent: _list,
+                name: 'panel_${idx}',
+                x:2, y:4, w:236, h:96,
+            });
+
+            layout.margin(_panel, right, fixed, 8);
+
+            new mint.Image({
+                parent: _panel, name: 'icon_${idx}',
+                x:8, y:8, w:80, h:80,
+                path: 'assets/transparency.png'
+            });
+
+            var _title = new mint.Label({
+                parent: _panel, name: 'label_${idx}',
+                mouse_input:true, x:96, y:8, w:148, h:18, text_size: 16,
+                align: TextAlign.left, align_vertical: TextAlign.top,
+                text: titles[idx],
+            });
+
+            var _desc = new mint.Label({
+                parent: _panel, name: 'desc_${idx}',
+                x:96, y:30, w:132, h:18, text_size: 12,
+                align: TextAlign.left, align_vertical: TextAlign.top, bounds_wrap: true,
+                text: desc[idx]
+            });
+
+            layout.margin(_title, right, fixed, 8);
+            layout.margin(_desc, right, fixed, 8);
+
+            return _panel;
+
+        } //create_block
+
+        for(i in 0 ... 5) {
+
+            _list.add_item( create_block(i), 0, (i == 0) ? 0 : 8 );
+
+        } //for
+
+    } //create_window1
+
+    function create_window2() {
+
+        var _window = new mint.Window({
+            parent: canvas, name: 'window2', title: 'window',
+            visible: false, closable: false,
+            x:500, y:10, w:256, h: 131,
+            h_max: 131, h_min: 131, w_min: 131
+        });
+
+        var _anchored = new mint.Image({
+            parent: canvas, name: 'image2', x:0, y:400, w:32, h: 32,
+            path: 'assets/transparency.png'
+        });
+
+        var _platform = new mint.Dropdown({
+            parent: _window,
+            name: 'dropdown', text: 'Platform...',
+            options: { color:new Color().rgb(0x343439) },
+            x:10, y:32+22+10+32, w:256-10-10, h:24,
+        });
+
+        var plist = ['windows', 'linux', 'ios', 'android', 'web'];
+
+        inline function add_plat(name:String) {
+            var first = plist.indexOf(name) == 0;
+            _platform.add_item(
+                new mint.Label({
+                    parent: canvas, text: '$name', align:TextAlign.left,
+                    name: 'plat-$name', w:225, h:24, text_size: 14
+                }),
+                10, (first) ? 0 : 10
+            );
+        }
+
+        for(p in plist) add_plat(p);
+
+        _platform.onselect.listen(function(idx,_,_){ _platform.label.text = plist[idx]; });
+
+        var _text1 = new mint.TextEdit({
+            parent: _window, name: 'textedit1', text: 'snõwkit / mínt', renderable: true,
+            x: 10, y:32, w: 256-10-10, h: 22
+        });
+
+        var _text2 = new mint.TextEdit({
+            parent: _window, name: 'textnumbersonly', text: 'numbers only',
+            x: 10, y:32+22+10, w: 256-10-10, h: 22,
+            filter: new EReg('[0-9]+','gi'),
+            options: {
+                color: new Color(0.96,0.96,0.96),
+                color_hover: new Color(),
+                color_cursor: new Color().rgb(0xf6007b),
+                label:{ color: new Color().rgb(0xf6007b) }
+            }
+        });
+
+        layout.anchor(_anchored, _window, left, right);
+        layout.anchor(_anchored, _window, top, top);
+
+        layout.margin(_platform, right, fixed, 10);
+        layout.margin(_text1, right, fixed, 10);
+        layout.margin(_text2, right, fixed, 10);
+
+        Luxe.timer.schedule(1, function(){ _window.visible = true; });
+
+    } //create_window2
+
+    function create_window3() {
+
+        window3 = new mint.Window({
+            parent: canvas, name: 'customwindow', title: 'custom window', text_size: 13,
+            rendering: new CustomWindowRendering(),
+            x:500, y:150, w:256, h:180+42+32,
+            w_min: 128, h_min:128
+        });
+
+        //reach into the rendering specifics and change stuff
+        var _close_render = (cast window3.close_button.renderer:Label);
+            _close_render.text.point_size = 16;
+
+        var _list = new mint.List({ parent: window3, name: 'list', x: 10, y: 50, w: 236, h: 64 });
+
+        for(i in 0 ... 20) {
+            _list.add_item(
+                new mint.Label({
+                    parent: _list, w:100, h:30, align:TextAlign.left,
+                    name: 'label$i', text: 'label $i', text_size: 14,
+                    options: {
+                        color: new Color().rgb(0xf6007b),
+                        color_hover: new Color().rgb(0xffffff)
+                    },
+                }),
+                10, i == 0 ? 0 : 10
+            );
+        } //for
+
+
+        var _panel1 = new mint.Panel({
+            parent: window3, name: 'p1', x: 32, y: 120, w: 32, h: 32,
+            options:{ color:new Color().rgb(0x06b4fb) }
+        });
+
+        var _panel2 = new mint.Panel({ parent: window3, name: 'p2', x: 32, y: 36, w: 8, h: 8 });
+
+        layout.margin(_list, right, fixed, 10);
+
+        layout.anchor(_panel1, center_x, center_x);
+        layout.anchor(_panel1, center_y, center_y);
+
+        layout.size(_panel2, width, 50);
+        layout.anchor(_panel2, center_x, center_x);
+
+    } //create_window3
+
+    function create_basics() {
+
+        new mint.Label({
             parent: canvas,
             name: 'label1',
             x:10, y:10, w:100, h:32,
@@ -112,58 +301,42 @@ class Main extends luxe.Game {
             x: 10, y:95 , w:128, h: 16
         });
 
-        var sh1 = new mint.Slider({
-            parent: canvas,
-            name: 'slider1',
+        new mint.Slider({
+            parent: canvas, name: 'slider1', x: 10, y:330 , w: 128, h: 24,
             options: { bar: { color:new Color().rgb(0x9dca63) } },
-            min: 0,
-            max: 100,
-            step: 10,
-            x: 10, y:330 , w: 128, h: 24
+            min: 0, max: 100, step: 10
         });
 
-        var sh2 = new mint.Slider({
-            parent: canvas,
-            name: 'slider2',
+        new mint.Slider({
+            parent: canvas, name: 'slider2', x:10, y:357, w:128, h:24,
             options: { bar: { color:new Color().rgb(0x9dca63) } },
-            min: 0, max: 100, step: 1,
-            x:10, y:357, w:128, h:24
+            min: 0, max: 100, step: 1
         });
 
-        var sh3 = new mint.Slider({
-            parent: canvas,
-            name: 'slider3',
+        new mint.Slider({
+            parent: canvas, name: 'slider3', x:10, y:385, w:128, h:24,
             options: { bar: { color:new Color().rgb(0xf6007b) } },
-            x:10, y:385, w:128, h:24
         });
 
-        var sv1 = new mint.Slider({
-            parent: canvas,
-            name: 'slider1',
-            vertical: true,
+        new mint.Slider({
+            parent: canvas, name: 'slider1', x:14, y:424 , w:32, h:128,
             options: { bar: { color:new Color().rgb(0x9dca63) } },
-            min: 0, max: 100, step: 10,
-            x:14, y:424 , w:32, h:128
+            vertical: true, min: 0, max: 100, step: 10
         });
 
-        var sv2 = new mint.Slider({
-            parent: canvas,
-            name: 'slider2',
-            vertical: true,
+        new mint.Slider({
+            parent: canvas, name: 'slider2', x:56, y:424, w:32, h:128,
             options: { bar: { color:new Color().rgb(0x9dca63) } },
-            min: 0, max: 100, step: 1,
-            x:56, y:424, w:32, h:128
+            vertical: true, min: 0, max: 100, step: 1
         });
 
-        var sv3 = new mint.Slider({
-            parent: canvas,
-            name: 'slider3',
-            vertical: true,
+        new mint.Slider({
+            parent: canvas, name: 'slider3', x:98, y:424, w:32, h:128,
             options: { bar: { color:new Color().rgb(0xf6007b) } },
-            x:98, y:424, w:32, h:128
+            vertical: true
         });
 
-        button = new mint.Button({
+        new mint.Button({
             parent: canvas,
             name: 'button1',
             x: 10, y: 52, w: 60, h: 32,
@@ -183,7 +356,7 @@ class Main extends luxe.Game {
             onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
 
-        image = new mint.Image({
+        new mint.Image({
             parent: canvas,
             name: 'image1',
             x: 10, y: 120, w: 64, h: 64,
@@ -191,13 +364,13 @@ class Main extends luxe.Game {
             path: 'assets/transparency.png'
         });
 
-        panel = new mint.Panel({
+        new mint.Panel({
             parent: canvas,
             name: 'panel1',
             x:84, y:120, w:64, h: 64,
         });
 
-        scroll = new mint.Scroll({
+        var _scroll = new mint.Scroll({
             parent: canvas,
             name: 'scroll1',
             options: { color_handles:new Color().rgb(0xffffff) },
@@ -205,237 +378,16 @@ class Main extends luxe.Game {
         });
 
         new mint.Image({
-            parent: scroll,
+            parent: _scroll,
             name: 'image2',
             x:0, y:100, w:512, h: 512,
             path: 'assets/image.png'
         });
 
-        var a = new mint.Image({
-            parent: canvas,
-            name: 'image2',
-            x:0, y:400, w:32, h: 32,
-            path: 'assets/transparency.png'
-        });
-
-        window = new mint.Window({
-            parent: canvas,
-            name: 'window1',
-            title: 'window',
-            options: {
-                color:new Color().rgb(0x121212),
-                color_titlebar:new Color().rgb(0x191919),
-                label: { color:new Color().rgb(0x06b4fb) },
-                close_button: { color:new Color().rgb(0x06b4fb) },
-            },
-            x:160, y:10, w:256, h: 400,
-            w_min: 256, h_min:256
-        });
-
-        window2 = new mint.Window({
-            parent: canvas,
-            name: 'window2',
-            title: 'window',
-            visible: false,
-            x:500, y:10, w:256, h: 131,
-            h_max: 131, h_min: 131, w_min: 131
-        });
-
-        layout.anchor(a, window2, left, right);
-        layout.anchor(a, window2, top, top);
-
-        Luxe.timer.schedule(2, function(){ window2.visible = true; });
-
-        customwindow = new mint.Window({
-            parent: canvas,
-            name: 'customwindow',
-            title: 'custom window',
-            text_size: 13,
-            closable: false,
-            rendering: new CustomWindowRendering(),
-            x:500, y:150, w:256, h:180+42+32,
-            w_min: 128, h_min:128
-        });
-
-        //reach into the rendering specifics and change stuff
-        var _title_render = (cast customwindow.title.renderer:mint.render.luxe.Label);
-            _title_render.text.color.rgb(0x7d5956);
-
-        var _close_render = (cast customwindow.close_button.renderer:mint.render.luxe.Label);
-            _close_render.text.color.rgb(0x7d5956);
-            _close_render.color.rgb(0x7d5956);
-            _close_render.color_hover.rgb(0xf6007b);
-            _close_render.text.point_size = 16;
-
-        var platform = new mint.Dropdown({
-            parent: window2,
-            name: 'dropdown',
-            text: 'Platform...',
-            options: { color:new Color().rgb(0x343439) },
-            x:10, y:32+22+10+32, w:256-10-10, h:24,
-        });
-
-        layout.margin(platform, right, fixed, 10);
-
-        inline function add_plat(name:String, first:Bool = false) {
-            platform.add_item(
-                new mint.Label({
-                    parent: canvas,
-                    align: TextAlign.left,
-                    text: '$name',
-                    name: 'plat-$name',
-                    w:225, h:24, text_size: 14
-                }),
-                10, (first) ? 0 : 10
-            );
-        }
-
-        var plist = ['windows', 'linux', 'ios', 'android', 'web'];
-        var f = true;
-        for(p in plist) {
-            add_plat(p, f);
-            f = false;
-        }
-
-        platform.onselect.listen(function(idx,_,_){
-            platform.label.text = plist[idx];
-        });
-
-        var list2 = new mint.List({
-            parent: customwindow,
-            name: 'list',
-            x: 10, y: 50, w: 236, h: 64
-        });
-
-        for(i in 0 ... 20) {
-            list2.add_item(
-                new mint.Label({
-                    parent: list2,
-                    align: TextAlign.left,
-                    options: {
-                        color: new Color().rgb(0xf6007b),
-                        color_hover: new Color().rgb(0xffffff)
-                    },
-                    name: 'label$i',
-                    w:100, h:30,
-                    text: 'label $i',
-                    text_size: 14
-                }),
-                10, i == 0 ? 0 : 10
-            );
-        }
-
-        layout.margin(list2, right, fixed, 10);
-
-        var p1 = new mint.Panel({
-            parent: customwindow, name: 'p1', x: 32, y: 120, w: 32, h: 32,
-            options:{ color:new Color().rgb(0x06b4fb) }
-        });
-
-        var p2 = new mint.Panel({ parent: customwindow, name: 'p2', x: 32, y: 36, w: 8, h: 8 });
-
-        layout.anchor(p1, center_x, center_x);
-        layout.anchor(p1, center_y, center_y);
-
-        layout.size(p2, width, 50);
-        layout.anchor(p2, center_x, center_x);
-
-        var text1 = new mint.TextEdit({
-            parent: window2,
-            name: 'textedit1',
-            text: 'snõwkit / mínt',
-            renderable: true,
-            x: 10, y:32, w: 256-10-10, h: 22
-        });
-
-        layout.margin(text1, right, fixed, 10);
-
-        var text2 = new mint.TextEdit({
-            parent: window2,
-            name: 'textnumbersonly',
-            text: 'numbers only',
-            options: {
-                color: new Color(0.96,0.96,0.96),
-                color_hover: new Color(),
-                color_cursor: new Color().rgb(0xf6007b),
-                label:{ color: new Color().rgb(0xf6007b) }
-            },
-            x: 10, y:32+22+10, w: 256-10-10, h: 22,
-            filter: new EReg('[0-9]+','gi'),
-        });
-
-        layout.margin(text2, right, fixed, 10);
-
-        list = new mint.List({
-            parent: window,
-            name: 'list1',
-            options: { view: { color:new Color().rgb(0x19191c) } },
-            x: 4, y: 28, w: 248, h: 400-28-4
-        });
-
-        layout.margin(list, right, fixed, 4);
-        layout.margin(list, bottom, fixed, 4);
-
-        for(i in 0 ... 5) {
-            list.add_item( create_block(i), 0, (i == 0) ? 0 : 8 );
-        } //for
-
 
     } //test1
 
-    function create_block(idx:Int) {
 
-        var titles = ['Sword of Extraction', 'Fortitude', 'Wisdom stone', 'Cursed Blade', 'Risen Staff' ];
-        var desc = ['Steals 30% life of every hit from the target',
-                    '3 second Invulnerability', 'Passive: intelligence +5',
-                    'Each attack deals 1 damage to the weilder', 'Undead staff deals 3x damage to human enemies' ];
-
-        var _panel = new mint.Panel({
-            parent: list,
-            name: 'panel_${idx}',
-            x:2, y:4, w:236, h:96,
-        });
-
-        layout.margin(_panel, right, fixed, 8);
-
-        var _icon = new mint.Image({
-            name: 'icon_${idx}',
-            parent: _panel,
-            mouse_input:true,
-            x:8, y:8, w:80, h:80,
-            path: 'assets/transparency.png'
-        });
-
-        var _title = new mint.Label({
-            name: 'label_${idx}',
-            parent: _panel,
-            mouse_input:true,
-            x:96, y:8, w:148, h:18,
-            text_size: 16,
-            align: TextAlign.left,
-            align_vertical: TextAlign.top,
-            text: titles[idx]
-        });
-
-        layout.margin(_title, right, fixed, 8);
-
-        var _desc = new mint.Label({
-            name: 'desc_${idx}',
-            parent: _panel,
-            mouse_input:true,
-            bounds_wrap: true,
-            x:96, y:30, w:132, h:18,
-            text_size: 12,
-            align: TextAlign.left,
-            align_vertical: TextAlign.top,
-            text: desc[idx]
-        });
-
-        layout.margin(_desc, right, fixed, 8);
-
-        return _panel;
-
-    }
 
     override function onmousemove(e) {
 
@@ -482,46 +434,17 @@ class Main extends luxe.Game {
         if(canvas!=null) canvas.textinput( Convert.text_event(e) );
     }
 
-    function dump(c:Control, d:Int=0) {
-        var t = '';
-        for(i in 0 ... d) t += '    ';
-        trace('${t}${c.name}');
-        for(cc in c.children) dump(cc, d+1);
-    }
-
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
-        if(e.keycode == Key.key_1) {
-            if(window != null) window.open();
-        }
-        if(e.keycode == Key.key_2) {
-            if(window2 != null) window2.open();
-        }
-        if(e.keycode == Key.key_3) {
-            if(customwindow != null) customwindow.open();
-        }
-        if(e.keycode == Key.key_4) {
-            if(check != null) check.visible = !check.visible;
-        }
-        if(e.keycode == Key.key_5) {
-            dump(canvas);
-        }
+        if(e.keycode == Key.key_1) if(window1 != null) window1.open();
+        if(e.keycode == Key.key_2) if(window2 != null) window2.open();
+        if(e.keycode == Key.key_3) if(window3 != null) window3.open();
+        if(e.keycode == Key.key_4) if(check != null) check.visible = !check.visible;
 
-        if(e.keycode == Key.key_6) {
-            window.x += 10;
-        }
+        if(e.keycode == Key.key_d && e.mod.ctrl) debug = !debug;
+        if(e.keycode == Key.key_v && e.mod.ctrl) if(canvas!=null) canvas.visible = !canvas.visible;
 
-        if(e.keycode == Key.key_d && e.mod.ctrl) {
-            debug = !debug;
-        }
-
-        if(e.keycode == Key.key_v && e.mod.ctrl) {
-            if(canvas!=null) canvas.visible = !canvas.visible;
-        }
-
-        if(e.keycode == Key.escape) {
-            Luxe.shutdown();
-        }
+        if(e.keycode == Key.escape) Luxe.shutdown();
 
         if(canvas!=null) canvas.keyup( Convert.key_event(e) );
 
