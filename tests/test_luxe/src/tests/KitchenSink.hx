@@ -1,76 +1,62 @@
+package tests;
 
 import luxe.Color;
 import luxe.Vector;
 import luxe.Input;
 import luxe.Text;
+import luxe.States;
 
 import mint.Control;
 import mint.types.Types;
-import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
 import mint.render.luxe.Label;
-
-
 import mint.layout.margins.Margins;
 
-class Main extends luxe.Game {
+class KitchenSink extends State {
 
-    var canvas: mint.Canvas;
-    var rendering: LuxeMintRender;
-    var layout: Margins;
+    var bg: luxe.Sprite;
 
-//some controls we want to edit outside of their scope
+        //some controls we want to edit outside of their scope
     var window1: mint.Window;
     var window2: mint.Window;
     var window3: mint.Window;
     var check: mint.Checkbox;
     var progress: mint.Progress;
+    var canvas: mint.Canvas;
 
+    override function onleave<T>(_:T) {
 
-    var debug : Bool = false;
-    var td : Text;
+        bg.destroy();
 
-    override function config(config:luxe.AppConfig) {
+        canvas = null;
+        window1 = null;
+        window2 = null;
+        window3 = null;
+        check = null;
+        progress = null;
 
-        config.preload.textures.push({ id:'assets/960.png' });
-        config.preload.textures.push({ id:'assets/transparency.png' });
-        config.preload.textures.push({ id:'assets/mint.box.png' });
+    } //onleave
 
-        return config;
-    }
+    override function onenter<T>(_:T) {
 
-    override function ready() {
+        canvas = Main.canvas;
+
+        Main.disp.text = 'Test: KitchenSink';
 
         // Luxe.snow.windowing.enable_vsync(false);
 
-        new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
+        bg = new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
 
         Luxe.renderer.clear_color.rgb(0x161619);
 
-        rendering = new LuxeMintRender();
-        layout = new Margins();
-
-        canvas = new mint.Canvas({
-            rendering: rendering,
-            options: { color:new Color(1,1,1,0.3) },
-            x: 0, y:0, w: 960, h: 640
-        });
-
-        td = new Text({
-            text: 'debug:  (${Luxe.snow.os} / ${Luxe.snow.platform})',
-            point_size: 14,
-            pos: new Vector(950, 10),
-            align: right,
-            depth: 999,
-            color: new Color()
-        });
+        
 
         create_basics();
         create_window1();
         create_window2();
         create_window3();
 
-    } //ready
+    } //onenter
 
     var progress_dir = -1;
 
@@ -97,8 +83,8 @@ class Main extends luxe.Game {
             x: 4, y: 28, w: 248, h: 400-28-4
         });
 
-        layout.margin(_list, right, fixed, 4);
-        layout.margin(_list, bottom, fixed, 4);
+        Main.layout.margin(_list, right, fixed, 4);
+        Main.layout.margin(_list, bottom, fixed, 4);
 
         var titles = ['Sword of Extraction', 'Fortitude', 'Wisdom stone', 'Cursed Blade', 'Risen Staff' ];
         var desc = ['Steals 30% life of every hit from the target',
@@ -113,7 +99,7 @@ class Main extends luxe.Game {
                 x:2, y:4, w:236, h:96,
             });
 
-            layout.margin(_panel, right, fixed, 8);
+            Main.layout.margin(_panel, right, fixed, 8);
 
             new mint.Image({
                 parent: _panel, name: 'icon_${idx}',
@@ -135,8 +121,8 @@ class Main extends luxe.Game {
                 text: desc[idx]
             });
 
-            layout.margin(_title, right, fixed, 8);
-            layout.margin(_desc, right, fixed, 8);
+            Main.layout.margin(_title, right, fixed, 8);
+            Main.layout.margin(_desc, right, fixed, 8);
 
             return _panel;
 
@@ -205,12 +191,12 @@ class Main extends luxe.Game {
             }
         });
 
-        layout.anchor(_anchored, _window, left, right);
-        layout.anchor(_anchored, _window, top, top);
+        Main.layout.anchor(_anchored, _window, left, right);
+        Main.layout.anchor(_anchored, _window, top, top);
 
-        layout.margin(_platform, right, fixed, 10);
-        layout.margin(_text1, right, fixed, 10);
-        layout.margin(_text2, right, fixed, 10);
+        Main.layout.margin(_platform, right, fixed, 10);
+        Main.layout.margin(_text1, right, fixed, 10);
+        Main.layout.margin(_text2, right, fixed, 10);
 
         Luxe.timer.schedule(1, function(){ _window.visible = true; });
 
@@ -253,13 +239,13 @@ class Main extends luxe.Game {
 
         var _panel2 = new mint.Panel({ parent: window3, name: 'p2', x: 32, y: 36, w: 8, h: 8 });
 
-        layout.margin(_list, right, fixed, 10);
+        Main.layout.margin(_list, right, fixed, 10);
 
-        layout.anchor(_panel1, center_x, center_x);
-        layout.anchor(_panel1, center_y, center_y);
+        Main.layout.anchor(_panel1, center_x, center_x);
+        Main.layout.anchor(_panel1, center_y, center_y);
 
-        layout.size(_panel2, width, 50);
-        layout.anchor(_panel2, center_x, center_x);
+        Main.layout.size(_panel2, width, 50);
+        Main.layout.anchor(_panel2, center_x, center_x);
 
     } //create_window3
 
@@ -385,54 +371,8 @@ class Main extends luxe.Game {
         });
 
 
-    } //test1
+    } //create_basics
 
-
-
-    override function onmousemove(e) {
-
-        if(canvas!=null) {
-            canvas.mousemove( Convert.mouse_event(e) );
-
-            var s = 'debug:  (${Luxe.snow.os} / ${Luxe.snow.platform})\n';
-
-            s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none');
-            s += '\n';
-            s += 'canvas depth_seq: ' + (canvas != null ? @:privateAccess canvas.depth_seq + '' : 'none');
-            s += '\n';
-            s += 'focused: ' + (canvas.focused != null ? canvas.focused.name : 'none');
-            s += (canvas.focused != null ? ' / depth: '+canvas.focused.depth : '');
-            s += '\n';
-            s += 'modal: ' + (canvas.modal != null ?  canvas.modal.name : 'none');
-            s += '\n';
-            s += 'dragged: ' + (canvas.dragged != null ? canvas.dragged.name : 'none');
-            s += '\n';
-
-            td.text = s;
-
-        }
-
-    }
-
-    override function onmousewheel(e) {
-        if(canvas!=null) canvas.mousewheel( Convert.mouse_event(e) );
-    }
-
-    override function onmouseup(e) {
-        if(canvas!=null) canvas.mouseup( Convert.mouse_event(e) );
-    }
-
-    override function onmousedown(e) {
-        if(canvas!=null) canvas.mousedown( Convert.mouse_event(e) );
-    }
-
-    override function onkeydown(e:luxe.Input.KeyEvent) {
-        if(canvas!=null) canvas.keydown( Convert.key_event(e) );
-    }
-
-    override function ontextinput(e:luxe.Input.TextEvent) {
-        if(canvas!=null) canvas.textinput( Convert.text_event(e) );
-    }
 
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
@@ -441,62 +381,17 @@ class Main extends luxe.Game {
         if(e.keycode == Key.key_3) if(window3 != null) window3.open();
         if(e.keycode == Key.key_4) if(check != null) check.visible = !check.visible;
 
-        if(e.keycode == Key.key_d && e.mod.ctrl) debug = !debug;
-        if(e.keycode == Key.key_v && e.mod.ctrl) if(canvas!=null) canvas.visible = !canvas.visible;
-
-        if(e.keycode == Key.escape) Luxe.shutdown();
-
-        if(canvas!=null) canvas.keyup( Convert.key_event(e) );
-
     } //onkeyup
 
-    function drawc(control:Control) {
-
-        if(!control.visible) return;
-
-        Luxe.draw.rectangle({
-            depth: 1000,
-            x: control.x,
-            y: control.y,
-            w: control.w,
-            h: control.h,
-            color: new Color(1,0,0,0.5),
-            immediate: true
-        });
-
-        for(c in control.children) {
-            drawc(c);
-        }
-
-    } //drawc
-
-    override function onrender() {
-
-        canvas.render();
-
-    } //onrender
-
     override function update(dt:Float) {
-        if(canvas!=null) {
-            canvas.update(dt);
-        }
 
         progress.progress += (0.2 * dt) * progress_dir;
         if(progress.progress >= 1) progress_dir = -1;
         if(progress.progress <= 0) progress_dir = 1;
 
-        if(debug) {
-            for(c in canvas.children) {
-                drawc(c);
-            }
-        }
     } //update
 
-    override function ondestroy() {
-    } //shutdown
-
-} //Main
-
+} //KitchenSink
 
 
 class CustomWindowRenderer extends mint.render.Render {
