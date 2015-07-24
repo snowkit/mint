@@ -38,6 +38,7 @@ class TextEdit extends Control {
 
         /** Emitted whenever the index is changed. */
     public var onchangeindex: Signal<Int->Void>;
+    public var onchange: Signal<String->Void>;
 
     var edit : String = '';
     var options: TextEditOptions;
@@ -47,13 +48,14 @@ class TextEdit extends Control {
         options = _options;
 
         def(options.name, 'textedit');
+        def(options.mouse_input, true);
+        def(options.key_input, true);
 
         super(options);
 
         onchangeindex = new Signal();
+        onchange = new Signal();
 
-        mouse_input = def(options.mouse_input, true);
-        key_input = def(options.key_input, true);
         filter = def(options.filter, null);
 
         def(options.text, 'mint.TextEdit');

@@ -51,11 +51,12 @@ class Canvas extends Control {
         def(options.w, 800);
         def(options.h, 600);
 
+        def(options.mouse_input, true);
+
         super(options);
 
         canvas = this;
 
-        mouse_input = true;
         depth = def(options.depth, 0.0);
         depth_seq = depth;
 
@@ -315,11 +316,5 @@ class Canvas extends Control {
         }
 
     } //update
-
-    public override function destroy(){
-
-        super.destroy();
-
-    } //destroy
 
 } //Canvas

@@ -54,8 +54,6 @@ class Label extends Control {
 
         onchange = new Signal();
 
-        mouse_input = def(options.mouse_input, false);
-
         def(options.align, TextAlign.center);
         def(options.align_vertical, TextAlign.center);
         def(options.text_size, 14);

@@ -44,12 +44,12 @@ class Checkbox extends Control {
         options = _options;
 
         def(options.name, 'checkbox');
+        def(options.mouse_input, true);
 
         super(_options);
 
         onchange = new Signal();
 
-        mouse_input = def(options.mouse_input, true);
 
         if(options.state != null) {
             state = options.state;

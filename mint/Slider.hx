@@ -53,6 +53,8 @@ class Slider extends Control {
         options = _options;
 
         def(options.name, 'slider');
+        def(options.mouse_input, true);
+
         max = def(options.max, 1);
         min = def(options.min, 0);
         value = def(options.value, max);
@@ -62,8 +64,6 @@ class Slider extends Control {
         super(options);
 
         onchange = new Signal();
-
-        mouse_input = true;
 
         bar = new Panel({
             parent : this,

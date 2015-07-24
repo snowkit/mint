@@ -35,10 +35,8 @@ class Window extends Control {
     public var title : Label;
     public var close_button : Label;
 
-    public var moveable : Bool = true;
     public var closable : Bool = true;
     public var focusable : Bool = true;
-    public var resizable : Bool = true;
 
     public var onclose : Signal<Void->Bool>;
 
@@ -55,17 +53,14 @@ class Window extends Control {
         onclose = new Signal();
 
         def(options.name, 'window');
+        def(options.moveable, true);
+        def(options.resizable, true);
+        def(options.mouse_input, true);
 
         super(options);
 
-        if(options.mouse_input == null){
-            mouse_input = true;
-        }
-
-        if(options.moveable != null) { moveable = options.moveable; }
-        if(options.closable != null) { closable = options.closable; }
-        if(options.focusable != null) { focusable = options.focusable; }
-        if(options.resizable != null) { resizable = options.resizable; }
+        def(options.closable, true);
+        def(options.focusable, true);
 
         resize_handle = new Control({
             parent : this,

@@ -33,10 +33,9 @@ class Button extends Control {
         options = _options;
 
         def(options.name, 'button');
+        def(options.mouse_input, true);
 
         super(options);
-
-        mouse_input = def(options.mouse_input, true);
 
         def(options.align, TextAlign.center);
         def(options.align_vertical, TextAlign.center);

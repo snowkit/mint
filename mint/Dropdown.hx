@@ -36,13 +36,12 @@ class Dropdown extends Control {
         options = _options;
 
         def(options.name, 'dropdown');
+        def(options.mouse_input, true);
 
             //create the base control
         super(options);
 
         onselect = new Signal();
-
-        mouse_input = true;
 
         def(options.align, TextAlign.left);
         def(options.align_vertical, TextAlign.center);

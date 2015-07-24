@@ -44,8 +44,6 @@ class Image extends Control {
 
         super(_options);
 
-        mouse_input = def(options.mouse_input, false);
-
         renderer = rendering.get(Image, this);
 
         oncreate.emit();
