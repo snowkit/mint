@@ -75,7 +75,7 @@ class Window extends mint.render.Render {
             x: window.x,
             y: window.y,
             w: window.w+1,
-            h: window.h+1,
+            h: window.h,
             color: color_border,
             depth: render.options.depth + window.depth+0.002,
             group: render.options.group,
@@ -88,7 +88,11 @@ class Window extends mint.render.Render {
     override function ondestroy() {
 
         visual.drop();
+        top.drop();
+        border.drop();
         visual = null;
+        top = null;
+        border = null;
 
     } //ondestroy
 
@@ -97,7 +101,7 @@ class Window extends mint.render.Render {
         visual.resize_xy(window.w, window.h);
         top.transform.pos.set_xy(window.title.x, window.title.y);
         top.resize_xy(window.title.w, window.title.h);
-        border.set({ x:window.x, y:window.y, w:window.w+1, h:window.h+1, color:border.color, visible:control.visible });
+        border.set({ x:window.x, y:window.y, w:window.w+1, h:window.h, color:border.color, visible:control.visible });
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {

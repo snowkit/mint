@@ -83,7 +83,9 @@ class Progress extends mint.render.Render {
     override function ondestroy() {
 
         visual.drop();
+        bar.drop();
         visual = null;
+        bar = null;
 
     }
 
