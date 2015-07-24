@@ -20,6 +20,9 @@ typedef ScrollOptions = {
 class Scroll extends Control {
 
     public var scroll: { v:ScrollInfo, h:ScrollInfo };
+    public var scrollh: mint.Control;
+    public var scrollv: mint.Control;
+    public var container: mint.Control;
 
     public var child_bounds : ChildBounds;
 
@@ -34,6 +37,7 @@ class Scroll extends Control {
     var last_modal : Control;
 
     var options: ScrollOptions;
+    var ready = false;
 
     public function new(_options:ScrollOptions) {
 
@@ -43,21 +47,44 @@ class Scroll extends Control {
         options = _options;
 
         def(options.name, 'scroll');
+        def(options.mouse_input, true);
 
         super(_options);
 
-        if(options.mouse_input == null){
-            mouse_input = true;
-        }
+        container = new mint.Control({
+            parent : this,
+            name: '$name.container',
+            mouse_input: false,
+            internal_visible: options.visible,
+            x:0, y:0, w:w, h:h
+        });
+
+        child_bounds = container.children_bounds;
+
+        scrollv = new mint.Control({
+            parent : this,
+            name: '$name.scroll_v',
+            internal_visible: options.visible,
+            x: w-8, y: 0, w: 8, h: 16
+        });
+
+        scrollh = new mint.Control({
+            parent : this,
+            name: '$name.scroll_h',
+            internal_visible: options.visible,
+            x: 0, y: h-8, w: 16, h: 8
+        });
+
+        ready = true;
 
         scroll = {
             v: {
                 enabled: false, percent: 0, amount: 0,
-                x: x+w-8, y: y, w: 8, h: 16
+                // x: x+w-8, y: y, w: 8, h: 16
             },
             h: {
                 enabled: false, percent: 0, amount: 0,
-                x: x, y: y+h-8, w: 16, h: 8
+                // x: x, y: y+h-8, w: 16, h: 8
             }
         };
 
@@ -70,11 +97,25 @@ class Scroll extends Control {
 
     public override function add(child:Control) {
 
-        super.add(child);
-        on_internal_scroll(0,0);
+            //if the internal controls add them normally
+        if(!ready) {
 
-        child.clip_with = this;
-        depth = depth;
+            super.add(child);
+
+        } else {
+
+            container.add(child);
+
+            child_bounds = container.children_bounds;
+
+            container.w = child_bounds.real_w;
+            container.h = child_bounds.real_h;
+
+            on_internal_scroll(0,0);
+            child.clip_with = this;
+            depth = depth;
+
+        } //
 
     } //add
 
@@ -84,16 +125,16 @@ class Scroll extends Control {
 
         if(scroll.h.enabled || scroll.v.enabled) {
 
-            if(scroll.h.enabled && in_rect(e.x, e.y, scroll.h.x, scroll.h.y, scroll.h.w, scroll.h.h)) {
-                drag_offset_x = e.x - scroll.h.x;
+            if(scroll.h.enabled && scrollh.contains(e.x, e.y)) {
+                drag_offset_x = e.x - scrollh.x;
                 handle_drag_h = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
                 forward = false;
             }
 
-            if(scroll.v.enabled && in_rect(e.x, e.y, scroll.v.x, scroll.v.y, scroll.v.w, scroll.v.h)) {
-                drag_offset_y = e.y - scroll.v.y;
+            if(scroll.v.enabled && scrollv.contains(e.x,e.y)) { //in_rect(e.x, e.y, scroll.v.x, scroll.v.y, scroll.v.w, scroll.v.h)
+                drag_offset_y = e.y - scrollv.y;
                 handle_drag_v = true;
                 last_modal = canvas.modal;
                 canvas.modal = this;
@@ -152,28 +193,11 @@ class Scroll extends Control {
 
     } //mousewheel
 
-
-    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
-
-        if(scroll != null) {
-            scroll.v.x = x+w-8;
-            scroll.v.y = y+scroll.v.amount;
-            scroll.h.x = x+scroll.h.amount;
-            scroll.h.y = y+h-8;
-        }
-
-        super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
-
-    } //bounds_changed
-
     function on_internal_scroll(_dx:Float, _dy:Float) {
 
         if(_dx != 0 || _dy != 0) {
 
-                //tell the children to scroll the delta
-            for(child in children) {
-                child.set_pos(child.x+_dx, child.y+_dy, true);
-            }
+            container.set_pos(container.x+_dx, container.y+_dy, true);
 
         } //has delta
 
@@ -181,15 +205,15 @@ class Scroll extends Control {
 
         onscroll.emit(_dx, _dy);
 
-        scroll.h.x += _dx;
-        scroll.v.y += _dy;
+        scrollh.x += _dx;
+        scrollv.y += _dy;
 
     } //on_internal_scroll
 
     function check_handle_vis() {
 
             //make sure the child bounds are up to date
-        child_bounds = children_bounds;
+        // child_bounds = container.children_bounds;
 
         var _preh = scroll.h.enabled;
         var _prev = scroll.v.enabled;
@@ -226,12 +250,12 @@ class Scroll extends Control {
             //for a delta
         var last_p_y = scroll.v.percent;
             //the new percent is based on the size of the control
-        scroll.v.percent = Helper.clamp(exact / (h-scroll.v.h), 0, 1);
+        scroll.v.percent = Helper.clamp(exact / (h-scrollv.h), 0, 1);
         scroll.v.amount = exact;
             //we need the difference in scroll amount in pixels
         var pdiff = (last_p_y - scroll.v.percent) * (child_bounds.real_h - h);
             //update the real slider y value
-        scroll.v.y = Helper.clamp( y + exact, y, y+h-scroll.v.h );
+        scrollv.y = Helper.clamp( y + exact, y, y+h-scrollv.h );
 
         on_internal_scroll(0, pdiff);
 
@@ -252,11 +276,25 @@ class Scroll extends Control {
             //we need the difference in scroll amount in pixels
         var pdiff = (last_p_x - scroll.h.percent) * (child_bounds.real_w - w);
             //update the real slider x value
-        scroll.h.x = Helper.clamp( x + exact, x, x+w-scroll.h.w );
+        scrollh.x = Helper.clamp( x + exact, x, x+w-scrollh.w );
 
         on_internal_scroll(pdiff, 0);
 
     } //set_scroll_x
+
+    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
+
+        super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
+
+        if(container != null) {
+            container.w = w;
+            container.h = h;
+        }
+
+        if(scrollh != null) scrollh.y_local = h-8;
+        if(scrollv != null) scrollv.x_local = w-8;
+
+    } //bounds_changed
 
 } //Scroll
 
@@ -265,8 +303,8 @@ private typedef ScrollInfo = {
     enabled: Bool,
     percent: Float,
     amount: Float,
-    x:Float,
-    y:Float,
-    w:Float,
-    h:Float
+    // x:Float,
+    // y:Float,
+    // w:Float,
+    // h:Float
 }

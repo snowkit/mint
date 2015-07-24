@@ -29,16 +29,13 @@ class List extends Control {
         options = _options;
 
         def(options.name, 'list');
+        def(options.mouse_input, true);
 
         super(options);
 
         onselect = new Signal();
         onitemleave = new Signal();
         onitementer = new Signal();
-
-        if(options.mouse_input == null){
-            mouse_input = true;
-        }
 
         if(options.multiselect != null) {
             multiselect = options.multiselect;
@@ -66,7 +63,7 @@ class List extends Control {
 
     public function add_item( item:Control, offset_x:Float = 0.0, offset_y:Float = 0.0 ) {
 
-        var _childbounds = view.children_bounds;
+        var _childbounds = view.container.children_bounds;
 
         item.y_local += _childbounds.bottom + offset_y;
         item.x_local += offset_x;

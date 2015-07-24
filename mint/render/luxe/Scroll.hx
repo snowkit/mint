@@ -54,8 +54,8 @@ class Scroll extends mint.render.Render {
         scrollh = new luxe.Sprite({
             batcher: render.options.batcher,
             centered: false,
-            pos: new Vector(scroll.scroll.h.x, scroll.scroll.h.y),
-            size: new Vector(scroll.scroll.h.w, scroll.scroll.h.h),
+            pos: new Vector(scroll.scrollh.x, scroll.scrollh.y),
+            size: new Vector(scroll.scrollh.w, scroll.scrollh.h),
             color: color_handles,
             depth: render.options.depth + control.depth+0.00001,
             group: render.options.group,
@@ -65,8 +65,8 @@ class Scroll extends mint.render.Render {
         scrollv = new luxe.Sprite({
             batcher: render.options.batcher,
             centered: false,
-            pos: new Vector(scroll.scroll.v.x, scroll.scroll.v.y),
-            size: new Vector(scroll.scroll.v.w, scroll.scroll.v.h),
+            pos: new Vector(scroll.scrollv.x, scroll.scrollv.y),
+            size: new Vector(scroll.scrollv.w, scroll.scrollv.h),
             color: color_handles,
             depth: render.options.depth + control.depth+0.00001,
             group: render.options.group,
@@ -83,6 +83,8 @@ class Scroll extends mint.render.Render {
 
         scroll.onscroll.remove(onscroll);
 
+        scrollh.destroy();
+        scrollv.destroy();
         visual.destroy();
         visual = null;
 
@@ -92,8 +94,8 @@ class Scroll extends mint.render.Render {
         visual.transform.pos.set_xy(control.x, control.y);
         visual.geometry_quad.resize_xy( control.w, control.h );
         //
-        scrollh.pos.set_xy(scroll.scroll.h.x, scroll.scroll.h.y);
-        scrollv.pos.set_xy(scroll.scroll.v.x, scroll.scroll.v.y);
+        scrollh.pos.set_xy(scroll.scrollh.x, scroll.scrollh.y);
+        scrollv.pos.set_xy(scroll.scrollv.x, scroll.scrollv.y);
     }
 
     function onhandlevis(_h:Bool, _v:Bool) {
@@ -102,8 +104,8 @@ class Scroll extends mint.render.Render {
     }
 
     function onscroll(_dx:Float=0.0, _dy:Float=0.0) {
-        scrollh.pos.x = scroll.scroll.h.x;
-        scrollv.pos.y = scroll.scroll.v.y;
+        scrollh.pos.x = scroll.scrollh.x;
+        scrollv.pos.y = scroll.scrollv.y;
     }
 
     override function onchild( _child:Control ) {
