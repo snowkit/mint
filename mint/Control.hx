@@ -48,6 +48,11 @@ typedef ControlOptions = {
         /** Whether or not the control emits render signals from the canvas render call */
     @:optional var renderable: Bool;
 
+        /** Whether or not the control is moveable (draggable). */
+    @:optional var moveable: Bool;
+        /** Whether or not the control is resizable. */
+    @:optional var resizable: Bool;
+
         /** The render service that provides this instance with an implementation.
             Defaults to using the owning canvas render service if not specified */
     @:optional var rendering: Rendering;
@@ -115,6 +120,10 @@ class Control {
     public var key_input : Bool = false;
         //if the control emits a render signal
     public var renderable : Bool = false;
+        //if the control is moveable (draggable)
+    public var moveable : Bool = false;
+        //if the control is resizable
+    public var resizable : Bool = false;
 
         //if the control is visible
     @:isVar public var visible (default, set) : Bool = true;
@@ -180,8 +189,6 @@ class Control {
 
         children = [];
 
-        // bounds = _options_.bounds == null ? new Rect(0,0,32,32) : _options_.bounds;
-
         w_min = def(_options_.w_min, 8);
         h_min = def(_options_.h_min, 8);
         w_max = def(_options_.w_max, 0);
@@ -197,8 +204,10 @@ class Control {
 
         name = def(_options_.name, 'control');
 
-        if(_options_.mouse_input != null) mouse_input = _options_.mouse_input;
-        if(_options_.key_input != null) key_input = _options_.key_input;
+        mouse_input = def(_options_.mouse_input, false);
+        key_input = def(_options_.key_input, false);
+        resizable = def(_options_.resizable, false);
+        moveable = def(_options_.moveable, false);
 
         children_bounds = {
             x:0,
@@ -581,6 +590,15 @@ class Control {
 
     } //mouseleave
 
+    public function destroy_children() {
+
+        while(children.length > 0) {
+            var child = children.shift();
+                child.destroy();
+        }
+
+    } //destroy_children
+
     public function destroy() {
 
         canvas.focus_invalid = true;
@@ -588,6 +606,8 @@ class Control {
         if(parent != null) {
             parent.remove(this);
         }
+
+        destroy_children();
 
         ondestroy.emit();
 
