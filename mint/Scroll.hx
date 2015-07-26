@@ -57,7 +57,7 @@ class Scroll extends Control {
         container = new mint.Control({
             parent : this,
             name: '$name.container',
-            // mouse_input: true,
+            mouse_input: true,
             internal_visible: options.visible,
             x:0, y:0, w:w, h:h
         });
