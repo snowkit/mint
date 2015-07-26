@@ -57,12 +57,10 @@ class Scroll extends Control {
         container = new mint.Control({
             parent : this,
             name: '$name.container',
-            mouse_input: true,
+            // mouse_input: true,
             internal_visible: options.visible,
             x:0, y:0, w:w, h:h
         });
-
-        child_bounds = container.children_bounds;
 
         scrollv = new mint.Control({
             parent : this, name: '$name.scroll_v',
@@ -80,6 +78,7 @@ class Scroll extends Control {
             x: 0, y: h-8, w: 16, h: 8
         });
 
+        child_bounds = container.children_bounds;
         ready = true;
 
         scrollv.onmousedown.listen(scrollvdown);

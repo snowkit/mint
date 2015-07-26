@@ -25,7 +25,7 @@ class Scrolling extends State {
 
         scroll = new mint.Scroll({
             parent: Main.canvas,
-            options: { color_handles:new Color().rgb(0xffffff) },
+            options: { color_handles:new Color().rgb(0xf6007b) },
             x:10, y:10, w: 256, h: 256
         });
 
