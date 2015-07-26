@@ -48,11 +48,6 @@ typedef ControlOptions = {
         /** Whether or not the control emits render signals from the canvas render call */
     @:optional var renderable: Bool;
 
-        /** Whether or not the control is moveable (draggable). */
-    @:optional var moveable: Bool;
-        /** Whether or not the control is resizable. */
-    @:optional var resizable: Bool;
-
         /** The render service that provides this instance with an implementation.
             Defaults to using the owning canvas render service if not specified */
     @:optional var rendering: Rendering;
@@ -120,10 +115,6 @@ class Control {
     public var key_input : Bool = false;
         //if the control emits a render signal
     public var renderable : Bool = false;
-        //if the control is moveable (draggable)
-    public var moveable : Bool = false;
-        //if the control is resizable
-    public var resizable : Bool = false;
 
         //if the control is visible
     @:isVar public var visible (default, set) : Bool = true;
@@ -206,8 +197,6 @@ class Control {
 
         mouse_input = def(_options_.mouse_input, false);
         key_input = def(_options_.key_input, false);
-        resizable = def(_options_.resizable, false);
-        moveable = def(_options_.moveable, false);
 
         children_bounds = {
             x:0,
