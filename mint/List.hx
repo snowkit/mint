@@ -9,14 +9,12 @@ import mint.core.Macros.*;
 
 typedef ListOptions = {
     > ControlOptions,
-    ? multiselect: Bool
 }
 
 class List extends Control {
 
     public var view : Scroll;
     public var items : Array<Control>;
-    public var multiselect : Bool = false;
     public var options : ListOptions;
 
     public var onselect : Signal<Int->Control->MouseEvent->Void>;
@@ -37,10 +35,6 @@ class List extends Control {
         onitemleave = new Signal();
         onitementer = new Signal();
 
-        if(options.multiselect != null) {
-            multiselect = options.multiselect;
-        }
-
         view = new Scroll({
             parent : this,
             x: 0, y: 0, w: w, h: h,
@@ -49,17 +43,11 @@ class List extends Control {
             internal_visible: options.visible
         });
 
-        view.onmousedown.listen(click_deselect);
-
         renderer = rendering.get(List, this);
 
         oncreate.emit();
 
     } //new
-
-    function click_deselect(e:MouseEvent, ctrl) {
-
-    }
 
     public function add_item( item:Control, offset_x:Float = 0.0, offset_y:Float = 0.0 ) {
 
