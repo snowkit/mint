@@ -37,12 +37,14 @@ class Window extends Control {
 
     public var closable : Bool = true;
     public var focusable : Bool = true;
+    public var moveable : Bool = true;
+    public var resizable : Bool = true;
 
     public var onclose : Signal<Void->Bool>;
 
     var dragging : Bool = false;
-    var drag_start_x : Float = 0;
-    var drag_start_y : Float = 0;
+    var drag_x : Float = 0;
+    var drag_y : Float = 0;
 
     var resize_handle : Control;
     var options : WindowOptions;
@@ -53,14 +55,14 @@ class Window extends Control {
         onclose = new Signal();
 
         def(options.name, 'window');
-        def(options.moveable, true);
-        def(options.resizable, true);
         def(options.mouse_input, true);
 
         super(options);
 
-        def(options.closable, true);
-        def(options.focusable, true);
+        moveable = def(options.moveable, true);
+        resizable = def(options.resizable, true);
+        closable = def(options.closable, true);
+        focusable = def(options.focusable, true);
 
         resize_handle = new Control({
             parent : this,
@@ -117,8 +119,8 @@ class Window extends Control {
     } //new
 
     var resizing = false;
-    var resize_start_x = 0.0;
-    var resize_start_y = 0.0;
+    var resize_x = 0.0;
+    var resize_y = 0.0;
 
     function on_resize_up(e:MouseEvent, _) {
 
@@ -135,8 +137,8 @@ class Window extends Control {
         if(resizing) return;
 
         resizing = true;
-        resize_start_x = e.x;
-        resize_start_y = e.y;
+        resize_x = e.x;
+        resize_y = e.y;
         canvas.dragged = resize_handle;
 
     } //on_resize_down
@@ -167,21 +169,21 @@ class Window extends Control {
 
         if(resizing) {
 
-            var diff_x = e.x - resize_start_x;
-            var diff_y = e.y - resize_start_y;
+            var _dx = e.x - resize_x;
+            var _dy = e.y - resize_y;
 
-            var ww = w + diff_x;
-            var hh = h + diff_y;
+            var ww = w + _dx;
+            var hh = h + _dy;
 
             var resized = false;
 
             if(ww >= w_min || ww <= w_max) {
-                resize_start_x = e.x;
+                resize_x = e.x;
                 resized = true;
             }
 
             if(hh >= h_min || hh <= h_max) {
-                resize_start_y = e.y;
+                resize_y = e.y;
                 resized = true;
             }
 
@@ -189,13 +191,13 @@ class Window extends Control {
 
         } else if(dragging) {
 
-            var diff_x = e.x - drag_start_x;
-            var diff_y = e.y - drag_start_y;
+            var _dx = e.x - drag_x;
+            var _dy = e.y - drag_y;
 
-            drag_start_x = e.x;
-            drag_start_y = e.y;
+            drag_x = e.x;
+            drag_y = e.y;
 
-            set_pos(x + diff_x, y + diff_y);
+            set_pos(x + _dx, y + _dy);
 
         } else { //dragging
 
@@ -226,8 +228,8 @@ class Window extends Control {
             if(!dragging && moveable) {
                 if( in_title ) {
                     dragging = true;
-                    drag_start_x = e.x;
-                    drag_start_y = e.y;
+                    drag_x = e.x;
+                    drag_y = e.y;
                     canvas.dragged = this;
                 } //if inside title bounds
             } //!dragging
