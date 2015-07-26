@@ -19,29 +19,32 @@ typedef ScrollOptions = {
 @:allow(mint.render.Renderer)
 class Scroll extends Control {
 
-    public var scroll: { v:ScrollInfo, h:ScrollInfo };
     public var scrollh: mint.Control;
     public var scrollv: mint.Control;
     public var container: mint.Control;
-
     public var child_bounds : ChildBounds;
 
-    public var onscroll : Signal<Float->Float->Void>;
+    public var onchange : Signal<Void->Void>;
     public var onhandlevis : Signal<Bool->Bool->Void>;
 
-    var handle_drag_v = false;
-    var handle_drag_h = false;
-    var drag_offset_x = 0.0;
-    var drag_offset_y = 0.0;
+    var drag_v = false;
+    var drag_y = 0.0;
+    var percent_v = 0.0;
+    var visible_v = false;
 
-    var last_modal : Control;
+    var drag_h = false;
+    var drag_x = 0.0;
+    var percent_h = 0.0;
+    var visible_h = false;
 
     var options: ScrollOptions;
     var ready = false;
 
+//Public API
+
     public function new(_options:ScrollOptions) {
 
-        onscroll = new Signal();
+        onchange = new Signal();
         onhandlevis = new Signal();
 
         options = _options;
@@ -62,38 +65,162 @@ class Scroll extends Control {
         child_bounds = container.children_bounds;
 
         scrollv = new mint.Control({
-            parent : this,
-            name: '$name.scroll_v',
+            parent : this, name: '$name.scroll_v',
+            mouse_input: true,
             internal_visible: options.visible,
+            h_min:2, w_min:2,
             x: w-8, y: 0, w: 8, h: 16
         });
 
         scrollh = new mint.Control({
-            parent : this,
-            name: '$name.scroll_h',
+            parent : this, name: '$name.scroll_h',
+            mouse_input: true,
             internal_visible: options.visible,
+            h_min:2, w_min:2,
             x: 0, y: h-8, w: 16, h: 8
         });
 
         ready = true;
 
-        scroll = {
-            v: {
-                enabled: false, percent: 0, amount: 0,
-                // x: x+w-8, y: y, w: 8, h: 16
-            },
-            h: {
-                enabled: false, percent: 0, amount: 0,
-                // x: x, y: y+h-8, w: 16, h: 8
-            }
-        };
+        scrollv.onmousedown.listen(scrollvdown);
+        scrollv.onmouseup.listen(scrollvup);
+        scrollv.onmousemove.listen(scrollvmove);
+
+        scrollh.onmousedown.listen(scrollhdown);
+        scrollh.onmouseup.listen(scrollhup);
+        scrollh.onmousemove.listen(scrollhmove);
 
         renderer = rendering.get( Scroll, this );
-        check_handle_vis();
 
         oncreate.emit();
 
     } //new
+
+    public function set_scroll_percent(?_horizontal:Null<Float>, ?_vertical:Null<Float>) {
+
+        percent_v = def(_vertical, percent_v);
+        percent_h = def(_horizontal, percent_h);
+
+        percent_v = Helper.clamp(percent_v, 0, 1);
+        percent_h = Helper.clamp(percent_h, 0, 1);
+
+        update_scroll();
+
+    } //set_scroll_percent
+
+    public function update_container() {
+
+        if(!ready) return;
+
+        child_bounds = container.children_bounds;
+
+        container.w = child_bounds.real_w;
+        container.h = child_bounds.real_h;
+
+    } //update_container
+
+
+//Internal
+
+//vertical
+
+    function scrollvdown(e:MouseEvent,_) {
+
+        if(!visible_v) return;
+
+        drag_v = true;
+        drag_y = e.y - scrollv.y;
+        canvas.dragged = scrollv;
+
+    } //scrollvdown
+
+    function scrollvup(e:MouseEvent,_) {
+
+        drag_v = false;
+        canvas.dragged = null;
+
+    } //scrollvup
+
+    function scrollvmove(e:MouseEvent,_) {
+
+        if(drag_v && visible_v) {
+
+            var _dest = Helper.clamp(e.y-drag_y, y, bottom-scrollv.h);
+            // scrollv.set_pos(scrollv.x, _dest);
+            percent_v = (_dest-y) / (h-scrollv.h);
+            update_scroll();
+
+        } //drag_v
+
+    } //scrollvmove
+
+//horizontal
+
+    function scrollhdown(e:MouseEvent,_) {
+
+        if(!visible_h) return;
+
+        drag_h = true;
+        drag_x = e.x - scrollh.x;
+        canvas.dragged = scrollh;
+
+    } //scrollhdown
+
+    function scrollhup(e:MouseEvent,_) {
+
+        drag_h = false;
+        canvas.dragged = null;
+
+    } //scrollhup
+
+    function scrollhmove(e:MouseEvent,_) {
+
+        if(drag_h && visible_h) {
+
+            var _dest = Helper.clamp(e.x-drag_x, x, right-scrollh.w);
+            // scrollh.set_pos(_dest, scrollh.y);
+            percent_h = (_dest-x) / (w-scrollh.w);
+            update_scroll();
+
+        } //drag_h
+
+    } //scrollvmove
+
+//Refresh all relevant values
+
+    function update_scroll() {
+
+        if(!ready) return;
+
+            //:todo: this should generally
+            //only be calculated when the children
+            //bounds are changing
+        // update_container();
+
+        var _dy = (h - container.h);
+        var _dx = (w - container.w);
+
+        visible_h = _dx < 0;
+        visible_v = _dy < 0;
+
+        if(_dx >= 0) _dx = 0;
+        if(_dy >= 0) _dy = 0;
+
+        container.x = x + (_dx * percent_h);
+        container.y = y + (_dy * percent_v);
+
+        scrollh.x = x + (percent_h * (w-scrollh.w));
+        scrollv.y = y + (percent_v * (h-scrollv.h));
+
+        onchange.emit();
+        onhandlevis.emit(visible_h, visible_v);
+
+    } //update_scroll
+
+    inline function get_step_h() return (Math.abs(w - container.w)*0.02)/w;
+    inline function get_step_v() return (Math.abs(h - container.h)*0.02)/h;
+
+//Control overrides
 
     public override function add(child:Control) {
 
@@ -106,12 +233,9 @@ class Scroll extends Control {
 
             container.add(child);
 
-            child_bounds = container.children_bounds;
+            update_container();
+            update_scroll();
 
-            container.w = child_bounds.real_w;
-            container.h = child_bounds.real_h;
-
-            on_internal_scroll(0,0);
             child.clip_with = this;
             depth = depth;
 
@@ -119,177 +243,35 @@ class Scroll extends Control {
 
     } //add
 
-    public override function mousedown(e : MouseEvent) {
+    public override function remove(child:Control) {
 
-        var forward = true;
+        super.remove(child);
 
-        if(scroll.h.enabled || scroll.v.enabled) {
+        update_container();
+        update_scroll();
 
-            if(scroll.h.enabled && scrollh.contains(e.x, e.y)) {
-                drag_offset_x = e.x - scrollh.x;
-                handle_drag_h = true;
-                last_modal = canvas.modal;
-                canvas.modal = this;
-                forward = false;
-            }
-
-            if(scroll.v.enabled && scrollv.contains(e.x,e.y)) { //in_rect(e.x, e.y, scroll.v.x, scroll.v.y, scroll.v.w, scroll.v.h)
-                drag_offset_y = e.y - scrollv.y;
-                handle_drag_v = true;
-                last_modal = canvas.modal;
-                canvas.modal = this;
-                forward = false;
-            }
-
-        } //can_scroll at all
-
-        if(forward) {
-            super.mousedown(e);
-        }
-
-    } //mousedown
-
-    public override function mouseup(e : MouseEvent) {
-
-        super.mouseup(e);
-
-        drag_offset_x = 0;
-        drag_offset_y = 0;
-
-        if(handle_drag_v || handle_drag_h) {
-            handle_drag_v = false;
-            handle_drag_h = false;
-            canvas.modal = last_modal;
-        }
-
-    } //mouseup
-
-    public override function mousemove(e : MouseEvent) {
-
-        super.mousemove(e);
-
-        if(handle_drag_v) {
-            set_scroll_y( e.y-y-drag_offset_y );
-        }
-
-        if(handle_drag_h) {
-            set_scroll_x( e.x-x-drag_offset_x );
-        }
-
-    } //mousemove
+    } //remove
 
     public override function mousewheel(e:MouseEvent) {
 
-            //forward to
         super.mousewheel(e);
 
-        if(e.x != 0 && scroll.h.enabled) {
-            set_scroll_x((scroll.h.amount)+(w*0.03*e.x));
+        if(e.x != 0 && visible_h) {
+            set_scroll_percent(percent_h + (e.x*get_step_h()), percent_v);
         }
 
-        if(e.y != 0 && scroll.v.enabled) {
-            set_scroll_y((scroll.v.amount)+(h*0.01*e.y));
+        if(e.y != 0 && visible_v) {
+            set_scroll_percent(percent_h, percent_v + (e.y*get_step_v()));
         }
 
     } //mousewheel
-
-    function on_internal_scroll(_dx:Float, _dy:Float) {
-
-        if(_dx != 0 || _dy != 0) {
-
-            container.set_pos(container.x+_dx, container.y+_dy, true);
-
-        } //has delta
-
-        check_handle_vis();
-
-        onscroll.emit(_dx, _dy);
-
-        scrollh.x += _dx;
-        scrollv.y += _dy;
-
-    } //on_internal_scroll
-
-    function check_handle_vis() {
-
-            //make sure the child bounds are up to date
-        // child_bounds = container.children_bounds;
-
-        var _preh = scroll.h.enabled;
-        var _prev = scroll.v.enabled;
-
-            //make sure the scroll goes away when too small
-        scroll.h.enabled = false;
-        scroll.v.enabled = false;
-
-            //if the children bounds are < our size, it can't scroll
-        if(child_bounds.real_w <= w) {
-            scroll.h.enabled = false;
-        } else {
-            scroll.h.enabled = true;
-        }
-
-        if(child_bounds.real_h <= h) {
-            scroll.v.enabled = false;
-        } else {
-            scroll.v.enabled = true;
-        }
-
-        onhandlevis.emit(scroll.h.enabled, scroll.v.enabled);
-
-    } //check_handle_vis
-
-        //set the scroll value directly in pixels, between 0 and h
-    public function set_scroll_y(exact:Float) {
-
-        if(!scroll.v.enabled) return;
-
-            //can't go outside the bounds
-        exact = Helper.clamp( exact, 0, h );
-
-            //for a delta
-        var last_p_y = scroll.v.percent;
-            //the new percent is based on the size of the control
-        scroll.v.percent = Helper.clamp(exact / (h-scrollv.h), 0, 1);
-        scroll.v.amount = exact;
-            //we need the difference in scroll amount in pixels
-        var pdiff = (last_p_y - scroll.v.percent) * (child_bounds.real_h - h);
-            //update the real slider y value
-        scrollv.y = Helper.clamp( y + exact, y, y+h-scrollv.h );
-
-        on_internal_scroll(0, pdiff);
-
-    } //set_scroll_y
-
-    public function set_scroll_x(exact:Float) {
-
-        if(!scroll.h.enabled) return;
-
-            //limit to the size of the control
-        exact = Helper.clamp( exact, 0, w );
-
-            //for a delta
-        var last_p_x = scroll.h.percent;
-            //the new percent is based on the size of the control
-        scroll.h.percent = Helper.clamp(exact / w, 0, 1);
-        scroll.h.amount = exact;
-            //we need the difference in scroll amount in pixels
-        var pdiff = (last_p_x - scroll.h.percent) * (child_bounds.real_w - w);
-            //update the real slider x value
-        scrollh.x = Helper.clamp( x + exact, x, x+w-scrollh.w );
-
-        on_internal_scroll(pdiff, 0);
-
-    } //set_scroll_x
 
     override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
 
         super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
 
-        if(container != null) {
-            container.w = w;
-            container.h = h;
-        }
+        update_container();
+        update_scroll();
 
         if(scrollh != null) scrollh.y_local = h-8;
         if(scrollv != null) scrollv.x_local = w-8;
@@ -297,14 +279,3 @@ class Scroll extends Control {
     } //bounds_changed
 
 } //Scroll
-
-
-private typedef ScrollInfo = {
-    enabled: Bool,
-    percent: Float,
-    amount: Float,
-    // x:Float,
-    // y:Float,
-    // w:Float,
-    // h:Float
-}

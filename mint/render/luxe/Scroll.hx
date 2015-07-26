@@ -20,6 +20,7 @@ class Scroll extends mint.render.Render {
 
     public var scroll : mint.Scroll;
     public var visual : Sprite;
+
     public var scrollh : Sprite;
     public var scrollv : Sprite;
 
@@ -75,13 +76,14 @@ class Scroll extends mint.render.Render {
 
         visual.clip_rect = Convert.bounds(control.clip_with);
 
-        scroll.onscroll.listen(onscroll);
+        scroll.onchange.listen(onchange);
         scroll.onhandlevis.listen(onhandlevis);
+
     }
 
     override function ondestroy() {
 
-        scroll.onscroll.remove(onscroll);
+        scroll.onchange.remove(onchange);
 
         scrollh.destroy();
         scrollv.destroy();
@@ -99,11 +101,11 @@ class Scroll extends mint.render.Render {
     }
 
     function onhandlevis(_h:Bool, _v:Bool) {
-        scrollh.visible = _h;
-        scrollv.visible = _v;
+        scrollh.visible = _h && scroll.visible;
+        scrollv.visible = _v && scroll.visible;
     }
 
-    function onscroll(_dx:Float=0.0, _dy:Float=0.0) {
+    function onchange() {
         scrollh.pos.x = scroll.scrollh.x;
         scrollv.pos.y = scroll.scrollv.y;
     }
@@ -124,8 +126,8 @@ class Scroll extends mint.render.Render {
 
     override function onvisible( _visible:Bool ) {
         visual.visible = _visible;
-        scrollh.visible = scroll.scroll.h.enabled && _visible;
-        scrollv.visible = scroll.scroll.v.enabled && _visible;
+        scrollh.visible = scroll.visible_h && _visible;
+        scrollv.visible = scroll.visible_v && _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
