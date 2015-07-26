@@ -257,8 +257,8 @@ class Control {
             //if we have children, we look at each one, looking for the highest one
             //after we have the highest one, we ask it to return it's own highest child
 
-        var highest_child : Control = this;
-        var highest_depth : Float = 0;
+        var highest_child = this;
+        var highest_depth = 0.0;
 
         for(_child in children) {
             if(_child.contains(_x, _y) && _child.mouse_input && _child.visible) {
@@ -409,6 +409,7 @@ class Control {
         }
     }
 
+        //:todo: clean up
     function get_children_bounds() : ChildBounds {
 
         if(children.length == 0) {
@@ -815,8 +816,10 @@ class Control {
         ondepth.emit(depth);
 
         if(canvas != this) {
+            var _idx = 1;
             for(child in children) {
-                child.depth = _depth+0.001;
+                child.depth = _depth+(0.001 * _idx);
+                _idx++;
             }
         }
 
