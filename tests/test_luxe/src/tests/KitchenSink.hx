@@ -285,40 +285,31 @@ class KitchenSink extends State {
             x: 10, y:95 , w:128, h: 16
         });
 
-        new mint.Slider({
-            parent: canvas, name: 'slider1', x: 10, y:330 , w: 128, h: 24,
-            options: { bar: { color:new Color().rgb(0x9dca63) } },
-            min: 0, max: 100, step: 10
-        });
+        inline function make_slider(_n,_x,_y,_w,_h,_c,_min,_max,_step:Null<Float>,_vert) {
 
-        new mint.Slider({
-            parent: canvas, name: 'slider2', x:10, y:357, w:128, h:24,
-            options: { bar: { color:new Color().rgb(0x9dca63) } },
-            min: 0, max: 100, step: 1
-        });
+            var _s = new mint.Slider({
+                parent: canvas, name: _n, x:_x, y:_y, w:_w, h:_h,
+                options: { color_bar:new Color().rgb(_c) },
+                min: _min, max: _max, step: _step, vertical:_vert
+            });
 
-        new mint.Slider({
-            parent: canvas, name: 'slider3', x:10, y:385, w:128, h:24,
-            options: { bar: { color:new Color().rgb(0xf6007b) } },
-        });
+            var _l = new mint.Label({
+                parent:_s, text_size:12, x:0, y:0, w:_s.w, h:_s.h,
+                align: TextAlign.center, align_vertical: TextAlign.center,
+                name : _s.name+'.label', text: '${_s.value}'
+            });
 
-        new mint.Slider({
-            parent: canvas, name: 'slider1', x:14, y:424 , w:32, h:128,
-            options: { bar: { color:new Color().rgb(0x9dca63) } },
-            vertical: true, min: 0, max: 100, step: 10
-        });
+            _s.onchange.listen(function(_val,_) { _l.text = '$_val'; });
 
-        new mint.Slider({
-            parent: canvas, name: 'slider2', x:56, y:424, w:32, h:128,
-            options: { bar: { color:new Color().rgb(0x9dca63) } },
-            vertical: true, min: 0, max: 100, step: 1
-        });
+        } //make_slider
 
-        new mint.Slider({
-            parent: canvas, name: 'slider3', x:98, y:424, w:32, h:128,
-            options: { bar: { color:new Color().rgb(0xf6007b) } },
-            vertical: true
-        });
+        make_slider('slider1', 10, 330, 128, 24, 0x9dca63, 0, 100, 10, false);
+        make_slider('slider2', 10, 357, 128, 24, 0x9dca63, 0, 100, 1, false);
+        make_slider('slider3', 10, 385, 128, 24, 0xf6007b, null, null, null, false);
+
+        make_slider('slider4', 14, 424, 32, 128, 0x9dca63, 0, 100, 10, true);
+        make_slider('slider5', 56, 424, 32, 128, 0x9dca63, 0, 100, 1, true);
+        make_slider('slider6', 98, 424, 32, 128, 0xf6007b, null, null, null, true);
 
         new mint.Button({
             parent: canvas,

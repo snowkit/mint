@@ -40,11 +40,14 @@ class Slider extends Control {
     public var min : Float = 0;
     public var max : Float = 1;
     public var value : Float = 1;
+    public var percent : Float = 1;
     public var step : Null<Float>;
     public var vertical : Bool = false;
 
-    public var bar : Panel;
-    public var label : Label;
+    var bar_x : Float = 2.0;
+    var bar_y : Float = 2.0;
+    var bar_w : Float = 0.0;
+    var bar_h : Float = 0.0;
 
     public var onchange: Signal<Float->Float->Void>;
 
@@ -65,28 +68,8 @@ class Slider extends Control {
 
         onchange = new Signal();
 
-        bar = new Panel({
-            parent : this,
-            x: 2, y:2, w: w-4, h: h-4,
-            name : name + '.bar',
-            w_min : 1, h_min : 1,
-            mouse_input: false,
-            options: options.options.bar,
-            internal_visible: options.visible
-        });
-
-        label = new Label({
-            parent : this,
-            x: 0, y:0, w: w, h: h,
-            align: TextAlign.center,
-            align_vertical: TextAlign.center,
-            text: '${options.value}',
-            text_size: 12,
-            name : name + '.label',
-            mouse_input: false,
-            options: options.options.label,
-            internal_visible: options.visible
-        });
+        bar_w = w-4;
+        bar_h = h-4;
 
         renderer = rendering.get(Slider, this);
 
@@ -95,16 +78,12 @@ class Slider extends Control {
     } //new
 
     var dragging = false;
-    var drag_x = 0.0;
-    var drag_y = 0.0;
 
     override function mousedown(e:MouseEvent) {
 
         super.mousedown(e);
 
         dragging = true;
-        drag_x = e.x;
-        drag_y = e.y;
         canvas.modal = this;
         update_value(e);
 
@@ -119,38 +98,37 @@ class Slider extends Control {
 
         if(!vertical) {
 
-            var _bar_w = e.x - x;
+            var _dx = e.x - x;
 
-            if(_bar_w < 1) _bar_w = 1;
-            if(_bar_w >= w-4) _bar_w = w-4;
+            if(_dx < 1) _dx = 1;
+            if(_dx >= w-4) _dx = w-4;
 
-            _bar_w = bar.w + (_bar_w - bar.w);
-            value = ((_bar_w - 1) / (w - 5)) * get_range();
+            _dx = bar_w + (_dx - bar_w);
+            value = ((_dx - 1) / (w - 5)) * get_range();
 
             if(step != null) value = Math.round(value/step) * step;
 
-            bar.w = _bar_w;
+            bar_w = _dx;
 
         } else {
 
-            var _bar_h = (h) - (e.y - y);
+            var _dy = (h) - (e.y - y);
 
-            if(_bar_h < 1) _bar_h = 1;
-            if(_bar_h >= h-4) _bar_h = h-4;
+            if(_dy < 1) _dy = 1;
+            if(_dy >= h-4) _dy = h-4;
 
-            _bar_h = bar.h + (_bar_h - bar.h);
-            value = ((_bar_h - 1) / (h - 5)) * get_range();
+            _dy = bar_h + (_dy - bar_h);
+            value = ((_dy - 1) / (h - 5)) * get_range();
 
             if(step != null) value = Math.round(value/step) * step;
 
-            bar.h = _bar_h;
-            bar.y_local = (h - _bar_h) - 2;
+            bar_h = _dy;
+            bar_y = ((h - _dy) - 2);
 
         } //vertical
 
-        label.text = Std.string(value);
-
-        onchange.emit(value, prev);
+        percent = value/get_range();
+        onchange.emit(value, percent);
 
     } //update_value
 
