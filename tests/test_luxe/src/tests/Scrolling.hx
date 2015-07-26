@@ -17,6 +17,7 @@ import mint.layout.margins.Margins;
 class Scrolling extends State {
 
     var scroll: mint.Scroll;
+    var scroll2: mint.Scroll;
 
     override function onenter<T>(_:T) {
 
@@ -30,7 +31,19 @@ class Scrolling extends State {
 
         new mint.Image({
             parent: scroll,
-            x:0, y:0, w:1024, h: 1024,
+            x:0, y:0, w:512, h: 512,
+            path: 'assets/image.png'
+        });
+
+        scroll2 = new mint.Scroll({
+            parent: Main.canvas,
+            options: { color_handles:new Color().rgb(0xcc0000) },
+            x:320, y:10, w: 256, h: 256
+        });
+
+        new mint.Image({
+            parent: scroll2,
+            x:0, y:0, w:128, h: 128,
             path: 'assets/image.png'
         });
 

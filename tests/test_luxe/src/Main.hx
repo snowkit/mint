@@ -81,7 +81,6 @@ class Main extends luxe.Game {
         return config;
     }
 
-
     override function onrender() {
 
         canvas.render();
@@ -95,7 +94,9 @@ class Main extends luxe.Game {
     } //onrender
 
     override function update(dt:Float) {
+
         canvas.update(dt);
+
     } //update
 
     override function onmousemove(e) {

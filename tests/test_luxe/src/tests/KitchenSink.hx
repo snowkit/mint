@@ -41,15 +41,13 @@ class KitchenSink extends State {
 
         canvas = Main.canvas;
 
-        Main.disp.text = 'Test: KitchenSink';
+        Main.disp.text = 'Test: KitchenSink. Press 0 or 9 to cycle test cases';
 
         // Luxe.snow.windowing.enable_vsync(false);
 
         bg = new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
 
         Luxe.renderer.clear_color.rgb(0x161619);
-
-        
 
         create_basics();
         create_window1();
