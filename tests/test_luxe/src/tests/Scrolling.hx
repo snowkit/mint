@@ -26,24 +26,24 @@ class Scrolling extends State {
         scroll = new mint.Scroll({
             parent: Main.canvas,
             options: { color_handles:new Color().rgb(0xf6007b) },
-            x:10, y:10, w: 256, h: 256
-        });
-
-        new mint.Image({
-            parent: scroll,
-            x:0, y:0, w:512, h: 512,
-            path: 'assets/image.png'
+            x:20, y:100, w: 256, h: 256
         });
 
         scroll2 = new mint.Scroll({
             parent: Main.canvas,
             options: { color_handles:new Color().rgb(0xcc0000) },
-            x:320, y:10, w: 256, h: 256
+            x:340, y:100, w: 256, h: 256
+        });
+
+        new mint.Image({
+            parent: scroll,
+            w:1024, h: 1024,
+            path: 'assets/image.png'
         });
 
         new mint.Image({
             parent: scroll2,
-            x:0, y:0, w:128, h: 128,
+            w:128, h: 128,
             path: 'assets/image.png'
         });
 

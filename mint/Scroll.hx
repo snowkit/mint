@@ -236,7 +236,7 @@ class Scroll extends Control {
             update_scroll();
 
             child.clip_with = this;
-            depth = depth;
+            // depth = depth;
 
         } //
 

@@ -207,11 +207,6 @@ class Window extends Control {
 
     } //onmousemove
 
-    function bring_to_front() {
-        if(depth != @:privateAccess canvas.depth_seq) {
-            depth = canvas.next_depth();
-        }
-    }
 
     public override function mousedown(e:MouseEvent)  {
 
@@ -223,7 +218,7 @@ class Window extends Control {
             super.mousedown(e);
         }
 
-        if(focusable) bring_to_front();
+        if(focusable) canvas.bring_to_front(this);
 
             if(!dragging && moveable) {
                 if( in_title ) {

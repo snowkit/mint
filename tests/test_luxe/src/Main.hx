@@ -26,12 +26,14 @@ class Main extends luxe.Game {
 
     override function ready() {
 
+        Luxe.renderer.clear_color.rgb(0x121219);
+
         rendering = new LuxeMintRender();
         layout = new Margins();
 
         canvas = new mint.Canvas({
             rendering: rendering,
-            options: { color:new Color(1,1,1,0.3) },
+            options: { color:new Color(1,1,1,0.0) },
             x: 0, y:0, w: 960, h: 640
         });
 
@@ -56,6 +58,7 @@ class Main extends luxe.Game {
 
         state.add( new tests.KitchenSink({ name:'state0' }) );
         state.add( new tests.Scrolling({ name:'state1' }) );
+        state.add( new tests.Depth({ name:'state2' }) );
 
         count = Lambda.count( state._states );
 
@@ -107,9 +110,9 @@ class Main extends luxe.Game {
 
         s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none');
         s += '\n';
-        s += 'canvas depth_seq: ' + (canvas != null ? @:privateAccess canvas.depth_seq + '' : 'none');
+        s += 'canvas depth_seq: ' + (canvas != null ? '$canvas.depth' + '' : 'none');
         s += '\n';
-        s += 'focused: ' + (canvas.focused != null ? canvas.focused.name : 'none');
+        s += 'focused: ' + (canvas.focused != null ? '${canvas.focused.name} [${canvas.focused.nodes}]' : 'none');
         s += (canvas.focused != null ? ' / depth: '+canvas.focused.depth : '');
         s += '\n';
         s += 'modal: ' + (canvas.modal != null ?  canvas.modal.name : 'none');
@@ -170,7 +173,6 @@ class Main extends luxe.Game {
         }
 
     } //onkeyup
-
 
     function drawc(control:Control) {
 

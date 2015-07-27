@@ -100,14 +100,15 @@ class Dropdown extends Control {
         canvas.modal = null;
 
         list.set_visible(false);
-        list.depth = depth+0.001;
+        // list.depth = depth+0.001;
         is_open = false;
 
     } //close_list
 
     public function open_list() {
 
-        list.depth = canvas.next_depth();
+        // canvas.bring_to_front(this);
+
         canvas.modal = list;
 
         list.set_visible(true);

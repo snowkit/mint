@@ -47,8 +47,6 @@ class KitchenSink extends State {
 
         bg = new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
 
-        Luxe.renderer.clear_color.rgb(0x161619);
-
         create_basics();
         create_window1();
         create_window2();
@@ -161,7 +159,7 @@ class KitchenSink extends State {
             var first = plist.indexOf(name) == 0;
             _platform.add_item(
                 new mint.Label({
-                    parent: canvas, text: '$name', align:TextAlign.left,
+                    parent: _platform, text: '$name', align:TextAlign.left,
                     name: 'plat-$name', w:225, h:24, text_size: 14
                 }),
                 10, (first) ? 0 : 10
@@ -374,9 +372,11 @@ class KitchenSink extends State {
 
     override function update(dt:Float) {
 
-        progress.progress += (0.2 * dt) * progress_dir;
-        if(progress.progress >= 1) progress_dir = -1;
-        if(progress.progress <= 0) progress_dir = 1;
+        if(progress != null) {
+            progress.progress += (0.2 * dt) * progress_dir;
+            if(progress.progress >= 1) progress_dir = -1;
+            if(progress.progress <= 0) progress_dir = 1;
+        }
 
     } //update
 
