@@ -124,8 +124,8 @@ class Window extends mint.render.Render {
 
     override function ondepth( _depth:Float ) {
         visual.depth = render.options.depth + _depth;
-        top.depth = render.options.depth + _depth+0.0001;
-        border.depth = render.options.depth + _depth+0.0002;
+        top.depth = visual.depth+0.001;
+        border.depth = visual.depth+0.002;
     } //ondepth
 
 } //Window

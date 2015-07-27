@@ -60,7 +60,7 @@ class Dropdown extends mint.render.Render {
             w: control.w,
             h: control.h,
             color: color_border,
-            depth: render.options.depth + control.depth+0.002,
+            depth: render.options.depth + control.depth+0.001,
             group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
@@ -95,7 +95,7 @@ class Dropdown extends mint.render.Render {
 
     override function ondepth( _depth:Float ) {
         visual.depth = render.options.depth + _depth;
-        border.depth = render.options.depth + _depth+0.002;
+        border.depth = visual.depth+0.001;
     }
 
 

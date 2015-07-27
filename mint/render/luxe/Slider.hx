@@ -60,7 +60,7 @@ class Slider extends mint.render.Render {
             w:slider.bar_w,
             h:slider.bar_h,
             color: color_bar,
-            depth: render.options.depth + control.depth + 0.0001,
+            depth: render.options.depth + control.depth + 0.001,
             group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
@@ -108,7 +108,7 @@ class Slider extends mint.render.Render {
 
     override function ondepth( _depth:Float ) {
         visual.depth = render.options.depth + _depth;
-        bar.depth = visual.depth + 0.0001;
+        bar.depth = visual.depth + 0.001;
     } //ondepth
 
 } //Slider

@@ -58,9 +58,9 @@ class Scroll extends mint.render.Render {
             pos: new Vector(scroll.scrollh.x, scroll.scrollh.y),
             size: new Vector(scroll.scrollh.w, scroll.scrollh.h),
             color: color_handles,
-            depth: render.options.depth + control.depth+0.00001,
+            depth: render.options.depth + scroll.scrollh.depth,
             group: render.options.group,
-            visible: control.visible,
+            visible: scroll.visible_h,
         });
 
         scrollv = new luxe.Sprite({
@@ -69,9 +69,9 @@ class Scroll extends mint.render.Render {
             pos: new Vector(scroll.scrollv.x, scroll.scrollv.y),
             size: new Vector(scroll.scrollv.w, scroll.scrollv.h),
             color: color_handles,
-            depth: render.options.depth + control.depth+0.00001,
+            depth: render.options.depth + scroll.scrollv.depth,
             group: render.options.group,
-            visible: control.visible,
+            visible: scroll.visible_v
         });
 
         visual.clip_rect = Convert.bounds(control.clip_with);
@@ -111,8 +111,8 @@ class Scroll extends mint.render.Render {
     }
 
     override function onchild( _child:Control ) {
-        scrollv.depth = scroll.depth+(scroll.nodes*0.001)+0.00001;
-        scrollh.depth = scroll.depth+(scroll.nodes*0.001)+0.00001;
+        scrollv.depth = render.options.depth + scroll.scrollv.depth;
+        scrollh.depth = render.options.depth + scroll.scrollh.depth;
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
@@ -132,8 +132,8 @@ class Scroll extends mint.render.Render {
 
     override function ondepth( _depth:Float ) {
         visual.depth = render.options.depth + _depth;
-        scrollv.depth = render.options.depth + _depth+(scroll.nodes*0.001)+0.00001;
-        scrollh.depth = render.options.depth + _depth+(scroll.nodes*0.001)+0.00001;
+        scrollv.depth = render.options.depth + scroll.scrollv.depth;
+        scrollh.depth = render.options.depth + scroll.scrollh.depth;
     } //ondepth
 
 } //Scroll

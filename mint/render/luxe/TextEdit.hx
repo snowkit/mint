@@ -61,7 +61,7 @@ class TextEdit extends mint.render.Render {
             p0: new Vector(0,0),
             p1: new Vector(0,0),
             color: color_cursor,
-            depth: render.options.depth + control.depth+0.0001,
+            depth: render.options.depth + control.depth+0.001,
             group: render.options.group,
             visible: false,
             clip_rect: Convert.bounds(control.clip_with)
@@ -92,7 +92,7 @@ class TextEdit extends mint.render.Render {
                     h:textedit.h,
                     immediate: true,
                     color: color_cursor,
-                    depth: render.options.depth+textedit.depth+0.0001,
+                    depth: render.options.depth+textedit.depth+0.001,
                     group: render.options.group
                 });
             }
@@ -181,7 +181,7 @@ class TextEdit extends mint.render.Render {
 
     override function ondepth( _depth:Float ) {
         visual.depth = render.options.depth+_depth;
-        cursor.depth = render.options.depth+_depth+0.0001;
+        cursor.depth = visual.depth+0.001;
     } //ondepth
 
 } //TextEdit
