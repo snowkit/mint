@@ -144,7 +144,7 @@ class Control {
         //the parent control, null if no parent
     @:isVar public var parent(get,set) : Control;
         //the depth of this control
-    @:isVar public var depth(get,set) : Float = 0.0;
+    @:isVar public var depth(get,set) : Float = 1.0;
         //The concrete renderer for this control instance
     public var renderer : mint.render.Renderer;
         /** The rendering service that this instance uses, defaults to the canvas render service */
@@ -180,39 +180,36 @@ class Control {
 
         children = [];
 
+        name = def(_options_.name, 'control');
+
         w_min = def(_options_.w_min, 8);
         h_min = def(_options_.h_min, 8);
         w_max = def(_options_.w_max, 0);
         h_max = def(_options_.h_max, 0);
 
-        x = def(_options_.x, 0);
-        y = def(_options_.y, 0);
-        w = def(_options_.w, 32);
-        h = def(_options_.h, 32);
+        ignore_spatial = true;
 
-        x_local = x;
-        y_local = y;
+            x = def(_options_.x, 0);
+            y = def(_options_.y, 0);
+            w = def(_options_.w, 32);
+            h = def(_options_.h, 32);
 
-        name = def(_options_.name, 'control');
+            x_local = x;
+            y_local = y;
+
+        ignore_spatial = false;
 
         mouse_input = def(_options_.mouse_input, false);
         key_input = def(_options_.key_input, false);
 
         children_bounds = {
-            x:0,
-            y:0,
-            right:0,
-            bottom:0,
-            real_x : 0,
-            real_y : 0,
-            real_w : 0,
-            real_h : 0
+            x:0, y:0, right:0, bottom:0,
+            real_x : 0, real_y : 0, real_w : 0, real_h : 0
         };
 
         if(_options_.parent != null) {
 
             canvas = _options_.parent.canvas;
-            depth = canvas.next_depth();
             _options_.parent.add(this);
 
         } else { //parent != null
@@ -225,7 +222,7 @@ class Control {
 
         closest_to_canvas = find_top_parent();
 
-        //canvas is valid here
+        //canvas must be valid here
 
         rendering = def(_options.rendering, canvas.rendering);
 
@@ -251,7 +248,7 @@ class Control {
 
     public function topmost_child_at_point( _x:Float, _y:Float ) : Control {
 
-            //if we have no children, we are the topmost child
+        //if we have no children, we are the topmost child
         if(children.length == 0) return this;
 
             //if we have children, we look at each one, looking for the highest one
@@ -261,6 +258,7 @@ class Control {
         var highest_depth = 0.0;
 
         for(_child in children) {
+
             if(_child.contains(_x, _y) && _child.mouse_input && _child.visible) {
 
                 if(_child.depth >= highest_depth) {
@@ -382,29 +380,18 @@ class Control {
         }
 
         if(child.parent != this) {
-            child.parent = this;
             children.push(child);
-
-            if(parent != null || canvas == this) {
-                var _nodes = child.nodes + 1;
-                nodes += _nodes;
-                if(parent != null) parent.nodes += _nodes;
-            }
-
+            child.parent = this;
             onchild.emit(child);
         }
-    }
+
+        // canvas.flush_depths();
+
+    } //add
 
     public function remove( child:Control ) {
         if(child.parent == this) {
             children.remove(child);
-
-            if(parent != null || canvas == this) {
-                var _nodes = child.nodes + 1;
-                nodes -= _nodes;
-                if(parent != null) parent.nodes -= _nodes;
-            }
-
             onchild.emit(child);
         }
     }
@@ -674,6 +661,16 @@ class Control {
 
         x = _x;
 
+        if(!ignore_spatial) {
+            ignore_spatial = true;
+                if(parent != null) {
+                    x_local = x - parent.x;
+                } else {
+                    x_local = x;
+                }
+            ignore_spatial = false;
+        } //ignore_spatial
+
         bounds_changed(_dx);
 
         return x;
@@ -685,6 +682,16 @@ class Control {
         var _dy = _y - y;
 
         y = _y;
+
+        if(!ignore_spatial) {
+            ignore_spatial = true;
+                if(parent != null) {
+                    y_local = y - parent.y;
+                } else {
+                    y_local = y;
+                }
+            ignore_spatial = false;
+        } //ignore_spatial
 
         bounds_changed(0, _dy);
 
@@ -762,15 +769,20 @@ class Control {
 
     } //set_h
 
+    var ignore_spatial = false;
     function set_x_local(_x:Float) : Float {
 
         x_local = _x;
 
-        if(parent != null) {
-            x = parent.x + x_local;
-        } else {
-            x = x_local;
-        }
+        if(!ignore_spatial) {
+            ignore_spatial = true;
+                if(parent != null) {
+                    x = parent.x + x_local;
+                } else {
+                    x = x_local;
+                }
+            ignore_spatial = false;
+        } //ignore_spatial
 
         return x_local;
 
@@ -780,11 +792,15 @@ class Control {
 
         y_local = _y;
 
-        if(parent != null) {
-            y = parent.y + y_local;
-        } else {
-            y = y_local;
-        }
+        if(!ignore_spatial) {
+            ignore_spatial = true;
+                if(parent != null) {
+                    y = parent.y + y_local;
+                } else {
+                    y = y_local;
+                }
+            ignore_spatial = false;
+        } //ignore_spatial
 
         return y_local;
 
@@ -815,13 +831,13 @@ class Control {
         depth = _depth;
         ondepth.emit(depth);
 
-        if(canvas != this) {
-            var _idx = 1;
-            for(child in children) {
-                child.depth = _depth+(0.001 * _idx);
-                _idx++;
-            }
-        }
+        // if(canvas != this) {
+            // var _idx = 1;
+            // for(child in children) {
+                // child.depth = _depth+(0.001 * _idx);
+                // _idx++;
+            // }
+        // }
 
         return depth;
 
@@ -829,22 +845,44 @@ class Control {
 
 //Parent properties
 
+    function sync_depth(_depth:Float, _index:Int) {
+        //tell each child to update their depth
+        canvas_depth = _depth;
+        canvas_index = _index;
+        if(children.length>0){
+            for(child in children) {
+                child.sync_depth(_depth+1, _index);
+            }
+        }
+
+        depth = (canvas_index * 100) + canvas_depth;
+    }
+
+    var canvas_index:Int = 0;
+    var canvas_depth:Float = 1;
     function set_parent(p:Control) {
 
+        //do stuff with old parent
+
+        parent = p;
+
+
         if(parent != null) {
-            x -= parent.x;
-            y -= parent.y;
+
+            ignore_spatial = true;
+                x = parent.x + x_local;
+                y = parent.y + y_local;
+            ignore_spatial = false;
+
+            var _ci = parent.canvas_index;
+            if(_ci == 0) {
+                canvas_index = _ci = 1+canvas.children.indexOf(this);
+            }
+
+            sync_depth(parent.canvas_depth+1, _ci);
         }
 
-        // x_local = x;
-        // y_local = y;
-
-        if(p != null) {
-            x = p.x + x_local;
-            y = p.y + y_local;
-        }
-
-        return parent = p;
+        return parent;
 
     } //set_parent
 
