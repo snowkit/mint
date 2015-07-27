@@ -38,7 +38,6 @@ class Canvas extends Control {
     public var focus_invalid : Bool = true;
 
     var options: CanvasOptions;
-    var depth_seq : Float = 0;
 
     public function new( _options:CanvasOptions ) {
 
@@ -57,8 +56,10 @@ class Canvas extends Control {
 
         canvas = this;
 
-        depth = def(options.depth, 0.0);
-        depth_seq = depth;
+        depth = def(options.depth, 0);
+        canvas_index = 0;
+        canvas_depth = 0;
+        // depth_seq = depth;
 
         focused = null;
         modal = null;
@@ -69,6 +70,13 @@ class Canvas extends Control {
         oncreate.emit();
 
     } //new
+
+    public function bring_to_front(control:Control) {
+
+        //re-add it to the canvas
+        canvas.add(control);
+
+    } //bring_to_front
 
         /** Get the top most control under the given point, or null if there is none (or is the canvas itself) */
     public function topmost_at_point( _x:Float, _y:Float ) {
@@ -82,16 +90,7 @@ class Canvas extends Control {
     } //topmost_at_point
 
 //Internal
-
-        /** Get the next viable depth */
-    @:allow(mint.Control)
-    function next_depth() {
-
-        depth_seq += 1;
-
-        return depth_seq;
-
-    } //next_depth
+    function ef(x:Int) { var a=''; for(i in 0 ... x) a+='  ';return a;}
 
         /** Reset the focus to nothing, if given a control will tell
             that control of itself losing focus */
