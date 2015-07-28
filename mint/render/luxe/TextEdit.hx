@@ -150,13 +150,17 @@ class TextEdit extends mint.render.Render {
     } //
 
     override function ondestroy() {
+        stop_cursor();
+        cursor.drop();
         visual.drop();
         visual = null;
+        cursor = null;
     }
 
     override function onbounds() {
         visual.transform.pos.set_xy(control.x, control.y);
         visual.resize_xy( control.w, control.h );
+        stop_cursor(); start_cursor();
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
