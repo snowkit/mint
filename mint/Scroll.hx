@@ -79,6 +79,11 @@ class Scroll extends Control {
         });
 
         child_bounds = container.children_bounds;
+
+        container.clip_with = this;
+        scrollv.clip_with = this;
+        scrollh.clip_with = this;
+
         ready = true;
 
         scrollv.onmousedown.listen(scrollvdown);
