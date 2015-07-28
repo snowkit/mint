@@ -107,8 +107,6 @@ class Dropdown extends Control {
 
     public function open_list() {
 
-        // canvas.bring_to_front(this);
-
         canvas.modal = list;
 
         list.set_visible(true);
