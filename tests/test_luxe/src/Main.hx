@@ -110,8 +110,6 @@ class Main extends luxe.Game {
 
         s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none');
         s += '\n';
-        s += 'canvas depth_seq: ' + (canvas != null ? '$canvas.depth' + '' : 'none');
-        s += '\n';
         s += 'focused: ' + (canvas.focused != null ? '${canvas.focused.name} [${canvas.focused.nodes}]' : 'none');
         s += (canvas.focused != null ? ' / depth: '+canvas.focused.depth : '');
         s += '\n';
@@ -119,10 +117,6 @@ class Main extends luxe.Game {
         s += '\n';
         s += 'dragged: ' + (canvas.dragged != null ? canvas.dragged.name : 'none');
         s += '\n\n';
-
-        for(c in canvas.children) {
-            s += '${c.name}\n';
-        }
 
         canvas_debug.text = s;
 
