@@ -104,6 +104,8 @@ class Control {
     @:isVar public var clip_with (default, set): Control;
         //the list of children added to this control
     public var children : Array<Control>;
+        //the number of controls below and including this one
+    public var nodes (get,never) : Int;
 
         //if the control has focus
     public var isfocused : Bool = false;
@@ -122,23 +124,24 @@ class Control {
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
 
-    public var oncreate     : Signal<Void->Void>;
-    public var onrender     : Signal<Void->Void>;
-    public var onbounds     : Signal<Void->Void>;
-    public var ondestroy    : Signal<Void->Void>;
-    public var onvisible    : Signal<Bool->Void>;
-    public var ondepth      : Signal<Float->Void>;
-    public var onclip       : Signal<Bool->Float->Float->Float->Float->Void>;
-    public var onchild      : Signal<Control->Void>;
-    public var onmousedown  : Signal<MouseSignal>;
-    public var onmouseup    : Signal<MouseSignal>;
-    public var onmousemove  : Signal<MouseSignal>;
-    public var onmousewheel : Signal<MouseSignal>;
-    public var onmouseenter : Signal<MouseSignal>;
-    public var onmouseleave : Signal<MouseSignal>;
-    public var onkeydown    : Signal<KeySignal>;
-    public var onkeyup      : Signal<KeySignal>;
-    public var ontextinput  : Signal<TextSignal>;
+    public var oncreate      : Signal<Void->Void>;
+    public var onrender      : Signal<Void->Void>;
+    public var onbounds      : Signal<Void->Void>;
+    public var ondestroy     : Signal<Void->Void>;
+    public var onvisible     : Signal<Bool->Void>;
+    public var ondepth       : Signal<Float->Void>;
+    public var onclip        : Signal<Bool->Float->Float->Float->Float->Void>;
+    public var onchildadd    : Signal<Control->Void>;
+    public var onchildremove : Signal<Control->Void>;
+    public var onmousedown   : Signal<MouseSignal>;
+    public var onmouseup     : Signal<MouseSignal>;
+    public var onmousemove   : Signal<MouseSignal>;
+    public var onmousewheel  : Signal<MouseSignal>;
+    public var onmouseenter  : Signal<MouseSignal>;
+    public var onmouseleave  : Signal<MouseSignal>;
+    public var onkeydown     : Signal<KeySignal>;
+    public var onkeyup       : Signal<KeySignal>;
+    public var ontextinput   : Signal<TextSignal>;
 
 
         //the parent control, null if no parent
@@ -152,6 +155,7 @@ class Control {
 
         /** The control specific options */
     var _options_ : ControlOptions;
+    var depth_offset : Float = 0;
 
         /** Create a Control with the given options.
             The emit_oncreate flag will fire the oncreate signal at the end of this function default:false */
@@ -160,27 +164,29 @@ class Control {
         _options_ = _options;
         def(_options_.options, {});
 
-        oncreate     = new Signal();
-        onrender     = new Signal();
-        onbounds     = new Signal();
-        ondestroy    = new Signal();
-        onvisible    = new Signal();
-        ondepth      = new Signal();
-        onclip       = new Signal();
-        onchild      = new Signal();
-        onmousedown  = new Signal();
-        onmouseup    = new Signal();
-        onmousemove  = new Signal();
-        onmousewheel = new Signal();
-        onmouseleave = new Signal();
-        onmouseenter = new Signal();
-        onkeydown    = new Signal();
-        onkeyup      = new Signal();
-        ontextinput  = new Signal();
+        oncreate      = new Signal();
+        onrender      = new Signal();
+        onbounds      = new Signal();
+        ondestroy     = new Signal();
+        onvisible     = new Signal();
+        ondepth       = new Signal();
+        onclip        = new Signal();
+        onchildadd    = new Signal();
+        onchildremove = new Signal();
+        onmousedown   = new Signal();
+        onmouseup     = new Signal();
+        onmousemove   = new Signal();
+        onmousewheel  = new Signal();
+        onmouseleave  = new Signal();
+        onmouseenter  = new Signal();
+        onkeydown     = new Signal();
+        onkeyup       = new Signal();
+        ontextinput   = new Signal();
 
         children = [];
 
         name = def(_options_.name, 'control');
+        depth_offset = def(_options_.depth, 0);
 
         w_min = def(_options_.w_min, 8);
         h_min = def(_options_.h_min, 8);
@@ -371,29 +377,31 @@ class Control {
 
     } //find_top_parent
 
-    public var nodes : Int = 0;
     public function add( child:Control ) {
 
         if(child.parent != null) {
             child.parent.remove(child);
-            child.parent = null;
         }
 
         if(child.parent != this) {
             children.push(child);
             child.parent = this;
-            onchild.emit(child);
+            onchildadd.emit(child);
         }
 
-        // canvas.flush_depths();
+        canvas.sync_depth();
 
     } //add
 
     public function remove( child:Control ) {
+
         if(child.parent == this) {
             children.remove(child);
-            onchild.emit(child);
+            onchildremove.emit(child);
+            child.parent = null;
+            canvas.sync_depth();
         }
+
     }
 
         //:todo: clean up
@@ -818,6 +826,16 @@ class Control {
 
     } //get_y_local
 
+//Node properties
+
+    inline function get_nodes() : Int {
+
+        var _nodes = 1;
+        for(child in children) _nodes += child.nodes;
+        return _nodes;
+
+    } //get_nodes
+
 //Depth properties
 
     inline function get_depth() : Float {
@@ -829,15 +847,8 @@ class Control {
     function set_depth( _depth:Float ) : Float {
 
         depth = _depth;
-        ondepth.emit(depth);
 
-        // if(canvas != this) {
-            // var _idx = 1;
-            // for(child in children) {
-                // child.depth = _depth+(0.001 * _idx);
-                // _idx++;
-            // }
-        // }
+        ondepth.emit(depth);
 
         return depth;
 
@@ -845,41 +856,17 @@ class Control {
 
 //Parent properties
 
-    function sync_depth(_depth:Float, _index:Int) {
-        //tell each child to update their depth
-        canvas_depth = _depth;
-        canvas_index = _index;
-        if(children.length>0){
-            for(child in children) {
-                child.sync_depth(_depth+1, _index);
-            }
-        }
-
-        depth = (canvas_index * 100) + canvas_depth;
-    }
-
-    var canvas_index:Int = 0;
-    var canvas_depth:Float = 1;
     function set_parent(p:Control) {
 
         //do stuff with old parent
 
         parent = p;
 
-
         if(parent != null) {
-
             ignore_spatial = true;
                 x = parent.x + x_local;
                 y = parent.y + y_local;
             ignore_spatial = false;
-
-            var _ci = parent.canvas_index;
-            if(_ci == 0) {
-                canvas_index = _ci = 1+canvas.children.indexOf(this);
-            }
-
-            sync_depth(parent.canvas_depth+1, _ci);
         }
 
         return parent;

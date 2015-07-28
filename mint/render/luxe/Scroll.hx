@@ -110,11 +110,6 @@ class Scroll extends mint.render.Render {
         scrollv.pos.y = scroll.scrollv.y;
     }
 
-    override function onchild( _child:Control ) {
-        scrollv.depth = render.options.depth + scroll.scrollv.depth;
-        scrollh.depth = render.options.depth + scroll.scrollh.depth;
-    }
-
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
         if(_disable) {
             visual.clip_rect = null;

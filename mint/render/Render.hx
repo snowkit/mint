@@ -30,7 +30,8 @@ class Render implements Renderer {
         control.ondepth.listen(ondepth);
         control.ondestroy.listen(ondestroy);
         control.onclip.listen(onclip);
-        control.onchild.listen(onchild);
+        control.onchildadd.listen(onchildadd);
+        control.onchildremove.listen(onchildremove);
         control.onbounds.listen(onbounds);
         control.ondestroy.listen(internal_disconnect);
 
@@ -43,7 +44,8 @@ class Render implements Renderer {
         control.ondepth.remove(ondepth);
         control.ondestroy.remove(ondestroy);
         control.onclip.remove(onclip);
-        control.onchild.remove(onchild);
+        control.onchildadd.remove(onchildadd);
+        control.onchildremove.remove(onchildremove);
         control.onbounds.remove(onbounds);
 
         control.oncreate.remove(internal_connect);
@@ -56,7 +58,8 @@ class Render implements Renderer {
     function ondestroy() {}
     function onbounds() {}
     function onclip(_disable:Bool,_x:Float,_y:Float,_w:Float,_h:Float){}
-    function onchild(_c:Control) {}
+    function onchildadd(_c:Control) {}
+    function onchildremove(_c:Control) {}
 
 } //Render
 
