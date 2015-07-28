@@ -56,11 +56,6 @@ class Canvas extends Control {
 
         canvas = this;
 
-        depth = def(options.depth, 0);
-        canvas_index = 0;
-        canvas_depth = 0;
-        // depth_seq = depth;
-
         focused = null;
         modal = null;
         dragged = null;
@@ -73,8 +68,9 @@ class Canvas extends Control {
 
     public function bring_to_front(control:Control) {
 
-        //re-add it to the canvas
+        //re-add it to the canvas will put it above
         canvas.add(control);
+        sync_depth();
 
     } //bring_to_front
 
@@ -90,7 +86,29 @@ class Canvas extends Control {
     } //topmost_at_point
 
 //Internal
-    function ef(x:Int) { var a=''; for(i in 0 ... x) a+='  ';return a;}
+
+    @:allow(mint.Control)
+    var depth_idx = 0.0;
+
+    function apply_depth(control:Control) {
+
+        control.depth = depth_idx+control.depth_offset;
+        depth_idx++;
+
+        for(child in control.children) {
+            apply_depth(child);
+        } //each child
+
+    } //apply_depth
+
+    @:allow(mint.Control)
+    function sync_depth() {
+
+        depth_idx = 0;
+        apply_depth(this);
+
+    } //sync_depth
+
 
         /** Reset the focus to nothing, if given a control will tell
             that control of itself losing focus */
