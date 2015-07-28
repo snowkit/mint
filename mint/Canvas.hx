@@ -190,13 +190,14 @@ class Canvas extends Control {
         }
 
             //first we check if the mouse is still inside the focused element
+            //:todo: this whole thing needs revising from older concepts
         if(focused != null) {
 
             if(focused.contains(e.x, e.y)) {
 
-                    //now check if we haven't gone into any of it's children
-                var _child_over = focused.topmost_child_at_point(e.x, e.y);
-                if(_child_over != null && _child_over != focused) {
+                var _child_over = focused.parent.topmost_child_at_point(e.x, e.y);
+
+                if(_child_over != null && _child_over != focused && _child_over != this) {
 
                         //if we don't want mouseleave when the child takes focus, set to false
                     var _mouseleave_parent = true;
