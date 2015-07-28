@@ -48,6 +48,7 @@ class Window extends Control {
 
     var resize_handle : Control;
     var options : WindowOptions;
+    var ready = false;
 
     public function new( _options:WindowOptions ) {
 
@@ -101,6 +102,7 @@ class Window extends Control {
             internal_visible: options.visible
         });
 
+        ready = true;
 
         close_button.mouse_input = closable;
 
@@ -164,6 +166,17 @@ class Window extends Control {
         visible = true;
 
     } //open
+
+    override public function add(child:Control) {
+
+        super.add(child);
+
+            //readd so it's always above
+        if(ready && child != resize_handle) {
+            add(resize_handle);
+        }
+
+    }
 
     public override function mousemove(e:MouseEvent)  {
 
