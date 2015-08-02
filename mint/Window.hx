@@ -25,6 +25,8 @@ typedef WindowOptions = {
     @:optional var resizable: Bool;
         /** Whether or not the window is focusable (bring to front on click) */
     @:optional var focusable: Bool;
+        /** Whether or not the window is collapsible */
+    @:optional var collapsible: Bool;
 
 } //WindowOptions
 
@@ -34,19 +36,22 @@ class Window extends Control {
 
     public var title : Label;
     public var close_button : Label;
+    public var resize_handle : Control;
+    public var collapse_handle : Control;
 
     public var closable : Bool = true;
     public var focusable : Bool = true;
     public var moveable : Bool = true;
     public var resizable : Bool = true;
+    public var collapsible : Bool = false;
 
     public var onclose : Signal<Void->Bool>;
+    public var oncollapse : Signal<Bool->Void>;
 
     var dragging : Bool = false;
     var drag_x : Float = 0;
     var drag_y : Float = 0;
 
-    var resize_handle : Control;
     var options : WindowOptions;
     var ready = false;
 
@@ -54,6 +59,7 @@ class Window extends Control {
 
         options = _options;
         onclose = new Signal();
+        oncollapse = new Signal();
 
         def(options.name, 'window');
         def(options.mouse_input, true);
@@ -64,6 +70,7 @@ class Window extends Control {
         resizable = def(options.resizable, true);
         closable = def(options.closable, true);
         focusable = def(options.focusable, true);
+        collapsible = def(options.collapsible, false);
 
         resize_handle = new Control({
             parent : this,
@@ -75,6 +82,16 @@ class Window extends Control {
         resize_handle.mouse_input = resizable;
         resize_handle.onmousedown.listen(on_resize_down);
         resize_handle.onmouseup.listen(on_resize_up);
+
+        collapse_handle = new Control({
+            parent : this,
+            x: w-48, y: 2, w: 22, h: 22,
+            name : name + '.collapse_handle',
+            internal_visible: options.visible
+        });
+
+        collapse_handle.mouse_input = collapsible;
+        collapse_handle.onmouseup.listen(on_collapse);
 
             //create the title label
         title = new Label({
@@ -127,6 +144,7 @@ class Window extends Control {
     function on_resize_up(e:MouseEvent, _) {
 
         if(!resizable) return;
+        if(!collapsed) return;
 
         resizing = false;
         canvas.dragged = null;
@@ -136,6 +154,7 @@ class Window extends Control {
     function on_resize_down(e:MouseEvent, _) {
 
         if(!resizable) return;
+        if(!collapsed) return;
         if(resizing) return;
 
         resizing = true;
@@ -144,6 +163,48 @@ class Window extends Control {
         canvas.dragged = resize_handle;
 
     } //on_resize_down
+
+    var collapsed = false;
+    var pre_h:Float = 0.0;
+    var pre_h_min:Float = 0.0;
+    var pre_resize:Bool = true;
+
+    function on_collapse(e:MouseEvent, _) {
+
+        if(!collapsible) return;
+
+        collapsed = !collapsed;
+
+        if(collapsed == true) {
+            pre_resize = resize_handle.visible;
+            pre_h = h;
+            pre_h_min = h_min;
+
+            for(child in children) {
+                if(child == title) continue;
+                if(child == collapse_handle) continue;
+                if(child == close_button) continue;
+                child.set_visible_only(false);
+            }
+
+            h_min = title.h+6;
+            h = title.h;
+        } else {
+
+            for(child in children) {
+                if(child == title) continue;
+                if(child == collapse_handle) continue;
+                if(child == close_button) continue;
+                child.set_visible_only(true);
+            }
+
+            h_min = pre_h_min;
+            h = pre_h;
+        }
+
+        oncollapse.emit(collapsed);
+
+    } //on_collapse
 
     function on_close() {
 

@@ -69,7 +69,8 @@ class KitchenSink extends State {
                 close_button: { color:new Color().rgb(0x06b4fb) },
             },
             x:160, y:10, w:256, h: 400,
-            w_min: 256, h_min:256
+            w_min: 256, h_min:256,
+            collapsible:true
         });
 
         var _list = new mint.List({
