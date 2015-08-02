@@ -66,7 +66,6 @@ class Scroll extends Control {
             parent : this, name: '$name.scroll_v',
             mouse_input: true,
             internal_visible: options.visible,
-            h_min:2, w_min:2,
             x: w-8, y: 0, w: 8, h: 16
         });
 
@@ -74,7 +73,6 @@ class Scroll extends Control {
             parent : this, name: '$name.scroll_h',
             mouse_input: true,
             internal_visible: options.visible,
-            h_min:2, w_min:2,
             x: 0, y: h-8, w: 16, h: 8
         });
 
@@ -246,6 +244,13 @@ class Scroll extends Control {
         } //
 
     } //add
+
+    public function refresh_scroll() {
+
+        update_container();
+        update_scroll();
+
+    } //refresh_scroll
 
     public override function remove(child:Control) {
 
