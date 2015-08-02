@@ -82,9 +82,9 @@ class Control {
     @:isVar public var h (default, set) : Float;
 
         /** The minimum width*/
-    @:isVar public var w_min (default, set) : Float = 8;
+    @:isVar public var w_min (default, set) : Float = 0;
         /** The minimum height */
-    @:isVar public var h_min (default, set) : Float = 8;
+    @:isVar public var h_min (default, set) : Float = 0;
         /** The maximum width*/
     @:isVar public var w_max (default, set) : Float = 0;
         /** The maximum height */
