@@ -76,7 +76,7 @@ class Checkbox extends mint.render.Render {
             color: color_node,
             depth: render.options.depth + control.depth + 0.002,
             group: render.options.group,
-            visible: control.visible
+            visible: control.visible && checkbox.state
         });
 
         visual.clip_rect = Convert.bounds(control.clip_with);
