@@ -13,12 +13,16 @@ import luxe.Vector;
 
 private typedef LuxeMintImageOptions = {
     @:optional var uv: luxe.Rectangle;
+    @:optional var sizing: String; //:todo: type
 }
 
 class Image extends mint.render.Render {
 
     public var image : mint.Image;
     public var visual : Sprite;
+
+    var ratio_w : Float = 1.0;
+    var ratio_h : Float = 1.0;
 
     var render: LuxeMintRender;
 
@@ -33,14 +37,42 @@ class Image extends mint.render.Render {
 
         var get = Luxe.resources.load_texture(image.options.path);
 
-        get.then(function(texture){
+        get.then(function(texture:phoenix.Texture){
+
+            if(_opt.sizing != null) {
+
+                switch(_opt.sizing) {
+                        //sets the uv to be the size on the longest edge
+                        //possibly leaving whitespace on the sides (pillarbox) or top (letterbox)
+                    case 'fit': {
+                        if(texture.width > texture.height) {
+                            ratio_h = texture.height/texture.width;
+                        } else {
+                            ratio_w = texture.width/texture.height;
+                        }
+                    } //fit
+
+                        // cover the viewport with the size (possible cropping)
+                    case 'cover': {
+                        var _rx = 1.0;
+                        var _ry = 1.0;
+                        if(texture.width > texture.height) {
+                            _rx = texture.height/texture.width;
+                        } else {
+                            _ry = texture.width/texture.height;
+                        }
+                        _opt.uv = new luxe.Rectangle(0,0,texture.width*_rx,texture.height*_ry);
+                    }
+
+                }
+            }
 
             visual = new luxe.Sprite({
                 batcher: render.options.batcher,
                 centered: false,
                 texture: texture,
                 pos: new Vector(control.x, control.y),
-                size: new Vector(control.w, control.h),
+                size: new Vector(control.w*ratio_w, control.h*ratio_h),
                 depth: render.options.depth + control.depth,
                 group: render.options.group,
                 visible: control.visible,
@@ -57,7 +89,7 @@ class Image extends mint.render.Render {
 
         if(visual != null) {
             visual.transform.pos.set_xy(control.x, control.y);
-            visual.geometry_quad.resize_xy( control.w, control.h );
+            visual.geometry_quad.resize_xy( control.w*ratio_w, control.h*ratio_h );
         }
 
     } //onbounds
