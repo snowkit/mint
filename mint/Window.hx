@@ -316,9 +316,9 @@ class Window extends Control {
 
     } //mouseup
 
-    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
+    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0) {
 
-        super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
+        super.bounds_changed(_dx, _dy, _dw, _dh);
 
         if(close_button != null) close_button.x_local = w - 24;
         if(title != null) title.w = w - 4;

@@ -188,8 +188,8 @@ class Control {
         name = def(_options_.name, 'control');
         depth_offset = def(_options_.depth, 0);
 
-        w_min = def(_options_.w_min, 8);
-        h_min = def(_options_.h_min, 8);
+        w_min = def(_options_.w_min, 0);
+        h_min = def(_options_.h_min, 0);
         w_max = def(_options_.w_max, 0);
         h_max = def(_options_.h_max, 0);
 
@@ -603,7 +603,7 @@ class Control {
     } //update
 
     var updating = false;
-    function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
+    function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0) {
 
         if(updating) return;
 
@@ -619,7 +619,7 @@ class Control {
 
 //Spatial properties
 
-    public function set_pos(_x:Float, _y:Float, ?_offset:Bool = false ) {
+    public function set_pos(_x:Float, _y:Float) {
 
         updating = true;
 
@@ -631,7 +631,7 @@ class Control {
 
         updating = false;
 
-        bounds_changed(_dx, _dy, 0, 0, _offset);
+        bounds_changed(_dx, _dy, 0, 0);
 
     } //set_pos
 

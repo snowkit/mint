@@ -148,7 +148,6 @@ class Scroll extends Control {
         if(drag_v && visible_v) {
 
             var _dest = Helper.clamp(e.y-drag_y, y, bottom-scrollv.h);
-            // scrollv.set_pos(scrollv.x, _dest);
             percent_v = (_dest-y) / (h-scrollv.h);
             update_scroll();
 
@@ -180,7 +179,6 @@ class Scroll extends Control {
         if(drag_h && visible_h) {
 
             var _dest = Helper.clamp(e.x-drag_x, x, right-scrollh.w);
-            // scrollh.set_pos(_dest, scrollh.y);
             percent_h = (_dest-x) / (w-scrollh.w);
             update_scroll();
 
@@ -235,8 +233,7 @@ class Scroll extends Control {
 
             container.add(child);
 
-            update_container();
-            update_scroll();
+            refresh_scroll();
 
             child.clip_with = this;
             // depth = depth;
@@ -256,8 +253,7 @@ class Scroll extends Control {
 
         super.remove(child);
 
-        update_container();
-        update_scroll();
+        refresh_scroll();
 
     } //remove
 
@@ -275,12 +271,11 @@ class Scroll extends Control {
 
     } //mousewheel
 
-    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0, ?_offset:Bool = false ) {
+    override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0) {
 
-        super.bounds_changed(_dx, _dy, _dw, _dh, _offset);
+        super.bounds_changed(_dx, _dy, _dw, _dh);
 
-        update_container();
-        update_scroll();
+        refresh_scroll();
 
         if(scrollh != null) scrollh.y_local = h-8;
         if(scrollv != null) scrollv.x_local = w-8;
