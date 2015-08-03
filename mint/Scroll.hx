@@ -217,8 +217,8 @@ class Scroll extends Control {
 
     } //update_scroll
 
-    inline function get_step_h() return (Math.abs(w - container.w)*0.02)/w;
-    inline function get_step_v() return (Math.abs(h - container.h)*0.02)/h;
+    inline function get_step_h() return 0.01;//(Math.abs(w - container.w)*0.02)/w;
+    inline function get_step_v() return 0.01;//(Math.abs(h - container.h)*0.02)/h;
 
 //Control overrides
 
