@@ -586,6 +586,10 @@ class Control {
 
     public function destroy() {
 
+        if(canvas.focused == this) canvas.focused = null;
+        if(canvas.modal == this) canvas.modal = null;
+        if(canvas.dragged == this) canvas.dragged = null;
+
         canvas.focus_invalid = true;
 
         if(parent != null) {
