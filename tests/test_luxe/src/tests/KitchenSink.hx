@@ -176,10 +176,13 @@ class KitchenSink extends State {
             x: 10, y:32, w: 256-10-10, h: 22
         });
 
+        var numbers = new EReg('^[0-9]+[.]?[0-9]{0,2}$','gi');
         var _text2 = new mint.TextEdit({
-            parent: _window, name: 'textnumbersonly', text: 'numbers only',
+            parent: _window, name: 'textnumbersonly', text: '314.29',
             x: 10, y:32+22+10, w: 256-10-10, h: 22,
-            filter: new EReg('[0-9]+','gi'),
+            filter: function(char,future,prev){
+                return numbers.match(future);
+            },
             options: {
                 color: new Color(0.96,0.96,0.96),
                 color_hover: new Color(),

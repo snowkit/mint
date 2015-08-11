@@ -19,8 +19,10 @@ typedef TextEditOptions = {
     @:optional var text: String;
         /** The text size of the text for the rendering to use */
     @:optional var text_size: Float;
-        /** A filter to apply to text on input, inclusive */
-    @:optional var filter: EReg;
+        /** A filter function to call when text is entered.
+            It passes `new character`, `new text`, `old text`.
+            Returning false will reject the character */
+    @:optional var filter: String->String->String->Bool;
 
 } //TextEditOptions
 
@@ -33,7 +35,7 @@ typedef TextEditOptions = {
 class TextEdit extends Control {
 
     public var label : Label;
-    public var filter : EReg;
+    public var filter : String->String->String->Bool;
     @:isVar public var index (default, null) : Int = 0;
 
         /** Emitted whenever the index is changed. */
@@ -93,17 +95,16 @@ class TextEdit extends Control {
 
     override function textinput( event:TextEvent ) {
 
-        if(filter != null) {
-            if(!filter.match(event.text)) {
-                return;
-            }
-        }
-
         var b = before(index);
         var a = after(index);
-        index += event.text.uLength();
+        var new_text = b + event.text + a;
 
-        refresh( b + event.text + a );
+        if(filter != null && !filter(event.text, new_text, edit)) {
+            return;
+        }
+
+        index += event.text.uLength();
+        refresh( new_text );
 
         // event.bubble = false;
         // super.textinput(event);
