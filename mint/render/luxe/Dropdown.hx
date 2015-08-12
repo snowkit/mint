@@ -41,6 +41,7 @@ class Dropdown extends mint.render.Render {
         color_border = def(_opt.color_border, new Color().rgb(0x121212));
 
         visual = Luxe.draw.box({
+            id: control.name+'.visual',
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
@@ -54,6 +55,7 @@ class Dropdown extends mint.render.Render {
         });
 
         border = Luxe.draw.rectangle({
+            id: control.name+'.border',
             batcher: render.options.batcher,
             x: control.x,
             y: control.y,

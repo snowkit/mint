@@ -44,6 +44,7 @@ class TextEdit extends mint.render.Render {
         color_cursor = def(_opt.color_cursor, new Color().rgb(0x9dca63));
 
         visual = Luxe.draw.box({
+            id: control.name+'.visual',
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
@@ -57,6 +58,7 @@ class TextEdit extends mint.render.Render {
         });
 
         cursor = Luxe.draw.line({
+            id: control.name+'.cursor',
             batcher: render.options.batcher,
             p0: new Vector(0,0),
             p1: new Vector(0,0),
@@ -85,6 +87,7 @@ class TextEdit extends mint.render.Render {
 
             if(textedit.isfocused) {
                 Luxe.draw.rectangle({
+                    id: control.name+'.border',
                     batcher: render.options.batcher,
                     x:textedit.x,
                     y:textedit.y,

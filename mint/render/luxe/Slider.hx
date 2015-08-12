@@ -41,6 +41,7 @@ class Slider extends mint.render.Render {
         color_bar = def(_opt.color_bar, new Color().rgb(0x9dca63));
 
         visual = Luxe.draw.box({
+            id: control.name+'.visual',
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,
@@ -54,6 +55,7 @@ class Slider extends mint.render.Render {
         });
 
         bar = Luxe.draw.box({
+            id: control.name+'.bar',
             batcher: render.options.batcher,
             x:control.x + slider.bar_x,
             y:control.y + slider.bar_y,

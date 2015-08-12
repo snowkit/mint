@@ -36,6 +36,7 @@ class Panel extends mint.render.Render {
         color = def(_opt.color, new Color().rgb(0x242424));
 
         visual = Luxe.draw.box({
+            id: control.name+'.visual',
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,

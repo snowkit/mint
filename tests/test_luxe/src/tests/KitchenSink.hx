@@ -45,7 +45,7 @@ class KitchenSink extends State {
 
         // Luxe.snow.windowing.enable_vsync(false);
 
-        bg = new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
+        bg = new luxe.Sprite({ name:'bg',texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
 
         create_basics();
         create_window1();
@@ -253,9 +253,10 @@ class KitchenSink extends State {
 
         new mint.Label({
             parent: canvas,
-            name: 'label1',
+            name: 'labelmain',
             x:10, y:10, w:100, h:32,
             text: 'hello mint',
+            align:left,
             text_size: 14,
             onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
         });
@@ -356,7 +357,7 @@ class KitchenSink extends State {
 
         new mint.Image({
             parent: _scroll,
-            name: 'image2',
+            name: 'image_other',
             x:0, y:100, w:512, h: 512,
             path: 'assets/image.png'
         });
@@ -398,6 +399,7 @@ class CustomWindowRenderer extends mint.render.Render {
         window = _control;
 
         visual = new luxe.NineSlice({
+            name: _control.name + '.visual',
             texture : Luxe.resources.texture('assets/mint.box.png'),
             top : 32, left : 32, right : 32, bottom : 32,
         });

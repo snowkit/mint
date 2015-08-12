@@ -36,6 +36,7 @@ class Canvas extends mint.render.Render {
         color = def(_opt.color, new Color(0,0,0,0).rgb(0x0c0c0c));
 
         visual = Luxe.draw.box({
+            id: control.name+'.visual',
             batcher: render.options.batcher,
             x:control.x,
             y:control.y,

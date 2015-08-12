@@ -32,12 +32,14 @@ class Main extends luxe.Game {
         layout = new Margins();
 
         canvas = new mint.Canvas({
+            name:'canvas',
             rendering: rendering,
             options: { color:new Color(1,1,1,0.0) },
             x: 0, y:0, w: 960, h: 640
         });
 
         disp = new Text({
+            name:'display.text',
             pos: new Vector(Luxe.screen.w-10, Luxe.screen.h-10),
             align: luxe.TextAlign.right,
             align_vertical: luxe.TextAlign.bottom,
@@ -46,6 +48,7 @@ class Main extends luxe.Game {
         });
 
         canvas_debug = new Text({
+            name:'debug.text',
             text: 'debug:  (${Luxe.snow.os} / ${Luxe.snow.platform})',
             point_size: 14,
             pos: new Vector(950, 10),
@@ -82,7 +85,8 @@ class Main extends luxe.Game {
         config.preload.textures.push({ id:'assets/mint.box.png' });
 
         return config;
-    }
+
+    } //config
 
     override function onrender() {
 

@@ -42,6 +42,7 @@ class Scroll extends mint.render.Render {
         color_handles = def(_opt.color_handles, new Color().rgb(0x9dca63));
 
         visual = new luxe.Sprite({
+            name: control.name+'.visual',
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),
@@ -53,6 +54,7 @@ class Scroll extends mint.render.Render {
         });
 
         scrollh = new luxe.Sprite({
+            name: control.name+'.scrollh',
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(scroll.scrollh.x, scroll.scrollh.y),
@@ -64,6 +66,7 @@ class Scroll extends mint.render.Render {
         });
 
         scrollv = new luxe.Sprite({
+            name: control.name+'.scrollv',
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(scroll.scrollv.x, scroll.scrollv.y),

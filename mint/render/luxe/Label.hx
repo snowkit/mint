@@ -38,6 +38,7 @@ class Label extends mint.render.Render {
         color_hover = def(_opt.color_hover, new Color().rgb(0x9dca63));
 
         text = new luxe.Text({
+            name: control.name+'.text',
             batcher: render.options.batcher,
             bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
             color: color,

@@ -42,6 +42,7 @@ class Button extends mint.render.Render {
         color_down = def(_opt.color_down, new Color().rgb(0x444444));
 
         visual = new luxe.Sprite({
+            name: control.name+'.visual',
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),

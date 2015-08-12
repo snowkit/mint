@@ -47,6 +47,7 @@ class Checkbox extends mint.render.Render {
         color_node_hover = def(_opt.color_node_hover, new Color().rgb(0xadca63));
 
         visual = new luxe.Sprite({
+            name: control.name+'.visual',
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(control.x, control.y),
@@ -58,6 +59,7 @@ class Checkbox extends mint.render.Render {
         });
 
         node_off = new luxe.Sprite({
+            name: control.name+'.node_off',
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(control.x+4, control.y+4),
@@ -69,6 +71,7 @@ class Checkbox extends mint.render.Render {
         });
 
         node = new luxe.Sprite({
+            name: control.name+'.node_on',
             batcher: render.options.batcher,
             centered: false,
             pos: new Vector(control.x+4, control.y+4),

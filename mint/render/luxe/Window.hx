@@ -45,6 +45,7 @@ class Window extends mint.render.Render {
         color_titlebar = def(_opt.color_titlebar, new Color().rgb(0x373737));
 
         visual = Luxe.draw.box({
+            id: control.name+'.visual',
             batcher: render.options.batcher,
             x:window.x,
             y:window.y,
@@ -58,6 +59,7 @@ class Window extends mint.render.Render {
         });
 
         top = Luxe.draw.box({
+            id: control.name+'.top',
             batcher: render.options.batcher,
             x: window.title.x,
             y:window.title.y,
@@ -71,6 +73,7 @@ class Window extends mint.render.Render {
         });
 
         border = Luxe.draw.rectangle({
+            id: control.name+'.border',
             batcher: render.options.batcher,
             x: window.x,
             y: window.y,
