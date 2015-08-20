@@ -56,6 +56,7 @@ class Dropdown extends Control {
         });
 
         list.onselect.listen(onselected);
+        list.onmousedown.listen(ondeselect);
 
         label = new Label({
             parent : this,
@@ -77,11 +78,13 @@ class Dropdown extends Control {
 
     } //new
 
-    public function select(index:Int) {
+    function ondeselect(e:MouseEvent, c:Control) {
 
-        // list.select(index);
+        if(!list.contains(e.x,e.y)) {
+            close_list();
+        }
 
-    }
+    } //ondeselect
 
     function onselected(idx:Int, c:Control, e:MouseEvent) {
 
@@ -100,7 +103,12 @@ class Dropdown extends Control {
         canvas.modal = null;
 
         list.set_visible(false);
-        // list.depth = depth+0.001;
+
+        //since removed by bring to front, readd
+        list.x = 0;
+        list.y = h+1;
+        add(list);
+        
         is_open = false;
 
     } //close_list
@@ -110,6 +118,12 @@ class Dropdown extends Control {
         canvas.modal = list;
 
         list.set_visible(true);
+
+        //bring above everything
+        canvas.bring_to_front(list);
+        //move to absolute space
+        list.x = x;
+        list.y = y+h+1;
 
         is_open = true;
 
@@ -153,7 +167,11 @@ class Dropdown extends Control {
 
         super.bounds_changed(_dx, _dy, _dw, _dh);
 
-        if(list != null) list.set_size(w, list.h);
+        if(list != null) {
+            if(is_open) list.set_pos(x, y+h+1);
+            list.set_size(w, list.h);
+        }
+
         if(label != null) label.set_size(w-1, h);
 
     } //bounds_changed
