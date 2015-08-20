@@ -121,7 +121,7 @@ class Slider extends Control {
             if(_dy < 1) _dy = 1;
             if(_dy >= h-4) _dy = h-4;
 
-            value = ((_dy - 1) / (w - 5)) * get_range() + min;
+            value = ((_dy - 1) / (h - 5)) * get_range() + min;
 
             if(step != null) value = Math.round(value/step) * step;
 
