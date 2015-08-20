@@ -67,9 +67,15 @@ class Slider extends Control {
         super(options);
 
         onchange = new Signal();
-
-        bar_w = w-4;
-        bar_h = h-4;
+        
+        if(vertical) {
+            bar_w = w - 4;
+            bar_h = (h - 4) * (value - min) / (max - min);
+        }
+        else {
+            bar_w = (w - 4) * (value - min) / (max - min);
+            bar_h = h - 4;
+        }
 
         renderer = rendering.get(Slider, this);
 
