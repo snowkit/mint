@@ -95,7 +95,6 @@ class Slider extends Control {
 
     } //mousedown
 
-    inline function get_amount() return (max-min) * value;
     inline function get_range() return max-min;
 
     inline function update_value(e:MouseEvent) {
@@ -109,8 +108,7 @@ class Slider extends Control {
             if(_dx < 1) _dx = 1;
             if(_dx >= w-4) _dx = w-4;
 
-            _dx = bar_w + (_dx - bar_w);
-            value = ((_dx - 1) / (w - 5)) * get_range();
+            value = ((_dx - 1) / (w - 5)) * get_range() + min;
 
             if(step != null) value = Math.round(value/step) * step;
 
@@ -123,8 +121,7 @@ class Slider extends Control {
             if(_dy < 1) _dy = 1;
             if(_dy >= h-4) _dy = h-4;
 
-            _dy = bar_h + (_dy - bar_h);
-            value = ((_dy - 1) / (h - 5)) * get_range();
+            value = ((_dy - 1) / (w - 5)) * get_range() + min;
 
             if(step != null) value = Math.round(value/step) * step;
 
