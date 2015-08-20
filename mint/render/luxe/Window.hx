@@ -10,12 +10,14 @@ import mint.render.luxe.Convert;
 
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.RectangleGeometry;
+import phoenix.geometry.Geometry;
 import luxe.Color;
 
 private typedef LuxeMintWindowOptions = {
     var color: Color;
     var color_titlebar: Color;
     var color_border: Color;
+    var color_collapse: Color;
 }
 
 class Window extends mint.render.Render {
@@ -23,11 +25,13 @@ class Window extends mint.render.Render {
     public var window : mint.Window;
     public var visual : QuadGeometry;
     public var top : QuadGeometry;
+    public var collapse : Geometry;
     public var border : RectangleGeometry;
 
     public var color: Color;
     public var color_titlebar: Color;
     public var color_border: Color;
+    public var color_collapse: Color;
 
     var render: LuxeMintRender;
 
@@ -43,6 +47,7 @@ class Window extends mint.render.Render {
         color = def(_opt.color, new Color().rgb(0x242424));
         color_border = def(_opt.color_border, new Color().rgb(0x373739));
         color_titlebar = def(_opt.color_titlebar, new Color().rgb(0x373737));
+        color_collapse = def(_opt.color_collapse, new Color().rgb(0x666666));
 
         visual = Luxe.draw.box({
             id: control.name+'.visual',
@@ -86,6 +91,25 @@ class Window extends mint.render.Render {
             clip_rect: Convert.bounds(window.clip_with)
         });
 
+        collapse = Luxe.draw.ngon({
+            id: control.name+'.border',
+            batcher: render.options.batcher,
+            r: 5,
+            solid: true,
+            angle: 180,
+            sides: 3,
+            color: color_collapse,
+            depth: render.options.depth + window.depth+0.003,
+            group: render.options.group,
+            visible: window.collapsible,
+            clip_rect: Convert.bounds(window.clip_with)
+        });
+
+        var ch = window.collapse_handle;
+        collapse.transform.pos.set_xy(ch.x+(ch.w/2), ch.y+(ch.h/2));
+
+        window.oncollapse.listen(oncollapse);
+
     } //new
 
     override function ondestroy() {
@@ -93,9 +117,11 @@ class Window extends mint.render.Render {
         visual.drop();
         top.drop();
         border.drop();
+        collapse.drop();
         visual = null;
         top = null;
         border = null;
+        collapse = null;
 
     } //ondestroy
 
@@ -105,6 +131,9 @@ class Window extends mint.render.Render {
         top.transform.pos.set_xy(window.title.x, window.title.y);
         top.resize_xy(window.title.w, window.title.h);
         border.set({ x:window.x, y:window.y, w:window.w+1, h:window.h, color:border.color, visible:control.visible });
+
+        var ch = window.collapse_handle;
+        collapse.transform.pos.set_xy(ch.x+(ch.w/2), ch.y+(ch.h/2));
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
@@ -112,10 +141,12 @@ class Window extends mint.render.Render {
             visual.clip_rect = null;
             top.clip_rect = null;
             border.clip_rect = null;
+            collapse.clip_rect = null;
         } else {
             visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
             top.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
             border.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
+            collapse.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
         }
     } //onclip
 
@@ -123,12 +154,21 @@ class Window extends mint.render.Render {
         visual.visible = _visible;
         top.visible = _visible;
         border.visible = _visible;
+        collapse.visible = _visible;
     } //onvisible
 
     override function ondepth( _depth:Float ) {
         visual.depth = render.options.depth + _depth;
         top.depth = visual.depth+0.001;
         border.depth = visual.depth+0.002;
+        collapse.depth = visual.depth+0.003;
     } //ondepth
+
+    function oncollapse(state:Bool) {
+
+        var a = (state) ? -90 : 0;
+        collapse.transform.rotation.setFromEuler(new Vector(0,0,luxe.utils.Maths.radians(a)));
+
+    }
 
 } //Window

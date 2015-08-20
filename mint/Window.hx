@@ -37,7 +37,7 @@ class Window extends Control {
     public var title : Label;
     public var close_button : Label;
     public var resize_handle : Control;
-    public var collapse_button : Label;
+    public var collapse_handle : Control;
 
     public var closable : Bool = true;
     public var focusable : Bool = true;
@@ -121,23 +121,19 @@ class Window extends Control {
             });
         }
         
-            // create the collapse label
-        collapse_button = new Label({
+        collapse_handle = new Control({
             parent : this,
             x: closable ? w - 48 : w - 24, y: 2, w: 22, h: 22,
-            text:'^',
-            align : TextAlign.center,
-            align_vertical : TextAlign.center,
-            text_size: options.text_size,
             name : name + '.collapselabel',
             internal_visible: options.visible
         });
-        collapse_button.mouse_input = collapsible;
+
+        collapse_handle.mouse_input = collapsible;
 
         if(!collapsible) {
-            collapse_button.visible = false;
+            collapse_handle.visible = false;
         } else {
-            collapse_button.onmousedown.listen(on_collapse);
+            collapse_handle.onmousedown.listen(on_collapse);
         }
 
         renderer = rendering.get( Window, this );
@@ -185,14 +181,13 @@ class Window extends Control {
         collapsed = !collapsed;
 
         if(collapsed == true) {
-            collapse_button.text = "v";
             pre_resize = resize_handle.visible;
             pre_h = h;
             pre_h_min = h_min;
 
             for(child in children) {
                 if(child == title) continue;
-                if(child == collapse_button) continue;
+                if(child == collapse_handle) continue;
                 if(child == close_button) continue;
                 child.set_visible_only(false);
             }
@@ -200,10 +195,9 @@ class Window extends Control {
             h_min = title.h+6;
             h = title.h;
         } else {
-            collapse_button.text = "^";
             for(child in children) {
                 if(child == title) continue;
-                if(child == collapse_button) continue;
+                if(child == collapse_handle) continue;
                 if(child == close_button) continue;
                 child.set_visible_only(true);
             }
