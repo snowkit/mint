@@ -23,6 +23,7 @@ class KitchenSink extends State {
     var check: mint.Checkbox;
     var progress: mint.Progress;
     var canvas: mint.Canvas;
+    var text1: mint.TextEdit;
 
     override function onleave<T>(_:T) {
 
@@ -171,10 +172,12 @@ class KitchenSink extends State {
 
         _platform.onselect.listen(function(idx,_,_){ _platform.label.text = plist[idx]; });
 
-        var _text1 = new mint.TextEdit({
+        text1 = new mint.TextEdit({
             parent: _window, name: 'textedit1', text: 'snõwkit / mínt', renderable: true,
             x: 10, y:32, w: 256-10-10, h: 22
         });
+
+        text1.onchange.listen(function(s){ trace(s); });
 
         var numbers = new EReg('^[0-9]+[.]?[0-9]{0,2}$','gi');
         var _text2 = new mint.TextEdit({
@@ -195,7 +198,7 @@ class KitchenSink extends State {
         Main.layout.anchor(_anchored, _window, top, top);
 
         Main.layout.margin(_platform, right, fixed, 10);
-        Main.layout.margin(_text1, right, fixed, 10);
+        Main.layout.margin(text1, right, fixed, 10);
         Main.layout.margin(_text2, right, fixed, 10);
 
         Luxe.timer.schedule(1, function(){ _window.visible = true; });
@@ -372,6 +375,7 @@ class KitchenSink extends State {
         if(e.keycode == Key.key_2) if(window2 != null) window2.open();
         if(e.keycode == Key.key_3) if(window3 != null) window3.open();
         if(e.keycode == Key.key_4) if(check != null) check.visible = !check.visible;
+        if(e.keycode == Key.key_5) text1.text = 'fps:' + luxe.utils.Maths.fixed((1/Luxe.debug.dt_average), 2);
 
     } //onkeyup
 

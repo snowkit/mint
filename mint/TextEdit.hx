@@ -37,6 +37,7 @@ class TextEdit extends Control {
     public var label : Label;
     public var filter : String->String->String->Bool;
     @:isVar public var index (default, null) : Int = 0;
+    public var text (get, set): String;
 
         /** Emitted whenever the index is changed. */
     public var onchangeindex: Signal<Int->Void>;
@@ -140,9 +141,20 @@ class TextEdit extends Control {
         label.text = edit = str;
         update_cur();
 
+        onchange.emit(edit);
+
         return edit;
 
     } //refresh
+
+    inline function get_text() {
+        return edit;
+    }
+
+    inline function set_text(v:String) {
+        index = v.uLength();
+        return refresh(v);
+    }
 
     function move(amount:Int = -1) {
 
