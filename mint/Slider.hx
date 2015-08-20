@@ -39,7 +39,7 @@ class Slider extends Control {
 
     public var min : Float = 0;
     public var max : Float = 1;
-    public var value : Float = 1;
+    public var value  (default, set): Float = 1;
     public var percent : Float = 1;
     public var step : Null<Float>;
     public var vertical : Bool = false;
@@ -68,19 +68,7 @@ class Slider extends Control {
 
         onchange = new Signal();
         
-        if(vertical) {
-            bar_w = w - 4;
-            bar_h = (h - 4) * (value - min) / (max - min);
-            bar_y = ((h - ((h - 4) * (value - min) / (max - min))) - 2);
-            if(bar_h < 1) bar_h = 1;
-            if(bar_h >= w-4) bar_h = h - 4;
-        }
-        else {
-            bar_w = (w - 4) * (value - min) / (max - min);
-            if(bar_w < 1) bar_w = 1;
-            if(bar_w >= w-4) bar_w = w - 4;
-            bar_h = h - 4;
-        }
+        update_bar();
 
         renderer = rendering.get(Slider, this);
 
@@ -101,6 +89,30 @@ class Slider extends Control {
     } //mousedown
 
     inline function get_range() return max-min;
+    
+    inline function update_bar() {
+        if(vertical) {
+            bar_w = w - 4;
+            bar_h = (h - 4) * (value - min) / (max - min);
+            bar_y = ((h - ((h - 4) * (value - min) / (max - min))) - 2);
+            if(bar_h < 1) bar_h = 1;
+            if(bar_h >= w-4) bar_h = h - 4;
+        }
+        else {
+            bar_w = (w - 4) * (value - min) / (max - min);
+            if(bar_w < 1) bar_w = 1;
+            if(bar_w >= w-4) bar_w = w - 4;
+            bar_h = h - 4;
+        }
+    } // update_bar
+    
+    inline function set_value(v:Float):Float {
+        value = luxe.utils.Maths.clamp(v, min, max);
+        update_bar();
+        percent = value/get_range();
+        if(onchange != null) onchange.emit(value, percent);
+        return value;
+    } // set_value
 
     inline function update_value(e:MouseEvent) {
 
@@ -113,11 +125,10 @@ class Slider extends Control {
             if(_dx < 1) _dx = 1;
             if(_dx >= w-4) _dx = w-4;
 
-            value = ((_dx - 1) / (w - 5)) * get_range() + min;
+            var _v:Float = ((_dx - 1) / (w - 5)) * get_range() + min;
 
-            if(step != null) value = Math.round(value/step) * step;
-
-            bar_w = _dx;
+            if(step != null) _v = Math.round(_v/step) * step;
+            value = _v;
 
         } else {
 
@@ -126,17 +137,12 @@ class Slider extends Control {
             if(_dy < 1) _dy = 1;
             if(_dy >= h-4) _dy = h-4;
 
-            value = ((_dy - 1) / (h - 5)) * get_range() + min;
+            var _v:Float = ((_dy - 1) / (h - 5)) * get_range() + min;
 
-            if(step != null) value = Math.round(value/step) * step;
-
-            bar_h = _dy;
-            bar_y = ((h - _dy) - 2);
+            if(step != null) _v = Math.round(_v/step) * step;
+            value = _v;
 
         } //vertical
-
-        percent = value/get_range();
-        onchange.emit(value, percent);
 
     } //update_value
 
