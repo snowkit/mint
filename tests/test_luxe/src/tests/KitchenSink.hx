@@ -137,7 +137,7 @@ class KitchenSink extends State {
 
         var _window = new mint.Window({
             parent: canvas, name: 'window2', title: 'window',
-            visible: false, closable: false,
+            visible: false, closable: false, collapsible: true,
             x:500, y:10, w:256, h: 131,
             h_max: 131, h_min: 131, w_min: 131
         });
@@ -288,12 +288,12 @@ class KitchenSink extends State {
             x: 10, y:95 , w:128, h: 16
         });
 
-        inline function make_slider(_n,_x,_y,_w,_h,_c,_min,_max,_step:Null<Float>,_vert) {
+        inline function make_slider(_n,_x,_y,_w,_h,_c,_min,_max,_initial,_step:Null<Float>,_vert) {
 
             var _s = new mint.Slider({
                 parent: canvas, name: _n, x:_x, y:_y, w:_w, h:_h,
                 options: { color_bar:new Color().rgb(_c) },
-                min: _min, max: _max, step: _step, vertical:_vert
+                min: _min, max: _max, step: _step, vertical:_vert, value:_initial
             });
 
             var _l = new mint.Label({
@@ -306,13 +306,13 @@ class KitchenSink extends State {
 
         } //make_slider
 
-        make_slider('slider1', 10, 330, 128, 24, 0x9dca63, 0, 100, 10, false);
-        make_slider('slider2', 10, 357, 128, 24, 0x9dca63, 0, 100, 1, false);
-        make_slider('slider3', 10, 385, 128, 24, 0xf6007b, null, null, null, false);
+        make_slider('slider1', 10, 330, 128, 24, 0x9dca63, -100, 100, 0, 10, false);
+        make_slider('slider2', 10, 357, 128, 24, 0x9dca63, 0, 100, 50, 1, false);
+        make_slider('slider3', 10, 385, 128, 24, 0xf6007b, null, null, null, null, false);
 
-        make_slider('slider4', 14, 424, 32, 128, 0x9dca63, 0, 100, 10, true);
-        make_slider('slider5', 56, 424, 32, 128, 0x9dca63, 0, 100, 1, true);
-        make_slider('slider6', 98, 424, 32, 128, 0xf6007b, null, null, null, true);
+        make_slider('slider4', 14, 424, 32, 128, 0x9dca63, 0, 100, 20, 10, true);
+        make_slider('slider5', 56, 424, 32, 128, 0x9dca63, 0, 100, 0.3, 1, true);
+        make_slider('slider6', 98, 424, 32, 128, 0xf6007b, null, null, null, null, true);
 
         new mint.Button({
             parent: canvas,

@@ -205,43 +205,43 @@ class Main extends luxe.Game {
 
     override function onmousemove(e) {
 
-        if(ui_canvas!=null) ui_canvas.mousemove( Convert.mouse_event(e) );
-        if(editor_canvas!=null) editor_canvas.mousemove( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(!moving) ui_canvas.mousemove( Convert.mouse_event(e) );
+        editor_canvas.mousemove( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
 
     }
 
     override function onmousewheel(e) {
 
-        if(ui_canvas!=null) ui_canvas.mousewheel( Convert.mouse_event(e) );
-        if(editor_canvas!=null) editor_canvas.mousewheel( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(!moving) ui_canvas.mousewheel( Convert.mouse_event(e) );
+        if(ui_canvas.focused == null) editor_canvas.mousewheel( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
 
     }
 
     override function onmouseup(e) {
 
-        if(ui_canvas!=null) ui_canvas.mouseup( Convert.mouse_event(e) );
-        if(editor_canvas!=null) editor_canvas.mouseup( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(!moving) ui_canvas.mouseup( Convert.mouse_event(e) );
+        if(ui_canvas.focused == null) editor_canvas.mouseup( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
 
     }
 
     override function onmousedown(e) {
 
-        if(ui_canvas!=null) ui_canvas.mousedown( Convert.mouse_event(e) );
-        if(editor_canvas!=null) editor_canvas.mousedown( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        ui_canvas.mousedown( Convert.mouse_event(e) );
+        if(ui_canvas.focused == null) editor_canvas.mousedown( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
 
     } //onmousedown
 
     override function onkeydown(e:luxe.Input.KeyEvent) {
 
-        if(ui_canvas!=null) ui_canvas.keydown( Convert.key_event(e) );
-        if(editor_canvas!=null) editor_canvas.keydown( Convert.key_event(e) );
+        ui_canvas.keydown( Convert.key_event(e) );
+        editor_canvas.keydown( Convert.key_event(e) );
 
     } //onkeydown
 
     override function ontextinput(e:luxe.Input.TextEvent) {
 
-        if(ui_canvas!=null) ui_canvas.textinput( Convert.text_event(e) );
-        if(editor_canvas!=null) editor_canvas.textinput( Convert.text_event(e) );
+        ui_canvas.textinput( Convert.text_event(e) );
+        editor_canvas.textinput( Convert.text_event(e) );
 
     } //ontextinput
 
@@ -267,22 +267,22 @@ class Main extends luxe.Game {
             }
         }
 
-        if(ui_canvas!=null) ui_canvas.keyup( Convert.key_event(e) );
-        if(editor_canvas!=null) editor_canvas.keyup( Convert.key_event(e) );
+        ui_canvas.keyup( Convert.key_event(e) );
+        editor_canvas.keyup( Convert.key_event(e) );
 
     } //onkeyup
 
     override function onrender() {
 
-        if(ui_canvas!=null) ui_canvas.render();
-        if(editor_canvas!=null) editor_canvas.render();
+        ui_canvas.render();
+        editor_canvas.render();
 
     } //onrender
 
     override function update(dt:Float) {
 
-        if(ui_canvas!=null) ui_canvas.update(dt);
-        if(editor_canvas!=null) editor_canvas.update(dt);
+        ui_canvas.update(dt);
+        editor_canvas.update(dt);
 
     } //update
 
