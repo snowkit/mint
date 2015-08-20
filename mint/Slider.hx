@@ -71,9 +71,14 @@ class Slider extends Control {
         if(vertical) {
             bar_w = w - 4;
             bar_h = (h - 4) * (value - min) / (max - min);
+            bar_y = ((h - ((h - 4) * (value - min) / (max - min))) - 2);
+            if(bar_h < 1) bar_h = 1;
+            if(bar_h >= w-4) bar_h = h - 4;
         }
         else {
             bar_w = (w - 4) * (value - min) / (max - min);
+            if(bar_w < 1) bar_w = 1;
+            if(bar_w >= w-4) bar_w = w - 4;
             bar_h = h - 4;
         }
 
