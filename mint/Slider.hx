@@ -5,6 +5,7 @@ import mint.Panel;
 
 import mint.types.Types;
 import mint.core.Signal;
+import mint.types.Types.Helper;
 import mint.core.Macros.*;
 
 
@@ -67,12 +68,12 @@ class Slider extends Control {
         super(options);
 
         onchange = new Signal();
-        
-        update_bar();
 
         renderer = rendering.get(Slider, this);
 
         oncreate.emit();
+
+        update_value(value);
 
     } //new
 
@@ -84,39 +85,58 @@ class Slider extends Control {
 
         dragging = true;
         canvas.modal = this;
-        update_value(e);
+        update_value_from_mouse(e);
 
     } //mousedown
 
     inline function get_range() return max-min;
-    
-    inline function update_bar() {
+        
+    var ignore_set = true;
+
+    inline function update_value(_value:Float) {
+
+        _value = Helper.clamp(_value, min, max);
+
+        if(step != null) {
+            _value = Math.round(_value/step) * step;
+        }
+
         if(vertical) {
+
             bar_w = w - 4;
-            bar_h = (h - 4) * (value - min) / (max - min);
-            bar_y = ((h - ((h - 4) * (value - min) / (max - min))) - 2);
-            if(bar_h < 1) bar_h = 1;
-            if(bar_h >= w-4) bar_h = h - 4;
-        }
-        else {
-            bar_w = (w - 4) * (value - min) / (max - min);
-            if(bar_w < 1) bar_w = 1;
-            if(bar_w >= w-4) bar_w = w - 4;
+            bar_h = (h - 4) * (_value - min) / (max - min);
+            bar_y = ((h - ((h - 4) * (_value - min) / (max - min))) - 2);
+            bar_h = Helper.clamp(bar_h, 1, h - 4);
+
+        } else {
+
+            bar_w = (w - 4) * (_value - min) / (max - min);
+            bar_w = Helper.clamp(bar_w, 1, w-4);
             bar_h = h - 4;
+
         }
+
+        percent = _value/get_range();
+
+        ignore_set = true;
+            value = _value;
+        ignore_set = false;
+
+        onchange.emit(value, percent);
+
     } // update_bar
     
-    inline function set_value(v:Float):Float {
-        value = luxe.utils.Maths.clamp(v, min, max);
-        update_bar();
-        percent = value/get_range();
-        if(onchange != null) onchange.emit(value, percent);
+    inline function set_value(_value:Float):Float {
+
+        if(ignore_set) return value = _value;
+
+        update_value(_value);
+
         return value;
+
     } // set_value
 
-    inline function update_value(e:MouseEvent) {
-
-        var prev = value;
+    inline function update_value_from_mouse(e:MouseEvent) {
 
         if(!vertical) {
 
@@ -127,8 +147,7 @@ class Slider extends Control {
 
             var _v:Float = ((_dx - 1) / (w - 5)) * get_range() + min;
 
-            if(step != null) _v = Math.round(_v/step) * step;
-            value = _v;
+            update_value(_v);
 
         } else {
 
@@ -138,9 +157,8 @@ class Slider extends Control {
             if(_dy >= h-4) _dy = h-4;
 
             var _v:Float = ((_dy - 1) / (h - 5)) * get_range() + min;
-
-            if(step != null) _v = Math.round(_v/step) * step;
-            value = _v;
+                
+            update_value(_v);
 
         } //vertical
 
@@ -150,7 +168,7 @@ class Slider extends Control {
 
         if(dragging) {
 
-            update_value(e);
+            update_value_from_mouse(e);
 
         } //dragging
 
