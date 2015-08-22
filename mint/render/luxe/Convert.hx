@@ -83,9 +83,9 @@ class Convert {
     public static function text_event_type( _type:TextEventType ) : mint.types.TextEventType {
 
         return switch(_type) {
-            case TextEventType.unknown: mint.types.TextEventType.unknown;
-            case TextEventType.edit:    mint.types.TextEventType.edit;
-            case TextEventType.input:   mint.types.TextEventType.input;
+            case luxe.TextEventType.unknown: mint.types.TextEventType.unknown;
+            case luxe.TextEventType.edit:    mint.types.TextEventType.edit;
+            case luxe.TextEventType.input:   mint.types.TextEventType.input;
         }
 
     } //text_event_type
