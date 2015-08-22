@@ -1,5 +1,7 @@
 package mint.core;
 
+// Contibuted by Michael Bickel http://github.com/dazKind
+
 import haxe.macro.Expr;
 
 class Signal<T> {
