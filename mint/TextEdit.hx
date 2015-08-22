@@ -5,6 +5,7 @@ import mint.Label;
 
 import mint.types.Types;
 import mint.core.Signal;
+import mint.types.Types.Helper;
 import mint.core.Macros.*;
 
 using mint.core.unifill.Unifill;
@@ -159,7 +160,7 @@ class TextEdit extends Control {
     function move(amount:Int = -1) {
 
         index += amount;
-        index = Std.int(luxe.utils.Maths.clamp(index, 0, edit.uLength()));
+        index = Std.int(Helper.clamp(index, 0, edit.uLength()));
 
         // trace('index $index / ${edit.uLength()}');
         // trace(before(index) + '|' + after(index));
