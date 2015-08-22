@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>mint - </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="shortcut icon" href="../../images/favicon.png" />
+
+        <link rel="stylesheet" type="text/css" href="../../css/style.css" media="all">
+        <link rel="stylesheet" type="text/css" href="../../css/code.css" media="all">
+        <link rel="stylesheet" type="text/css" href="../../css/font.css" media="all">
+
+        <link rel="stylesheet" type="text/css" href="../../css/tooltipster.css" media="all">
+        <link rel="stylesheet" type="text/css" href="../../css/tooltipster-shadow.css" media="all">
+
+        <script src="../../js/jquery-2.0.3.min.js"> </script>
+        <script src="../../js/jquery.tooltipster.min.js"> </script>
+
+        <script>
+
+            $(document).ready(function() {
+
+                $('.section').css('display','none');
+                $('.readmore').click(function(e){
+                    var _child = $(this).parent().find('.section').first();
+                    var _opp = 'block';
+                    if( _child.css('display') == 'block' ) {
+                        _opp = 'none';
+                    } else {
+                    }
+                    _child.css('display', _opp);
+                });
+
+                $('div.sample').on('click', function(e){
+                        //get the data tag
+                    var content = $(this).attr('data-content');
+                        //remove clicking handler
+                    $(this).off('click');
+                        //replace the content!
+                    $(this).html('<iframe src="'+content+'" sandbox="allow-same-origin allow-scripts" style="overflow:hidden; scrollbar:none; border: 0; width:645px; height:450px;"></iframe> ')
+                });
+
+                $('.tooltip').each(function(e){
+                    var c = $(this).attr('data-tooltip');
+                    $(this).tooltipster({
+                        content:$('<span>' + c + '</span>'),
+                        interactive:true,
+                    theme:'tooltipster-shadow'
+                    });
+                });
+
+            }); //document.ready
+
+        </script>
+    </head>
+
+    <body>
+        <div class="content">
+            <p><a href="../../api/index.html"><img src="../../images/logo.png" alt="Logo"></a></p>
+<p><hr/>
+<a href="#" id="search_bar" onclick="return;"><div> search API <em>(or start typing anywhere)</em> </div></a></p>
+<hr/>
+
+<script src="../../js/omnibar.js"> </script>
+<link rel="stylesheet" type="text/css" href="../../css/omnibar.css" media="all">
+
+<div id="omnibar"> <a href="#" onclick="return" id="omnibar_close"></a> <input id="omnibar_text" type="text" placeholder="search types..."></input></div>
+<script  id="typelist" data-relpath="../../" data-types="mint.Button,mint.ButtonOptions,mint.Canvas,mint.CanvasOptions,mint.Checkbox,mint.CheckboxOptions,mint.ChildBounds,mint.Control,mint.ControlOptions,mint.Dropdown,mint.DropdownOptions,mint.Image,mint.ImageOptions,mint.KeySignal,mint.Label,mint.LabelOptions,mint.List,mint.ListOptions,mint.MouseSignal,mint.Panel,mint.PanelOptions,mint.Progress,mint.ProgressOptions,mint.Scroll,mint.ScrollOptions,mint.Slider,mint.SliderOptions,mint.TextEdit,mint.TextEditOptions,mint.TextSignal,mint.Window,mint.WindowOptions,mint.core.Macros,mint.core.Signal,mint.core.unifill.CodePoint,mint.core.unifill.CodePointIter,mint.core.unifill.Exception,mint.core.unifill.InternalEncoding,mint.core.unifill.InternalEncodingBackwardIter,mint.core.unifill.InternalEncodingIter,mint.core.unifill.Unicode,mint.core.unifill.Unifill,mint.core.unifill.Utf,mint.core.unifill.Utf16,mint.core.unifill.Utf32,mint.core.unifill.Utf8,mint.core.unifill.UtfIter,mint.core.unifill.UtfTools,mint.core.unifill._CodePoint.CodePoint_Impl_,mint.core.unifill._InternalEncoding.UtfX,mint.core.unifill._Utf16.StringU16,mint.core.unifill._Utf16.StringU16Buffer,mint.core.unifill._Utf16.StringU16Buffer_Impl_,mint.core.unifill._Utf16.StringU16_Impl_,mint.core.unifill._Utf16.Utf16Impl,mint.core.unifill._Utf8.StringU8,mint.core.unifill._Utf8.StringU8_Impl_,mint.core.unifill._Utf8.Utf8Impl,mint.layout.margins.AnchorType,mint.layout.margins.Layouts,mint.layout.margins.MarginTarget,mint.layout.margins.MarginType,mint.layout.margins.Margins,mint.layout.margins.SizeTarget,mint.layout.margins._Margins.Anchor,mint.layout.margins._Margins.AnchorType_Impl_,mint.layout.margins._Margins.Margin,mint.layout.margins._Margins.MarginTarget_Impl_,mint.layout.margins._Margins.MarginType_Impl_,mint.layout.margins._Margins.SizeTarget_Impl_,mint.layout.margins._Margins.Sizer,mint.render.Render,mint.render.Renderer,mint.render.Rendering,mint.render.luxe.Button,mint.render.luxe.Canvas,mint.render.luxe.Checkbox,mint.render.luxe.Convert,mint.render.luxe.Dropdown,mint.render.luxe.Image,mint.render.luxe.Label,mint.render.luxe.List,mint.render.luxe.LuxeMintRender,mint.render.luxe.Panel,mint.render.luxe.Progress,mint.render.luxe.Scroll,mint.render.luxe.Slider,mint.render.luxe.TextEdit,mint.render.luxe.Window,mint.render.luxe._Button.LuxeMintButtonOptions,mint.render.luxe._Canvas.LuxeMintCanvasOptions,mint.render.luxe._Checkbox.LuxeMintCheckboxOptions,mint.render.luxe._Dropdown.LuxeMintDropdownOptions,mint.render.luxe._Image.LuxeMintImageOptions,mint.render.luxe._Label.LuxeMintLabelOptions,mint.render.luxe._List.LuxeMintListOptions,mint.render.luxe._Panel.LuxeMintPanelOptions,mint.render.luxe._Progress.LuxeMintProgressOptions,mint.render.luxe._Scroll.LuxeMintScrollOptions,mint.render.luxe._Slider.LuxeMintSliderOptions,mint.render.luxe._TextEdit.LuxeMintTextEditOptions,mint.render.luxe._Window.LuxeMintWindowOptions,mint.types.Helper,mint.types.InteractState,mint.types.KeyCode,mint.types.KeyEvent,mint.types.ModState,mint.types.MouseButton,mint.types.MouseEvent,mint.types.TextAlign,mint.types.TextEvent,mint.types.TextEventType,mint.types._Types.InteractState_Impl_,mint.types._Types.KeyCode_Impl_,mint.types._Types.MouseButton_Impl_,mint.types._Types.TextAlign_Impl_"></script>
+
+
+<p><h1>Control</h1>
+<small><code>mint.Control</code></small></p>
+<p>An empty control.
+    Base class for all controls
+    handles propogation of events,
+    mouse handling, layout and so on</p>
+<hr/>
+
+<p><code>class</code><br/><span class="meta">
+meta: @:directlyUsed, @:allow(mint.render.Renderer)</span></p>
+<hr/>
+
+
+<p>&nbsp;
+&nbsp;</p>
+<p><h3>Members</h3> <hr/><span class="member apipage">
+                <a name="canvas"><a class="lift" href="#canvas">canvas</a></a><div class="clear"></div>
+                <code class="signature apipage">canvas : <a href="../../api/mint/Canvas.html">mint.Canvas</a></code><br/></span>
+            <span class="small_desc_flat">Root canvas that this element belongs to</span><br/><span class="member apipage">
+                <a name="children"><a class="lift" href="#children">children</a></a><div class="clear"></div>
+                <code class="signature apipage">children : <a href="http://api.haxe.org/Array.html">Array</a>&lt;<a href="../../api/mint/Control.html">mint.Control</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="closest_to_canvas"><a class="lift" href="#closest_to_canvas">closest_to_canvas</a></a><div class="clear"></div>
+                <code class="signature apipage">closest_to_canvas : <a href="../../api/mint/Control.html">mint.Control</a></code><br/></span>
+            <span class="small_desc_flat">the top most control below the canvas that holds us</span><br/><span class="member apipage">
+                <a name="isfocused"><a class="lift" href="#isfocused">isfocused</a></a><div class="clear"></div>
+                <code class="signature apipage">isfocused : <a href="http://api.haxe.org/Bool.html">Bool</a></code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="ishovered"><a class="lift" href="#ishovered">ishovered</a></a><div class="clear"></div>
+                <code class="signature apipage">ishovered : <a href="http://api.haxe.org/Bool.html">Bool</a></code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="key_input"><a class="lift" href="#key_input">key_input</a></a><div class="clear"></div>
+                <code class="signature apipage">key_input : <a href="http://api.haxe.org/Bool.html">Bool</a></code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="mouse_input"><a class="lift" href="#mouse_input">mouse_input</a></a><div class="clear"></div>
+                <code class="signature apipage">mouse_input : <a href="http://api.haxe.org/Bool.html">Bool</a></code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="name"><a class="lift" href="#name">name</a></a><div class="clear"></div>
+                <code class="signature apipage">name : <a href="http://api.haxe.org/String.html">String</a></code><br/></span>
+            <span class="small_desc_flat">The name of this control. default: ‘control’</span><br/><span class="member apipage">
+                <a name="onbounds"><a class="lift" href="#onbounds">onbounds</a></a><div class="clear"></div>
+                <code class="signature apipage">onbounds : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onchildadd"><a class="lift" href="#onchildadd">onchildadd</a></a><div class="clear"></div>
+                <code class="signature apipage">onchildadd : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onchildremove"><a class="lift" href="#onchildremove">onchildremove</a></a><div class="clear"></div>
+                <code class="signature apipage">onchildremove : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onclip"><a class="lift" href="#onclip">onclip</a></a><div class="clear"></div>
+                <code class="signature apipage">onclip : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="oncreate"><a class="lift" href="#oncreate">oncreate</a></a><div class="clear"></div>
+                <code class="signature apipage">oncreate : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="ondepth"><a class="lift" href="#ondepth">ondepth</a></a><div class="clear"></div>
+                <code class="signature apipage">ondepth : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="ondestroy"><a class="lift" href="#ondestroy">ondestroy</a></a><div class="clear"></div>
+                <code class="signature apipage">ondestroy : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onkeydown"><a class="lift" href="#onkeydown">onkeydown</a></a><div class="clear"></div>
+                <code class="signature apipage">onkeydown : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/KeySignal.html">mint.KeySignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onkeyup"><a class="lift" href="#onkeyup">onkeyup</a></a><div class="clear"></div>
+                <code class="signature apipage">onkeyup : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/KeySignal.html">mint.KeySignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onmousedown"><a class="lift" href="#onmousedown">onmousedown</a></a><div class="clear"></div>
+                <code class="signature apipage">onmousedown : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/MouseSignal.html">mint.MouseSignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onmouseenter"><a class="lift" href="#onmouseenter">onmouseenter</a></a><div class="clear"></div>
+                <code class="signature apipage">onmouseenter : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/MouseSignal.html">mint.MouseSignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onmouseleave"><a class="lift" href="#onmouseleave">onmouseleave</a></a><div class="clear"></div>
+                <code class="signature apipage">onmouseleave : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/MouseSignal.html">mint.MouseSignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onmousemove"><a class="lift" href="#onmousemove">onmousemove</a></a><div class="clear"></div>
+                <code class="signature apipage">onmousemove : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/MouseSignal.html">mint.MouseSignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onmouseup"><a class="lift" href="#onmouseup">onmouseup</a></a><div class="clear"></div>
+                <code class="signature apipage">onmouseup : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/MouseSignal.html">mint.MouseSignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onmousewheel"><a class="lift" href="#onmousewheel">onmousewheel</a></a><div class="clear"></div>
+                <code class="signature apipage">onmousewheel : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/MouseSignal.html">mint.MouseSignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onrender"><a class="lift" href="#onrender">onrender</a></a><div class="clear"></div>
+                <code class="signature apipage">onrender : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="ontextinput"><a class="lift" href="#ontextinput">ontextinput</a></a><div class="clear"></div>
+                <code class="signature apipage">ontextinput : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="../../api/mint/TextSignal.html">mint.TextSignal</a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="onvisible"><a class="lift" href="#onvisible">onvisible</a></a><div class="clear"></div>
+                <code class="signature apipage">onvisible : <a href="../../api/mint/core/Signal.html">mint.core.Signal</a>&lt;<a href="#"></a>&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="renderable"><a class="lift" href="#renderable">renderable</a></a><div class="clear"></div>
+                <code class="signature apipage">renderable : <a href="http://api.haxe.org/Bool.html">Bool</a></code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="renderer"><a class="lift" href="#renderer">renderer</a></a><div class="clear"></div>
+                <code class="signature apipage">renderer : <a href="../../api/mint/render/Renderer.html">mint.render.Renderer</a></code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="rendering"><a class="lift" href="#rendering">rendering</a></a><div class="clear"></div>
+                <code class="signature apipage">rendering : <a href="../../api/mint/render/Rendering.html">mint.render.Rendering</a></code><br/></span>
+            <span class="small_desc_flat">The rendering service that this instance uses, defaults to the canvas render service</span><br/></p>
+<p><h3>Properties</h3> <hr/><span class="member apipage">
+                <a name="bottom"><a class="lift" href="#bottom">bottom</a></a><div class="clear"></div>
+                <code class="signature apipage">bottom : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The bottom edge of the control bounds</span><span class="member apipage">
+                <a name="children_bounds"><a class="lift" href="#children_bounds">children_bounds</a></a><div class="clear"></div>
+                <code class="signature apipage">children_bounds : <a href="../../api/mint/ChildBounds.html">mint.ChildBounds</a></code><br/></span>
+            <span class="small_desc_flat"></span><span class="member apipage">
+                <a name="clip_with"><a class="lift" href="#clip_with">clip_with</a></a><div class="clear"></div>
+                <code class="signature apipage">clip_with : <a href="../../api/mint/Control.html">mint.Control</a></code><br/></span>
+            <span class="small_desc_flat"></span><span class="member apipage">
+                <a name="depth"><a class="lift" href="#depth">depth</a></a><div class="clear"></div>
+                <code class="signature apipage">depth : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat"></span><span class="member apipage">
+                <a name="h"><a class="lift" href="#h">h</a></a><div class="clear"></div>
+                <code class="signature apipage">h : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The height of the control bounds</span><span class="member apipage">
+                <a name="h_max"><a class="lift" href="#h_max">h_max</a></a><div class="clear"></div>
+                <code class="signature apipage">h_max : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The maximum height</span><span class="member apipage">
+                <a name="h_min"><a class="lift" href="#h_min">h_min</a></a><div class="clear"></div>
+                <code class="signature apipage">h_min : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The minimum height</span><span class="member apipage">
+                <a name="nodes"><a class="lift" href="#nodes">nodes</a></a><div class="clear"></div>
+                <code class="signature apipage">nodes : <a href="http://api.haxe.org/Int.html">Int</a></code><br/></span>
+            <span class="small_desc_flat"></span><span class="member apipage">
+                <a name="parent"><a class="lift" href="#parent">parent</a></a><div class="clear"></div>
+                <code class="signature apipage">parent : <a href="../../api/mint/Control.html">mint.Control</a></code><br/></span>
+            <span class="small_desc_flat"></span><span class="member apipage">
+                <a name="right"><a class="lift" href="#right">right</a></a><div class="clear"></div>
+                <code class="signature apipage">right : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The right edge of the control bounds</span><span class="member apipage">
+                <a name="visible"><a class="lift" href="#visible">visible</a></a><div class="clear"></div>
+                <code class="signature apipage">visible : <a href="http://api.haxe.org/Bool.html">Bool</a></code><br/></span>
+            <span class="small_desc_flat"></span><span class="member apipage">
+                <a name="w"><a class="lift" href="#w">w</a></a><div class="clear"></div>
+                <code class="signature apipage">w : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The width of the control bounds</span><span class="member apipage">
+                <a name="w_max"><a class="lift" href="#w_max">w_max</a></a><div class="clear"></div>
+                <code class="signature apipage">w_max : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The maximum width</span><span class="member apipage">
+                <a name="w_min"><a class="lift" href="#w_min">w_min</a></a><div class="clear"></div>
+                <code class="signature apipage">w_min : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The minimum width</span><span class="member apipage">
+                <a name="x"><a class="lift" href="#x">x</a></a><div class="clear"></div>
+                <code class="signature apipage">x : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The x position of the control bounds, world coordinate</span><span class="member apipage">
+                <a name="x_local"><a class="lift" href="#x_local">x_local</a></a><div class="clear"></div>
+                <code class="signature apipage">x_local : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The x position of the control bounds, relative to its container</span><span class="member apipage">
+                <a name="y"><a class="lift" href="#y">y</a></a><div class="clear"></div>
+                <code class="signature apipage">y : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The y position of the control bounds, world coordinate</span><span class="member apipage">
+                <a name="y_local"><a class="lift" href="#y_local">y_local</a></a><div class="clear"></div>
+                <code class="signature apipage">y_local : <a href="http://api.haxe.org/Float.html">Float</a></code><br/></span>
+            <span class="small_desc_flat">The y position of the control bounds, relative to its container</span></p>
+<p><h3>Methods</h3> <hr/><span class="method apipage">
+            <a name="add"><a class="lift" href="#add">add</a></a><div class="clear"></div>
+            <code class="signature apipage">add(child:<a href="../../api/mint/Control.html">mint.Control</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="contains"><a class="lift" href="#contains">contains</a></a><div class="clear"></div>
+            <code class="signature apipage">contains(_x:<a href="http://api.haxe.org/Float.html">Float</a><span></span>, _y:<a href="http://api.haxe.org/Float.html">Float</a><span></span>) : <a href="http://api.haxe.org/Bool.html">Bool</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="destroy"><a class="lift" href="#destroy">destroy</a></a><div class="clear"></div>
+            <code class="signature apipage">destroy() : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="destroy_children"><a class="lift" href="#destroy_children">destroy_children</a></a><div class="clear"></div>
+            <code class="signature apipage">destroy_children() : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="keydown"><a class="lift" href="#keydown">keydown</a></a><div class="clear"></div>
+            <code class="signature apipage">keydown(e:<a href="../../api/mint/types/KeyEvent.html">mint.types.KeyEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="keyup"><a class="lift" href="#keyup">keyup</a></a><div class="clear"></div>
+            <code class="signature apipage">keyup(e:<a href="../../api/mint/types/KeyEvent.html">mint.types.KeyEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="mousedown"><a class="lift" href="#mousedown">mousedown</a></a><div class="clear"></div>
+            <code class="signature apipage">mousedown(e:<a href="../../api/mint/types/MouseEvent.html">mint.types.MouseEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="mouseenter"><a class="lift" href="#mouseenter">mouseenter</a></a><div class="clear"></div>
+            <code class="signature apipage">mouseenter(e:<a href="../../api/mint/types/MouseEvent.html">mint.types.MouseEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="mouseleave"><a class="lift" href="#mouseleave">mouseleave</a></a><div class="clear"></div>
+            <code class="signature apipage">mouseleave(e:<a href="../../api/mint/types/MouseEvent.html">mint.types.MouseEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="mousemove"><a class="lift" href="#mousemove">mousemove</a></a><div class="clear"></div>
+            <code class="signature apipage">mousemove(e:<a href="../../api/mint/types/MouseEvent.html">mint.types.MouseEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="mouseup"><a class="lift" href="#mouseup">mouseup</a></a><div class="clear"></div>
+            <code class="signature apipage">mouseup(e:<a href="../../api/mint/types/MouseEvent.html">mint.types.MouseEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="mousewheel"><a class="lift" href="#mousewheel">mousewheel</a></a><div class="clear"></div>
+            <code class="signature apipage">mousewheel(e:<a href="../../api/mint/types/MouseEvent.html">mint.types.MouseEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="new"><a class="lift" href="#new">new</a></a><div class="clear"></div>
+            <code class="signature apipage">new(_options:<a href="../../api/mint/ControlOptions.html">mint.ControlOptions</a><span></span>, _emit_oncreate:<a href="http://api.haxe.org/Bool.html">Bool</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat">Create a Control with the given options.
+            The emit_oncreate flag will fire the oncreate signal at the end of this function default:false</span></p>
+<p></span>
+<span class="method apipage">
+            <a name="remove"><a class="lift" href="#remove">remove</a></a><div class="clear"></div>
+            <code class="signature apipage">remove(child:<a href="../../api/mint/Control.html">mint.Control</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="render"><a class="lift" href="#render">render</a></a><div class="clear"></div>
+            <code class="signature apipage">render() : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="set_pos"><a class="lift" href="#set_pos">set_pos</a></a><div class="clear"></div>
+            <code class="signature apipage">set_pos(_x:<a href="http://api.haxe.org/Float.html">Float</a><span></span>, _y:<a href="http://api.haxe.org/Float.html">Float</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="set_size"><a class="lift" href="#set_size">set_size</a></a><div class="clear"></div>
+            <code class="signature apipage">set_size(_w:<a href="http://api.haxe.org/Float.html">Float</a><span></span>, _h:<a href="http://api.haxe.org/Float.html">Float</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="textinput"><a class="lift" href="#textinput">textinput</a></a><div class="clear"></div>
+            <code class="signature apipage">textinput(e:<a href="../../api/mint/types/TextEvent.html">mint.types.TextEvent</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="topmost_child_at_point"><a class="lift" href="#topmost_child_at_point">topmost_child_at_point</a></a><div class="clear"></div>
+            <code class="signature apipage">topmost_child_at_point(_x:<a href="http://api.haxe.org/Float.html">Float</a><span></span>, _y:<a href="http://api.haxe.org/Float.html">Float</a><span></span>) : <a href="../../api/mint/Control.html">mint.Control</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span>
+<span class="method apipage">
+            <a name="update"><a class="lift" href="#update">update</a></a><div class="clear"></div>
+            <code class="signature apipage">update(dt:<a href="http://api.haxe.org/Float.html">Float</a><span></span>) : <a href="http://api.haxe.org/Void.html">Void</a></code><br/><span class="small_desc_flat"></span></p>
+<p></span></p>
+<hr/>
+
+<p>&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;</p>
+
+        </div>
+    </body>
+
+</html>

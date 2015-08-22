@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>mint - </title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="shortcut icon" href="./images/favicon.png" />
+
+        <link rel="stylesheet" type="text/css" href="./css/style.css" media="all">
+        <link rel="stylesheet" type="text/css" href="./css/code.css" media="all">
+        <link rel="stylesheet" type="text/css" href="./css/font.css" media="all">
+
+        <link rel="stylesheet" type="text/css" href="./css/tooltipster.css" media="all">
+        <link rel="stylesheet" type="text/css" href="./css/tooltipster-shadow.css" media="all">
+
+        <script src="./js/jquery-2.0.3.min.js"> </script>
+        <script src="./js/jquery.tooltipster.min.js"> </script>
+
+        <script>
+
+            $(document).ready(function() {
+
+                $('.section').css('display','none');
+                $('.readmore').click(function(e){
+                    var _child = $(this).parent().find('.section').first();
+                    var _opp = 'block';
+                    if( _child.css('display') == 'block' ) {
+                        _opp = 'none';
+                    } else {
+                    }
+                    _child.css('display', _opp);
+                });
+
+                $('div.sample').on('click', function(e){
+                        //get the data tag
+                    var content = $(this).attr('data-content');
+                        //remove clicking handler
+                    $(this).off('click');
+                        //replace the content!
+                    $(this).html('<iframe src="'+content+'" sandbox="allow-same-origin allow-scripts" style="overflow:hidden; scrollbar:none; border: 0; width:645px; height:450px;"></iframe> ')
+                });
+
+                $('.tooltip').each(function(e){
+                    var c = $(this).attr('data-tooltip');
+                    $(this).tooltipster({
+                        content:$('<span>' + c + '</span>'),
+                        interactive:true,
+                    theme:'tooltipster-shadow'
+                    });
+                });
+
+            }); //document.ready
+
+        </script>
+    </head>
+
+    <body>
+        <div class="content">
+            <p><a href="./index.html" id="logo"><img src="./images/logo.png" /></a></p>
+<div class="topmenu">
+<a href="./api/index.html">api</a> . <del>guide</del> <img src=".//images/github.png" alt="github">  <a href="https://github.com/snowkit/mint/">source</a> . <a href="https://github.com/snowkit/mint/issues/">issues</a>
+</div>
+
+<hr>
+<p><br/>
+<a name="about"></a> </p>
+<h2 id="m-nt">mínt</h2>
+<p><strong>mint</strong> is <strong>minimal, renderer agnostic ui library</strong> for <strong>Haxe</strong>.</p>
+<blockquote>
+<p>“<code>m</code>inimal <code>int</code>erface”</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><a href="http://haxe.org"> <img src="./images/haxe.png" target="_blank" class="small-image"/> </a>   </p>
+<p><small class="haxedesc">Haxe is an expressive, beautiful modern programming language <br/>
+      that compiles its own code into other languages. <a href="http://haxe.org/" target="_blank"> learn more</a> </small></p>
+<p><br/></p>
+<hr>
+<p><a name="about"></a></p>
+<h3 id="about">About</h3>
+<p><strong>Purpose</strong><br>mint is a game and tool focused library.
+mint is intentionally minimal and to the point.   </p>
+<p>It is designed around the notion that not every game<br>looks the same. Not every game uses the same UI skin<br>across all UI elements. That games are particularly<br>nuanced when it comes to user interfaces and interaction.</p>
+<p><strong>Goals</strong></p>
+<ul>
+<li><strong>efficient</strong> - no superfluous code or requirements for controls</li>
+<li><strong>light weight</strong> - only the essentials, easy to include</li>
+<li><strong>easy to use</strong> - rapid iteration for prototyping UI and UI based games</li>
+<li><strong>flexible</strong> - per control renderer instances allow nuanced visual diversion</li>
+<li><strong>extensible</strong> - Designed for <em>writing</em> UI, quickly and to the point</li>
+<li><strong>agnostic</strong> - handles logic. abstracts the framework and layout specifics</li>
+</ul>
+<p>&nbsp;</p>
+<p>This means the core library remains pure, and ideally use case specific<br>controls are shared via simple, isolated controls with similar intentions.</p>
+<p>More <a href="http://snowkit.org/2015/01/25/mint-details-part-1/">thoughts</a> here in the mean time.</p>
+<hr>
+<p><small style="display:block;margin:auto;">
+<a href="./images/controls.png">
+<img src="./images/controls.png" width="550px" /></a>
+<br/>
+rendered in <a href="http://luxeengine.com/">luxe engine</a>
+</small></p>
+<hr>
+<p><a name="setup"></a></p>
+<h2 id="setup">setup</h2>
+<p><code>haxelib git mint https://github.com/snowkit/mint.git</code></p>
+<p><a name="quickstart"></a></p>
+<h2 id="quick-start">quick start</h2>
+<ul>
+<li>create a canvas</li>
+<li>feed it events!<ul>
+<li>canvas.mousemove({ … });</li>
+<li>canvas.keydown({ … });</li>
+<li>canvas.update(dt);</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="alpha">Alpha</h3>
+<p><small>
+Please note   </p>
+<p>mint is currently considered alpha, which means there may be bugs, inconsistencies, incomplete implementations, and possible minor API changes.
+It is still considered fairly usable and is being used by multiple tools and games, but there are things to tighten up before it can be called beta or final. </p>
+<p>Join us in developing and testing the library and tools, below.</p>
+<p><strong>luxe specifics</strong><br>The <code>mint.render.luxe</code> code and <code>test_luxe</code> folders are temporarily stored<br>in the main repo for iteration and examples of a complete renderer, for the tests.</p>
+<p>In the near future this will be moved to it’s own repo as it’s meant to be.</p>
+<p></small></p>
+<h3 id="examples">Examples</h3>
+<p>In the repo and in the wild</p>
+<ul>
+<li>See the <a href="https://github.com/snowkit/mint/tree/master/tests/test_luxe">tests/test_luxe</a> folder</li>
+<li>See <a href="https://github.com/FuzzyWuzzie/LuxeParticleDesigner/">https://github.com/FuzzyWuzzie/LuxeParticleDesigner/</a></li>
+</ul>
+<h3 id="controls">Controls</h3>
+<p>Current default controls include</p>
+<ul>
+<li>Control (empty)</li>
+<li>Canvas</li>
+<li>Button</li>
+<li>Checkbox</li>
+<li>Dropdown</li>
+<li>Image</li>
+<li>Label</li>
+<li>List</li>
+<li>Panel</li>
+<li>Progress</li>
+<li>Scroll area</li>
+<li>Slider</li>
+<li>TextEdit</li>
+<li>Window</li>
+</ul>
+<hr>
+<p><a name="example"></a></p>
+<h3 id="quick-look">Quick look</h3>
+<pre><code class="lang-haxe">
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span> </span>{
+    ...
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">create</span><span class="hljs-params">()</span> </span>{
+
+        <span class="hljs-keyword">var</span> rendering = <span class="hljs-keyword">new</span> YourFrameworkMintRenderer();
+
+        canvas = <span class="hljs-keyword">new</span> mint.Canvas({
+            name:<span class="hljs-string">'canvas'</span>,
+            rendering: rendering,
+            x: <span class="hljs-number">0</span>, y:<span class="hljs-number">0</span>, w: <span class="hljs-number">960</span>, h: <span class="hljs-number">640</span>,
+            options: {
+                framework_specific_option: <span class="hljs-keyword">new</span> FrameworkType()
+            }
+        });
+
+        <span class="hljs-keyword">new</span> mint.Label({
+            parent: canvas,
+            name: <span class="hljs-string">'label'</span>,
+            x:<span class="hljs-number">10</span>, y:<span class="hljs-number">10</span>, w:<span class="hljs-number">100</span>, h:<span class="hljs-number">32</span>,
+            text: <span class="hljs-string">'hello mínt'</span>,
+            align:left,
+            text_size: <span class="hljs-number">14</span>,
+            onclick: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(_,_)</span> </span>{ <span class="hljs-keyword">trace</span>(<span class="hljs-string">'hello mint!'</span>); }
+        });
+
+    }
+}
+</code></pre>
+<hr>
+<p><a name="contribute"></a></p>
+<h2 id="contribute">Contribute</h2>
+<p>Feedback, bugs, PR’s and suggestions definitely welcome!</p>
+<p><small><em>(They will be weighted against the purpose and goals of the library)</em></small></p>
+<hr>
+<p>&nbsp;
+&nbsp;</p>
+<p><a href="http://snowkit.org" ><img src="./images/snowkit.png" /></a></p>
+<p>&nbsp;
+&nbsp;</p>
+<hr>
+<p><strong>mint is a <a href="http://snowkit.org/">snõwkit</a> community library</strong></p>
+<p><a href="https://github.com/snowkit/mint/issues">feedback</a>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/></p>
+
+        </div>
+    </body>
+
+</html>
