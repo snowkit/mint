@@ -1,0 +1,65 @@
+
+[![Logo]({{{rel_path}}}images/logo.png)]({{{rel_path}}}api/index.html)
+
+<hr/>
+<a href="#" id="search_bar" onclick="return;"><div> search API <em>(or start typing anywhere)</em> </div></a>
+<hr/>
+
+{{>omnibar}}
+
+{{#item}}
+
+<h1>{{{name}}}</h1>
+<small>`{{{path}}}`</small>
+
+{{{doc}}}
+
+<hr/>
+
+`{{{type}}}`
+
+
+{{~#if type '==' 'typedef'}}
+    {{~^if members~}}
+        &nbsp;alias of `{{types.cpp.name}}`   
+    {{/if~}}
+{{/if}}
+
+{{~#with superClass}}
+    {{~#unless @index}}extends {{/unless~}}
+    {{#if @index}}, {{/if~}}
+    <code><span>{{path}}</span></code>
+{{~/with~}}
+
+{{~#each interfaces}}
+    {{~#unless @index}}<br/>implements {{/unless~}}
+    {{#if @index}}, {{/if~}}
+    <code><span>{{path}}</span></code>
+{{~/each~}}
+
+{{#if meta.length}}
+<br/><span class="meta">
+{{#each meta~}}
+    {{~#unless @index}}meta: {{/unless~}}
+    {{~#if @index}}, {{/if~}}
+    @{{name}}{{#if params.length}}({{params}}){{/if}}
+{{~/each}}
+</span>
+{{/if}}
+
+<hr/>
+
+
+&nbsp;
+&nbsp;
+
+{{>type_page . }}
+
+{{/item}}
+
+<hr/>
+
+&nbsp;
+&nbsp;
+&nbsp;
+&nbsp;

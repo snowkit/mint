@@ -1,0 +1,39 @@
+
+[![Logo]({{{rel_path}}}images/logo.png)]({{{rel_path}}}index.html)
+
+<hr/>
+<a href="#" id="search_bar" onclick="return;"><div> search API <em>(or start typing anywhere)</em> </div></a>
+<hr/>
+
+{{>omnibar}}
+
+## Packages
+
+{{#each doc.package_roots~}}
+    {{#with (get_type 'packages' . ) ~}}
+        {{#with this~}}
+            {{>package_list}}<br/>
+        {{~/with}}
+    {{~/with}}
+{{~/each}}
+<hr/>
+## Types
+
+
+{{#with doc.packages._empty_}}
+   {{>package_node}}
+{{~/with}}
+
+
+{{#each doc.package_roots~}}
+    {{#with (get_type 'packages' . ) ~}}
+        {{#with this~}}
+            {{>package_node}}<br/>
+        {{~/with}}
+    {{~/with}}
+{{~/each}}
+
+<hr/>
+
+&nbsp;
+&nbsp;

@@ -1,0 +1,43 @@
+{
+    "project_name" : "mint",
+    "project_git_url" : "http://github.com/snowkit/mint/",
+
+    "style_path" : "./mint/style/",
+    "template_path" : "./mint/templates/",
+    "images_path" : "./mint/images/",
+    "api_path" : "./mint/apis/api/",
+    "md_path" : "./mint/md/",
+
+    "md_input": ["**/+(*.md)"],
+    "api_input" : ["**/+(*.json)"],
+
+    "output_path" : "../mint_docs/",
+    "images_output_path" : "images/",
+
+    "api_out_md_path" : "api/",
+    "api_source_json" : "./generated_api.json",
+    "api_index_out" : "index.md",
+    "api_template" : "api_page.html",
+    "api_index_template" : "api_index.html",
+    "template_index" : "index.html",
+    "api_packages" : ["mint"],
+    "api_packages_ignore" : ["mint.render.luxe"],
+    "api_classes" : [],
+    "api_partials" : [
+        { "name": "type", "path":"api_partial_type.html"},
+        { "name": "omnibar", "path":"api_partial_omnibar.html"},
+        { "name": "type_page", "path":"api_partial_type_page.html"},
+        { "name": "args", "path":"api_partial_args.html"},
+        { "name": "package_node", "path":"api_partial_package_node.html"},
+        { "name": "package_list", "path":"api_partial_package_list.html"},
+        { "name": "package_list_items", "path":"api_partial_package_list_items.html"},
+        { "name": "package", "path":"api_partial_package.html"}
+    ],
+
+    "force_full" : true,
+    "force_copy_template" : true,
+
+    "replacements" : [
+    ]
+
+}

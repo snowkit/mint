@@ -1,0 +1,22 @@
+
+{{#with full~}}
+{{#unless (hidden_package .) ~}}
+
+    {{#if . '==' '_empty_'~}}
+        <a name="empty"><h5> [_no package_](#empty) </h5></a>
+    {{~else~}}
+        <a name="{{.}}"><h3> [{{without_package (escape_markdown .)}}](#{{.}}) </h3></a>
+    {{~/if}}
+
+    {{~#each (names_in_package .) ~}}
+        {{#name_visible .~}}
+            <div class="package-node">&bull; [{{ without_package (escape_markdown .) }}]({{type_path .}}.html) </div> <br/>
+        {{~/name_visible}}
+    {{~/each}}
+
+{{~/unless}}
+{{/with}}
+
+{{#each packages~}}
+    {{~>package_list_items~}}
+{{/each}}
