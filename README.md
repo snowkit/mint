@@ -2,4 +2,4 @@ mínt | http://snowkit.github.io/mint/
 
 ![mint](mint.png)
 
-“`M`inimal `INT`erface”
+“`**M**inimal **Int**erface”
