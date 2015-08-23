@@ -375,7 +375,13 @@ class KitchenSink extends State {
         if(e.keycode == Key.key_2) if(window2 != null) window2.open();
         if(e.keycode == Key.key_3) if(window3 != null) window3.open();
         if(e.keycode == Key.key_4) if(check != null) check.visible = !check.visible;
-        if(e.keycode == Key.key_5) text1.text = 'fps:' + luxe.utils.Maths.fixed((1/Luxe.debug.dt_average), 2);
+        if(e.keycode == Key.key_5) {
+            if( text1.display_char == null ) {
+                text1.display_char = '•';
+            } else {
+                text1.display_char = null;
+            }
+        }
 
     } //onkeyup
 

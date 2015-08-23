@@ -124,7 +124,7 @@ class TextEdit extends mint.render.Render {
     function update_cursor() {
 
         var text = (cast textedit.label.renderer:mint.render.luxe.Label).text;
-        var _t = textedit.before(textedit.index);
+        var _t = textedit.before_display(textedit.index);
 
         var _tw = text.font.width_of(textedit.edit, text.point_size, text.letter_spacing);
         var _twh = _tw/2.0;

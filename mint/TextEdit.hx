@@ -18,11 +18,13 @@ typedef TextEditOptions = {
 
         /** The default text value */
     @:optional var text: String;
+        /** An override display character (like * for a password entry) */
+    @:optional var display_char: String;
         /** The text size of the text for the rendering to use */
     @:optional var text_size: Float;
         /** A filter function to call when text is entered.
-            It passes `new character`, `new text`, `old text`.
-            Returning false will reject the character */
+            It is: `filter(new_character, new_text, old_text):Bool`.
+            Returning false will reject the character. */
     @:optional var filter: String->String->String->Bool;
 
 } //TextEditOptions
@@ -39,12 +41,15 @@ class TextEdit extends Control {
     public var filter : String->String->String->Bool;
     @:isVar public var index (default, null) : Int = 0;
     public var text (get, set): String;
+    public var display_text (get, never): String;
+    @:isVar public var display_char (get, set): String;
 
         /** Emitted whenever the index is changed. */
     public var onchangeindex: Signal<Int->Void>;
     public var onchange: Signal<String->Void>;
 
     var edit : String = '';
+    var display : String = '';
     var options: TextEditOptions;
 
     public function new( _options:TextEditOptions ) {
@@ -83,6 +88,10 @@ class TextEdit extends Control {
 
         renderer = rendering.get(TextEdit, this);
 
+        if(options.display_char != null) {
+            display_char = options.display_char;
+        }
+        
         refresh(edit);
 
         oncreate.emit();
@@ -137,12 +146,24 @@ class TextEdit extends Control {
 
     } //onkeydown
 
-    inline function refresh( str:String ) {
+    inline function refresh( str:String, _no_change:Bool=false ) {
 
-        label.text = edit = str;
+        edit = str;
+
+        if(display_char != null) {
+            var _l = str.uLength();
+            display = '';
+            for(i in 0 ... _l) display += display_char;
+        } else {
+            display = edit;
+        }
+
+        label.text = display;
         update_cur();
 
-        onchange.emit(edit);
+        if(!_no_change) {
+            onchange.emit(edit);
+        }
 
         return edit;
 
@@ -152,10 +173,33 @@ class TextEdit extends Control {
         return edit;
     }
 
+    inline function get_display_text() {
+        return display;
+    }
+
+    inline function get_display_char() {
+        return display_char;
+    }
+
     inline function set_text(v:String) {
         index = v.uLength();
         return refresh(v);
     }
+
+    inline function set_display_char(v:String) {
+
+        if(v != null) {
+            display_char = v.uCharAt(0);
+        } else {
+            display_char = v;
+        }
+
+        refresh(edit, true);
+        update_cur();
+
+        return display_char;
+
+    } //set_display_char
 
     function move(amount:Int = -1) {
 
@@ -186,6 +230,18 @@ class TextEdit extends Control {
     inline function before( cur:Int = 0 ) {
 
         return edit.uSubstr(0, cur);
+
+    } //before
+
+    inline function after_display( cur:Int = 0 ) {
+
+        return display.uSubstr(cur, display.length);
+
+    } //after
+
+    inline function before_display( cur:Int = 0 ) {
+
+        return display.uSubstr(0, cur);
 
     } //before
 
