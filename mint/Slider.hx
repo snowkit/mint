@@ -17,6 +17,9 @@ typedef SliderOptions = {
         /** Whether or not the slider is vertical. default: false */
     @:optional var vertical: Bool;
 
+        /** Inverts the sliders default direction. If true, horizontal slider goes from right to left and vertical slider from top to bottom. default: false */
+    @:optional var inverse_direction: Bool;
+
         /** The slider minimum value. default: 0 */
     @:optional var min: Float;
         /** The slider maximum value. default: 1 */
@@ -44,6 +47,7 @@ class Slider extends Control {
     public var percent : Float = 1;
     public var step : Null<Float>;
     public var vertical : Bool = false;
+    public var inverse_direction : Bool = false;
 
     var bar_x : Float = 2.0;
     var bar_y : Float = 2.0;
@@ -63,6 +67,7 @@ class Slider extends Control {
         min = def(options.min, 0);
         value = def(options.value, max);
         vertical = def(options.vertical, false);
+        inverse_direction = def(options.inverse_direction, false);
         step = options.step;
 
         super(options);
@@ -105,7 +110,7 @@ class Slider extends Control {
 
             bar_w = w - 4;
             bar_h = (h - 4) * (_value - min) / (max - min);
-            bar_y = ((h - ((h - 4) * (_value - min) / (max - min))) - 2);
+            bar_y = (!inverse_direction) ? ((h - ((h - 4) * (_value - min) / (max - min))) - 2) : 2;
             bar_h = Helper.clamp(bar_h, 1, h - 4);
 
         } else {
@@ -113,6 +118,7 @@ class Slider extends Control {
             bar_w = (w - 4) * (_value - min) / (max - min);
             bar_w = Helper.clamp(bar_w, 1, w-4);
             bar_h = h - 4;
+            bar_x = (!inverse_direction) ? 2 : ((w - ((w - 4) * (_value - min) / (max - min))) - 2);
 
         }
 
@@ -140,7 +146,7 @@ class Slider extends Control {
 
         if(!vertical) {
 
-            var _dx = e.x - x;
+            var _dx = (!inverse_direction) ? e.x - x : (w) - (e.x - x);
 
             if(_dx < 1) _dx = 1;
             if(_dx >= w-4) _dx = w-4;
@@ -151,7 +157,7 @@ class Slider extends Control {
 
         } else {
 
-            var _dy = (h) - (e.y - y);
+            var _dy = (!inverse_direction) ? (h) - (e.y - y) : e.y - y;
 
             if(_dy < 1) _dy = 1;
             if(_dy >= h-4) _dy = h-4;
