@@ -130,7 +130,7 @@ class Window extends mint.render.Render {
         visual.resize_xy(window.w, window.h);
         top.transform.pos.set_xy(window.title.x, window.title.y);
         top.resize_xy(window.title.w, window.title.h);
-        border.set({ x:window.x, y:window.y, w:window.w+1, h:window.h, color:border.color, visible:control.visible });
+        border.set_xywh(window.x, window.y, window.w+1, window.h);
 
         var ch = window.collapse_handle;
         collapse.transform.pos.set_xy(ch.x+(ch.w/2), ch.y+(ch.h/2));

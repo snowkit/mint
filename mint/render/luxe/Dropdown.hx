@@ -80,7 +80,7 @@ class Dropdown extends mint.render.Render {
     override function onbounds() {
         visual.transform.pos.set_xy(control.x, control.y);
         visual.resize_xy(control.w, control.h);
-        border.set({ x:control.x, y:control.y, w:control.w, h:control.h, color:border.color, visible:control.visible });
+        border.set_xywh(control.x, control.y, control.w+1, control.h);
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
