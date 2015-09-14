@@ -52,9 +52,9 @@ class Button extends Control {
             internal_visible: options.visible
         });
 
-        if(options.onclick != null) onmouseup.listen(options.onclick);
-
         renderer = rendering.get( Button, this );
+
+        if(options.onclick != null) onmouseup.listen(options.onclick);
 
         oncreate.emit();
 
