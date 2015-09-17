@@ -149,6 +149,8 @@ class TextEdit extends mint.render.Render {
 
         cursor.p0 = new Vector(_xx, _yy);
         cursor.p1 = new Vector(_xx, _yy + textedit.label.h - 4);
+        cursor.visible = true; 
+        if(timer != null) timer.fire_at = snow.Snow.timestamp + 0.5;
 
     } //
 
