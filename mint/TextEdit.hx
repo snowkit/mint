@@ -49,6 +49,7 @@ class TextEdit extends Control {
     public var onchange: Signal<String->Void>;
 
     var edit : String = '';
+    var ime_edit : String = '';
     var display : String = '';
     var options: TextEditOptions;
 
@@ -106,20 +107,30 @@ class TextEdit extends Control {
 
     override function textinput( event:TextEvent ) {
 
-        var b = before(index);
-        var a = after(index);
-        var new_text = b + event.text + a;
+        switch (event.type) {
+            case edit:
+                me_edit = event.text;
+                refresh( edit );
 
-        if(filter != null && !filter(event.text, new_text, edit)) {
-            return;
-        }
+            case input:
+                ime_edit = '';
 
-        index += event.text.uLength();
-        refresh( new_text );
+                var b = before(index);
+                var a = after(index);
+                var new_text = b + event.text + a;
 
-        // event.bubble = false;
-        // super.textinput(event);
+                if(filter != null && !filter(event.text, new_text, edit)) {
+                    return;
+                }
 
+                index += event.text.uLength();
+                refresh( new_text );
+
+                // event.bubble = false;
+                // super.textinput(event);
+            default:
+
+        } //switch event.type
     } //ontextinput
 
     override function keydown( event:KeyEvent ) {
@@ -155,7 +166,7 @@ class TextEdit extends Control {
             display = '';
             for(i in 0 ... _l) display += display_char;
         } else {
-            display = edit;
+            display = before(index) + ime_edit + after(index);
         }
 
         label.text = display;
