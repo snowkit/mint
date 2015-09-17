@@ -109,7 +109,7 @@ class TextEdit extends Control {
 
         switch (event.type) {
             case edit:
-                me_edit = event.text;
+                ime_edit = event.text;
                 refresh( edit );
 
             case input:
