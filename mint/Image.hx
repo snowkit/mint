@@ -29,7 +29,7 @@ class Image extends Control {
     var options: ImageOptions;
 
         /** The current image path/id. Read/Write */
-    @:isVar public var path (default, set) : String = '';
+    @:isVar public var path (default, set) : String;
 
         /** Emitted whenever the path/id is changed.
             `function(new_path:String)` */
@@ -44,6 +44,10 @@ class Image extends Control {
 
         super(_options);
 
+        onchange = new Signal();
+
+        path = def(options.path, '');
+
         renderer = rendering.get(Image, this);
 
         oncreate.emit();
@@ -53,6 +57,8 @@ class Image extends Control {
 //Internal
 
     function set_path( _p:String ) {
+
+        if(path == null) return path = _p;
 
         path = _p;
 
