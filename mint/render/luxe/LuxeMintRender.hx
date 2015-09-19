@@ -18,7 +18,6 @@ class LuxeMintRender extends mint.render.Rendering {
         options = def(_options, {});
         def(options.batcher, Luxe.renderer.batcher);
         def(options.depth, 0);
-        def(options.group, 0);
         def(options.immediate, false);
         def(options.visible, true);
 

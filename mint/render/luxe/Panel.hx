@@ -44,7 +44,6 @@ class Panel extends mint.render.Render {
             h:control.h,
             color: color,
             depth: render.options.depth + control.depth,
-            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });

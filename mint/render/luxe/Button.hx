@@ -49,7 +49,6 @@ class Button extends mint.render.Render {
             size: new Vector(control.w, control.h),
             color: color,
             depth: render.options.depth + control.depth,
-            group: render.options.group,
             visible: control.visible,
         });
 

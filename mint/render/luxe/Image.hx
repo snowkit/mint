@@ -75,7 +75,6 @@ class Image extends mint.render.Render {
                 pos: new Vector(control.x, control.y),
                 size: new Vector(control.w*ratio_w, control.h*ratio_h),
                 depth: render.options.depth + control.depth,
-                group: render.options.group,
                 visible: control.visible,
                 uv: _opt.uv
             });

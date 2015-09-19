@@ -54,7 +54,6 @@ class Checkbox extends mint.render.Render {
             size: new Vector(control.w, control.h),
             color: color,
             depth: render.options.depth + control.depth,
-            group: render.options.group,
             visible: control.visible,
         });
 
@@ -66,7 +65,6 @@ class Checkbox extends mint.render.Render {
             size: new Vector(control.w-8, control.h-8),
             color: color_node.clone().set(null,null,null,0.25),
             depth: render.options.depth + control.depth + 0.001,
-            group: render.options.group,
             visible: control.visible
         });
 
@@ -78,7 +76,6 @@ class Checkbox extends mint.render.Render {
             size: new Vector(control.w-8, control.h-8),
             color: color_node,
             depth: render.options.depth + control.depth + 0.002,
-            group: render.options.group,
             visible: control.visible && checkbox.state
         });
 

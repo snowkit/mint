@@ -52,7 +52,6 @@ class TextEdit extends mint.render.Render {
             h:control.h,
             color: color,
             depth: render.options.depth + control.depth,
-            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });
@@ -64,7 +63,6 @@ class TextEdit extends mint.render.Render {
             p1: new Vector(0,0),
             color: color_cursor,
             depth: render.options.depth + control.depth+0.001,
-            group: render.options.group,
             visible: false,
             clip_rect: Convert.bounds(control.clip_with)
         });
@@ -96,7 +94,6 @@ class TextEdit extends mint.render.Render {
                     immediate: true,
                     color: color_cursor,
                     depth: render.options.depth+textedit.depth+0.001,
-                    group: render.options.group
                 });
             }
         });

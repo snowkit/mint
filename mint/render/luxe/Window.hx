@@ -58,7 +58,6 @@ class Window extends mint.render.Render {
             h:window.h,
             color: color,
             depth: render.options.depth + window.depth,
-            group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
         });
@@ -72,7 +71,6 @@ class Window extends mint.render.Render {
             h:window.title.h,
             color: color_titlebar,
             depth: render.options.depth + window.depth+0.001,
-            group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
         });
@@ -86,7 +84,6 @@ class Window extends mint.render.Render {
             h: window.h,
             color: color_border,
             depth: render.options.depth + window.depth+0.002,
-            group: render.options.group,
             visible: window.visible,
             clip_rect: Convert.bounds(window.clip_with)
         });
@@ -100,7 +97,6 @@ class Window extends mint.render.Render {
             sides: 3,
             color: color_collapse,
             depth: render.options.depth + window.depth+0.003,
-            group: render.options.group,
             visible: window.collapsible,
             clip_rect: Convert.bounds(window.clip_with)
         });

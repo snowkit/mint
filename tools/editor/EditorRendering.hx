@@ -32,7 +32,6 @@ class ControlRenderer extends mint.render.Render {
             text: '${control.name} ${control.x},${control.y},${control.w},${control.h}',
             point_size: 14,
             depth: render.options.depth + control.depth,
-            group: render.options.group,
             visible: control.visible,
         });
 
@@ -80,7 +79,6 @@ class EditorRendering extends mint.render.Rendering {
         options = def(_options, {});
         def(options.batcher, Luxe.renderer.batcher);
         def(options.depth, 0);
-        def(options.group, 0);
         def(options.immediate, false);
         def(options.visible, true);
 

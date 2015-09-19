@@ -49,7 +49,6 @@ class Scroll extends mint.render.Render {
             size: new Vector(control.w, control.h),
             color: color,
             depth: render.options.depth + control.depth,
-            group: render.options.group,
             visible: control.visible,
         });
 
@@ -61,7 +60,6 @@ class Scroll extends mint.render.Render {
             size: new Vector(scroll.scrollh.w, scroll.scrollh.h),
             color: color_handles,
             depth: render.options.depth + scroll.scrollh.depth,
-            group: render.options.group,
             visible: scroll.visible_h,
         });
 
@@ -73,7 +71,6 @@ class Scroll extends mint.render.Render {
             size: new Vector(scroll.scrollv.w, scroll.scrollv.h),
             color: color_handles,
             depth: render.options.depth + scroll.scrollv.depth,
-            group: render.options.group,
             visible: scroll.visible_v
         });
 

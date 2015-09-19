@@ -49,7 +49,6 @@ class Dropdown extends mint.render.Render {
             h:control.h,
             color: color,
             depth: render.options.depth + control.depth,
-            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });
@@ -63,7 +62,6 @@ class Dropdown extends mint.render.Render {
             h: control.h,
             color: color_border,
             depth: render.options.depth + control.depth+0.001,
-            group: render.options.group,
             visible: control.visible,
             clip_rect: Convert.bounds(control.clip_with)
         });
