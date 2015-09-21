@@ -149,7 +149,7 @@ class Window extends Control {
     function on_resize_up(e:MouseEvent, _) {
 
         if(!resizable) return;
-        if(!collapsed) return;
+        if(collapsed) return;
 
         resizing = false;
         canvas.dragged = null;
@@ -159,7 +159,7 @@ class Window extends Control {
     function on_resize_down(e:MouseEvent, _) {
 
         if(!resizable) return;
-        if(!collapsed) return;
+        if(collapsed) return;
         if(resizing) return;
 
         resizing = true;
