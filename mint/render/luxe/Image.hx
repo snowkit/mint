@@ -13,6 +13,7 @@ import luxe.Vector;
 
 private typedef LuxeMintImageOptions = {
     @:optional var uv: luxe.Rectangle;
+    @:optional var color: luxe.Color;
     @:optional var sizing: String; //:todo: type
 }
 
@@ -20,6 +21,7 @@ class Image extends mint.render.Render {
 
     public var image : mint.Image;
     public var visual : Sprite;
+    public var color : Color;
 
     var ratio_w : Float = 1.0;
     var ratio_h : Float = 1.0;
@@ -76,7 +78,8 @@ class Image extends mint.render.Render {
                 size: new Vector(control.w*ratio_w, control.h*ratio_h),
                 depth: render.options.depth + control.depth,
                 visible: control.visible,
-                uv: _opt.uv
+                uv: _opt.uv,
+                color: _opt.color
             });
 
             visual.clip_rect = Convert.bounds(control.clip_with);
