@@ -4,8 +4,8 @@ import luxe.Input;
 import luxe.Text;
 import luxe.Log.def;
 
-import mint.types.Types;
 import mint.Control;
+import mint.types.Types;
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
 import mint.types.Types.Helper.in_rect;

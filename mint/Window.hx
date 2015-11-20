@@ -325,6 +325,7 @@ class Window extends Control {
         super.bounds_changed(_dx, _dy, _dw, _dh);
 
         if(close_button != null) close_button.x_local = w - 24;
+        if(collapse_handle != null) collapse_handle.x_local = closable ? w - 48 : w - 24;
         if(title != null) title.w = w - 4;
         if(resize_handle != null) resize_handle.set_pos(x + w - 24, y + h - 24);
 

@@ -121,7 +121,6 @@ class Scroll extends Control {
 
     } //update_container
 
-
 //Internal
 
 //vertical
@@ -194,7 +193,7 @@ class Scroll extends Control {
 
             //:todo: this should generally
             //only be calculated when the children
-            //bounds are changing
+            //bounds are changing, where that calls this
         // update_container();
 
         var _dy = (h - container.h);
