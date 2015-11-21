@@ -16,6 +16,7 @@ private typedef LuxeMintTextEditOptions = {
     var color: Color;
     var color_hover: Color;
     var color_cursor: Color;
+    @:optional var cursor_blink_rate: Float;
 }
 
 class TextEdit extends mint.render.Render {
@@ -27,6 +28,7 @@ class TextEdit extends mint.render.Render {
     public var color: Color;
     public var color_hover: Color;
     public var color_cursor: Color;
+    public var cursor_blink_rate: Float = 0.5;
 
     var render: LuxeMintRender;
 
@@ -42,6 +44,7 @@ class TextEdit extends mint.render.Render {
         color = def(_opt.color, new Color().rgb(0x646469));
         color_hover = def(_opt.color_hover, new Color().rgb(0x444449));
         color_cursor = def(_opt.color_cursor, new Color().rgb(0x9dca63));
+        cursor_blink_rate = def(_opt.cursor_blink_rate, 0.5);
 
         visual = Luxe.draw.box({
             id: control.name+'.visual',
@@ -106,7 +109,7 @@ class TextEdit extends mint.render.Render {
     function start_cursor() {
         cursor.visible = true;
         update_cursor();
-        timer = Luxe.timer.schedule(0.5, blink_cursor, true);
+        timer = Luxe.timer.schedule(cursor_blink_rate, blink_cursor, true);
     }
 
     function stop_cursor() {
@@ -118,6 +121,13 @@ class TextEdit extends mint.render.Render {
     function blink_cursor() {
         if(timer == null) return;
         cursor.visible = !cursor.visible;
+    }
+
+    inline function reset_cursor() {
+        if(timer != null) {
+            cursor.visible = true;
+            timer.fire_at = Luxe.time + cursor_blink_rate;
+        }
     }
 
     function update_cursor() {
@@ -148,6 +158,7 @@ class TextEdit extends mint.render.Render {
 
         cursor.p0 = new Vector(_xx, _yy);
         cursor.p1 = new Vector(_xx, _yy + textedit.label.h - 4);
+        reset_cursor();
 
     } //
 
@@ -162,9 +173,7 @@ class TextEdit extends mint.render.Render {
     override function onbounds() {
         visual.transform.pos.set_xy(control.x, control.y);
         visual.resize_xy( control.w, control.h );
-        if(timer != null) {
-            stop_cursor(); start_cursor();
-        }
+        reset_cursor();
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
