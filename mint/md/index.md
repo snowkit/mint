@@ -31,7 +31,7 @@
 ### About
 
 **Purpose**   
-mint is a game and tool focused library.
+mint is a game and tool focused library.   
 mint is intentionally minimal and to the point.   
 
 It is designed around the notion that not every game    
@@ -53,10 +53,13 @@ nuanced when it comes to user interfaces and interaction.
 This means the core library remains pure, and ideally use case specific   
 controls are shared via simple, isolated controls with similar intentions.
 
-More [thoughts](http://snowkit.org/2015/01/25/mint-details-part-1/) here in the mean time.
+#### [Release notes](http://snowkit.org/2015/08/21/mint-alpha-release/)
 
 
 ---
+
+### Try the demo
+http://snowkit.github.io/mint/demo/
 
 <small style="display:block;margin:auto;">
 <a href="{{{rel_path}}}images/controls.png">
