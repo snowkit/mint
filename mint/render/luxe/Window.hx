@@ -97,7 +97,7 @@ class Window extends mint.render.Render {
             sides: 3,
             color: color_collapse,
             depth: render.options.depth + window.depth+0.003,
-            visible: window.collapsible,
+            visible: window.collapsible && window.visible,
             clip_rect: Convert.bounds(window.clip_with)
         });
 
