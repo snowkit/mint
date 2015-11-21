@@ -80,6 +80,7 @@ class TextEdit extends Control {
             options: options.options.label,
             name : name + '.label',
             mouse_input: false,
+            depth: options.depth + 0.001,
             internal_visible: options.visible
         });
 
