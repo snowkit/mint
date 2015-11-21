@@ -41,7 +41,8 @@ meta: @:directlyUsed, @:allow(mint.render.Renderer)</span>
             <span class="small_desc_flat"></span><br/><span class="member apipage">
                 <a name="onchange"><a class="lift" href="#onchange">onchange</a></a><div class="clear"></div>
                 <code class="signature apipage">onchange : [mint.core.Signal](../../api/mint/core/Signal.html)&lt;[](#)&gt;</code><br/></span>
-            <span class="small_desc_flat"></span><br/><span class="member apipage">
+            <span class="small_desc_flat">Emitted whenever the text or display text is changed. 
+            `text:String, display_text:String, from_typing:Bool`</span><br/><span class="member apipage">
                 <a name="onchangeindex"><a class="lift" href="#onchangeindex">onchangeindex</a></a><div class="clear"></div>
                 <code class="signature apipage">onchangeindex : [mint.core.Signal](../../api/mint/core/Signal.html)&lt;[](#)&gt;</code><br/></span>
             <span class="small_desc_flat">Emitted whenever the index is changed.</span><br/>
@@ -84,6 +85,12 @@ meta: @:directlyUsed, @:allow(mint.render.Renderer)</span>
 <span class="method apipage">
             <a name="textinput"><a class="lift" href="#textinput">textinput</a></a><div class="clear"></div>
             <code class="signature apipage">textinput(event:[mint.types.TextEvent](../../api/mint/types/TextEvent.html)<span></span>) : [Void](http://api.haxe.org/Void.html)</code><br/><span class="small_desc_flat"></span>
+
+
+</span>
+<span class="method apipage">
+            <a name="unfocus"><a class="lift" href="#unfocus">unfocus</a></a><div class="clear"></div>
+            <code class="signature apipage">unfocus() : [Void](http://api.haxe.org/Void.html)</code><br/><span class="small_desc_flat"></span>
 
 
 </span>

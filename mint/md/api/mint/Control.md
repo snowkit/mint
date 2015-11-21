@@ -334,7 +334,7 @@ meta: @:directlyUsed, @:allow(mint.render.Renderer)</span>
 
 </span>
 <span class="method apipage">
-            <a name="unfocus"><a class="lift" href="#unfocus">unfocus</a></a><span class="inline-block static">inline</span><div class="clear"></div>
+            <a name="unfocus"><a class="lift" href="#unfocus">unfocus</a></a><div class="clear"></div>
             <code class="signature apipage">unfocus() : [Void](http://api.haxe.org/Void.html)</code><br/><span class="small_desc_flat"></span>
 
 

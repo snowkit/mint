@@ -44,6 +44,9 @@ meta: @:directlyUsed</span>
                 <a name="cursor"><a class="lift" href="#cursor">cursor</a></a><div class="clear"></div>
                 <code class="signature apipage">cursor : [phoenix.geometry.LineGeometry](#)</code><br/></span>
             <span class="small_desc_flat"></span><br/><span class="member apipage">
+                <a name="cursor_blink_rate"><a class="lift" href="#cursor_blink_rate">cursor\_blink\_rate</a></a><div class="clear"></div>
+                <code class="signature apipage">cursor\_blink\_rate : [Float](http://api.haxe.org/Float.html)</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
                 <a name="textedit"><a class="lift" href="#textedit">textedit</a></a><div class="clear"></div>
                 <code class="signature apipage">textedit : [mint.TextEdit](../../../../api/mint/TextEdit.html)</code><br/></span>
             <span class="small_desc_flat"></span><br/><span class="member apipage">

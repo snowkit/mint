@@ -30,6 +30,9 @@
 
 
 <h3>Members</h3> <hr/><span class="member apipage">
+                <a name="cursor_blink_rate"><a class="lift" href="#cursor_blink_rate">cursor\_blink\_rate</a></a><div class="clear"></div>
+                <code class="signature apipage">cursor\_blink\_rate : [Null](http://api.haxe.org/Null.html)&lt;[Float](http://api.haxe.org/Float.html)&gt;</code><br/></span>
+            <span class="small_desc_flat"></span><br/><span class="member apipage">
                 <a name="color_hover"><a class="lift" href="#color_hover">color\_hover</a></a><div class="clear"></div>
                 <code class="signature apipage">color\_hover : [luxe.Color](#)</code><br/></span>
             <span class="small_desc_flat"></span><br/><span class="member apipage">
