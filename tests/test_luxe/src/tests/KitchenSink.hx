@@ -177,7 +177,7 @@ class KitchenSink extends State {
             x: 10, y:32, w: 256-10-10, h: 22
         });
 
-        text1.onchange.listen(function(s){ trace(s); });
+        text1.onchange.listen(function(s,d,t){ trace('text:$s, display_text:$d, from_typing:$t'); });
 
         var numbers = new EReg('^[0-9]+[.]?[0-9]{0,2}$','gi');
         var _text2 = new mint.TextEdit({

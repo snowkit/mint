@@ -46,9 +46,14 @@ class TextEdit extends Control {
 
         /** Emitted whenever the index is changed. */
     public var onchangeindex: Signal<Int->Void>;
-    public var onchange: Signal<String->Void>;
+        /** Emitted whenever the text or display text is changed. 
+            `text:String, display_text:String, from_typing:Bool`  */
+    public var onchange: Signal<String->String->Bool->Void>;
 
     var edit : String = '';
+    var composition : String = '';
+    var composition_start : Int = 0;
+    var composition_length : Int = 0;
     var display : String = '';
     var options: TextEditOptions;
 
@@ -93,7 +98,7 @@ class TextEdit extends Control {
             display_char = options.display_char;
         }
         
-        refresh(edit);
+        refresh(edit, false);
 
         oncreate.emit();
 
@@ -111,25 +116,54 @@ class TextEdit extends Control {
 
     } //onmousedown
 
+    override function unfocus() {
+        
+        super.unfocus();
+
+        composition = '';
+        composition_start = composition_length = 0;
+
+    } //unfocus
+
     override function textinput( event:TextEvent ) {
 
-        var b = before(index);
-        var a = after(index);
-        var new_text = b + event.text + a;
+        super.textinput(event);
 
-        if(filter != null && !filter(event.text, new_text, edit)) {
-            return;
+        var _bef = before(index);
+        var _aft = after(index);
+        var _new = _bef + event.text + _aft;
+
+        switch(event.type) {
+
+            case edit:
+
+                composition = event.text;
+                composition_start = event.start;
+                composition_length = event.length;
+
+                refresh(edit, true, false);
+
+            case input:
+
+                composition = '';
+                composition_start = composition_length = 0;
+
+                if(filter != null && !filter(event.text, _new, edit)) {
+                    return;
+                }
+
+                index += event.text.uLength();
+                refresh(_new);
+
+            case _:
+
         }
-
-        index += event.text.uLength();
-        refresh( new_text );
-
-        // event.bubble = false;
-        // super.textinput(event);
 
     } //ontextinput
 
     override function keydown( event:KeyEvent ) {
+
+        super.keydown(event);
 
         switch(event.key) {
             case KeyCode.backspace:
@@ -148,28 +182,25 @@ class TextEdit extends Control {
             case KeyCode.up:
         }
 
-        // event.bubble = false;
-        // super.keydown(event);
-
     } //onkeydown
 
-    inline function refresh( str:String, _no_change:Bool=false ) {
+    inline function refresh(str:String, _from_typing:Bool=true, _emit:Bool=true) {
 
         edit = str;
 
         if(display_char != null) {
-            var _l = str.uLength();
             display = '';
+            var _l = str.uLength();
             for(i in 0 ... _l) display += display_char;
         } else {
-            display = edit;
+            display = before(index) + composition + after(index);
         }
 
         label.text = display;
         update_cur();
 
-        if(!_no_change) {
-            onchange.emit(edit);
+        if(_emit) {
+            onchange.emit(edit, display, _from_typing);
         }
 
         return edit;
@@ -190,7 +221,7 @@ class TextEdit extends Control {
 
     inline function set_text(v:String) {
         index = v.uLength();
-        return refresh(v);
+        return refresh(v, false);
     }
 
     inline function set_display_char(v:String) {
@@ -201,7 +232,7 @@ class TextEdit extends Control {
             display_char = v;
         }
 
-        refresh(edit, true);
+        refresh(edit, false);
         update_cur();
 
         return display_char;

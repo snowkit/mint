@@ -78,8 +78,22 @@ class TextEdit extends mint.render.Render {
             visual.color = color;
         });
 
+        textedit.ontextinput.listen(function(_,_) {
+            if(textedit.isfocused || textedit.iscaptured) {
+                Luxe.snow.input.module.text_input_rect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+            }
+        });
+
         textedit.onfocused.listen(function(state:Bool) {
-            if(state) start_cursor(); else stop_cursor();
+            if(state) {
+                start_cursor();
+                Luxe.snow.input.module.text_input_start();
+                Luxe.snow.input.module.text_input_rect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+            } else {
+                stop_cursor();
+                Luxe.snow.input.module.text_input_stop();
+                Luxe.snow.input.module.text_input_rect(0,0,0,0);
+            }
         });
 
         textedit.onchangeindex.listen(function(index:Int) {

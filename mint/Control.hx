@@ -649,7 +649,7 @@ class Control {
 
     } //focus
 
-    public inline function unfocus() {
+    public function unfocus() {
         
         if(canvas == this) return;
         if(canvas.focused == this) {
