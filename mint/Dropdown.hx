@@ -100,8 +100,7 @@ class Dropdown extends Control {
 
     public function close_list() {
 
-        canvas.modal = null;
-
+        list.uncapture();
         list.set_visible(false);
 
         //since removed by bring to front, readd
@@ -115,8 +114,6 @@ class Dropdown extends Control {
 
     public function open_list() {
 
-        canvas.modal = list;
-
         list.set_visible(true);
 
         //bring above everything
@@ -124,6 +121,8 @@ class Dropdown extends Control {
         //move to absolute space
         list.x = x;
         list.y = y+h+1;
+
+        list.capture();
 
         is_open = true;
 

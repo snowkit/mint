@@ -9,6 +9,7 @@ import mint.types.Types;
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
 import mint.layout.margins.Margins;
+import mint.focus.Focus;
 
 class Main extends luxe.Game {
 
@@ -20,6 +21,7 @@ class Main extends luxe.Game {
     public static var canvas: mint.Canvas;
     public static var rendering: LuxeMintRender;
     public static var layout: Margins;
+    public static var focus: Focus;
 
     var canvas_debug : Text;
     var debug : Bool = false;
@@ -37,6 +39,8 @@ class Main extends luxe.Game {
             options: { color:new Color(1,1,1,0.0) },
             x: 0, y:0, w: 960, h: 640
         });
+
+        focus = new Focus(canvas);
 
         disp = new Text({
             name:'display.text',
@@ -110,21 +114,27 @@ class Main extends luxe.Game {
 
         canvas.mousemove( Convert.mouse_event(e) );
 
+        debugtext();
+
+    } //onmousemove
+
+    public function debugtext() {
+
         var s = 'debug:  (${Luxe.snow.os} / ${Luxe.snow.platform})\n';
 
         s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none');
         s += '\n';
-        s += 'focused: ' + (canvas.focused != null ? '${canvas.focused.name} [${canvas.focused.nodes}]' : 'none');
-        s += (canvas.focused != null ? ' / depth: '+canvas.focused.depth : '');
+        s += 'captured: ' + (canvas.captured != null ? '${canvas.captured.name} [${canvas.captured.nodes}]' : 'none');
+        s += (canvas.captured != null ? ' / depth: '+canvas.captured.depth : '');
         s += '\n';
-        s += 'modal: ' + (canvas.modal != null ?  canvas.modal.name : 'none');
+        s += 'marked: ' + (canvas.marked != null ?  canvas.marked.name : 'none');
         s += '\n';
-        s += 'dragged: ' + (canvas.dragged != null ? canvas.dragged.name : 'none');
+        s += 'focused: ' + (canvas.focused != null ? canvas.focused.name : 'none');
         s += '\n\n';
 
         canvas_debug.text = s;
 
-    } //onmousemove
+    }
 
     override function onmousewheel(e) {
         canvas.mousewheel( Convert.mouse_event(e) );
@@ -169,6 +179,8 @@ class Main extends luxe.Game {
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
         }
+
+        debugtext();
 
     } //onkeyup
 

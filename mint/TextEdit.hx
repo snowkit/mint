@@ -102,6 +102,12 @@ class TextEdit extends Control {
 
         super.mousedown(event);
 
+        if(contains(event.x, event.y)) {
+            focus();
+        } else {
+            unfocus();
+        }
+
     } //onmousedown
 
     override function textinput( event:TextEvent ) {

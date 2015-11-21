@@ -152,7 +152,7 @@ class Window extends Control {
         if(collapsed) return;
 
         resizing = false;
-        canvas.dragged = null;
+        resize_handle.unfocus();
 
     } //on_resize_up
 
@@ -165,7 +165,8 @@ class Window extends Control {
         resizing = true;
         resize_x = e.x;
         resize_y = e.y;
-        canvas.dragged = resize_handle;
+        resize_handle.focus();
+        e.bubble = false;
 
     } //on_resize_down
 
@@ -207,6 +208,7 @@ class Window extends Control {
         }
 
         oncollapse.emit(collapsed);
+        e.bubble = false;
 
     } //on_collapse
 
@@ -255,12 +257,12 @@ class Window extends Control {
 
             var resized = false;
 
-            if(ww >= w_min || ww <= w_max) {
+            if((ww >= w_min || ww <= w_max) && e.x >= x) {
                 resize_x = e.x;
                 resized = true;
             }
 
-            if(hh >= h_min || hh <= h_max) {
+            if((hh >= h_min || hh <= h_max) && e.y >= y) {
                 resize_y = e.y;
                 resized = true;
             }
@@ -289,6 +291,7 @@ class Window extends Control {
     public override function mousedown(e:MouseEvent)  {
 
         if(close_button.contains(e.x, e.y) && closable) return;
+        if(collapse_handle.contains(e.x, e.y) && collapsible) return;
 
         var in_title = title.contains(e.x, e.y);
 
@@ -303,7 +306,7 @@ class Window extends Control {
                     dragging = true;
                     drag_x = e.x;
                     drag_y = e.y;
-                    canvas.dragged = this;
+                    focus();
                 } //if inside title bounds
             } //!dragging
 
@@ -315,7 +318,7 @@ class Window extends Control {
 
         if(dragging) {
             dragging = false;
-            canvas.dragged = null;
+            unfocus();
         } //dragging
 
     } //mouseup

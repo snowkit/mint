@@ -100,48 +100,76 @@ class Control {
         /** The y position of the control bounds, relative to its container */
     @:isVar public var y_local (get, set) : Float;
 
-        //The control this one is clipped by
+        /** The control this one is clipped by */
     @:isVar public var clip_with (default, set): Control;
-        //the list of children added to this control
+        /** the list of children added to this control */
     public var children : Array<Control>;
-        //the number of controls below and including this one
+        /** the number of controls below and including this one */
     public var nodes (get,never) : Int;
 
-        //if the control has focus
+        /** if the control has focus */
     public var isfocused : Bool = false;
-        //if the control is under the mouse
+        /** if the control is marked for potential focus */
+    public var ismarked : Bool = false;
+        /** if the control has modal focus */
+    public var iscaptured : Bool = false;
+        /** if the control is under the mouse */
     public var ishovered : Bool = false;
-        //if the control accepts mouse events
+        /** if the control accepts mouse events */
     public var mouse_input : Bool = false;
-        //if the control accepts key events
+        /** if the control accepts key events */
     public var key_input : Bool = false;
-        //if the control emits a render signal
+        /** if the control emits a render signal */
     public var renderable : Bool = false;
 
-        //if the control is visible
+        /** If the control is visible */
     @:isVar public var visible (default, set) : Bool = true;
-        //a getter for the bounds information about the children and their children in this control
+        /** A getter for the bounds information about the children and their children in this control */
     @:isVar public var children_bounds (get,null) : ChildBounds;
 
 
+        /** An event for when the control is created. Used by the rendering service */ 
     public var oncreate      : Signal<Void->Void>;
+        /** An event for when (if) a control is marked as renderable and is rendered. */ 
     public var onrender      : Signal<Void->Void>;
+        /** An event for when the bounds of the control change. */ 
     public var onbounds      : Signal<Void->Void>;
+        /** An event for when the control is being destroyed. */ 
     public var ondestroy     : Signal<Void->Void>;
+        /** An event for when the visibility of the control changes. */ 
     public var onvisible     : Signal<Bool->Void>;
+        /** An event for when the control moves in depth in the canvas. */ 
     public var ondepth       : Signal<Float->Void>;
+        /** An event for when the clipping rectangle changes for the control. */ 
     public var onclip        : Signal<Bool->Float->Float->Float->Float->Void>;
+        /** An event for when a child is added to the control. */ 
     public var onchildadd    : Signal<Control->Void>;
+        /** An event for when a child is removed from the control. */ 
     public var onchildremove : Signal<Control->Void>;
+        /** An event for when the mouse is clicked on this control (if `mouse_input`). */ 
     public var onmousedown   : Signal<MouseSignal>;
+        /** An event for when the mouse is released on this control (if `mouse_input`). */ 
     public var onmouseup     : Signal<MouseSignal>;
+        /** An event for when the mouse is moved inside this control (if `mouse_input`). */ 
     public var onmousemove   : Signal<MouseSignal>;
+        /** An event for when the mousewheel is moved while the mouse is inside this control (if `mouse_input`). */ 
     public var onmousewheel  : Signal<MouseSignal>;
+        /** An event for when the mouse enters the control (if `mouse_input`). */ 
     public var onmouseenter  : Signal<MouseSignal>;
+        /** An event for when the mouse leaves the control (if `mouse_input`). */ 
     public var onmouseleave  : Signal<MouseSignal>;
+        /** An event for when a key is pressed and the control is focused (if `key_input`). */ 
     public var onkeydown     : Signal<KeySignal>;
+        /** An event for when a key is released and the control is focused (if `key_input`). */ 
     public var onkeyup       : Signal<KeySignal>;
+        /** An event for when a text/typing event happened and the control is focused (if `key_input`). */ 
     public var ontextinput   : Signal<TextSignal>;
+        /** An event for when this control gains or loses focus */ 
+    public var onfocused     : Signal<Bool->Void>;
+        /** An event for when this control is marked or unmarked for focus */ 
+    public var onmarked      : Signal<Bool->Void>;
+        /** An event for when this control is made or unmade the modal focus */ 
+    public var oncaptured    : Signal<Bool->Void>;
 
 
         //the parent control, null if no parent
@@ -182,6 +210,9 @@ class Control {
         onkeydown     = new Signal();
         onkeyup       = new Signal();
         ontextinput   = new Signal();
+        onfocused     = new Signal();
+        onmarked      = new Signal();
+        oncaptured    = new Signal();
 
         children = [];
 
@@ -566,12 +597,14 @@ class Control {
     public function mouseenter( e:MouseEvent ) {
 
         onmouseenter.emit(e, this);
+        ishovered = true;
 
     } //mouseenter
 
     public function mouseleave( e:MouseEvent ) {
 
         onmouseleave.emit(e, this);
+        ishovered = false;
 
     } //mouseleave
 
@@ -586,11 +619,9 @@ class Control {
 
     public function destroy() {
 
-        if(canvas.focused == this) canvas.focused = null;
-        if(canvas.modal == this) canvas.modal = null;
-        if(canvas.dragged == this) canvas.dragged = null;
-
-        canvas.focus_invalid = true;
+        unmark();
+        unfocus();
+        uncapture();
 
         if(parent != null) {
             parent.remove(this);
@@ -605,6 +636,72 @@ class Control {
     public function update(dt:Float) {
 
     } //update
+
+    public inline function focus() {
+        
+        if(canvas == this) return;
+
+        var _pre = canvas.focused == this;
+        
+        canvas.focused = this;
+        
+        if(!_pre) onfocused.emit(true);
+
+    } //focus
+
+    public inline function unfocus() {
+        
+        if(canvas == this) return;
+        if(canvas.focused == this) {
+            canvas.focused = null;
+            onfocused.emit(false);
+        }
+
+    } //unfocus
+
+    public inline function capture() {
+        
+        if(canvas == this) return;
+
+        var _pre = canvas.captured == this;
+        
+        canvas.captured = this;
+        
+        if(!_pre) oncaptured.emit(true);
+
+    } //capture
+
+    public inline function uncapture() {
+        
+        if(canvas == this) return;
+        if(canvas.captured == this) {
+            canvas.captured = null;
+            oncaptured.emit(false);
+        }
+
+    } //uncapture
+
+    public inline function mark() {
+        
+        if(canvas == this) return;
+
+        var _pre = canvas.marked == this;
+
+        canvas.marked = this;
+
+        if(!_pre) onmarked.emit(true);
+    
+    } //mark
+
+    public inline function unmark() {
+        
+        if(canvas == this) return;
+        if(canvas.marked == this) {
+            canvas.marked = null;
+            onmarked.emit(false);
+        }
+
+    } //unmark
 
     var updating = false;
     function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0) {

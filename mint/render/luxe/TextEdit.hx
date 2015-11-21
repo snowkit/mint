@@ -69,12 +69,14 @@ class TextEdit extends mint.render.Render {
 
         textedit.onmouseenter.listen(function(e,c) {
             visual.color = color_hover;
-            start_cursor();
         });
 
         textedit.onmouseleave.listen(function(e,c) {
             visual.color = color;
-            stop_cursor();
+        });
+
+        textedit.onfocused.listen(function(state:Bool) {
+            if(state) start_cursor(); else stop_cursor();
         });
 
         textedit.onchangeindex.listen(function(index:Int) {
