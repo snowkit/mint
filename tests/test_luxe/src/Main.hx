@@ -11,6 +11,9 @@ import mint.render.luxe.Convert;
 import mint.layout.margins.Margins;
 import mint.focus.Focus;
 
+    //auto canvas helper
+import AutoCanvas;
+
 class Main extends luxe.Game {
 
     var state : luxe.States;
@@ -33,13 +36,27 @@ class Main extends luxe.Game {
         rendering = new LuxeMintRender();
         layout = new Margins();
 
-        canvas = new mint.Canvas({
+        //instead of mint.Canvas,
+        //we're using AutoCanvas to automatically bind the luxe events directly
+        //without it, it would be like this:
+            // var canvas = new mint.Canvas({
+            //     name:'canvas',
+            //     rendering: rendering,
+            //     options: { color:new Color(1,1,1,0.0) },
+            //     x: 0, y:0, w: 960, h: 640
+            // });
+
+        var auto_canvas = new AutoCanvas({
             name:'canvas',
             rendering: rendering,
             options: { color:new Color(1,1,1,0.0) },
             x: 0, y:0, w: 960, h: 640
         });
 
+        auto_canvas.auto_listen();
+        canvas = auto_canvas;
+        
+            //this is required to handle input focus in the default way
         focus = new Focus(canvas);
 
         disp = new Text({
@@ -94,8 +111,6 @@ class Main extends luxe.Game {
 
     override function onrender() {
 
-        canvas.render();
-
         if(debug) {
             for(c in canvas.children) {
                 drawc(c);
@@ -104,15 +119,7 @@ class Main extends luxe.Game {
 
     } //onrender
 
-    override function update(dt:Float) {
-
-        canvas.update(dt);
-
-    } //update
-
     override function onmousemove(e) {
-
-        canvas.mousemove( Convert.mouse_event(e) );
 
         debugtext();
 
@@ -136,27 +143,6 @@ class Main extends luxe.Game {
 
     }
 
-    override function onmousewheel(e) {
-        canvas.mousewheel( Convert.mouse_event(e) );
-    }
-
-    override function onmouseup(e) {
-        canvas.mouseup( Convert.mouse_event(e) );
-    }
-
-    override function onmousedown(e) {
-        canvas.mousedown( Convert.mouse_event(e) );
-    }
-
-    override function onkeydown(e:luxe.Input.KeyEvent) {
-        canvas.keydown( Convert.key_event(e) );
-    }
-
-    override function ontextinput(e:luxe.Input.TextEvent) {
-        canvas.textinput( Convert.text_event(e) );
-    }
-
-
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
         if(e.keycode == Key.key_d && e.mod.ctrl) { debug = !debug; trace('debug: $debug'); }
@@ -173,8 +159,6 @@ class Main extends luxe.Game {
             if(current >= count) current = 0;
             change('state$current');
         }
-
-        canvas.keyup( Convert.key_event(e) );
 
         if(e.keycode == Key.escape) {
             Luxe.shutdown();
