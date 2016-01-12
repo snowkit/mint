@@ -1,0 +1,25 @@
+{
+  project : {
+    name : 'mint.empty',
+    version : '1.0.0',
+    author : 'snowkit',
+
+    app : {
+      name : 'mint_luxe_empty',
+      package : 'org.snowkit.mint'
+    },
+
+    build : {
+      dependencies : {
+        luxe : '*',
+        mint : '*'
+      }
+    },
+
+    files : {
+      assets : 'assets/'
+    }
+
+  }
+
+}
