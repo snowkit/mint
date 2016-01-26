@@ -121,6 +121,8 @@ class Control {
     public var key_input : Bool = false;
         /** if the control emits a render signal */
     public var renderable : Bool = false;
+        /** if the control has been destroyed and is no longer usable */
+    public var destroyed (default,null) : Bool = false;
 
         /** If the control is visible */
     @:isVar public var visible (default, set) : Bool = true;
@@ -619,15 +621,18 @@ class Control {
 
     public function destroy() {
 
+        assert(destroyed == false, 'attempt to destroy control twice `$this` ($name)');
+        destroyed = true;
+
         unmark();
         unfocus();
         uncapture();
 
+        destroy_children();
+
         if(parent != null) {
             parent.remove(this);
         }
-
-        destroy_children();
 
         ondestroy.emit();
 
