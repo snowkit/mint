@@ -80,7 +80,7 @@ class TextEdit extends mint.render.Render {
 
         textedit.ontextinput.listen(function(_,_) {
             if(textedit.isfocused || textedit.iscaptured) {
-                #if linc_sdl
+                #if (linc_sdl && cpp)
                     sdl.SDL.setTextInputRect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
                 #end
             }
@@ -89,13 +89,13 @@ class TextEdit extends mint.render.Render {
         textedit.onfocused.listen(function(state:Bool) {
             if(state) {
                 start_cursor();
-                #if linc_sdl
+                #if (linc_sdl && cpp)
                 sdl.SDL.startTextInput();
                     sdl.SDL.setTextInputRect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
                 #end
             } else {
                 stop_cursor();
-                #if linc_sdl
+                #if (linc_sdl && cpp)
                     sdl.SDL.stopTextInput();
                     sdl.SDL.setTextInputRect(0,0,0,0);
                 #end
