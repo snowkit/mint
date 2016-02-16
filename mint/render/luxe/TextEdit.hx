@@ -80,19 +80,25 @@ class TextEdit extends mint.render.Render {
 
         textedit.ontextinput.listen(function(_,_) {
             if(textedit.isfocused || textedit.iscaptured) {
-                Luxe.snow.input.module.text_input_rect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+                #if linc_sdl
+                    sdl.SDL.setTextInputRect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+                #end
             }
         });
 
         textedit.onfocused.listen(function(state:Bool) {
             if(state) {
                 start_cursor();
-                Luxe.snow.input.module.text_input_start();
-                Luxe.snow.input.module.text_input_rect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+                #if linc_sdl
+                sdl.SDL.startTextInput();
+                    sdl.SDL.setTextInputRect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+                #end
             } else {
                 stop_cursor();
-                Luxe.snow.input.module.text_input_stop();
-                Luxe.snow.input.module.text_input_rect(0,0,0,0);
+                #if linc_sdl
+                    sdl.SDL.stopTextInput();
+                    sdl.SDL.setTextInputRect(0,0,0,0);
+                #end
             }
         });
 
