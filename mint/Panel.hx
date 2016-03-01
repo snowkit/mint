@@ -29,6 +29,7 @@ class Panel extends Control {
         options = _options;
 
         def(options.name, 'panel');
+        def(options.mouse_input, true);
 
         super(options);
 
