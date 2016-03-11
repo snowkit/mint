@@ -27,8 +27,9 @@ class Signal<T> {
 
     public function remove( _handler:T ):Void {
 
-        if (listeners.remove(_handler) == false) {
-            throw "mint / signal / remove failed / WTF?!?";
+        var _index = listeners.indexOf(_handler);
+        if(_index != -1) {
+            listeners[_index] = null;
         }
 
     } //remove
@@ -41,10 +42,22 @@ class Signal<T> {
 
     macro public function emit( ethis : Expr, args:Array<Expr> ) {
         return macro {
-            for (l in $ethis.listeners) {
-                l($a{args});
+            var _idx = 0;
+            var _count = $ethis.listeners.length;
+            while(_idx < _count) {
+                var fn = $ethis.listeners[_idx];
+                if(fn != null) {
+                    fn($a{args});
+                }
+                _idx++;
+            }
+
+            while(_count > 0) {
+                var fn = $ethis.listeners[_count-1];
+                if(fn == null) $ethis.listeners.splice(_count-1, 1);
+                _count--;
             }
         }
-    } //dispatch
+    } //emit
 
 } //Signal
