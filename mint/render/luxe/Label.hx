@@ -41,6 +41,7 @@ class Label extends mint.render.Render {
             name: control.name+'.text',
             batcher: render.options.batcher,
             bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
+            no_scene: true,
             color: color,
             text: label.text,
             bounds_wrap: label.options.bounds_wrap,

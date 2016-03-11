@@ -44,7 +44,8 @@ class Button extends mint.render.Render {
         visual = new luxe.Sprite({
             name: control.name+'.visual',
             batcher: render.options.batcher,
-            centered: false,
+            no_scene: true,
+            centered: false,            
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
             color: color,

@@ -49,6 +49,7 @@ class Checkbox extends mint.render.Render {
         visual = new luxe.Sprite({
             name: control.name+'.visual',
             batcher: render.options.batcher,
+            no_scene: true,
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
@@ -60,6 +61,7 @@ class Checkbox extends mint.render.Render {
         node_off = new luxe.Sprite({
             name: control.name+'.node_off',
             batcher: render.options.batcher,
+            no_scene: true,
             centered: false,
             pos: new Vector(control.x+4, control.y+4),
             size: new Vector(control.w-8, control.h-8),
@@ -71,6 +73,7 @@ class Checkbox extends mint.render.Render {
         node = new luxe.Sprite({
             name: control.name+'.node_on',
             batcher: render.options.batcher,
+            no_scene: true,
             centered: false,
             pos: new Vector(control.x+4, control.y+4),
             size: new Vector(control.w-8, control.h-8),

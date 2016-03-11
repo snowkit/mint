@@ -73,6 +73,7 @@ class Image extends mint.render.Render {
                 name: control.name+'.visual',
                 batcher: render.options.batcher,
                 centered: false,
+                no_scene: true,
                 texture: texture,
                 pos: new Vector(control.x, control.y),
                 size: new Vector(control.w*ratio_w, control.h*ratio_h),

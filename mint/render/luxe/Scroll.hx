@@ -44,6 +44,7 @@ class Scroll extends mint.render.Render {
         visual = new luxe.Sprite({
             name: control.name+'.visual',
             batcher: render.options.batcher,
+            no_scene: true,
             centered: false,
             pos: new Vector(control.x, control.y),
             size: new Vector(control.w, control.h),
@@ -55,6 +56,7 @@ class Scroll extends mint.render.Render {
         scrollh = new luxe.Sprite({
             name: control.name+'.scrollh',
             batcher: render.options.batcher,
+            no_scene: true,
             centered: false,
             pos: new Vector(scroll.scrollh.x, scroll.scrollh.y),
             size: new Vector(scroll.scrollh.w, scroll.scrollh.h),
@@ -66,6 +68,7 @@ class Scroll extends mint.render.Render {
         scrollv = new luxe.Sprite({
             name: control.name+'.scrollv',
             batcher: render.options.batcher,
+            no_scene: true,
             centered: false,
             pos: new Vector(scroll.scrollv.x, scroll.scrollv.y),
             size: new Vector(scroll.scrollv.w, scroll.scrollv.h),

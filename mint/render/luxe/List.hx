@@ -6,7 +6,6 @@ import mint.render.Rendering;
 import mint.render.luxe.LuxeMintRender;
 import mint.render.luxe.Convert;
 
-import luxe.Text;
 import luxe.Color;
 import phoenix.geometry.RectangleGeometry;
 

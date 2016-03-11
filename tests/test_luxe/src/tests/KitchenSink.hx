@@ -409,6 +409,7 @@ class CustomWindowRenderer extends mint.render.Render {
         window = _control;
 
         visual = new luxe.NineSlice({
+            no_scene:true,
             name: _control.name + '.visual',
             texture : Luxe.resources.texture('assets/mint.box.png'),
             top : 32, left : 32, right : 32, bottom : 32,
