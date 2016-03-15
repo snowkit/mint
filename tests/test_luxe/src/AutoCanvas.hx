@@ -6,15 +6,15 @@ class AutoCanvas extends mint.Canvas {
 
     public function auto_listen() {
 
-        Luxe.on(Luxe.Ev.render,     conv_render);
-        Luxe.on(Luxe.Ev.update,     conv_update);
-        Luxe.on(Luxe.Ev.mousewheel, conv_mousewheel);
-        Luxe.on(Luxe.Ev.mousedown,  conv_mousedown);
-        Luxe.on(Luxe.Ev.mouseup,    conv_mouseup);
-        Luxe.on(Luxe.Ev.mousemove,  conv_mousemove);
-        Luxe.on(Luxe.Ev.keyup,      conv_keyup);
-        Luxe.on(Luxe.Ev.keydown,    conv_keydown);
-        Luxe.on(Luxe.Ev.textinput,  conv_textinput);
+        Luxe.on(luxe.Ev.render,     conv_render);
+        Luxe.on(luxe.Ev.update,     conv_update);
+        Luxe.on(luxe.Ev.mousewheel, conv_mousewheel);
+        Luxe.on(luxe.Ev.mousedown,  conv_mousedown);
+        Luxe.on(luxe.Ev.mouseup,    conv_mouseup);
+        Luxe.on(luxe.Ev.mousemove,  conv_mousemove);
+        Luxe.on(luxe.Ev.keyup,      conv_keyup);
+        Luxe.on(luxe.Ev.keydown,    conv_keydown);
+        Luxe.on(luxe.Ev.textinput,  conv_textinput);
             //make sure we clean up
         ondestroy.listen(auto_unlisten);
 
@@ -22,15 +22,15 @@ class AutoCanvas extends mint.Canvas {
 
     public function auto_unlisten() {
 
-        Luxe.off(Luxe.Ev.render,     conv_render);
-        Luxe.off(Luxe.Ev.update,     conv_update);
-        Luxe.off(Luxe.Ev.mousewheel, conv_mousewheel);
-        Luxe.off(Luxe.Ev.mousedown,  conv_mousedown);
-        Luxe.off(Luxe.Ev.mouseup,    conv_mouseup);
-        Luxe.off(Luxe.Ev.mousemove,  conv_mousemove);
-        Luxe.off(Luxe.Ev.keyup,      conv_keyup);
-        Luxe.off(Luxe.Ev.keydown,    conv_keydown);
-        Luxe.off(Luxe.Ev.textinput,  conv_textinput);
+        Luxe.off(luxe.Ev.render,     conv_render);
+        Luxe.off(luxe.Ev.update,     conv_update);
+        Luxe.off(luxe.Ev.mousewheel, conv_mousewheel);
+        Luxe.off(luxe.Ev.mousedown,  conv_mousedown);
+        Luxe.off(luxe.Ev.mouseup,    conv_mouseup);
+        Luxe.off(luxe.Ev.mousemove,  conv_mousemove);
+        Luxe.off(luxe.Ev.keyup,      conv_keyup);
+        Luxe.off(luxe.Ev.keydown,    conv_keydown);
+        Luxe.off(luxe.Ev.textinput,  conv_textinput);
             //no longer try to clean up
         ondestroy.remove(auto_unlisten);
 
