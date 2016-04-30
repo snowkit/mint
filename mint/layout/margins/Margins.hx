@@ -39,7 +39,7 @@ class Margins {
 
     } //size
 
-    public function anchor( self:Control, ?other:Control, self_anchor:AnchorType, other_anchor:AnchorType ) {
+    public function anchor( self:Control, ?other:Control, self_anchor:AnchorType, other_anchor:AnchorType, offset:Int=0 ) {
 
         assertnull(self);
         def(other, self.parent);
@@ -51,6 +51,7 @@ class Margins {
             other_anchor: other_anchor,
             self: self,
             other: other,
+            offset: offset
         };
 
         lay.anchors.push( anchor );
@@ -149,6 +150,8 @@ class Margins {
             case top:       other.y;
         }
 
+        ref += anchor.offset;
+
         switch(anchor.self_anchor) {
             case center_x:  self.x = ref - (self.w/2);
             case center_y:  self.y = ref - (self.h/2);
@@ -224,5 +227,6 @@ private typedef Anchor = {
     other_anchor: AnchorType,
     self_anchor: AnchorType,
     self: Control,
-    other: Control
+    other: Control,
+    offset: Int
 }
