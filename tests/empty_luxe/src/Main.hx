@@ -18,7 +18,7 @@ class Main extends luxe.Game {
     var canvas: AutoCanvas;
     var rendering: LuxeMintRender;
 
-    override function config(config:luxe.AppConfig) {
+    override function config(config:luxe.GameConfig) {
 
         return config;
 

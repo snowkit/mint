@@ -129,8 +129,8 @@ class Convert {
             timestamp   : _event.timestamp,
             x           : Std.int(_pos.x),
             y           : Std.int(_pos.y),
-            xrel        : _event.xrel,
-            yrel        : _event.yrel,
+            xrel        : _event.x_rel,
+            yrel        : _event.y_rel,
             bubble      : true
         };
 
