@@ -35,7 +35,7 @@ typedef WindowOptions = {
 class Window extends Control {
 
     public var title : Label;
-    public var close_button : Label;
+    public var close_handle : Control;
     public var resize_handle : Control;
     public var collapse_handle : Control;
 
@@ -83,7 +83,6 @@ class Window extends Control {
         resize_handle.onmousedown.listen(on_resize_down);
         resize_handle.onmouseup.listen(on_resize_up);
 
-            //create the title label
         title = new Label({
             parent : this,
             x: 2, y: 2, w: w - 4, h: 22,
@@ -92,39 +91,33 @@ class Window extends Control {
             align_vertical : TextAlign.center,
             text_size: options.text_size,
             options: options.options.label,
-            name: name + '.titlelabel',
+            name: name + '.title',
             internal_visible: options.visible
         });
 
-            //create the close label
-        close_button = new Label({
+        close_handle = new Control({
             parent : this,
             x: w - 24, y: 2, w: 22, h: 22,
-            text:'x',
-            align : TextAlign.center,
-            align_vertical : TextAlign.center,
-            text_size: options.text_size,
-            options: options.options.close_button,
-            name : name + '.closelabel',
+            name : name + '.close',
+            options: options.options.close_handle,
             internal_visible: options.visible
         });
 
+        //:todo: this logic is weird
         ready = true;
-
-        close_button.mouse_input = closable;
+        close_handle.mouse_input = closable;
 
         if(!closable) {
-            close_button.visible = false;
+            close_handle.visible = false;
         } else {
-            close_button.onmousedown.listen(function(_,_) {
-                on_close();
-            });
+            close_handle.onmousedown.listen(on_close);
         }
         
         collapse_handle = new Control({
             parent : this,
             x: closable ? w - 48 : w - 24, y: 2, w: 22, h: 22,
-            name : name + '.collapselabel',
+            name : name + '.collapse',
+            options: options.options.collapse_handle,
             internal_visible: options.visible
         });
 
@@ -189,7 +182,7 @@ class Window extends Control {
             for(child in children) {
                 if(child == title) continue;
                 if(child == collapse_handle) continue;
-                if(child == close_button) continue;
+                if(child == close_handle) continue;
                 child.set_visible_only(false);
             }
 
@@ -199,7 +192,7 @@ class Window extends Control {
             for(child in children) {
                 if(child == title) continue;
                 if(child == collapse_handle) continue;
-                if(child == close_button) continue;
+                if(child == close_handle) continue;
                 child.set_visible_only(true);
             }
 
@@ -212,7 +205,7 @@ class Window extends Control {
 
     } //on_collapse
 
-    function on_close() {
+    function on_close(e:MouseEvent, _) {
 
         onclose.emit();
 
@@ -302,7 +295,7 @@ class Window extends Control {
 
     public override function mousedown(e:MouseEvent)  {
 
-        if(close_button.contains(e.x, e.y) && closable) return;
+        if(close_handle.contains(e.x, e.y) && closable) return;
         if(collapse_handle.contains(e.x, e.y) && collapsible) return;
 
         var in_title = title.contains(e.x, e.y);
@@ -339,7 +332,7 @@ class Window extends Control {
 
         super.bounds_changed(_dx, _dy, _dw, _dh);
 
-        if(close_button != null) close_button.x_local = w - 24;
+        if(close_handle != null) close_handle.x_local = w - 24;
         if(collapse_handle != null) collapse_handle.x_local = closable ? w - 48 : w - 24;
         if(title != null) title.w = w - 4;
         if(resize_handle != null) resize_handle.set_pos(x + w - 24, y + h - 24);

@@ -67,7 +67,7 @@ class KitchenSink extends State {
                 color:new Color().rgb(0x121212),
                 color_titlebar:new Color().rgb(0x191919),
                 label: { color:new Color().rgb(0x06b4fb) },
-                close_button: { color:new Color().rgb(0x06b4fb) },
+                close_handle: { color:new Color().rgb(0x06b4fb) },
             },
             x:160, y:10, w:256, h: 400,
             w_min: 256, h_min:256,
@@ -213,10 +213,6 @@ class KitchenSink extends State {
             x:500, y:150, w:256, h:180+42+32,
             w_min: 128, h_min:128
         });
-
-        //reach into the rendering specifics and change stuff
-        var _close_render = (cast window3.close_button.renderer:Label);
-            _close_render.text.point_size = 16;
 
         var _list = new mint.List({ parent: window3, name: 'list', x: 10, y: 50, w: 236, h: 64 });
 
@@ -418,7 +414,7 @@ class CustomWindowRenderer extends mint.render.Render {
         visual.create(new Vector(window.x, window.y), window.w, window.h);
 
         window.title.y_local += 3;
-        window.close_button.y_local += 1;
+        window.close_handle.y_local += 1;
 
     } //new
 
