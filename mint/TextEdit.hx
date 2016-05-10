@@ -18,10 +18,17 @@ typedef TextEditOptions = {
 
         /** The default text value */
     @:optional var text: String;
-        /** An override display character (like * for a password entry) */
-    @:optional var display_char: String;
+        /** The text alignment on the horizontal axis, relative to the bounds */
+    @:optional var align: mint.types.Types.TextAlign;
+        /** The text alignment on the vertical axis, relative to the bounds */
+    @:optional var align_vertical: mint.types.Types.TextAlign;
+        /** Whether or not to wrap the text by the bounds for the rendering to apply */
+    @:optional var bounds_wrap: Bool;
         /** The text size of the text for the rendering to use */
     @:optional var text_size: Float;
+
+        /** An override display character (like * for a password entry) */
+    @:optional var display_char: String;
         /** A filter function to call when text is entered.
             It is: `filter(new_character, new_text, old_text):Bool`.
             Returning false will reject the character. */
@@ -74,14 +81,16 @@ class TextEdit extends Control {
 
         def(options.text, 'mint.TextEdit');
         def(options.text_size, options.h * 0.8);
+        def(options.align, left);
 
         label = new Label({
             parent : this,
             x: 2, y: 0, w: w, h: h,
             text: options.text,
             text_size: options.text_size,
-            align: TextAlign.left,
-            align_vertical: TextAlign.center,
+            align: options.align,
+            align_vertical: options.align_vertical,
+            bounds_wrap: options.bounds_wrap,
             options: options.options.label,
             name : name + '.label',
             mouse_input: false,
@@ -103,6 +112,17 @@ class TextEdit extends Control {
         oncreate.emit();
 
     } //new
+
+    public override function destroy() {
+
+        super.destroy();
+
+        onchange.clear();
+        onchange = null;
+        onchangeindex.clear();
+        onchangeindex = null;
+
+    } //destroy
 
     override function mousedown( event:MouseEvent ) {
 
@@ -176,6 +196,7 @@ class TextEdit extends Control {
             case KeyCode.right:
                 move(1);
             case KeyCode.enter:
+            case KeyCode.escape:
             case KeyCode.tab:
             case KeyCode.unknown:
             case KeyCode.down:

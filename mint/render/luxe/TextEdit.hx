@@ -162,6 +162,12 @@ class TextEdit extends mint.render.Render {
         var _th = text.font.height_of(_t, text.point_size);
         var _thh = _th/2.0;
 
+        var _left = switch(text.align) {
+            case luxe.Text.TextAlign.center: textedit.label.x+(textedit.label.w/2);
+            case luxe.Text.TextAlign.right: textedit.label.w;
+            case _: textedit.label.x;
+        }
+
         var _x = _w;
         var _y = 0.0;
 
@@ -173,7 +179,7 @@ class TextEdit extends mint.render.Render {
 
         _y += _th * 0.2;
 
-        var _xx = textedit.label.x + _x;
+        var _xx = _left + _x;
         var _yy = textedit.label.y + 2;
 
         cursor.p0 = new Vector(_xx, _yy);
