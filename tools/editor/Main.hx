@@ -11,6 +11,7 @@ import mint.render.luxe.Convert;
 import mint.types.Types.Helper.in_rect;
 
 import mint.layout.margins.Margins;
+import mint.focus.Focus;
 
 typedef Ctrl = {
     id:Int,
@@ -30,8 +31,11 @@ class Main extends luxe.Game {
     var editor_render: EditorRendering;
 
     var layout: Margins;
+    var editor_focus: Focus;
+    var ui_focus: Focus;
+    var drag:util.CameraDrag;
 
-    override function config(config:luxe.AppConfig) {
+    override function config(config:luxe.GameConfig) {
 
         config.preload.textures.push({ id:'assets/960.png' });
         config.preload.textures.push({ id:'assets/transparency.png' });
@@ -54,15 +58,17 @@ class Main extends luxe.Game {
         editor_canvas = new mint.Canvas({ rendering: editor_render, w: Luxe.screen.w, h: Luxe.screen.h });
 
         layout = new Margins();
+        ui_focus = new Focus(ui_canvas);
+        editor_focus = new Focus(editor_canvas);
 
         new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), centered:false, depth:-1 });
-        var drag = Luxe.camera.add( new util.CameraDrag({name:'drag'}) );
-            drag.zoom_speed = 0.05;
+        drag = Luxe.camera.add( new util.CameraDrag({name:'drag'}) );
+        drag.zoom_speed = 0.05;
 
         controls = new Map();
         create_palette();
 
-    } //ready
+    } //ready`
 
     var controls: Map<Int, Ctrl>;
 
@@ -74,7 +80,7 @@ class Main extends luxe.Game {
 
     function ondown(e:mint.types.MouseEvent,c:mint.Control) {
 
-        editor_canvas.modal = c;
+        editor_canvas.focused = c;
 
         if( in_rect(e.x, e.y, c.right-rsize, c.bottom-rsize, rsize, rsize) ) {
             resizing = true;
@@ -87,7 +93,7 @@ class Main extends luxe.Game {
     }
 
     function onmove(e:mint.types.MouseEvent, c:mint.Control) {
-        if(editor_canvas.modal == c) {
+        if(editor_canvas.focused == c) {
 
             if(moving) {
                 c.set_pos(c.x + (e.x - down_x), c.y + (e.y - down_y));
@@ -106,7 +112,7 @@ class Main extends luxe.Game {
     }
 
     function onup(_,_) {
-        editor_canvas.modal = null;
+        editor_canvas.focused = null;
         resizing = false;
         moving = false;
     }
@@ -144,7 +150,7 @@ class Main extends luxe.Game {
 
         ed_palette = new mint.Window({
             parent: ui_canvas,
-            x: Luxe.screen.w * 0.05,
+            x: Luxe.screen.w * 0.04,
             y: Luxe.screen.h * 0.2,
             w: Luxe.screen.w * 0.2,
             h: Luxe.screen.w * 0.4,
@@ -187,9 +193,12 @@ class Main extends luxe.Game {
                 name: 'palette.$name',
                 text: name,
                 text_size: 16,
+                align: TextAlign.left,
+                x: 8, y:8,
+                w: 32,
                 h: 32,
             });
-            ed_controls.add_item(label, 0, 8);
+            ed_controls.add_item(label, 0, 0);
             layout.size(label, width, 100);
         }
 
@@ -213,21 +222,21 @@ class Main extends luxe.Game {
     override function onmousewheel(e) {
 
         if(!moving) ui_canvas.mousewheel( Convert.mouse_event(e) );
-        if(ui_canvas.focused == null) editor_canvas.mousewheel( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(ui_canvas.marked == null) editor_canvas.mousewheel( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
 
     }
 
     override function onmouseup(e) {
 
         if(!moving) ui_canvas.mouseup( Convert.mouse_event(e) );
-        if(ui_canvas.focused == null) editor_canvas.mouseup( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(ui_canvas.marked == null) editor_canvas.mouseup( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
 
     }
 
     override function onmousedown(e) {
 
         ui_canvas.mousedown( Convert.mouse_event(e) );
-        if(ui_canvas.focused == null) editor_canvas.mousedown( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(ui_canvas.marked == null) editor_canvas.mousedown( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
 
     } //onmousedown
 
@@ -263,7 +272,7 @@ class Main extends luxe.Game {
         if(e.keycode == Key.delete || e.keycode == Key.backspace) {
             if(editor_canvas.focused != null) {
                 editor_canvas.focused.destroy();
-                editor_canvas.reset_focus();
+                editor_canvas.unfocus();
             }
         }
 
@@ -283,6 +292,8 @@ class Main extends luxe.Game {
 
         ui_canvas.update(dt);
         editor_canvas.update(dt);
+
+        drag.zoomable = ui_canvas.marked == null;
 
     } //update
 

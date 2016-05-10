@@ -1,5 +1,12 @@
 {
 
+  
+
+  //please note this project is not yet
+  //usage and is a test bed for now!
+
+
+
   project : {
     name : 'mint editor',
     version : '1.0.0-alpha',

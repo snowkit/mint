@@ -51,8 +51,8 @@ class ControlRenderer extends mint.render.Render {
     }
 
     override function onbounds() {
-        bounds.set({ x:control.x, y:control.y, w:control.w, h:control.h, color:color, visible:control.visible });
-        resizer.set({ x:control.right-rsize, y:control.bottom-rsize, w:rsize, h:rsize, color:color, visible:control.visible });
+        bounds.set_xywh(control.x, control.y, control.w, control.h);
+        resizer.set_xywh(control.right-rsize, control.bottom-rsize, rsize, rsize);
         text.bounds = new luxe.Rectangle(control.x, control.y, control.w, control.h);
         text.text = '${control.name} ${control.x},${control.y},${control.w},${control.h}';
     }
