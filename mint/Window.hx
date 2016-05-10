@@ -234,6 +234,18 @@ class Window extends Control {
 
     } //open
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onclose.clear();
+        onclose = null;
+        
+        oncollapse.clear();
+        oncollapse = null;
+
+    } //destroy
+
     override public function add(child:Control) {
 
         super.add(child);

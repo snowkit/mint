@@ -221,6 +221,17 @@ class Scroll extends Control {
 
 //Control overrides
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onchange.clear();
+        onchange = null;
+        onhandlevis.clear();
+        onhandlevis = null;
+
+    } //destroy
+
     public override function add(child:Control) {
 
             //if the internal controls add them normally

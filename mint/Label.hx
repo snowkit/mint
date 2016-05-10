@@ -71,6 +71,15 @@ class Label extends Control {
 
     } //new
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onchange.clear();
+        onchange = null;
+
+    } //destroy
+
 //Internal
 
     function set_text( _s:String ) : String {

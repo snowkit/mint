@@ -128,6 +128,15 @@ class Dropdown extends Control {
 
     } //open_list
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onselect.clear();
+        onselect = null;
+
+    } //destroy
+
     var skip_mouse_up = false;
 
     public override function mousedown(e) {

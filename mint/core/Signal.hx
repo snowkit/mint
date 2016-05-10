@@ -40,6 +40,11 @@ class Signal<T> {
 
     } //has
 
+    public inline function clear() {
+        listeners = null;
+        listeners = [];
+    }
+
     macro public function emit( ethis : Expr, args:Array<Expr> ) {
         return macro {
             var _idx = 0;

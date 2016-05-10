@@ -96,6 +96,20 @@ class List extends Control {
 
     } //clear
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onselect.clear();
+        onselect = null;
+        onitementer.clear();
+        onitementer = null;
+        onitemleave.clear();
+        onitemleave = null;
+
+    } //destroy
+
+
     override function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0) {
 
         super.bounds_changed(_dx, _dy, _dw, _dh);

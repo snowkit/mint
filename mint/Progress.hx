@@ -49,6 +49,15 @@ class Progress extends Control {
 
     } //new
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onchange.clear();
+        onchange = null;
+
+    } //destroy
+
     function set_progress(_value:Float) : Float {
 
         var prev = progress;

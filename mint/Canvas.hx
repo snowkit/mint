@@ -183,6 +183,20 @@ class Canvas extends Control {
 
     } //update
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onfocusedchange.clear();
+        onmarkedchange.clear();
+        oncapturedchange.clear();
+
+        onfocusedchange = null;
+        onmarkedchange = null;
+        oncapturedchange = null;
+
+    } //destroy
+
     function get_focused() : Control {
 
         return focused;

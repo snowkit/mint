@@ -67,6 +67,15 @@ class Checkbox extends Control {
 
     } //new
 
+    public override function destroy() {
+        
+        super.destroy();
+
+        onchange.clear();
+        onchange = null;
+        
+    }
+
 //Internal
 
     function onclick(_, _) {

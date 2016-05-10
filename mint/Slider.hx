@@ -82,6 +82,15 @@ class Slider extends Control {
 
     } //new
 
+    public override function destroy() {
+
+        super.destroy();
+
+        onchange.clear();
+        onchange = null;
+
+    } //destroy
+
     var dragging = false;
 
     override function mousedown(e:MouseEvent) {
