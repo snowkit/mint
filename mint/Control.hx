@@ -14,6 +14,9 @@ typedef ControlOptions = {
         /** Generic framework/user specific options,
             which can be strong typed on the receiving end. */
     @:optional var options: Dynamic;
+    /** Generic framework/user specific data to store on the control `user` property,
+            which can be strong typed on the receiving end. */
+    @:optional var user: Dynamic;
 
         /** The control name */
     @:optional var name: String;
@@ -36,7 +39,7 @@ typedef ControlOptions = {
     @:optional var h_max: Float;
 
         /** The control parent, if any */
-    @:optional var parent: Control;
+    @:optional var parent (default, null): Control;
         /** The control depth. Usually set internally */
     @:optional var depth: Float;
         /** Whether or not the control is visible at creation */
@@ -66,7 +69,11 @@ typedef ControlOptions = {
 class Control {
 
         /** The name of this control. default: 'control'*/
-    public var name : String = 'control';
+    public var name (default, set): String = 'control';
+        /** Generic framework/user specific data to store with the control,
+            which can be strong typed on the receiving end. */
+    public var user: Dynamic;
+
         /** Root canvas that this element belongs to */
     public var canvas : Canvas;
         /** the top most control below the canvas that holds us */
@@ -134,6 +141,8 @@ class Control {
     public var oncreate      : Signal<Void->Void>;
         /** An event for when (if) a control is marked as renderable and is rendered. */ 
     public var onrender      : Signal<Void->Void>;
+        /** An event for when the name of the control changes. args: old, new */ 
+    public var onrenamed     : Signal<String->String->Void>;
         /** An event for when the bounds of the control change. */ 
     public var onbounds      : Signal<Void->Void>;
         /** An event for when the control is being destroyed. */ 
@@ -196,6 +205,7 @@ class Control {
 
         oncreate      = new Signal();
         onrender      = new Signal();
+        onrenamed     = new Signal();
         onbounds      = new Signal();
         ondestroy     = new Signal();
         onvisible     = new Signal();
@@ -219,6 +229,7 @@ class Control {
         children = [];
 
         name = def(_options_.name, 'control');
+        user = _options_.user;
         depth_offset = def(_options_.depth, 0);
 
         w_min = def(_options_.w_min, 0);
@@ -287,6 +298,8 @@ class Control {
 
     public function topmost_child_at_point( _x:Float, _y:Float ) : Control {
 
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         //if we have no children, we are the topmost child
         if(children.length == 0) return this;
 
@@ -318,6 +331,8 @@ class Control {
 
     public function contains( _x:Float, _y:Float ) {
 
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         var inside = in_rect(_x, _y, x, y, w, h);
 
         if(clip_with == null) return inside;
@@ -328,6 +343,8 @@ class Control {
 
     function onclipchanged() {
 
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');        
+
         if(clip_with != null) {
             onclip.emit(false, clip_with.x, clip_with.y, clip_with.w, clip_with.h);
         }
@@ -335,6 +352,8 @@ class Control {
     } //onclipchanged
 
     function set_clip_with(_other:Control) {
+
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         if(clip_with != null) {
             clip_with.onbounds.remove(onclipchanged);
@@ -369,6 +388,8 @@ class Control {
 
     inline function set_visible_only(_visible:Bool) {
 
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         update_vis_state = false;
         visible = _visible;
         update_vis_state = true;
@@ -376,6 +397,8 @@ class Control {
     } //set_visible_only
 
     function set_visible( _visible:Bool) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         visible = _visible;
         if(update_vis_state) vis_state = _visible;
@@ -393,6 +416,8 @@ class Control {
     } //set visible
 
     function find_top_parent( ?_from:Control = null ) {
+
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         var _target = (_from == null) ? this : _from;
 
@@ -412,6 +437,8 @@ class Control {
 
     public function add( child:Control ) {
 
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(child.parent != null) {
             child.parent.remove(child);
         }
@@ -428,6 +455,8 @@ class Control {
 
     public function remove( child:Control ) {
 
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(child.parent == this) {
             children.remove(child);
             onchildremove.emit(child);
@@ -439,6 +468,8 @@ class Control {
 
         //:todo: clean up
     function get_children_bounds() : ChildBounds {
+
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         if(children.length == 0) {
 
@@ -492,6 +523,8 @@ class Control {
 
     public function render() {
 
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(renderable) onrender.emit();
 
         for(child in children) child.render();
@@ -499,6 +532,8 @@ class Control {
     } //render
 
     public function keyup( e:KeyEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onkeyup.emit(e, this);
 
@@ -513,6 +548,8 @@ class Control {
     } //keyup
 
     public function keydown( e:KeyEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onkeydown.emit(e, this);
 
@@ -527,6 +564,8 @@ class Control {
     } //keydown
 
     public function textinput( e:TextEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         ontextinput.emit(e, this);
 
@@ -541,6 +580,8 @@ class Control {
     } //textinput
 
     public function mousemove( e:MouseEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onmousemove.emit(e, this);
 
@@ -555,6 +596,8 @@ class Control {
     } //mousemove
 
     public function mouseup( e:MouseEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onmouseup.emit(e, this);
 
@@ -569,6 +612,8 @@ class Control {
     } //mouseup
 
     public function mousewheel( e:MouseEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onmousewheel.emit(e, this);
 
@@ -583,6 +628,8 @@ class Control {
     } //mousewheel
 
     public function mousedown( e:MouseEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onmousedown.emit(e, this);
 
@@ -597,6 +644,8 @@ class Control {
     } //mousedown
 
     public function mouseenter( e:MouseEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onmouseenter.emit(e, this);
         ishovered = true;
@@ -604,6 +653,8 @@ class Control {
     } //mouseenter
 
     public function mouseleave( e:MouseEvent ) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         onmouseleave.emit(e, this);
         ishovered = false;
@@ -611,6 +662,8 @@ class Control {
     } //mouseleave
 
     public function destroy_children() {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         while(children.length > 0) {
             var child = children.shift();
@@ -622,7 +675,6 @@ class Control {
     public function destroy() {
 
         assert(destroyed == false, 'attempt to destroy control twice `$this` ($name)');
-        destroyed = true;
 
         unmark();
         unfocus();
@@ -630,20 +682,55 @@ class Control {
 
         destroy_children();
 
+        if(clip_with != null) {
+            clip_with.onbounds.remove(onclipchanged);
+        }
+
         if(parent != null) {
             parent.remove(this);
         }
 
         ondestroy.emit();
 
+        user = null;
+        
+        oncreate.clear();       oncreate = null;
+        onrender.clear();       onrender = null;
+        onrenamed.clear();      onrenamed = null;
+        onbounds.clear();       onbounds = null;
+        ondestroy.clear();      ondestroy = null;
+        onvisible.clear();      onvisible = null;
+        ondepth.clear();        ondepth = null;
+        onclip.clear();         onclip = null;
+        onchildadd.clear();     onchildadd = null;
+        onchildremove.clear();  onchildremove = null;
+        onmousedown.clear();    onmousedown = null;
+        onmouseup.clear();      onmouseup = null;
+        onmousemove.clear();    onmousemove = null;
+        onmousewheel.clear();   onmousewheel = null;
+        onmouseleave.clear();   onmouseleave = null;
+        onmouseenter.clear();   onmouseenter = null;
+        onkeydown.clear();      onkeydown = null;
+        onkeyup.clear();        onkeyup = null;
+        ontextinput.clear();    ontextinput = null;
+        onfocused.clear();      onfocused = null;
+        onmarked.clear();       onmarked = null;
+        oncaptured.clear();     oncaptured = null;
+
+        destroyed = true;
+
     } //destroy
 
     public function update(dt:Float) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
     } //update
 
     public inline function focus() {
-        
+                
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(canvas == this) return;
 
         var _pre = canvas.focused == this;
@@ -655,7 +742,9 @@ class Control {
     } //focus
 
     public function unfocus() {
-        
+                
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(canvas == this) return;
         if(canvas.focused == this) {
             canvas.focused = null;
@@ -665,7 +754,9 @@ class Control {
     } //unfocus
 
     public inline function capture() {
-        
+                
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(canvas == this) return;
 
         var _pre = canvas.captured == this;
@@ -677,7 +768,9 @@ class Control {
     } //capture
 
     public inline function uncapture() {
-        
+                
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(canvas == this) return;
         if(canvas.captured == this) {
             canvas.captured = null;
@@ -687,7 +780,9 @@ class Control {
     } //uncapture
 
     public inline function mark() {
-        
+                
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(canvas == this) return;
 
         var _pre = canvas.marked == this;
@@ -699,7 +794,9 @@ class Control {
     } //mark
 
     public inline function unmark() {
-        
+                
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
         if(canvas == this) return;
         if(canvas.marked == this) {
             canvas.marked = null;
@@ -710,11 +807,15 @@ class Control {
 
     var updating = false;
     function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         if(updating) return;
 
         if(_dx != 0.0 || _dy != 0.0) {
-            for(child in children) child.set_pos(child.x + _dx, child.y + _dy);
+            for(child in children) {
+                child.set_pos(child.x + _dx, child.y + _dy);
+            }
         }
 
         onbounds.emit();
@@ -726,6 +827,8 @@ class Control {
 //Spatial properties
 
     public function set_pos(_x:Float, _y:Float) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         updating = true;
 
@@ -742,6 +845,8 @@ class Control {
     } //set_pos
 
     public function set_size(_w:Float, _h:Float) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         updating = true;
 
@@ -768,6 +873,19 @@ class Control {
         return y + h;
 
     } //get_bottom
+
+    function set_name(_name:String) : String {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
+        var _prev = name;
+        name = _name;
+
+        onrenamed.emit(_prev, _name);
+
+        return name;
+
+    } //set_name
 
     function set_x(_x:Float) : Float {
 
@@ -935,6 +1053,8 @@ class Control {
 //Node properties
 
     inline function get_nodes() : Int {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         var _nodes = 1;
         for(child in children) _nodes += child.nodes;
@@ -951,6 +1071,8 @@ class Control {
     } //get_depth
 
     function set_depth( _depth:Float ) : Float {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         depth = _depth;
 
@@ -963,6 +1085,8 @@ class Control {
 //Parent properties
 
     function set_parent(p:Control) {
+        
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
 
         //do stuff with old parent
 
