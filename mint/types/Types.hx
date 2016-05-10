@@ -80,6 +80,8 @@ abstract KeyCode(Int) from Int to Int {
     var tab = 6;
         /** the enter key */
     var enter = 7;
+        /** the escape key */
+    var escape = 8;
 
 } //KeyCode
 

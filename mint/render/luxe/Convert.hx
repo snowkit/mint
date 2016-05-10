@@ -1,7 +1,6 @@
 package mint.render.luxe;
 
 import mint.types.Types;
-import mint.render.luxe.Convert;
 
 import luxe.Rectangle;
 import luxe.Vector;
@@ -74,6 +73,7 @@ class Convert {
             case Key.delete:    mint.types.KeyCode.delete;
             case Key.tab:       mint.types.KeyCode.tab;
             case Key.enter:     mint.types.KeyCode.enter;
+            case Key.escape:    mint.types.KeyCode.escape;
             case _:             mint.types.KeyCode.unknown;
 
         } //_keycode
