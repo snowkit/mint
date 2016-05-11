@@ -21,7 +21,7 @@
         "y": 56,
         "type": "mint.Label",
         "name": "label.tools.tooltip",
-        "text_size": "22",
+        "text_size": "20",
         "align": "center",
         "text": "...",
         "w": 220

@@ -64,6 +64,7 @@ class Main extends luxe.Game {
 
         #if js
         untyped window.game = this;
+        untyped window.game_ready();
         #end
 
         // Luxe.snow.windowing.enable_vsync(false);
@@ -90,7 +91,7 @@ class Main extends luxe.Game {
 
         ui_info = new mint.Label({ parent:ui_canvas, text:'...', text_size:22 });
         layout.margin(ui_info, left, fixed, 200);
-        layout.margin(ui_info, right, fixed, 0);
+        layout.margin(ui_info, right, fixed, ui_tools.w);
 
     } //ready`
 
@@ -303,9 +304,15 @@ class Main extends luxe.Game {
         _options.mouse_input = true;
 
         _clear.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'clear'; });
-        _load.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'load'; });
         _save.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'save'; });
         _options.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'options'; });
+        _load.onmouseenter.listen(function(_,_) { 
+            #if js
+                ui_tooltip.text = 'drop file on editor to load'; 
+            #else
+                ui_tooltip.text = 'load'; 
+            #end
+        });
 
         _clear.onmouseup.listen(function(_,_) { ed_canvas.destroy_children(); });
         _load.onmouseup.listen(function(_,_) { do_load(); });
