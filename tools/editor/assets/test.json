@@ -1,0 +1,77 @@
+[
+  {
+    "h": 150,
+    "x": 0,
+    "y": 0,
+    "type": "mint.Panel",
+    "children": [
+      {
+        "h": 20,
+        "x": 50,
+        "align_vertical": "center",
+        "y": 50,
+        "type": "mint.Label",
+        "name": "label.fullscreen",
+        "align": "center",
+        "text": "Toggle fullscreen",
+        "w": 170
+      },
+      {
+        "h": 20,
+        "x": 22,
+        "y": 50,
+        "type": "mint.Checkbox",
+        "w": 20,
+        "name": "check.fullscreen"
+      },
+      {
+        "h": 20,
+        "x": 23,
+        "y": 80,
+        "type": "mint.Checkbox",
+        "w": 20,
+        "name": "check.screenshake"
+      },
+      {
+        "h": 20,
+        "x": 50,
+        "align_vertical": "center",
+        "y": 80,
+        "type": "mint.Label",
+        "name": "label.screenshake",
+        "align": "center",
+        "text": "Toggle screenshake",
+        "w": 170
+      },
+      {
+        "h": 22,
+        "x": 40,
+        "y": 120,
+        "type": "mint.Button",
+        "w": 70,
+        "name": "button.cancel"
+      },
+      {
+        "h": 22,
+        "x": 130,
+        "y": 120,
+        "type": "mint.Button",
+        "w": 70,
+        "name": "button.ok"
+      },
+      {
+        "h": 30,
+        "x": 50,
+        "align_vertical": "center",
+        "y": 5,
+        "type": "mint.Label",
+        "name": "label.options",
+        "align": "center",
+        "text": "Options",
+        "w": 140
+      }
+    ],
+    "w": 240,
+    "name": "panel.options"
+  }
+]

@@ -40,7 +40,7 @@ class ControlRenderer extends mint.render.Render {
             align: center,
             align_vertical: center,
             depth: render.options.depth + control.depth,
-            visible: control.visible,
+            visible: false,
         });
 
         control.mouse_input = true;

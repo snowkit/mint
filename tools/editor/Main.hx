@@ -43,6 +43,7 @@ class Main extends luxe.Game {
         config.preload.textures.push({ id:'assets/960.png' });
         config.preload.textures.push({ id:'assets/transparency.png' });
         config.preload.textures.push({ id:'assets/mint.box.png' });
+        config.preload.jsons.push({ id:'assets/test.json' });
 
         return config;
     }
@@ -139,7 +140,75 @@ class Main extends luxe.Game {
 
     } //duplicate
 
-    function spawn_control(_name:String, _type:String, ?_x:Float, ?_y:Float, ?_w:Float, ?_h:Float) {
+    function get_export_node(_control:mint.Control, _root:Bool=false):Dynamic {
+        //for now all root items are considered at 0,0
+        var _node = haxe.Json.parse(haxe.Json.stringify(_control.user));
+            _node.name = _control.name; 
+            _node.x = (_root) ? 0 : _control.x_local;
+            _node.y = (_root) ? 0 : _control.y_local;
+            _node.w = _control.w;
+            _node.h = _control.h;
+
+            if(_control.children.length > 0) {
+                _node.children = [];
+                for(_child in _control.children) {
+                    _node.children.push(get_export_node(_child));
+                }
+            }
+
+        return _node;
+    }
+
+    function load_string(_name:String, _contents:String) {
+        load(_name, haxe.Json.parse(_contents));
+    }
+
+    function load_item(_item:Dynamic, _parent:mint.Control, _offset_x:Int=0, _offset_y:Int=0) {
+        var _control = spawn_control(_item.name, _item.type, false, _item.x+_offset_x, _item.y+_offset_y, _item.w, _item.h);
+        var _fields = Reflect.fields(_item);
+        for(_fieldn in _fields) {
+            if(_fieldn=='name') continue;
+            if(_fieldn=='type') continue;
+            if(_fieldn=='children') continue;
+            if(_fieldn=='x') continue;
+            if(_fieldn=='y') continue;
+            if(_fieldn=='w') continue;
+            if(_fieldn=='h') continue;
+            Reflect.setField(_control.user, _fieldn, Reflect.field(_item, _fieldn));
+        }
+        if(_item.children != null) {
+            var _children:Array<Dynamic> = _item.children;
+            for(_child in _children) {
+                load_item(_child, _control);
+            }
+        }
+        _parent.add(_control);
+    }
+
+    function load(_name:String, _contents:Dynamic) {
+        var _list: Array<Dynamic> = _contents;
+        if(_list == null) {
+            trace('error loading contents for `$_name`!');
+            return;
+        }
+
+        for(_item in _list) {
+            load_item(_item, ed_canvas, 100, 100);
+        }
+    }
+
+    function export() {
+
+        var _list = [];
+        for(_control in ed_canvas.children) {
+            _list.push(get_export_node(_control, true));
+        }
+
+        trace('\n\n' + haxe.Json.stringify(_list,null,'  ') + '\n\n');
+
+    } //export
+
+    function spawn_control(_name:String, _type:String, _select:Bool=true, ?_x:Float, ?_y:Float, ?_w:Float, ?_h:Float) {
 
         def(_x, Luxe.screen.mid.x-128);
         def(_y, Luxe.screen.h-128);
@@ -155,7 +224,9 @@ class Main extends luxe.Game {
         control.onmousemove.listen(onmove);
         control.onmouseup.listen(onup);
 
-        select(control);
+        if(_select) select(control);
+
+        return control;
 
     } //spawn_control
 
@@ -602,9 +673,23 @@ class Main extends luxe.Game {
 
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
+        if(e.keycode == Key.escape && parenting!=null) {
+            (cast parenting.renderer:ControlRenderer).light.visible = false;
+            parenting = null;
+            ui_info.text = '...';
+        }
+
         if(e.keycode == Key.escape && e.mod.shift) {
             Luxe.shutdown();
             return;
+        }
+
+        if(e.keycode == Key.key_e && e.mod.shift) {
+            export();
+        }
+
+        if(e.keycode == Key.key_i && e.mod.shift) {
+            load('test.json', Luxe.resources.json('assets/test.json').asset.json);
         }
 
         if(e.keycode == Key.key_d) {
