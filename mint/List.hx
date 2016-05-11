@@ -92,6 +92,7 @@ class List extends Control {
         items = null;
         items = [];
 
+        view.refresh_scroll();
         onselect.emit(-1, null, null);
 
     } //clear
