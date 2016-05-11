@@ -3,23 +3,43 @@ import mint.types.Types;
 import mint.Control;
 import mint.core.Macros.*;
 
+typedef LoaderItems = {
+    controls: Map<String, mint.Control>,
+    roots: Array<mint.Control>
+}
+
 class JSONLoader {
 
-    public static function parse(_parent:mint.Control, _name:String, _json:String, _offset_x:Int=0, _offset_y:Int=0) {
+    public static function parse(_parent:mint.Control, _name:String, _json:String, _offset_x:Int=0, _offset_y:Int=0) : LoaderItems {
         
-        load(_parent, _name, haxe.Json.parse(_json), _offset_x, _offset_y);
+        return load(_parent, _name, haxe.Json.parse(_json), _offset_x, _offset_y);
 
     } //parse
 
-    public static function load(_parent:mint.Control, _name:String, _json:Dynamic, _offset_x:Int=0, _offset_y:Int=0) {
+    public static function load(_parent:mint.Control, _name:String, _json:Dynamic, _offset_x:Int=0, _offset_y:Int=0) : LoaderItems {
 
+        var _map:Map<String, mint.Control> = new Map();
+        var _roots:Array<mint.Control> = [];
         var _list:Array<Dynamic> = _json;
 
         for(_node in _list) {
-            load_control(_parent, _name, _node, _offset_x, _offset_y);
+            var _control = load_control(_parent, _name, _node, _offset_x, _offset_y);
+            _roots.push(_control);
+            if(_map.exists(_control.name)) trace('loading multiple items named `${_control.name}`, only the last loaded will be mapped');
+            add_tree_to_map(_control, _map);
         }
 
-    } //
+        return { roots:_roots, controls:_map }
+
+    } //load
+
+    static function add_tree_to_map(_control:mint.Control, _map:Map<String,mint.Control>) {
+        _map.set(_control.name, _control);
+        for(_child in _control.children) {
+            _map.set(_child.name, _child);
+            add_tree_to_map(_child, _map);
+        }
+    }
 
     static function load_control(_parent:mint.Control, _source:String, _node:Dynamic, _offset_x:Int=0, _offset_y:Int=0) : mint.Control {
 

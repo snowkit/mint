@@ -1,4 +1,3 @@
-import EditorRendering.ControlRenderer;
 import luxe.Color;
 import luxe.Vector;
 import luxe.Input;
@@ -14,14 +13,8 @@ import mint.types.Types.Helper.in_rect;
 import mint.layout.margins.Margins;
 import mint.focus.Focus;
 
-typedef Ctrl = {
-    id:Int,
-    type:String,
-    tag:luxe.Text,
-    parent:Null<Int>,
-    bounds:luxe.Rectangle,
-    vis:phoenix.geometry.RectangleGeometry 
-};
+import JSONLoader;
+import EditorRendering.ControlRenderer;
 
 class Main extends luxe.Game {
 
@@ -40,11 +33,19 @@ class Main extends luxe.Game {
 
     override function config(config:luxe.GameConfig) {
 
+        config.window.title = 'minted';
+
         config.preload.textures.push({ id:'assets/960.png' });
         config.preload.textures.push({ id:'assets/transparency.png' });
         config.preload.textures.push({ id:'assets/mint.box.png' });
         
+        config.preload.textures.push({ id:'assets/icons/load-48.png' });
+        config.preload.textures.push({ id:'assets/icons/save-48.png' });
+        config.preload.textures.push({ id:'assets/icons/clear-48.png' });
+        config.preload.textures.push({ id:'assets/icons/options-48.png' });
+        
         config.preload.jsons.push({ id:'assets/test.json' });
+        config.preload.jsons.push({ id:'assets/editor/tools.mint.json' });
 
         config.preload.jsons.push({ id:'assets/inspector/mint.Button.nodes.json' });
         config.preload.jsons.push({ id:'assets/inspector/mint.Checkbox.nodes.json' });
@@ -84,8 +85,8 @@ class Main extends luxe.Game {
         drag = Luxe.camera.add( new util.CameraDrag({name:'drag'}) );
         drag.zoom_speed = 0.05;
 
-        controls = new Map();
         create_palette();
+        create_tools();
 
         ui_info = new mint.Label({ parent:ui_canvas, text:'...', text_size:22 });
         layout.margin(ui_info, left, fixed, 200);
@@ -93,7 +94,6 @@ class Main extends luxe.Game {
 
     } //ready`
 
-    var controls: Map<Int, Ctrl>;
     var parenting:mint.Control;
     var possible_parent:mint.Control;
 
@@ -151,7 +151,11 @@ class Main extends luxe.Game {
 
     function duplicate(c:mint.Control) {
 
-        spawn_control('${c.name}.clone', c.user.type, c.x+16, c.y+16, c.w, c.h );
+        var _control = spawn_control('${c.name}.clone', c.user.type, c.x_local+8, c.y_local+8, c.w, c.h );
+        
+        c.parent.add(_control);
+
+        return _control;
 
     } //duplicate
 
@@ -248,6 +252,71 @@ class Main extends luxe.Game {
         return control;
 
     } //spawn_control
+
+    var ui_tools: mint.Panel;
+    var ui_tooltip: mint.Label;
+    var ui_debug: mint.Label;
+
+    function load_ui_asset(_id:String) {
+
+        if(!Luxe.resources.has(_id)) return null;
+        return Luxe.resources.json(_id).asset;
+
+    } //load_ui_asset
+
+    function load_ui(_id:String, _parent:mint.Control, _x:Int, _y:Int) : LoaderItems {
+    
+        var _asset = load_ui_asset(_id);
+    
+        if(_asset == null) {
+            trace('load_ui failed to find asset `$_id`');
+            return null;
+        }
+    
+        return JSONLoader.load(_parent, _asset.id, _asset.json, _x, _y);
+    
+    } //load_ui
+
+    function create_tools() {
+
+        var _ui = load_ui('assets/editor/tools.mint.json', ui_canvas, 200,0);
+
+        ui_tools = cast _ui.controls.get('panel.tools');
+        ui_tooltip = cast _ui.controls.get('label.tools.tooltip');
+        ui_debug = cast _ui.controls.get('label.tools.debug');
+
+        if(ui_tools == null) {
+            trace('ui tools is null?');
+            return;
+        }
+
+        ui_tools.onmouseenter.listen(function(_,_) { ui_tooltip.text = '...'; });
+        
+        var _clear = _ui.controls.get('image.tools.clear');
+        var _load = _ui.controls.get('image.tools.load');
+        var _save = _ui.controls.get('image.tools.save');
+        var _options = _ui.controls.get('image.tools.options');
+
+        _clear.mouse_input = true;
+        _load.mouse_input = true;
+        _save.mouse_input = true;
+        _options.mouse_input = true;
+
+        _clear.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'clear'; });
+        _load.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'load'; });
+        _save.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'save'; });
+        _options.onmouseenter.listen(function(_,_) { ui_tooltip.text = 'options'; });
+
+        _clear.onmouseup.listen(function(_,_) { ed_canvas.destroy_children(); });
+        _load.onmouseup.listen(function(_,_) { do_load(); });
+        _save.onmouseup.listen(function(_,_) { do_save(); });
+        _options.onmouseup.listen(function(_,_) { do_options(); });
+
+        ui_tools.mouse_input = true;
+
+        layout.anchor(ui_tools, AnchorType.left, AnchorType.right, -Math.floor(ui_tools.w));
+
+    } //create_tools
 
     var ed_palette: mint.Window;
     var ed_controls: mint.List;
@@ -797,6 +866,41 @@ class Main extends luxe.Game {
 
     } //ontextinput
 
+    function do_options() {
+
+
+
+    } //do_options
+
+    function do_load() {
+        #if cpp
+            var _path = dialogs.Dialogs.open('load mint json', [{ext:'json', desc:'mint json file'}]);
+            if(_path != null && _path != '') {
+                var _str = sys.io.File.getContent(_path);
+                if(_str != null && _str.length > 0) {
+                    load_string(_path, _str);
+                } else {
+                    trace('invalid file from path: $_path');
+                }
+            }
+        #end
+    }
+
+    function do_save() {
+        var _str = export();
+        #if js
+            var win = js.Browser.window.open('data:text/json,' + untyped encodeURIComponent(_str), "_blank");
+            win.focus();
+        #end
+        #if cpp
+            var _path = dialogs.Dialogs.save('save mint json', {ext:'json', desc:'mint json file'});
+            if(_path != null && _path != '') {
+                sys.io.File.saveContent(_path, _str);
+            }
+        #end
+        trace('\n\n$_str\n\n');
+    } //do_save
+
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
         if(e.keycode == Key.escape && parenting!=null) {
@@ -810,39 +914,12 @@ class Main extends luxe.Game {
             return;
         }
 
-        if(e.keycode == Key.key_e && e.mod.shift) {
-            var _str = export();
-            #if js
-                var win = js.Browser.window.open('data:text/json,' + untyped encodeURIComponent(_str), "_blank");
-                win.focus();
-            #end
-            #if cpp
-                var _path = dialogs.Dialogs.save('save mint json', {ext:'json', desc:'mint json file'});
-                if(_path != null && _path != '') {
-                    sys.io.File.saveContent(_path, _str);
-                }
-            #end
-            trace('\n\n$_str\n\n');
+        if(e.keycode == Key.key_s && (e.mod.ctrl || e.mod.meta)) {
+            do_save();
         }
 
-        if(e.keycode == Key.key_t && e.mod.shift) {
-            trace('loading');
-            var _json = Luxe.resources.json('assets/test.json').asset.json;
-            JSONLoader.load(ui_canvas, 'test.json', _json, 600, 100);
-        }
-
-        if(e.keycode == Key.key_i && e.mod.shift) {
-            #if cpp
-                var _path = dialogs.Dialogs.open('load mint json', [{ext:'json', desc:'mint json file'}]);
-                if(_path != null && _path != '') {
-                    var _str = sys.io.File.getContent(_path);
-                    if(_str != null && _str.length > 0) {
-                        load_string(_path, _str);
-                    } else {
-                        trace('invalid file from path: $_path');
-                    }
-                }
-            #end
+        if(e.keycode == Key.key_o && (e.mod.ctrl || e.mod.meta)) {
+            do_load();
         }
 
         if(e.keycode == Key.key_d) {
