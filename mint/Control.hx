@@ -296,6 +296,33 @@ class Control {
 
     } //new
 
+    public function children_at_point(_x:Float, _y:Float, ?_into:Array<Control>) : Array<Control> {
+
+        assert(destroyed == false, '$name was already destroyed but is being interacted with');
+
+        var _result = def(_into, []);
+
+        if(children.length == 0) return _result;
+
+        for(_child in children) {
+            if(_child.contains(_x, _y) && _child.visible) {
+                _result.push(_child);
+                if(_child.children.length > 0) {
+                    return _child.children_at_point(_x, _y, _result);
+                }
+            }
+        }
+
+        _result.sort(function(a, b) {
+            if(a.depth == b.depth) return 0;
+            if(a.depth < b.depth) return -1;
+            return 1;
+        });
+
+        return _result;
+
+    } //children_at_point
+
     public function topmost_child_at_point( _x:Float, _y:Float ) : Control {
 
         assert(destroyed == false, '$name was already destroyed but is being interacted with');
@@ -311,6 +338,7 @@ class Control {
 
         for(_child in children) {
 
+                //:todo: this filters by mouse but is a general function
             if(_child.contains(_x, _y) && _child.mouse_input && _child.visible) {
 
                 if(_child.depth >= highest_depth) {
