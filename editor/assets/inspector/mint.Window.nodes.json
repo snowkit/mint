@@ -1,0 +1,45 @@
+[
+  {
+    "name": "window.title",
+    "type": "edit",
+    "label": "title:",
+    "text": "window",
+    "reflect": "title"
+  },{
+    "name": "window.text_size",
+    "type": "edit",
+    "label": "text size:",
+    "text": "14",
+    "reflect": "text_size"
+  },{
+    "name": "window.movable",
+    "type": "check",
+    "label": "movable",
+    "state": true,
+    "reflect": "movable"
+  },{
+    "name": "window.closable",
+    "type": "check",
+    "label": "closable",
+    "state": true,
+    "reflect": "closable"
+  },{
+    "name": "window.resizable",
+    "type": "check",
+    "label": "resizable",
+    "state": true,
+    "reflect": "resizable"
+  },{
+    "name": "window.focusable",
+    "type": "check",
+    "label": "focusable",
+    "state": true,
+    "reflect": "focusable"
+  },{
+    "name": "window.collapsible",
+    "type": "check",
+    "label": "collapsible",
+    "state": true,
+    "reflect": "collapsible"
+  }
+]

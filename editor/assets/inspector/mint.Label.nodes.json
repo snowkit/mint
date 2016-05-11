@@ -1,0 +1,30 @@
+[
+  {
+    "name": "label.text",
+    "type": "edit",
+    "label": "text:",
+    "text": "label",
+    "reflect": "text"
+  },
+  {
+    "name": "label.text_size",
+    "type": "edit",
+    "label": "text size:",
+    "text": "14",
+    "reflect": "text_size"
+  },
+  {
+    "name": "label.align",
+    "type": "edit",
+    "label": "align:",
+    "text": "center",
+    "reflect": "align"
+  },
+  {
+    "name": "label.align_vertical",
+    "type": "edit",
+    "label": "align vertical:",
+    "text": "center",
+    "reflect": "align_vertical"
+  }
+]

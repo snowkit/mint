@@ -1,0 +1,9 @@
+[
+  {
+    "name": "image.path",
+    "type": "edit",
+    "label": "path:",
+    "text": "",
+    "reflect": "path"
+  }
+]
