@@ -402,15 +402,13 @@ class Main extends luxe.Game {
         return { map:_list, roots:_roots };
     }
 
-    function edit_node(_name:String, _label:String, _text:String, ?_target:mint.Control, ?_reflect:String) : Node {
-        if(_target != null && _reflect != null) {
+    function edit_node(_name:String, _label:String, _text:String, _reflect:String, _target:mint.Control) : Node {
+        if(_target != null) {
             var _value = Reflect.field(_target.user, _reflect);
-            if(_value != null) {
-                _text = '$_value';
-            } else {
-                Reflect.setField(_target.user, _reflect, _text);
-            }
+            if(_value != null) _text = '$_value';
+            Reflect.setField(_target.user, _reflect, _text);
         }
+
         return {
             { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:178, h:48, 
                 children:[
@@ -456,7 +454,7 @@ class Main extends luxe.Game {
 
             var _nodes:Array<Node> = [
                 label_node('parent', 'parent: ' + (_control.parent == null ? 'none' : _control.parent.name)),
-                edit_node('name', 'name:', _control.name),
+                edit_node('name', 'name:', _control.name, null, null),
                 label_node('boundslabel', 'bounds:'),
                 bounds_node('bounds')
             ];
@@ -526,7 +524,7 @@ class Main extends luxe.Game {
             //low priority common types
 
                 var _low_nodes:Array<Node> = [
-                    edit_node('depth', 'depth:', '${_control.depth}'),
+                    edit_node('depth', 'depth:', '${_control.depth}', null, null),
                     label_node('spacer', ''),
                 ];
 
@@ -573,7 +571,7 @@ class Main extends luxe.Game {
 
             var _item:Node = switch(_node.type) {
                 
-                case 'edit': edit_node(_node.name, _node.label, _node.text, _node.reflect);
+                case 'edit': edit_node(_node.name, _node.label, _node.text, _node.reflect, _control);
 
                 case _: {
                     trace('inspector: unknown node type `${_node.type}` ($_json_name)');
