@@ -1,16 +1,16 @@
 [
   {
-    "name": "slider.direction",
-    "type": "edit",
-    "label": "orientation:",
-    "text": "horizontal",
-    "reflect": "orientation"
+    "name": "slider.vertical",
+    "type": "check",
+    "label": "vertical",
+    "state": false,
+    "reflect": "vertical"
   },
   {
     "name": "slider.invert",
-    "type": "edit",
-    "label": "invert:",
-    "text": "false",
+    "type": "check",
+    "label": "invert",
+    "state": false,
     "reflect": "invert"
   },
   {

@@ -13,33 +13,33 @@
     "reflect": "text_size"
   },{
     "name": "window.movable",
-    "type": "edit",
-    "label": "movable:",
-    "text": "true",
+    "type": "check",
+    "label": "movable",
+    "state": true,
     "reflect": "movable"
   },{
     "name": "window.closable",
-    "type": "edit",
-    "label": "closable:",
-    "text": "true",
+    "type": "check",
+    "label": "closable",
+    "state": true,
     "reflect": "closable"
   },{
     "name": "window.resizable",
-    "type": "edit",
-    "label": "resizable:",
-    "text": "true",
+    "type": "check",
+    "label": "resizable",
+    "state": true,
     "reflect": "resizable"
   },{
     "name": "window.focusable",
-    "type": "edit",
-    "label": "focusable:",
-    "text": "true",
+    "type": "check",
+    "label": "focusable",
+    "state": true,
     "reflect": "focusable"
   },{
     "name": "window.collapsible",
-    "type": "edit",
-    "label": "collapsible:",
-    "text": "true",
+    "type": "check",
+    "label": "collapsible",
+    "state": true,
     "reflect": "collapsible"
   }
 ]

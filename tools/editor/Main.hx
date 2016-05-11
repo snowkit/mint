@@ -364,6 +364,18 @@ class Main extends luxe.Game {
                     });
                 }
                 _edit;
+            case 'mint.Checkbox': 
+                var _check = new mint.Checkbox({
+                    parent:_parent, name: node.name,
+                    x:node.x, y:node.y, w:node.w, h:node.h,
+                    state: node.state,
+                });
+                if(node.reflect!=null && node.target != null) {
+                    _check.onchange.listen(function(_state:Bool,_) {
+                        Reflect.setField(node.target.user, node.reflect, _state);
+                    });
+                }
+                _check;
             case 'mint.Label':
                 new mint.Label({
                     parent:_parent, name: node.name,
@@ -434,6 +446,25 @@ class Main extends luxe.Game {
         return { name:'$_name.label', type:'mint.Label', 
             x:2, y:4, w:178, h:22, text: _label, align:_align }
     }
+
+    function check_node(_name:String, _label:String, _state:Null<Bool>, _reflect:String, _target:mint.Control) : Node {
+        def(_state, false);
+        if(_target != null) {
+            var _value:Null<Bool> = Reflect.field(_target.user, _reflect);
+            if(_value != null) _state = _value;
+            Reflect.setField(_target.user, _reflect, _state);
+        }
+        return {
+            { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:178, h:24, 
+                children:[
+                    { name:'$_name.label', type:'mint.Label', 
+                        x:28, y:0, w:144, h:24, text: _label, align:left  },
+                    { name:'$_name.check', type:'mint.Checkbox', reflect:_reflect, target:_target,
+                        x:2, y:2, w:22, h:22, state: _state },
+                ]
+            }
+        }; //
+    } //check_node
 
     function bounds_node(_name:String, _label:String='bounds:') : Node {
         var _ww = 41; var _xx = 2; var _p = 3; var _yy = 3;
@@ -580,6 +611,7 @@ class Main extends luxe.Game {
             var _item:Node = switch(_node.type) {
                 
                 case 'edit': edit_node(_node.name, _node.label, _node.text, _node.reflect, _control);
+                case 'check': check_node(_node.name, _node.label, _node.state, _node.reflect, _control);
 
                 case _: {
                     trace('inspector: unknown node type `${_node.type}` ($_json_name)');
@@ -810,6 +842,6 @@ typedef Node = {
     ?x:Int, ?y:Int,
     ?w:Int, ?h:Int,
     ?text:String, ?text_size:Int, ?align:TextAlign,
-    ?reflect:String, ?target:mint.Control, 
+    ?reflect:String, ?target:mint.Control, ?state:Bool,
     ?children:Array<Node>
 }
