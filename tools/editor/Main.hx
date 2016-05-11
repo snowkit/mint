@@ -47,6 +47,7 @@ class Main extends luxe.Game {
         config.preload.jsons.push({ id:'assets/test.json' });
 
         config.preload.jsons.push({ id:'assets/inspector/mint.Button.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.Checkbox.nodes.json' });
         config.preload.jsons.push({ id:'assets/inspector/mint.Dropdown.nodes.json' });
         config.preload.jsons.push({ id:'assets/inspector/mint.Image.nodes.json' });
         config.preload.jsons.push({ id:'assets/inspector/mint.Label.nodes.json' });
@@ -824,6 +825,12 @@ class Main extends luxe.Game {
             trace('\n\n$_str\n\n');
         }
 
+        if(e.keycode == Key.key_t && e.mod.shift) {
+            trace('loading');
+            var _json = Luxe.resources.json('assets/test.json').asset.json;
+            JSONLoader.load(ui_canvas, 'test.json', _json, 600, 100);
+        }
+
         if(e.keycode == Key.key_i && e.mod.shift) {
             #if cpp
                 var _path = dialogs.Dialogs.open('load mint json', [{ext:'json', desc:'mint json file'}]);
@@ -836,7 +843,6 @@ class Main extends luxe.Game {
                     }
                 }
             #end
-            // load('test.json', Luxe.resources.json('assets/test.json').asset.json);
         }
 
         if(e.keycode == Key.key_d) {
