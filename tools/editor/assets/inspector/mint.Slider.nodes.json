@@ -1,0 +1,37 @@
+[
+  {
+    "name": "slider.direction",
+    "type": "edit",
+    "label": "orientation:",
+    "text": "horizontal",
+    "reflect": "orientation"
+  },
+  {
+    "name": "slider.invert",
+    "type": "edit",
+    "label": "invert:",
+    "text": "false",
+    "reflect": "invert"
+  },
+  {
+    "name": "slider.min",
+    "type": "edit",
+    "label": "min:",
+    "text": "0.0",
+    "reflect": "min"
+  },
+  {
+    "name": "slider.max",
+    "type": "edit",
+    "label": "max:",
+    "text": "100.0",
+    "reflect": "max"
+  },
+  {
+    "name": "slider.step",
+    "type": "edit",
+    "label": "step:",
+    "text": "",
+    "reflect": "step"
+  }
+]

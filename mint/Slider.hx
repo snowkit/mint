@@ -27,7 +27,7 @@ typedef SliderOptions = {
         /** The slider initial value. default: 1 */
     @:optional var value: Float;
         /** The slider step value. default: none */
-    @:optional var step: Null<Float>;
+    @:optional var step: Float;
 
 } //SliderOptions
 

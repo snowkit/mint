@@ -43,7 +43,17 @@ class Main extends luxe.Game {
         config.preload.textures.push({ id:'assets/960.png' });
         config.preload.textures.push({ id:'assets/transparency.png' });
         config.preload.textures.push({ id:'assets/mint.box.png' });
+        
         config.preload.jsons.push({ id:'assets/test.json' });
+
+        config.preload.jsons.push({ id:'assets/inspector/mint.Button.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.Dropdown.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.Image.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.Label.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.Progress.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.Slider.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.TextEdit.nodes.json' });
+        config.preload.jsons.push({ id:'assets/inspector/mint.Window.nodes.json' });
 
         return config;
     }
@@ -311,7 +321,7 @@ class Main extends luxe.Game {
                 text_size: 16,
                 align: TextAlign.left,
                 x: 0, y:8,
-                w: 32,
+                w: ed_controls.w-12,
                 h: 32,
             });
             ed_controls.add_item(label, 0, 0);
@@ -402,12 +412,12 @@ class Main extends luxe.Game {
             }
         }
         return {
-            { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:186, h:48, 
+            { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:178, h:48, 
                 children:[
                     { name:'$_name.label', type:'mint.Label', 
-                        x:2, y:2, w:182, h:22, text: _label, align:left  },
+                        x:2, y:2, w:174, h:22, text: _label, align:left  },
                     { name:'$_name.edit', type:'mint.TextEdit', reflect:_reflect, target:_target,
-                        x:2, y:24, w:182, h:22, text: _text },
+                        x:2, y:24, w:174, h:22, text: _text },
                 ]
             }
         }; //
@@ -416,13 +426,13 @@ class Main extends luxe.Game {
     function label_node(_name:String, _label:String, ?_align:TextAlign) : Node {
         def(_align, left);
         return { name:'$_name.label', type:'mint.Label', 
-            x:2, y:4, w:186, h:22, text: _label, align:_align }
+            x:2, y:4, w:178, h:22, text: _label, align:_align }
     }
 
     function bounds_node(_name:String, _label:String='bounds:') : Node {
-        var _ww = 43; var _xx = 2; var _p = 3; var _yy = 3;
+        var _ww = 41; var _xx = 2; var _p = 3; var _yy = 3;
         return { name:'$_name.panel', type:'mint.Panel', 
-            x:4, y:0, w:186, h:28, children:[
+            x:4, y:0, w:178, h:28, children:[
                 { name:'$_name.x', type:'mint.TextEdit', 
                     x:_xx+(_ww+_p)*0,y:_yy,w:_ww,h:22, text_size:12, text:'0' },
                 { name:'$_name.y', type:'mint.TextEdit', 
@@ -448,8 +458,7 @@ class Main extends luxe.Game {
                 label_node('parent', 'parent: ' + (_control.parent == null ? 'none' : _control.parent.name)),
                 edit_node('name', 'name:', _control.name),
                 label_node('boundslabel', 'bounds:'),
-                bounds_node('bounds'),
-                edit_node('depth', 'depth:', '${_control.depth}'),
+                bounds_node('bounds')
             ];
 
             var _items = controls_for_nodes(ui_canvas, _nodes);
@@ -473,19 +482,6 @@ class Main extends luxe.Game {
                         } else if(e.key == KeyCode.escape) {
                             _name.text = _control.name;
                             _name.unfocus();
-                        }
-                    });
-
-            //depth handling
-
-                var _depth:mint.TextEdit = cast _items.map.get('depth.edit');
-                    _depth.onkeyup.listen(function(e,_){ 
-                        if(e.key == KeyCode.enter) {
-                            _control.depth = Std.parseFloat(_depth.text);
-                            _depth.unfocus();
-                        } else if(e.key == KeyCode.escape) {
-                            _depth.text = '${_control.depth}';
-                            _depth.unfocus();
                         }
                     });
 
@@ -527,26 +523,70 @@ class Main extends luxe.Game {
 
             add_nodes_for_type(ed_props, _control);
 
+            //low priority common types
+
+                var _low_nodes:Array<Node> = [
+                    edit_node('depth', 'depth:', '${_control.depth}'),
+                    label_node('spacer', ''),
+                ];
+
+                var _low_items = controls_for_nodes(ui_canvas, _low_nodes);
+                for(_item in _low_items.roots) ed_props.add_item(_item);
+
+                //depth handling
+
+                    var _depth:mint.TextEdit = cast _low_items.map.get('depth.edit');
+                        _depth.onkeyup.listen(function(e,_){ 
+                            if(e.key == KeyCode.enter) {
+                                _control.depth = Std.parseFloat(_depth.text);
+                                _depth.unfocus();
+                            } else if(e.key == KeyCode.escape) {
+                                _depth.text = '${_control.depth}';
+                                _depth.unfocus();
+                            }
+                        });
+
         } //clear
-    }
+
+    } //
 
     function add_nodes_for_type(_into:mint.List, _control:mint.Control) {
 
         var _name = _control.name;
         var _type = _control.user.type;
-
-        switch(_type) {
-            case 'mint.Label':
-                var _nodes:Array<Node> = [
-                    edit_node('label.text', 'text:', 'label', _control, 'text'),
-                    edit_node('label.align', 'align:', 'center', _control, 'align'),
-                    edit_node('label.align_vertical', 'align vertical:', 'center', _control, 'align_vertical'),
-                ];
-
-                var _items = controls_for_nodes(ui_canvas, _nodes);
-                for(_item in _items.roots) _into.add_item(_item);
-
+        var _json_name = 'assets/inspector/${_type}.nodes.json';
+        var _res = app.resources.json(_json_name);
+        if(_res == null) {
+            trace('inspector: no nodes file for `$_type` ($_json_name)');
+            return;
         }
+
+        var _list:Array<Dynamic> = _res.asset.json;
+        if(_list == null) {
+            trace('inspector: invalid nodes file for `$_type` ($_json_name), should be array of node descriptors.');
+            return;
+        }
+
+        var _nodes:Array<Node> = [];
+
+        for(_node in _list) {
+
+            var _item:Node = switch(_node.type) {
+                
+                case 'edit': edit_node(_node.name, _node.label, _node.text, _node.reflect);
+
+                case _: {
+                    trace('inspector: unknown node type `${_node.type}` ($_json_name)');
+                    null;
+                }
+            }
+
+            if(_item != null) _nodes.push(_item);
+
+        } //_node in _list
+
+        var _items = controls_for_nodes(ui_canvas, _nodes);
+        for(_item in _items.roots) _into.add_item(_item);
 
     } //nodes_for_type
 

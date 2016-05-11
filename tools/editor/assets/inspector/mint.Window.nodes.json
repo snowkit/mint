@@ -1,0 +1,45 @@
+[
+  {
+    "name": "window.title",
+    "type": "edit",
+    "label": "title:",
+    "text": "window",
+    "reflect": "title"
+  },{
+    "name": "window.text_size",
+    "type": "edit",
+    "label": "text size:",
+    "text": "14",
+    "reflect": "text_size"
+  },{
+    "name": "window.movable",
+    "type": "edit",
+    "label": "movable:",
+    "text": "true",
+    "reflect": "movable"
+  },{
+    "name": "window.closable",
+    "type": "edit",
+    "label": "closable:",
+    "text": "true",
+    "reflect": "closable"
+  },{
+    "name": "window.resizable",
+    "type": "edit",
+    "label": "resizable:",
+    "text": "true",
+    "reflect": "resizable"
+  },{
+    "name": "window.focusable",
+    "type": "edit",
+    "label": "focusable:",
+    "text": "true",
+    "reflect": "focusable"
+  },{
+    "name": "window.collapsible",
+    "type": "edit",
+    "label": "collapsible:",
+    "text": "true",
+    "reflect": "collapsible"
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "name": "progress.progress",
+    "type": "edit",
+    "label": "progress:",
+    "text": "0.0",
+    "reflect": "progress"
+  }
+]
