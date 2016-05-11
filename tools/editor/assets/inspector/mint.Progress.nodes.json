@@ -1,9 +1,12 @@
 [
   {
     "name": "progress.progress",
-    "type": "edit",
+    "type": "range",
     "label": "progress:",
-    "text": "0.0",
+    "min": 0.0,
+    "max": 100.0,
+    "value": 50,
+    "step" : 1,
     "reflect": "progress"
   }
 ]

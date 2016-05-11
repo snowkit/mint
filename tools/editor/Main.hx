@@ -376,12 +376,30 @@ class Main extends luxe.Game {
                     });
                 }
                 _check;
+            case 'mint.Slider': 
+                var _range = new mint.Slider({
+                    parent:_parent, name: node.name,
+                    x:node.x, y:node.y, w:node.w, h:node.h,
+                    value: node.value, min: node.min, max: node.max, step: node.step,
+                    options: { color_bar:new Color().rgb(0x218BA0) }
+                });
+                var _disp = new mint.Label({
+                    parent:_range, name:'${node.name}.label', mouse_input:false,
+                    x:0, y:0, w:node.w, h:node.h, text:'${node.value}', text_size:11
+                });
+                if(node.reflect!=null && node.target != null) {
+                    _range.onchange.listen(function(_value:Float,_percent:Float) {
+                        Reflect.setField(node.target.user, node.reflect, _value);
+                        _disp.text = '$_value';
+                    });
+                }
+                _range;
             case 'mint.Label':
                 new mint.Label({
                     parent:_parent, name: node.name,
                     x:node.x, y:node.y, w:node.w, h:node.h,
                     text: node.text, text_size: node.text_size, 
-                    align:node.align,
+                    align:node.align, mouse_input:false
                 }); 
             case 'mint.Panel':
                 new mint.Panel({
@@ -466,6 +484,26 @@ class Main extends luxe.Game {
         }; //
     } //check_node
 
+    function slider_node(_name:String, _label:String, _value:Null<Float>, _min:Null<Float>,_max:Null<Float>,_step:Null<Float>, _reflect:String, _target:mint.Control) : Node {
+        def(_value, 0.0);
+        if(_target != null) {
+            var _val:Null<Float> = Reflect.field(_target.user, _reflect);
+            if(_val != null) _value = _val;
+            Reflect.setField(_target.user, _reflect, _value);
+        }
+
+        return {
+            { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:178, h:42, 
+                children:[
+                    { name:'$_name.label', type:'mint.Label', 
+                        x:2, y:2, w:174, h:22, text: _label, align:left  },
+                    { name:'$_name.slider', type:'mint.Slider', reflect:_reflect, target:_target,
+                        x:2, y:24, w:174, h:16, min:_min, max:_max, value:_value, step:_step },
+                ]
+            }
+        }; //
+    } //slider_node
+
     function bounds_node(_name:String, _label:String='bounds:') : Node {
         var _ww = 41; var _xx = 2; var _p = 3; var _yy = 3;
         return { name:'$_name.panel', type:'mint.Panel', 
@@ -500,6 +538,10 @@ class Main extends luxe.Game {
 
             var _items = controls_for_nodes(ui_canvas, _nodes);
             for(_item in _items.roots) ed_props.add_item(_item);
+
+            //disable misleading hovers
+
+                _items.map.get('boundslabel.label').mouse_input = false;
 
             //parent handling
 
@@ -563,12 +605,16 @@ class Main extends luxe.Game {
             //low priority common types
 
                 var _low_nodes:Array<Node> = [
+                    label_node('editprops', 'editor properties'),
                     edit_node('depth', 'depth:', '${_control.depth}', null, null),
                     label_node('spacer', ''),
                 ];
 
                 var _low_items = controls_for_nodes(ui_canvas, _low_nodes);
                 for(_item in _low_items.roots) ed_props.add_item(_item);
+
+                _low_items.map.get('editprops.label').mouse_input = false;
+                _low_items.map.get('spacer.label').mouse_input = false;
 
                 //depth handling
 
@@ -612,6 +658,7 @@ class Main extends luxe.Game {
                 
                 case 'edit': edit_node(_node.name, _node.label, _node.text, _node.reflect, _control);
                 case 'check': check_node(_node.name, _node.label, _node.state, _node.reflect, _control);
+                case 'range': slider_node(_node.name, _node.label, _node.value, _node.min, _node.max, _node.step, _node.reflect, _control);
 
                 case _: {
                     trace('inspector: unknown node type `${_node.type}` ($_json_name)');
@@ -843,5 +890,6 @@ typedef Node = {
     ?w:Int, ?h:Int,
     ?text:String, ?text_size:Int, ?align:TextAlign,
     ?reflect:String, ?target:mint.Control, ?state:Bool,
+    ?min:Float, ?max:Float, ?value:Float, ?step:Float, 
     ?children:Array<Node>
 }
