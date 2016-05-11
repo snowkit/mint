@@ -131,14 +131,14 @@ class Scroll extends Control {
 
         drag_v = true;
         drag_y = e.y - scrollv.y;
-        scrollv.focus();
+        scrollv.capture();
 
     } //scrollvdown
 
     function scrollvup(e:MouseEvent,_) {
 
         drag_v = false;
-        scrollv.unfocus();
+        scrollv.uncapture();
 
     } //scrollvup
 
@@ -162,14 +162,14 @@ class Scroll extends Control {
 
         drag_h = true;
         drag_x = e.x - scrollh.x;
-        scrollh.focus();
+        scrollh.capture();
 
     } //scrollhdown
 
     function scrollhup(e:MouseEvent,_) {
 
         drag_h = false;
-        scrollh.unfocus();
+        scrollh.uncapture();
 
     } //scrollhup
 

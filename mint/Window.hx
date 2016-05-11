@@ -145,7 +145,7 @@ class Window extends Control {
         if(collapsed) return;
 
         resizing = false;
-        resize_handle.unfocus();
+        resize_handle.uncapture();
 
     } //on_resize_up
 
@@ -158,7 +158,7 @@ class Window extends Control {
         resizing = true;
         resize_x = e.x;
         resize_y = e.y;
-        resize_handle.focus();
+        resize_handle.capture();
         e.bubble = false;
 
     } //on_resize_down
@@ -311,7 +311,7 @@ class Window extends Control {
                     dragging = true;
                     drag_x = e.x;
                     drag_y = e.y;
-                    focus();
+                    capture();
                 } //if inside title bounds
             } //!dragging
 
@@ -323,7 +323,7 @@ class Window extends Control {
 
         if(dragging) {
             dragging = false;
-            unfocus();
+            uncapture();
         } //dragging
 
     } //mouseup

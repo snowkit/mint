@@ -98,7 +98,7 @@ class Slider extends Control {
         super.mousedown(e);
 
         dragging = true;
-        focus();
+        capture();
         update_value_from_mouse(e);
 
     } //mousedown
@@ -192,7 +192,7 @@ class Slider extends Control {
     override function mouseup(e:MouseEvent) {
 
         dragging = false;
-        unfocus();
+        uncapture();
 
         super.mouseup(e);
 
