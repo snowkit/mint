@@ -4,13 +4,15 @@ import luxe.Log.*;
 
 class ControlRenderer extends mint.render.Render {
 
-    var bounds : phoenix.geometry.RectangleGeometry;
-    var select : phoenix.geometry.RectangleGeometry;
-    var resizer : phoenix.geometry.RectangleGeometry;
+    public var select : phoenix.geometry.RectangleGeometry;
+    public var light : phoenix.geometry.RectangleGeometry;
+    public var bounds : phoenix.geometry.RectangleGeometry;
+    public var resizer : phoenix.geometry.RectangleGeometry;
 
-    var color : luxe.Color;
-    var colorsel : luxe.Color;
-    var text : luxe.Text;
+    public var color : luxe.Color;
+    public var colorsel : luxe.Color;
+    public var colorlit : luxe.Color;
+    public var text : luxe.Text;
     var render : EditorRendering;
     var rsize = 8;
 
@@ -20,13 +22,14 @@ class ControlRenderer extends mint.render.Render {
 
         super(_render, _control);
 
-        var resizerect = new luxe.Rectangle(control.right-rsize, control.bottom-rsize, rsize, rsize);
         color = new Color(1,1,1,0.8);
         colorsel = new Color(1,0.2,0.1,1);
+        colorlit = new Color(1,0.2,0.1,1);
 
         bounds = Luxe.draw.rectangle({ x:control.x, y:control.y, w:control.w, h:control.h, color:color });
-        resizer = Luxe.draw.rectangle({ rect:resizerect, color:color });
+        resizer = Luxe.draw.rectangle({ x:control.right-rsize, y:control.bottom-rsize, w:rsize, h:rsize, color:color });
         select = Luxe.draw.rectangle({ x:control.x-2, y:control.y-2, w:control.w+4, h:control.h+4, color:colorsel, visible:false });
+        light = Luxe.draw.rectangle({ x:control.x+1, y:control.y+1, w:control.w-2, h:control.h-2, color:colorlit, visible:false });
 
         text = new luxe.Text({
             batcher: render.options.batcher,
@@ -41,11 +44,18 @@ class ControlRenderer extends mint.render.Render {
         });
 
         control.mouse_input = true;
-        control.onmouseenter.listen(function(_,_){ text.visible = true; color.a = 1;  });
-        control.onmouseleave.listen(function(_,_){ text.visible = false; color.a = 0.7;  });
-        control.onfocused.listen(function(state:Bool) { select.visible = state; });
-        control.onrenamed.listen(function(prev:String,name:String) { 
-            text.text = '${control.user.type}(${name})\n${control.x_local},${control.y_local},${control.w},${control.h}';
+        control.onmouseenter.listen(function(_,_){ text.visible = true || control.isfocused; color.a = 1;  });
+        control.onmouseleave.listen(function(_,_){ text.visible = false || control.isfocused; color.a = 0.7;  });
+        control.onfocused.listen(function(state:Bool) { 
+            select.visible = state; 
+            text.visible = state;
+            for(_child in control.children) {
+                var r:ControlRenderer = cast _child.renderer;
+                r.light.visible = state;
+            }
+        });
+        control.onrenamed.listen(function(_prev:String,_name:String) { 
+            text.text = '${control.user.type}(${_name})\n${control.x_local},${control.y_local},${control.w},${control.h}';
         });
 
     } //new
@@ -54,6 +64,7 @@ class ControlRenderer extends mint.render.Render {
         bounds.drop();
         resizer.drop();
         select.drop();
+        light.drop();
         text.destroy();
         bounds = null;
         resizer = null;
@@ -63,6 +74,7 @@ class ControlRenderer extends mint.render.Render {
     override function onbounds() {
         bounds.set_xywh(control.x, control.y, control.w, control.h);
         select.set_xywh(control.x-2, control.y-2, control.w+4, control.h+4);
+        light.set_xywh(control.x+1, control.y+1, control.w-2, control.h-2);
         resizer.set_xywh(control.right-rsize, control.bottom-rsize, rsize, rsize);
         text.bounds = new luxe.Rectangle(control.x, control.y, control.w, control.h);
         text.text = '${control.user.type}(${control.name})\n${control.x_local},${control.y_local},${control.w},${control.h}';
@@ -73,7 +85,7 @@ class ControlRenderer extends mint.render.Render {
     }
 
     override function ondepth( _depth:Float ) {
-        bounds.depth = text.depth = _depth;
+        bounds.depth = text.depth =  _depth;
     }
 
 

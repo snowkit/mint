@@ -1,3 +1,4 @@
+import EditorRendering.ControlRenderer;
 import luxe.Color;
 import luxe.Vector;
 import luxe.Input;
@@ -27,6 +28,8 @@ class Main extends luxe.Game {
     var ui_batch: phoenix.Batcher;
     var ui_canvas: mint.Canvas;
     var ui_render: LuxeMintRender;
+    var ui_info: mint.Label;
+    
     var ed_canvas: mint.Canvas;
     var ed_render: EditorRendering;
 
@@ -68,9 +71,15 @@ class Main extends luxe.Game {
         controls = new Map();
         create_palette();
 
+        ui_info = new mint.Label({ parent:ui_canvas, text:'...', text_size:22 });
+        layout.margin(ui_info, left, fixed, 200);
+        layout.margin(ui_info, right, fixed, 0);
+
     } //ready`
 
     var controls: Map<Int, Ctrl>;
+    var parenting:mint.Control;
+    var possible_parent:mint.Control;
 
     var down_x = 0;
     var down_y = 0;
@@ -80,10 +89,12 @@ class Main extends luxe.Game {
 
     function ondown(e:mint.types.MouseEvent,c:mint.Control) {
 
+        e.bubble = false;
+
         c.capture();
 
         if( in_rect(e.x, e.y, c.right-rsize, c.bottom-rsize, rsize, rsize) ) {
-            resizing = true;
+            resizing = true;    
         } else {
             moving = true;
         }
@@ -93,8 +104,8 @@ class Main extends luxe.Game {
     }
 
     function onmove(e:mint.types.MouseEvent, c:mint.Control) {
-        if(ed_canvas.captured == c) {
 
+        if(ed_canvas.captured == c) {
             if(moving) {
                 c.set_pos(c.x + (e.x - down_x), c.y + (e.y - down_y));
             } else if(resizing) {
@@ -111,10 +122,15 @@ class Main extends luxe.Game {
         }
     }
 
-    function onup(_,_) {
-        ed_canvas.captured.uncapture();
+    function onup(e:mint.types.MouseEvent,c:mint.Control) {        
+
+        if(ed_canvas.captured != null) {
+            ed_canvas.captured.uncapture();
+        }
+        
         resizing = false;
         moving = false;
+
     }
 
     function duplicate(c:mint.Control) {
@@ -130,22 +146,16 @@ class Main extends luxe.Game {
         def(_w, 256);
         def(_h, 64);
 
-        var _class = Type.resolveClass(_type);
-        if(_class == null) {
-            trace('cant create type of `$_type`, resolve class failed');
-            return;
-        }
-
-        var _options = {
+        var control = new mint.Panel({
             parent: ed_canvas, name: _name, user: { type:_type },
             x:_x, y:_y, w:_w, h:_h, w_min:16, h_min:16,
-        };
-
-        var control:mint.Control = Type.createInstance(_class, [_options]);
+        });
 
         control.onmousedown.listen(ondown);
         control.onmousemove.listen(onmove);
         control.onmouseup.listen(onup);
+
+        select(control);
 
     } //spawn_control
 
@@ -162,7 +172,7 @@ class Main extends luxe.Game {
             x: 0,
             y: 0,
             w: 200,
-            h: 128,
+            h: 256,
             title: 'Controls',
             closable: false,
             moveable: false,
@@ -174,7 +184,7 @@ class Main extends luxe.Game {
             parent: ui_canvas,
             name:'ed_property',
             x: 0,
-            y: 128,
+            y: 256,
             w: 200,
             h: 20,
             title: 'Properties',
@@ -246,18 +256,25 @@ class Main extends luxe.Game {
         _he.text = '${_control.h}';
     }
 
-    function control_for_node(_parent:mint.Control, node:Node) {
+    function control_for_node(_parent:mint.Control, node:Node) : mint.Control {
         def(node.x, 0);
         def(node.y, 0);
         def(node.text, 'text');
         var _control = switch(node.type) {
             case 'mint.TextEdit':
-                new mint.TextEdit({
+                var _edit = new mint.TextEdit({
                     parent:_parent, name: node.name,
                     x:node.x, y:node.y, w:node.w, h:node.h,
                     text: node.text, text_size: node.text_size, 
                     align:node.align,
                 }); 
+
+                if(node.reflect!=null && node.target != null) {
+                    _edit.onchange.listen(function(t,dt,ft) {
+                        Reflect.setField(node.target.user, node.reflect, t);
+                    });
+                }
+                _edit;
             case 'mint.Label':
                 new mint.Label({
                     parent:_parent, name: node.name,
@@ -304,13 +321,21 @@ class Main extends luxe.Game {
         return { map:_list, roots:_roots };
     }
 
-    function edit_node(_name:String, _label:String, _text:String) : Node {
+    function edit_node(_name:String, _label:String, _text:String, ?_target:mint.Control, ?_reflect:String) : Node {
+        if(_target != null && _reflect != null) {
+            var _value = Reflect.field(_target.user, _reflect);
+            if(_value != null) {
+                _text = '$_value';
+            } else {
+                Reflect.setField(_target.user, _reflect, _text);
+            }
+        }
         return {
             { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:186, h:48, 
                 children:[
                     { name:'$_name.label', type:'mint.Label', 
                         x:2, y:2, w:182, h:22, text: _label, align:left  },
-                    { name:'$_name.edit', type:'mint.TextEdit',
+                    { name:'$_name.edit', type:'mint.TextEdit', reflect:_reflect, target:_target,
                         x:2, y:24, w:182, h:22, text: _text },
                 ]
             }
@@ -353,26 +378,45 @@ class Main extends luxe.Game {
                 edit_node('name', 'name:', _control.name),
                 label_node('boundslabel', 'bounds:'),
                 bounds_node('bounds'),
+                edit_node('depth', 'depth:', '${_control.depth}'),
             ];
 
             var _items = controls_for_nodes(ui_canvas, _nodes);
             for(_item in _items.roots) ed_props.add_item(_item);
-            for(_item in _items.map) {
-                trace(_item.name);
-            }
+
+            //parent handling
+
+                var _parent = _items.map.get('parent.label');
+                    _parent.onmouseup.listen(function(_,_){
+                        parenting = _control;
+                        ui_info.text = 'select parent...';
+                    });
 
             //name handling
 
                 var _name:mint.TextEdit = cast _items.map.get('name.edit');
-                _name.onkeyup.listen(function(e,_){ 
-                    if(e.key == KeyCode.enter) {
-                        _control.name = _name.text;
-                        _name.unfocus();
-                    } else if(e.key == KeyCode.escape) {
-                        _name.text = _control.name;
-                        _name.unfocus();
-                    }
-                });
+                    _name.onkeyup.listen(function(e,_){ 
+                        if(e.key == KeyCode.enter) {
+                            _control.name = _name.text;
+                            _name.unfocus();
+                        } else if(e.key == KeyCode.escape) {
+                            _name.text = _control.name;
+                            _name.unfocus();
+                        }
+                    });
+
+            //depth handling
+
+                var _depth:mint.TextEdit = cast _items.map.get('depth.edit');
+                    _depth.onkeyup.listen(function(e,_){ 
+                        if(e.key == KeyCode.enter) {
+                            _control.depth = Std.parseFloat(_depth.text);
+                            _depth.unfocus();
+                        } else if(e.key == KeyCode.escape) {
+                            _depth.text = '${_control.depth}';
+                            _depth.unfocus();
+                        }
+                    });
 
             //bounds handling
 
@@ -420,18 +464,12 @@ class Main extends luxe.Game {
         var _name = _control.name;
         var _type = _control.user.type;
 
-        _into.add_item(control_for_node(ui_canvas, 
-            { name:'label.${_name}', type:'mint.Label', 
-                x:4, y:0, w:186, h:22, text:'$_type:', align:left }));
-
         switch(_type) {
             case 'mint.Label':
-                var _label:mint.Label = cast _control;
-                
                 var _nodes:Array<Node> = [
-                    edit_node('label.text', 'text:', _label.text),
-                    edit_node('label.align', 'align:', 'center'),
-                    edit_node('label.align_vertical', 'align vertical:', 'center'),
+                    edit_node('label.text', 'text:', 'label', _control, 'text'),
+                    edit_node('label.align', 'align:', 'center', _control, 'align'),
+                    edit_node('label.align_vertical', 'align vertical:', 'center', _control, 'align_vertical'),
                 ];
 
                 var _items = controls_for_nodes(ui_canvas, _nodes);
@@ -442,6 +480,7 @@ class Main extends luxe.Game {
     } //nodes_for_type
 
     function select(control:mint.Control) {
+        if(ed_canvas.focused!=null) deselect(ed_canvas.focused);
         control.focus();
         refresh_properties(control, false);
     }
@@ -462,7 +501,29 @@ class Main extends luxe.Game {
     override function onmousemove(e) {
 
         if(!moving) ui_canvas.mousemove( Convert.mouse_event(e) );
-        if(ui_canvas.marked == null) ed_canvas.mousemove( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(ui_canvas.marked == null) {
+
+            if(parenting != null) {
+
+                if(possible_parent != null) {
+                    ui_info.text = 'select parent...';
+                    (cast possible_parent.renderer:ControlRenderer).light.visible = false;
+                    possible_parent = null;
+                }
+
+                var _possible = ed_canvas.topmost_at_point(e.x, e.y);
+                if(_possible != null && 
+                    _possible != parenting) 
+                {
+                    ui_info.text = 'parent to `${_possible.user.type}( ${_possible.name} )`?';
+                    (cast _possible.renderer:ControlRenderer).light.visible = true;
+                    possible_parent = _possible;
+                }
+
+            } else {
+                ed_canvas.mousemove( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+            }
+        }
 
     }
 
@@ -476,17 +537,41 @@ class Main extends luxe.Game {
     override function onmouseup(e) {
 
         if(!moving) ui_canvas.mouseup( Convert.mouse_event(e) );
-        if(ui_canvas.marked == null) ed_canvas.mouseup( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(ui_canvas.marked == null) {
+
+            if(parenting != null) {
+
+                var _parent = possible_parent == null ? ed_canvas : possible_parent;
+                if(_parent != null) {
+                    var _child = parenting;
+                    var _x = _child.x; 
+                    var _y = _child.y;
+                    _parent.add(_child);
+                    _child.x = _x;
+                    _child.y = _y;
+                    (cast _parent.renderer:ControlRenderer).light.visible = false;
+                    _parent = possible_parent = null;
+                } 
+
+                (cast parenting.renderer:ControlRenderer).light.visible = false;
+                select(parenting);
+                parenting = null;
+                ui_info.text = '...';
+
+            } else {
+                ed_canvas.mouseup( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+            }
+        }
 
     }
 
     override function onmousedown(e) {
 
         ui_canvas.mousedown( Convert.mouse_event(e) );
-        if(ui_canvas.marked == null) {
+        if(ui_canvas.marked == null && parenting == null) {
+
             if(ed_canvas.marked != null) {
-                if(ed_canvas.focused!=ed_canvas.marked) {
-                    if(ed_canvas.focused!=null) deselect(ed_canvas.focused);
+                if(ed_canvas.focused!=ed_canvas.marked) {                    
                     select(ed_canvas.marked);
                 }
             } else {
@@ -494,7 +579,9 @@ class Main extends luxe.Game {
                     deselect(ed_canvas.focused);
                 }
             }
+            
             ed_canvas.mousedown( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+
         }
 
     } //onmousedown
@@ -570,5 +657,6 @@ typedef Node = {
     ?x:Int, ?y:Int,
     ?w:Int, ?h:Int,
     ?text:String, ?text_size:Int, ?align:TextAlign,
+    ?reflect:String, ?target:mint.Control, 
     ?children:Array<Node>
 }
