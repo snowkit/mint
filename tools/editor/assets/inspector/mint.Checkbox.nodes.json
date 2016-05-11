@@ -1,0 +1,9 @@
+[
+  {
+    "name": "checkbox.state",
+    "type": "check",
+    "label": "state",
+    "state": false,
+    "reflect": "state"
+  }
+]
