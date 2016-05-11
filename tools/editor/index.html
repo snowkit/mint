@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <link rel="icon" href="favicon.png"/>
+        <meta charset="utf-8">
+
+        <style>
+            #app {
+                display: block;
+                position: relative;
+                margin: 0.1em auto 0 auto;
+            }
+            #drop {
+                clear: both;
+                display: block;
+                margin: 0 auto 0 auto;
+                width: 20em;
+                height: 3em;
+                text-align: center;
+                line-height: 3em;
+                font-family: helvetica, sans-serif;
+                font-size: 1.4em;
+                background: #3A3A3A;
+                color: #9dca63;
+            }
+        </style>
+
+        {{#each project.app.web.libs~}}
+            <script type="text/javascript" src="{{this}}"></script>
+        {{/each}}
+
+
+        <script>
+            function handleFileSelect(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                var files = evt.dataTransfer.files;
+                for (var i = 0, f; f = files[i]; i++) {
+
+                    if(f.type == 'application/json') {
+                        window.game.message('loading... `'+f.name+'`');
+                        var reader = new FileReader();                            
+                        reader.onload = (function(_file) {
+                            return function(e) {
+                                window.game.load_string(_file.name, e.target.result);
+                                window.game.message('...');
+                            };
+                        })(f);
+                        reader.readAsText(f);
+                    } else {
+                        window.game.message('invalid file `'+f.name+'`, only json files!');
+                    }
+                }
+            }
+
+            function handleDragOver(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+            }
+
+            window.onload = function(){
+                var drop = document.getElementById('drop');
+                    drop.addEventListener('dragover', handleDragOver, false);
+                    drop.addEventListener('drop', handleFileSelect, false);
+            }
+
+        </script>
+
+    </head>
+
+    <body style="padding: 0; margin: 0; background-color: #111111;">
+
+        <script type="text/javascript" src="./{{project.app.name}}{{#if project.app.web.min}}.min{{/if}}.js"></script>
+
+        <div id="drop">drop mint json files here to load</div>
+
+    </body>
+
+</html>

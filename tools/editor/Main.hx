@@ -60,6 +60,10 @@ class Main extends luxe.Game {
 
     override function ready() {
 
+        #if js
+        untyped window.game = this;
+        #end
+
         // Luxe.snow.windowing.enable_vsync(false);
         Luxe.renderer.clear_color.rgb(0x161619);
 
@@ -169,6 +173,10 @@ class Main extends luxe.Game {
         return _node;
     }
 
+    function message(_message:String) {
+        ui_info.text = _message;
+    }
+
     function load_string(_name:String, _contents:String) {
         load(_name, haxe.Json.parse(_contents));
     }
@@ -214,7 +222,7 @@ class Main extends luxe.Game {
             _list.push(get_export_node(_control, true));
         }
 
-        trace('\n\n' + haxe.Json.stringify(_list,null,'  ') + '\n\n');
+        return haxe.Json.stringify(_list,null,'  ');
 
     } //export
 
@@ -723,11 +731,33 @@ class Main extends luxe.Game {
         }
 
         if(e.keycode == Key.key_e && e.mod.shift) {
-            export();
+            var _str = export();
+            #if js
+                var win = js.Browser.window.open('data:text/json,' + untyped encodeURIComponent(_str), "_blank");
+                win.focus();
+            #end
+            #if cpp
+                var _path = dialogs.Dialogs.save('save mint json', {ext:'json', desc:'mint json file'});
+                if(_path != null && _path != '') {
+                    sys.io.File.saveContent(_path, _str);
+                }
+            #end
+            trace('\n\n$_str\n\n');
         }
 
         if(e.keycode == Key.key_i && e.mod.shift) {
-            load('test.json', Luxe.resources.json('assets/test.json').asset.json);
+            #if cpp
+                var _path = dialogs.Dialogs.open('load mint json', [{ext:'json', desc:'mint json file'}]);
+                if(_path != null && _path != '') {
+                    var _str = sys.io.File.getContent(_path);
+                    if(_str != null && _str.length > 0) {
+                        load_string(_path, _str);
+                    } else {
+                        trace('invalid file from path: $_path');
+                    }
+                }
+            #end
+            // load('test.json', Luxe.resources.json('assets/test.json').asset.json);
         }
 
         if(e.keycode == Key.key_d) {

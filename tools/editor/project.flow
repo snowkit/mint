@@ -20,13 +20,15 @@
     build : {
       dependencies : {
         luxe : '*',
-        mint : '*'
+        mint : '*',
+        linc_dialogs:'*'
       }
     },
 
     files : {
       assets : 'assets/',
       config : 'config.json',
+      index : { path:'index.html => index.html', template:'project' }
     }
 
   }
