@@ -1,0 +1,72 @@
+[
+  {
+    "h": 96,
+    "x": 0,
+    "y": 0,
+    "type": "mint.Panel",
+    "children": [
+      {
+        "h": 40,
+        "x": 10,
+        "y": 10,
+        "path": "assets/icons/clear-48.png",
+        "type": "mint.Image",
+        "w": 40,
+        "name": "image.tools.clear"
+      },
+      {
+        "h": 24,
+        "x": 10,
+        "align_vertical": "center",
+        "y": 64,
+        "type": "mint.Label",
+        "name": "label.tools.tooltip",
+        "text_size": "22",
+        "align": "center",
+        "text": "...",
+        "w": 220
+      },
+      {
+        "h": 40,
+        "x": 70,
+        "y": 10,
+        "path": "assets/icons/load-48.png",
+        "type": "mint.Image",
+        "w": 40,
+        "name": "image.tools.load"
+      },
+      {
+        "h": 40,
+        "x": 190,
+        "y": 10,
+        "path": "assets/icons/options-48.png",
+        "type": "mint.Image",
+        "w": 40,
+        "name": "image.tools.options"
+      },
+      {
+        "h": 36,
+        "x": 8,
+        "align_vertical": "top",
+        "y": 96,
+        "type": "mint.Label",
+        "name": "label.tools.debug",
+        "text_size": "12",
+        "align": "right",
+        "text": "...",
+        "w": 220
+      },
+      {
+        "h": 40,
+        "x": 130,
+        "y": 10,
+        "path": "assets/icons/save-48.png",
+        "type": "mint.Image",
+        "w": 40,
+        "name": "image.tools.save"
+      }
+    ],
+    "w": 240,
+    "name": "panel.tools"
+  }
+]

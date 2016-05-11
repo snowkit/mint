@@ -12,8 +12,9 @@
         "y": 50,
         "type": "mint.Label",
         "name": "label.fullscreen",
-        "align": "center",
+        "text_size": "14",
         "text": "Toggle fullscreen",
+        "align": "left",
         "w": 170
       },
       {
@@ -39,25 +40,34 @@
         "y": 80,
         "type": "mint.Label",
         "name": "label.screenshake",
-        "align": "center",
+        "text_size": "14",
         "text": "Toggle screenshake",
+        "align": "left",
         "w": 170
       },
       {
         "h": 22,
         "x": 40,
+        "align_vertical": "center",
         "y": 120,
         "type": "mint.Button",
-        "w": 70,
-        "name": "button.cancel"
+        "name": "button.cancel",
+        "text_size": "14",
+        "align": "center",
+        "text": "cancel",
+        "w": 70
       },
       {
         "h": 22,
         "x": 130,
+        "align_vertical": "center",
         "y": 120,
         "type": "mint.Button",
-        "w": 70,
-        "name": "button.ok"
+        "name": "button.ok",
+        "text_size": "14",
+        "align": "center",
+        "text": "ok",
+        "w": 70
       },
       {
         "h": 30,
@@ -66,8 +76,8 @@
         "y": 5,
         "type": "mint.Label",
         "name": "label.options",
-        "align": "center",
         "text": "Options",
+        "align": "center",
         "w": 140
       }
     ],
