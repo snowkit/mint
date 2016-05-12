@@ -38,7 +38,7 @@ class Scroll extends mint.render.Render {
 
         var _opt: LuxeMintScrollOptions = scroll.options.options;
 
-        color = def(_opt.color, new Color().rgb(0x343434));
+        color = def(_opt.color, new Color().rgb(0x19191a));
         color_handles = def(_opt.color_handles, new Color().rgb(0x9dca63));
 
         visual = new luxe.Sprite({
