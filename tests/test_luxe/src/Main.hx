@@ -46,12 +46,16 @@ class Main extends luxe.Game {
             //     x: 0, y:0, w: 960, h: 640
             // });
 
+        var _scale = Luxe.screen.device_pixel_ratio;
         var auto_canvas = new AutoCanvas({
             name:'canvas',
             rendering: rendering,
             options: { color:new Color(1,1,1,0.0) },
-            x: 0, y:0, w: 960, h: 640
+            scale: _scale,
+            x: 0, y:0, w: Luxe.screen.w/_scale, h: Luxe.screen.h/_scale
         });
+
+        trace('canvas scale: $_scale');
 
         auto_canvas.auto_listen();
         canvas = auto_canvas;

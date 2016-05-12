@@ -29,11 +29,12 @@ class Main extends luxe.Game {
         rendering = new LuxeMintRender();
         layout = new Margins();
         
+        var _scale = Luxe.screen.device_pixel_ratio;
         canvas = new AutoCanvas({
             name:'canvas',
             rendering: rendering,
             options: { color:new Color(1,1,1,0) },
-            x: 0, y:0, w: Luxe.screen.w, h: Luxe.screen.h
+            x: 0, y:0, scale:_scale, w: Luxe.screen.w/_scale, h: Luxe.screen.h/_scale
         });
 
         focus = new Focus(canvas);
