@@ -1,0 +1,32 @@
+[
+  {
+    "h": 128,
+    "x": 0,
+    "y": 0,
+    "type": "mint.Panel",
+    "children": [
+      {
+        "h": 24,
+        "x": 4,
+        "align_vertical": "center",
+        "y": 4,
+        "type": "mint.Label",
+        "name": "label.properties",
+        "text_size": "14",
+        "align": "center",
+        "text": "properties",
+        "w": 232
+      },
+      {
+        "h": 92,
+        "x": 4,
+        "y": 32,
+        "type": "mint.List",
+        "w": 232,
+        "name": "list.properties"
+      }
+    ],
+    "w": 240,
+    "name": "panel.properties"
+  }
+]
