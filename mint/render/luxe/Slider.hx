@@ -14,6 +14,7 @@ import luxe.Log.*;
 private typedef LuxeMintSliderOptions = {
     var color: Color;
     var color_bar: Color;
+    var color_bar_hover: Color;
 }
 
 class Slider extends mint.render.Render {
@@ -25,6 +26,7 @@ class Slider extends mint.render.Render {
 
     public var color: Color;
     public var color_bar: Color;
+    public var color_bar_hover: Color;
 
     var render: LuxeMintRender;
 
@@ -39,6 +41,7 @@ class Slider extends mint.render.Render {
 
         color = def(_opt.color, new Color().rgb(0x373739));
         color_bar = def(_opt.color_bar, new Color().rgb(0x9dca63));
+        color_bar_hover = def(_opt.color_bar_hover, new Color().rgb(0xb5d789));
 
         visual = Luxe.draw.box({
             id: control.name+'.visual',
@@ -67,6 +70,8 @@ class Slider extends mint.render.Render {
         update_clip(scale);
 
         slider.onchange.listen(onchange);
+        slider.onmouseenter.listen(function(_,_) { bar.color = color_bar_hover; });
+        slider.onmouseleave.listen(function(_,_) { bar.color = color_bar; });
 
     } //new
 
