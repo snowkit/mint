@@ -37,7 +37,7 @@ class Progress extends mint.render.Render {
 
         var _opt: LuxeMintProgressOptions = progress.options.options;
 
-        color = def(_opt.color, new Color().rgb(0x242424));
+        color = def(_opt.color, new Color().rgb(0x292929));
         color_bar = def(_opt.color_bar, new Color().rgb(0x9dca63));
 
         visual = Luxe.draw.box({
