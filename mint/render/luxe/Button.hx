@@ -58,7 +58,7 @@ class Button extends mint.render.Render {
         button.onmouseenter.listen(function(e,c) { visual.color = color_hover; });
         button.onmouseleave.listen(function(e,c) { visual.color = color; });
         button.onmousedown.listen(function(e,c) { visual.color = color_down; });
-        button.onmouseup.listen(function(e,c) { visual.color = color_hover; });
+        button.onmouseup.listen(function(e,c) { visual.color = color; });
 
     } //new
 
