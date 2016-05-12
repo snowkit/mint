@@ -833,6 +833,16 @@ class Control {
 
     } //unmark
 
+    function refresh_bounds() {
+            
+        onbounds.emit();
+        
+        for(_child in children) {
+            _child.refresh_bounds();
+        }
+
+    } //refresh_bounds
+
     var updating = false;
     function bounds_changed(_dx:Float=0.0, _dy:Float=0.0, _dw:Float=0.0, _dh:Float=0.0) {
         

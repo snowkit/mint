@@ -14,6 +14,11 @@ typedef CanvasOptions = {
 
     > ControlOptions,
 
+        /** The scaling factor for this canvas.
+            Note that this value is a hint for rendering the canvas,
+            it does not affect any coordinates directly. */
+    @:optional var scale: Float;
+
 } //CanvasOptions
 
 
@@ -34,6 +39,10 @@ class Canvas extends Control {
     @:isVar public var captured (get,set) : Control;
         /** Whether or not the current focus needs refreshing. */
     public var focus_invalid : Bool = true;
+        /** The canvas scale factor.
+            Note that this value is a hint for rendering the canvas,
+            it does not affect any coordinates directly. */
+    public var scale (default, set) : Float = 1.0;
 
         /** An event for when the focused state changes */ 
     public var onfocusedchange  : Signal<Control->Void>;
@@ -41,6 +50,8 @@ class Canvas extends Control {
     public var onmarkedchange   : Signal<Control->Void>;
         /** An event for when the captured state changes */ 
     public var oncapturedchange : Signal<Control->Void>;
+        /** On scale changed */
+    public var onscalechange : Signal<Float->Float->Void>;
 
     var options: CanvasOptions;
 
@@ -51,6 +62,7 @@ class Canvas extends Control {
         onfocusedchange = new Signal();
         onmarkedchange = new Signal();
         oncapturedchange = new Signal();
+        onscalechange = new Signal();
 
         assertnull(options, "No options given to canvas, at least a Renderer is required.");
         assertnull(options.rendering, "No Rendering given to Canvas, cannot create a canvas without one.");
@@ -190,18 +202,39 @@ class Canvas extends Control {
         onfocusedchange.clear();
         onmarkedchange.clear();
         oncapturedchange.clear();
+        onscalechange.clear();
 
         onfocusedchange = null;
         onmarkedchange = null;
         oncapturedchange = null;
+        onscalechange = null;
 
     } //destroy
+
+//getters/setters
+    
+
+    function set_scale(_scale:Float) {
+
+        var _prev = scale;  
+        scale = _scale;
+
+        if(_scale != _prev) {
+             refresh_bounds();
+        }
+
+        onscalechange.emit(_scale, _prev);
+
+        return scale;
+
+    } //set_scale
 
     function get_focused() : Control {
 
         return focused;
 
     } //get_focused
+
 
     function set_focused(_control:Control) : Control {
 
