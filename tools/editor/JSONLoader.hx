@@ -10,13 +10,13 @@ typedef LoaderItems = {
 
 class JSONLoader {
 
-    public static function parse(_parent:mint.Control, _name:String, _json:String, _offset_x:Int=0, _offset_y:Int=0) : LoaderItems {
+    public static function parse(_parent:mint.Control, _name:String, _json:String, _offset_x:Float=0, _offset_y:Float=0) : LoaderItems {
         
         return load(_parent, _name, haxe.Json.parse(_json), _offset_x, _offset_y);
 
     } //parse
 
-    public static function load(_parent:mint.Control, _name:String, _json:Dynamic, _offset_x:Int=0, _offset_y:Int=0) : LoaderItems {
+    public static function load(_parent:mint.Control, _name:String, _json:Dynamic, _offset_x:Float=0, _offset_y:Float=0) : LoaderItems {
 
         var _map:Map<String, mint.Control> = new Map();
         var _roots:Array<mint.Control> = [];
@@ -41,7 +41,7 @@ class JSONLoader {
         }
     }
 
-    static function load_control(_parent:mint.Control, _source:String, _node:Dynamic, _offset_x:Int=0, _offset_y:Int=0) : mint.Control {
+    static function load_control(_parent:mint.Control, _source:String, _node:Dynamic, _offset_x:Float=0, _offset_y:Float=0) : mint.Control {
 
         var _options:Dynamic = {}
 

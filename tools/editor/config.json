@@ -1,0 +1,45 @@
+{
+    "controls":[
+        { "type":"mint.Control",  "name":"empty control", "image":"assets/icons/control-96.png" },
+        { "type":"mint.Panel",    "name":"panel",    "image":"assets/icons/panel-96.png" },
+        { "type":"mint.Label",    "name":"label",    "image":"assets/icons/label-96.png" },
+        { "type":"mint.Button",   "name":"button",   "image":"assets/icons/button-96.png" },
+        { "type":"mint.Image",    "name":"image",    "image":"assets/icons/image-96.png" },
+        { "type":"mint.List",     "name":"list",     "image":"assets/icons/list-96.png" },
+        { "type":"mint.Slider",   "name":"slider",   "image":"assets/icons/slider-96.png" },
+        { "type":"mint.Scroll",   "name":"scroll",   "image":"assets/icons/scroll-96.png" },
+        { "type":"mint.Checkbox", "name":"checkbox", "image":"assets/icons/check-96.png" },
+        { "type":"mint.Dropdown", "name":"dropdown", "image":"assets/icons/dropdown-96.png" },
+        { "type":"mint.TextEdit", "name":"textedit", "image":"assets/icons/edit-96.png" },
+        { "type":"mint.Progress", "name":"progress", "image":"assets/icons/progress-96.png" },
+        { "type":"mint.Window",   "name":"window",   "image":"assets/icons/window-96.png" }
+    ],
+    "resources": {
+        "images":[
+            { "id":"assets/icons/control-96.png" },
+            { "id":"assets/icons/panel-96.png" },
+            { "id":"assets/icons/label-96.png" },
+            { "id":"assets/icons/button-96.png" },
+            { "id":"assets/icons/check-96.png" },
+            { "id":"assets/icons/image-96.png" },
+            { "id":"assets/icons/list-96.png" },
+            { "id":"assets/icons/slider-96.png" },
+            { "id":"assets/icons/scroll-96.png" },
+            { "id":"assets/icons/progress-96.png" },
+            { "id":"assets/icons/dropdown-96.png" },
+            { "id":"assets/icons/edit-96.png" },
+            { "id":"assets/icons/window-96.png" }
+        ],
+        "json":[
+            { "id":"assets/inspector/mint.Button.nodes.json" },
+            { "id":"assets/inspector/mint.Checkbox.nodes.json" },
+            { "id":"assets/inspector/mint.Dropdown.nodes.json" },
+            { "id":"assets/inspector/mint.Image.nodes.json" },
+            { "id":"assets/inspector/mint.Label.nodes.json" },
+            { "id":"assets/inspector/mint.Progress.nodes.json" },
+            { "id":"assets/inspector/mint.Slider.nodes.json" },
+            { "id":"assets/inspector/mint.TextEdit.nodes.json" },
+            { "id":"assets/inspector/mint.Window.nodes.json" }
+        ]
+    }
+}

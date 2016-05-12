@@ -12,7 +12,6 @@ class ControlRenderer extends mint.render.Render {
     public var color : luxe.Color;
     public var colorsel : luxe.Color;
     public var colorlit : luxe.Color;
-    public var text : luxe.Text;
     var render : EditorRendering;
     var rsize = 8;
 
@@ -22,9 +21,9 @@ class ControlRenderer extends mint.render.Render {
 
         super(_render, _control);
 
-        color = new Color(1,1,1,0.8);
+        color = new Color(1,1,1,0.5);
         colorsel = new Color(1,0.2,0.1,1);
-        colorlit = new Color(1,0.2,0.1,1);
+        colorlit = new Color(1,1,1,1).rgb(0x9dca63);
 
         var _inner = cs(1);
         var _outer = cs(2);
@@ -34,33 +33,18 @@ class ControlRenderer extends mint.render.Render {
         select = Luxe.draw.rectangle({ x:sx-_outer, y:sy-_outer, w:sw+(_outer*2), h:sh+(_outer*2), color:colorsel, visible:false });
         light = Luxe.draw.rectangle({ x:sx+_inner, y:sy+_inner, w:sw-(_inner*2), h:sh-(_inner*2), color:colorlit, visible:false });
 
-        text = new luxe.Text({
-            batcher: render.options.batcher,
-            bounds: new luxe.Rectangle(sx, sy, sw, sh),
-            color: color,
-            text: '${control.user.type}(${control.name})\n${control.x_local},${control.y_local},${control.w},${control.h}',
-            point_size: cs(12),
-            align: center,
-            align_vertical: center,
-            depth: render.options.depth + control.depth,
-            visible: false,
-        });
-
-        control.mouse_input = true;
-        control.onmouseenter.listen(function(_,_){ text.visible = true || control.isfocused; color.a = 1;  });
-        control.onmouseleave.listen(function(_,_){ text.visible = false || control.isfocused; color.a = 0.7;  });
-        control.onfocused.listen(function(state:Bool) { 
-            select.visible = state; 
-            text.visible = state;
-            for(_child in control.children) {
-                var r:ControlRenderer = cast _child.renderer;
-                r.light.visible = state;
-            }
-        });
-
-        control.onrenamed.listen(function(_prev:String,_name:String) { 
-            text.text = '${control.user.type}(${_name})\n${control.x_local},${control.y_local},${control.w},${control.h}';
-        });
+        if(control.canvas != control) {
+            control.mouse_input = true;
+            control.onmouseenter.listen(function(_,_){ color.a = 1;  });
+            control.onmouseleave.listen(function(_,_){ color.a = 0.5; });
+            control.onfocused.listen(function(state:Bool) { 
+                select.visible = state; 
+                for(_child in control.children) {
+                    var r:ControlRenderer = cast _child.renderer;
+                    r.light.visible = state;
+                }
+            });
+        }
 
     } //new
 
@@ -70,13 +54,11 @@ class ControlRenderer extends mint.render.Render {
         resizer.drop();
         select.drop();
         light.drop();
-        text.destroy();
 
         bounds = null;
         resizer = null;
         select = null;
         light = null;
-        text = null;
 
     } //ondestroy
 
@@ -90,17 +72,14 @@ class ControlRenderer extends mint.render.Render {
         light.set_xywh(sx+_inner, sy+_inner, sw-(_inner*2), sh-(_inner*2));
         resizer.set_xywh(cs(control.right-rsize), cs(control.bottom-rsize), cs(rsize), cs(rsize));
 
-        text.bounds = new luxe.Rectangle(sx, sy, sw, sh);
-        text.text = '${control.user.type}(${control.name})\n${control.x_local},${control.y_local},${control.w},${control.h}';
-
     } //onbounds
 
     override function onvisible( _visible:Bool ) {
-        bounds.visible = text.visible = _visible;
+        bounds.visible = _visible;
     }
 
     override function ondepth( _depth:Float ) {
-        bounds.depth = text.depth =  _depth;
+        bounds.depth =  _depth;
     }
 
 

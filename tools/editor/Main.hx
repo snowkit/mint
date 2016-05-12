@@ -16,6 +16,14 @@ import mint.focus.Focus;
 import JSONLoader;
 import EditorRendering.ControlRenderer;
 
+typedef UserConfig = {
+    var controls:Array<{ name:String, type:String, image:String }>;
+    var resources:{ 
+        images:Array<luxe.Parcel.TextureInfo>, 
+        json:Array<luxe.Parcel.JSONInfo>, 
+    };
+}
+
 class Main extends luxe.Game {
 
     var ui_batch: phoenix.Batcher;
@@ -31,35 +39,57 @@ class Main extends luxe.Game {
     var ui_focus: Focus;
     var drag:util.CameraDrag;
 
+    var control_list: Array<{ name:String, type:String, image:String }> = [];
+
     override function config(config:luxe.GameConfig) {
 
         config.window.title = 'minted';
 
-        config.preload.textures.push({ id:'assets/960.png' });
-        config.preload.textures.push({ id:'assets/transparency.png' });
-        config.preload.textures.push({ id:'assets/mint.box.png' });
-        
-        config.preload.textures.push({ id:'assets/icons/load-48.png' });
-        config.preload.textures.push({ id:'assets/icons/save-48.png' });
-        config.preload.textures.push({ id:'assets/icons/clear-48.png' });
-        config.preload.textures.push({ id:'assets/icons/options-48.png' });
-        
-        config.preload.jsons.push({ id:'assets/test.json' });
-        config.preload.jsons.push({ id:'assets/editor/tools.mint.json' });
-        config.preload.jsons.push({ id:'assets/editor/controls.list.json' });
+        //required resources
 
-        config.preload.jsons.push({ id:'assets/inspector/mint.Button.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.Checkbox.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.Dropdown.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.Image.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.Label.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.Progress.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.Slider.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.TextEdit.nodes.json' });
-        config.preload.jsons.push({ id:'assets/inspector/mint.Window.nodes.json' });
+            config.preload.textures.push({ id:'assets/editor/load-96.png' });
+            config.preload.textures.push({ id:'assets/editor/save-96.png' });
+            config.preload.textures.push({ id:'assets/editor/clear-96.png' });
+            config.preload.textures.push({ id:'assets/editor/options-96.png' });
+            config.preload.textures.push({ id:'assets/editor/control-96.png' });
+            
+            config.preload.jsons.push({ id:'assets/editor/tools.mint.json' });
+            config.preload.jsons.push({ id:'assets/editor/controls.mint.json' });
+            config.preload.jsons.push({ id:'assets/editor/properties.mint.json' });
+
+        //user specified
+
+            var _user:UserConfig = config.user;
+            if(_user!=null) {
+
+                //resources
+                    if(_user.resources != null) {
+
+                        if(_user.resources.images!=null) {
+                            for(_image in _user.resources.images) {
+                                config.preload.textures.push(_image);
+                            }
+                        }
+
+                        if(_user.resources.json!=null) {
+                            for(_json in _user.resources.json) {
+                                config.preload.jsons.push(_json);
+                            }
+                        }
+
+                    } //user resources != null
+
+                //controls
+
+                    if(_user.controls != null) {
+                        control_list = _user.controls;
+                    }
+
+            } //user config != null
 
         return config;
-    }
+
+    } //config
 
     override function ready() {
 
@@ -78,22 +108,23 @@ class Main extends luxe.Game {
 
         var _scale = Luxe.screen.device_pixel_ratio;
         ui_canvas = new mint.Canvas({ rendering: ui_render, scale:_scale, w: Luxe.screen.w/_scale, h: Luxe.screen.h/_scale });
-        ed_canvas = new mint.Canvas({ rendering: ed_render, scale:_scale, user:{type:'mint.Canvas'}, x:200, w: (Luxe.screen.w/_scale)-200, h: Luxe.screen.h/_scale });
 
         layout = new Margins();
         ui_focus = new Focus(ui_canvas);
-        ed_focus = new Focus(ed_canvas);
 
-        new luxe.Sprite({ texture:Luxe.resources.texture('assets/960.png'), pos:new Vector(200,0), centered:false, depth:-1 });
         drag = Luxe.camera.add( new util.CameraDrag({name:'drag'}) );
         drag.zoom_speed = 0.05;
 
-        create_palette();
         create_tools();
+        create_palette();
+        create_properties();
 
-        ui_info = new mint.Label({ parent:ui_canvas, text:'...', text_size:22 });
-        layout.margin(ui_info, left, fixed, 200);
+        ui_info = new mint.Label({ parent:ui_canvas, text:'...', y:4, align_vertical:top, text_size:16 });
+        layout.margin(ui_info, left, fixed, 0);
         layout.margin(ui_info, right, fixed, ui_tools.w);
+
+        ed_canvas = new mint.Canvas({ rendering: ed_render, scale:_scale, user:{type:'mint.Canvas'}, x:2, y:2, w:(Luxe.screen.w/_scale)-ui_tools.w-4, h: (Luxe.screen.h/_scale)-4 });
+        ed_focus = new Focus(ed_canvas);
 
     } //ready`
 
@@ -257,6 +288,9 @@ class Main extends luxe.Game {
     } //spawn_control
 
     var ui_tools: mint.Panel;
+    var ui_controls: mint.Panel;
+    var ui_properties: mint.Panel;
+
     var ui_tooltip: mint.Label;
     var ui_debug: mint.Label;
 
@@ -267,7 +301,7 @@ class Main extends luxe.Game {
 
     } //load_ui_asset
 
-    function load_ui(_id:String, _parent:mint.Control, _x:Int, _y:Int) : LoaderItems {
+    function load_ui(_id:String, _parent:mint.Control, _x:Float, _y:Float) : LoaderItems {
     
         var _asset = load_ui_asset(_id);
     
@@ -282,7 +316,7 @@ class Main extends luxe.Game {
 
     function create_tools() {
 
-        var _ui = load_ui('assets/editor/tools.mint.json', ui_canvas, 200,0);
+        var _ui = load_ui('assets/editor/tools.mint.json', ui_canvas, 0, 0);
 
         ui_tools = cast _ui.controls.get('panel.tools');
         ui_tooltip = cast _ui.controls.get('label.tools.tooltip');
@@ -316,10 +350,10 @@ class Main extends luxe.Game {
             #end
         });
 
-        _clear.onmouseup.listen(function(_,_) { do_clear(); });
-        _load.onmouseup.listen(function(_,_) { do_load(); });
-        _save.onmouseup.listen(function(_,_) { do_save(); });
-        _options.onmouseup.listen(function(_,_) { do_options(); });
+        _clear.onmouseup.listen(function(_,_) { ui_tooltip.text = 'cleared'; do_clear(); });
+        _load.onmouseup.listen(function(_,_) { ui_tooltip.text = '...'; do_load(); });
+        _save.onmouseup.listen(function(_,_) { ui_tooltip.text = '...'; do_save(); });
+        _options.onmouseup.listen(function(_,_) { ui_tooltip.text = 'todo'; do_options(); });
 
         ui_tools.mouse_input = true;
 
@@ -327,85 +361,89 @@ class Main extends luxe.Game {
 
     } //create_tools
 
-    var ed_palette: mint.Window;
-    var ed_controls: mint.List;
-    var ed_property: mint.Window;
     var ed_props: mint.List;
 
     function create_palette() {
 
-        ed_palette = new mint.Window({
-            parent: ui_canvas,
-            name:'ed_palette',
-            x: 0,
-            y: 0,
-            w: 200,
-            h: 256,
-            title: 'Controls',
-            closable: false,
-            moveable: false,
-            resizable: false,
-            focusable: false,
-        });
+        var _ui = load_ui('assets/editor/controls.mint.json', ui_canvas, 0, ui_tools.bottom+4);
 
-        ed_property = new mint.Window({
-            parent: ui_canvas,
-            name:'ed_property',
-            x: 0,
-            y: 256,
-            w: 200,
-            h: 20,
-            title: 'Properties',
-            closable: false,
-            moveable: false,
-            resizable: false,
-            focusable: false,
-        });
+        ui_controls = cast _ui.controls.get('panel.controls');
+        
+        if(ui_controls == null) {
+            trace('ui controls is null?');
+            return;
+        }
 
-        ed_controls = new mint.List({
-            parent: ed_palette,
-            name: 'list.ed_controls',
-            x: 4, y: 30
-        });
+        layout.anchor(ui_controls, AnchorType.left, AnchorType.right, -Math.floor(ui_controls.w));
 
-        ed_props = new mint.List({
-            parent: ed_property,
-            name: 'list.ed_property',
-            x: 4, y: 30, options:{ view:{ color:new Color(0.099, 0.101, 0.107, 1) }}
-        });
+        var ui_controltip:mint.Label = cast _ui.controls.get('label.controls.tooltip');
 
-        layout.margin(ed_controls, right, fixed, 4);
-        layout.margin(ed_controls, bottom, fixed, 4);
-        layout.margin(ed_property, bottom, fixed, 2);
+        ui_controls.mouse_input = true;
+        ui_controls.onmouseenter.listen(function(_,_) { ui_controltip.text = '...'; });
+
+        var _container:mint.List = cast _ui.controls.get('list.controls');
+        var _list = control_list;
+
+        var _cols = 4;
+        var _rows = Math.ceil(_list.length / _cols);
+        for(_i in 0 ... _rows) {
+            var _row = new mint.Panel({ parent:ui_canvas, mouse_input:true, x:0, y:0, w:_container.w, h:54 });
+            for(_j in 0 ... _cols) {
+                var _item = _list[(_i*_cols)+_j];
+                if(_item != null) {
+
+                    var _image = 'assets/editor/control-96.png';
+                    if(_item.image != '' && _item.image != null) {
+                        _image = _item.image;
+                    }
+
+                    var _name = _item.name;
+                    var _type = _item.type;
+                    var _control = new mint.Image({
+                        parent: _row,
+                        mouse_input: true,
+                        name: 'palette.$_name',
+                        user: { type:_type, name:_name },
+                        path: _image,
+                        x: _j*58, y:2, w: 40, h: 40,
+                    });
+                    
+                    _control.onmouseenter.listen(function(_,_) { ui_controltip.text = _name; });
+                    _control.onmouseleave.listen(function(_,_) { ui_controltip.text = '...'; });
+                    _control.onmouseup.listen(function(_,_) { 
+                        spawn_control(_name, _type);
+                    });
+
+                } //not null
+            }//each column
+
+            _container.add_item(_row);
+
+        } //each row
+
+    } //create_palette
+
+    function create_properties() {
+
+        var _ui = load_ui('assets/editor/properties.mint.json', ui_canvas, 0, ui_controls.bottom+4);
+
+        ui_properties = cast _ui.controls.get('panel.properties');
+        if(ui_properties == null) {
+            trace('ui properties is null?');
+            return;
+        }
+
+        layout.anchor(ui_properties, left, right, -Math.floor(ui_properties.w));
+        layout.margin(ui_properties, bottom, fixed, 0);
+
+        ui_properties.mouse_input = true;
+
+        ed_props = cast _ui.controls.get('list.properties');
+
         layout.margin(ed_props, right, fixed, 4);
         layout.margin(ed_props, bottom, fixed, 4);
 
-        var _asset = Luxe.resources.json('assets/editor/controls.list.json').asset;
-        var _list: Array<{name:String, type:String}> = _asset.json;
-
-        for(_item in _list) {
-            var _name = _item.name;
-            var _type = _item.type;
-            var _label = new mint.Label({
-                parent: ui_canvas,
-                name: 'palette.$_name',
-                user: { type:_type, name:_name },
-                text: _name,
-                text_size: 16,
-                align: TextAlign.left,
-                x: 0, y:8,
-                w: ed_controls.w-12,
-                h: 32,
-            });
-            ed_controls.add_item(_label, 0, 0);
-            layout.size(_label, width, 100);
-        }
-
-        ed_controls.onselect.listen(function(idx:Int, ctrl:Control, _) {
-            spawn_control(ctrl.user.name, ctrl.user.type);
-        });
-
-    } //create_palette
+    } //create_properties
 
     function prop_onbounds(_control:mint.Control, _xe:mint.TextEdit, _ye:mint.TextEdit, _we:mint.TextEdit, _he:mint.TextEdit) {
         _xe.text = '${_control.x_local}';
@@ -448,13 +486,13 @@ class Main extends luxe.Game {
             case 'mint.Slider': 
                 var _range = new mint.Slider({
                     parent:_parent, name: node.name,
-                    x:node.x, y:node.y, w:node.w, h:node.h,
+                    x:node.x, y:node.y, w:node.w-26, h:node.h,
                     value: node.value, min: node.min, max: node.max, step: node.step,
-                    options: { color_bar:new Color().rgb(0x218BA0) }
+                    // options: { color_bar:new Color().rgb(0x218BA0) }
                 });
                 var _disp = new mint.Label({
                     parent:_range, name:'${node.name}.label', mouse_input:false,
-                    x:0, y:0, w:node.w, h:node.h, text:'${node.value}', text_size:11
+                    x:node.w-20, y:0, w:14, h:node.h, text:'${node.value}', text_size:11
                 });
                 if(node.reflect!=null && node.target != null) {
                     _range.onchange.listen(function(_value:Float,_percent:Float) {
@@ -472,6 +510,11 @@ class Main extends luxe.Game {
                 }); 
             case 'mint.Panel':
                 new mint.Panel({
+                    parent:_parent, name: node.name,
+                    x:node.x, y:node.y, w:node.w, h:node.h,
+                }); 
+            case 'mint.Control':
+                new mint.Control({
                     parent:_parent, name: node.name,
                     x:node.x, y:node.y, w:node.w, h:node.h,
                 }); 
@@ -516,13 +559,18 @@ class Main extends luxe.Game {
             Reflect.setField(_target.user, _reflect, _text);
         }
 
+        var _ww = Std.int(ed_props.w-12);
+        var _px = 2;
+        var _py = 2;
+        var _lh = 22;
+
         return {
-            { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:178, h:48, 
+            { name:'$_name.container', type:'mint.Control', x:2, y:4, w:_ww, h:(_lh*2)+(_py*2), 
                 children:[
                     { name:'$_name.label', type:'mint.Label', 
-                        x:2, y:2, w:174, h:22, text: _label, align:left  },
+                        x:_px, y:_py, w: _ww-(_px*2), h:_lh, text: _label, align:left  },
                     { name:'$_name.edit', type:'mint.TextEdit', reflect:_reflect, target:_target,
-                        x:2, y:24, w:174, h:22, text: _text },
+                        x:_px, y:_lh+_py, w:_ww-(_px*2), h:_lh, text: _text },
                 ]
             }
         }; //
@@ -530,8 +578,13 @@ class Main extends luxe.Game {
 
     function label_node(_name:String, _label:String, ?_align:TextAlign) : Node {
         def(_align, left);
+
+        var _ww = Std.int(ed_props.w-12);
+        var _px = 2;
+        var _py = 2;
+
         return { name:'$_name.label', type:'mint.Label', 
-            x:2, y:4, w:178, h:22, text: _label, align:_align }
+            x:_px, y:_py, w:_ww, h:22, text: _label, align:_align }
     }
 
     function check_node(_name:String, _label:String, _state:Null<Bool>, _reflect:String, _target:mint.Control) : Node {
@@ -541,19 +594,25 @@ class Main extends luxe.Game {
             if(_value != null) _state = _value;
             Reflect.setField(_target.user, _reflect, _state);
         }
+
+        var _ww = Std.int(ed_props.w-12);
+        var _px = 2;
+        var _py = 2;
+        var _cw = 22;
+
         return {
-            { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:178, h:24, 
+            { name:'$_name.container', type:'mint.Control', x:2, y:4, w:178, h:24, 
                 children:[
                     { name:'$_name.label', type:'mint.Label', 
-                        x:28, y:0, w:144, h:24, text: _label, align:left  },
+                        x:_cw+(_px*4), y:0, w:_ww-(_cw+(_px*6)), h:_cw, text: _label, align:left  },
                     { name:'$_name.check', type:'mint.Checkbox', reflect:_reflect, target:_target,
-                        x:2, y:2, w:22, h:22, state: _state },
+                        x:_px, y:_py, w:_cw, h:_cw, state: _state },
                 ]
             }
         }; //
     } //check_node
 
-    function slider_node(_name:String, _label:String, _value:Null<Float>, _min:Null<Float>,_max:Null<Float>,_step:Null<Float>, _reflect:String, _target:mint.Control) : Node {
+    function range_node(_name:String, _label:String, _value:Null<Float>, _min:Null<Float>,_max:Null<Float>,_step:Null<Float>, _reflect:String, _target:mint.Control) : Node {
         def(_value, 0.0);
         if(_target != null) {
             var _val:Null<Float> = Reflect.field(_target.user, _reflect);
@@ -561,30 +620,39 @@ class Main extends luxe.Game {
             Reflect.setField(_target.user, _reflect, _value);
         }
 
+        var _ww = Std.int(ed_props.w-12);
+        var _px = 2;
+        var _py = 2;
+
         return {
-            { name:'$_name.panel', type:'mint.Panel', x:2, y:4, w:178, h:42, 
+            { name:'$_name.container', type:'mint.Control', x:2, y:4, w:_ww, h:42, 
                 children:[
                     { name:'$_name.label', type:'mint.Label', 
-                        x:2, y:2, w:174, h:22, text: _label, align:left  },
+                        x:_px, y:_py, w:_ww-(_px*2), h:22, text: _label, align:left  },
                     { name:'$_name.slider', type:'mint.Slider', reflect:_reflect, target:_target,
-                        x:2, y:24, w:174, h:16, min:_min, max:_max, value:_value, step:_step },
+                        x:_px, y:24, w:_ww-(_px*2), h:18, min:_min, max:_max, value:_value, step:_step },
                 ]
             }
         }; //
-    } //slider_node
+    } //range_node
 
     function bounds_node(_name:String, _label:String='bounds:') : Node {
-        var _ww = 41; var _xx = 2; var _p = 3; var _yy = 3;
+        var _ww = Std.int(ed_props.w-12);
+        var _px = 2; var _py = 2;
+        var _p = 3; 
+        var _bw = Math.floor((_ww-(_p*4.5))/4);
+        var _yy = 3;
+
         return { name:'$_name.panel', type:'mint.Panel', 
-            x:4, y:0, w:178, h:28, children:[
+            x:4, y:0, w:_ww-_px, h:28, children:[
                 { name:'$_name.x', type:'mint.TextEdit', 
-                    x:_xx+(_ww+_p)*0,y:_yy,w:_ww,h:22, text_size:12, text:'0' },
+                    x:_px+(_bw+_p)*0,y:_yy,w:_bw,h:22, text_size:12, text:'0' },
                 { name:'$_name.y', type:'mint.TextEdit', 
-                    x:_xx+(_ww+_p)*1,y:_yy,w:_ww,h:22, text_size:12, text:'0' },
+                    x:_px+(_bw+_p)*1,y:_yy,w:_bw,h:22, text_size:12, text:'0' },
                 { name:'$_name.w', type:'mint.TextEdit', 
-                    x:_xx+(_ww+_p)*2,y:_yy,w:_ww,h:22, text_size:12, text:'0' },
+                    x:_px+(_bw+_p)*2,y:_yy,w:_bw,h:22, text_size:12, text:'0' },
                 { name:'$_name.h', type:'mint.TextEdit', 
-                    x:_xx+(_ww+_p)*3,y:_yy,w:_ww,h:22, text_size:12, text:'0' },
+                    x:_px+(_bw+_p)*3,y:_yy,w:_bw,h:22, text_size:12, text:'0' },
             ] }
     }
 
@@ -727,7 +795,7 @@ class Main extends luxe.Game {
                 
                 case 'edit': edit_node(_node.name, _node.label, _node.text, _node.reflect, _control);
                 case 'check': check_node(_node.name, _node.label, _node.state, _node.reflect, _control);
-                case 'range': slider_node(_node.name, _node.label, _node.value, _node.min, _node.max, _node.step, _node.reflect, _control);
+                case 'range': range_node(_node.name, _node.label, _node.value, _node.min, _node.max, _node.step, _node.reflect, _control);
 
                 case _: {
                     trace('inspector: unknown node type `${_node.type}` ($_json_name)');
@@ -765,7 +833,7 @@ class Main extends luxe.Game {
         ed_canvas.scale = _scale;
 
         ui_canvas.set_size(Luxe.screen.w/_scale, Luxe.screen.h/_scale);
-        ed_canvas.set_size(Luxe.screen.w/_scale, Luxe.screen.h/_scale);
+        ed_canvas.set_size((Luxe.screen.w/_scale)-ui_tools.w-4, (Luxe.screen.h/_scale)-4);
 
     } //onwindowsized
 
@@ -792,7 +860,18 @@ class Main extends luxe.Game {
                 }
 
             } else {
+
                 ed_canvas.mousemove( Convert.mouse_event(e, ed_canvas.scale, Luxe.renderer.batcher.view) );
+
+                var _display = ed_canvas.marked;
+                if(_display == null) _display = ed_canvas.focused;
+
+                if(_display != null) {
+                    ui_info.text = '${_display.user.type}(${_display.name})\n${_display.x_local}, ${_display.y_local}, ${_display.w}, ${_display.h}';
+                } else {
+                    ui_info.text = '...';
+                }
+
             }
         }
 
@@ -936,12 +1015,12 @@ class Main extends luxe.Game {
             return;
         }
 
-        if(e.keycode == Key.key_9) {
+        if(e.keycode == Key.key_9 && e.mod.ctrl) {
             ed_canvas.scale -= 0.1; 
             ui_canvas.scale -= 0.1;
         }
 
-        if(e.keycode == Key.key_0) {
+        if(e.keycode == Key.key_0 && e.mod.ctrl) {
             ed_canvas.scale += 0.1; 
             ui_canvas.scale += 0.1;
         }
