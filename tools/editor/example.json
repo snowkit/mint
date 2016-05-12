@@ -1,0 +1,151 @@
+[
+  {
+    "h": 216,
+    "x": 0,
+    "title": "window",
+    "y": 0,
+    "collapsible": true,
+    "type": "mint.Window",
+    "focusable": false,
+    "name": "window",
+    "text_size": "14",
+    "resizable": false,
+    "movable": true,
+    "children": [
+      {
+        "h": 172,
+        "x": 8,
+        "y": 36,
+        "type": "mint.Panel",
+        "children": [
+          {
+            "h": 24,
+            "x": 12,
+            "align_vertical": "center",
+            "y": 12,
+            "type": "mint.Label",
+            "name": "left label",
+            "text_size": "14",
+            "align": "left",
+            "text": "left label",
+            "w": 100
+          },
+          {
+            "h": 24,
+            "x": 12,
+            "align_vertical": "center",
+            "y": 40,
+            "type": "mint.Label",
+            "name": "center label",
+            "text_size": "14",
+            "align": "center",
+            "text": "center label",
+            "w": 100
+          },
+          {
+            "h": 24,
+            "x": 12,
+            "align_vertical": "center",
+            "y": 68,
+            "type": "mint.Label",
+            "name": "right label",
+            "text_size": "14",
+            "align": "right",
+            "text": "right label",
+            "w": 100
+          },
+          {
+            "h": 32,
+            "x": 118,
+            "align_vertical": "center",
+            "y": 12,
+            "type": "mint.Button",
+            "name": "button",
+            "text_size": "14",
+            "align": "center",
+            "text": "button",
+            "w": 94
+          },
+          {
+            "h": 44,
+            "x": 118,
+            "y": 48,
+            "path": "",
+            "type": "mint.Image",
+            "w": 94,
+            "name": "image"
+          },
+          {
+            "h": 16,
+            "x": 12,
+            "y": 96,
+            "value": "50.0",
+            "min": "0.0",
+            "type": "mint.Slider",
+            "name": "slider h",
+            "step": "1",
+            "max": "100.0",
+            "invert": false,
+            "vertical": false,
+            "w": 200
+          },
+          {
+            "h": 100,
+            "x": 216,
+            "y": 12,
+            "value": "50.0",
+            "min": "0.0",
+            "type": "mint.Slider",
+            "name": "slider v",
+            "step": "1",
+            "max": "100.0",
+            "invert": false,
+            "vertical": true,
+            "w": 16
+          },
+          {
+            "h": 100,
+            "x": 236,
+            "y": 12,
+            "value": "50.0",
+            "min": "0.0",
+            "type": "mint.Slider",
+            "name": "slider v invert",
+            "step": "1",
+            "max": "100.0",
+            "invert": true,
+            "vertical": true,
+            "w": 16
+          },
+          {
+            "h": 16,
+            "x": 12,
+            "y": 116,
+            "value": "50.0",
+            "min": "0.0",
+            "type": "mint.Slider",
+            "name": "slider h invert",
+            "step": "1",
+            "max": "100.0",
+            "invert": true,
+            "vertical": false,
+            "w": 240
+          },
+          {
+            "h": 24,
+            "x": 12,
+            "y": 136,
+            "progress": 0.72,
+            "type": "mint.Progress",
+            "w": 240,
+            "name": "progress"
+          }
+        ],
+        "w": 264,
+        "name": "panel"
+      }
+    ],
+    "w": 280,
+    "closable": true
+  }
+]

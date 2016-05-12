@@ -21,6 +21,7 @@
     files : {
       assets : 'assets/',
       config : 'config.json',
+      example : 'example.json',
       index : { path:'index.html => index.html', template:'project' }
     }
 
