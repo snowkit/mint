@@ -223,6 +223,9 @@ class Scroll extends Control {
 
     public override function destroy() {
 
+            //:todo: hmm
+        ready = false;
+
         super.destroy();
 
         onchange.clear();
