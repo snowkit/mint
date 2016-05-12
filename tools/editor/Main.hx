@@ -75,8 +75,8 @@ class Main extends luxe.Game {
         ui_render = new LuxeMintRender({ batcher:ui_batch });
         ed_render = new EditorRendering();
 
-        ui_canvas = new mint.Canvas({ rendering: ui_render, w: Luxe.screen.w, h: Luxe.screen.h });
-        ed_canvas = new mint.Canvas({ rendering: ed_render, user:{type:'mint.Canvas'}, x:200, w: Luxe.screen.w-200, h: Luxe.screen.h });
+        ui_canvas = new mint.Canvas({ rendering: ui_render, scale:Luxe.screen.device_pixel_ratio, w: Luxe.screen.w, h: Luxe.screen.h });
+        ed_canvas = new mint.Canvas({ rendering: ed_render, scale:Luxe.screen.device_pixel_ratio, user:{type:'mint.Canvas'}, x:200, w: Luxe.screen.w-200, h: Luxe.screen.h });
 
         layout = new Margins();
         ui_focus = new Focus(ui_canvas);
@@ -766,6 +766,10 @@ class Main extends luxe.Game {
     override function onwindowsized(event:luxe.Screen.WindowEvent) {
 
         Luxe.camera.viewport = new luxe.Rectangle(0, 0, Luxe.screen.w, Luxe.screen.h);
+        
+        ui_canvas.scale = Luxe.screen.device_pixel_ratio;
+        ed_canvas.scale = Luxe.screen.device_pixel_ratio;
+
         ui_canvas.set_size(Luxe.screen.w, Luxe.screen.h);
         ed_canvas.set_size(Luxe.screen.w, Luxe.screen.h);
 
@@ -773,7 +777,7 @@ class Main extends luxe.Game {
 
     override function onmousemove(e) {
 
-        if(!moving) ui_canvas.mousemove( Convert.mouse_event(e) );
+        if(!moving) ui_canvas.mousemove( Convert.mouse_event(e, ui_canvas.scale) );
         if(ui_canvas.marked == null) {
 
             if(parenting != null) {
@@ -794,7 +798,7 @@ class Main extends luxe.Game {
                 }
 
             } else {
-                ed_canvas.mousemove( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+                ed_canvas.mousemove( Convert.mouse_event(e, ed_canvas.scale, Luxe.renderer.batcher.view) );
             }
         }
 
@@ -803,13 +807,13 @@ class Main extends luxe.Game {
     override function onmousewheel(e) {
 
         if(!moving) ui_canvas.mousewheel( Convert.mouse_event(e) );
-        if(ui_canvas.marked == null) ed_canvas.mousewheel( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+        if(ui_canvas.marked == null) ed_canvas.mousewheel( Convert.mouse_event(e, ed_canvas.scale, Luxe.renderer.batcher.view) );
 
     }
 
     override function onmouseup(e) {
 
-        if(!moving) ui_canvas.mouseup( Convert.mouse_event(e) );
+        if(!moving) ui_canvas.mouseup( Convert.mouse_event(e, ui_canvas.scale) );
         if(ui_canvas.marked == null) {
 
             if(parenting != null) {
@@ -832,7 +836,7 @@ class Main extends luxe.Game {
                 ui_info.text = '...';
 
             } else {
-                ed_canvas.mouseup( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+                ed_canvas.mouseup( Convert.mouse_event(e, ed_canvas.scale, Luxe.renderer.batcher.view) );
             }
         }
 
@@ -840,7 +844,7 @@ class Main extends luxe.Game {
 
     override function onmousedown(e) {
 
-        ui_canvas.mousedown( Convert.mouse_event(e) );
+        ui_canvas.mousedown( Convert.mouse_event(e, ui_canvas.scale) );
         if(ui_canvas.marked == null && parenting == null) {
 
             if(ed_canvas.marked != null) {
@@ -853,7 +857,7 @@ class Main extends luxe.Game {
                 }
             }
             
-            ed_canvas.mousedown( Convert.mouse_event(e, Luxe.renderer.batcher.view) );
+            ed_canvas.mousedown( Convert.mouse_event(e, ed_canvas.scale, Luxe.renderer.batcher.view) );
 
         }
 
@@ -919,6 +923,16 @@ class Main extends luxe.Game {
         if(e.keycode == Key.escape && e.mod.shift) {
             Luxe.shutdown();
             return;
+        }
+
+        if(e.keycode == Key.key_9) {
+            ed_canvas.scale -= 0.1; 
+            ui_canvas.scale -= 0.1;
+        }
+        
+        if(e.keycode == Key.key_0) {
+            ed_canvas.scale += 0.1; 
+            ui_canvas.scale += 0.1;
         }
 
         if(e.keycode == Key.key_s && (e.mod.ctrl || e.mod.meta)) {

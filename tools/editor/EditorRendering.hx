@@ -26,17 +26,20 @@ class ControlRenderer extends mint.render.Render {
         colorsel = new Color(1,0.2,0.1,1);
         colorlit = new Color(1,0.2,0.1,1);
 
-        bounds = Luxe.draw.rectangle({ x:control.x, y:control.y, w:control.w, h:control.h, color:color });
-        resizer = Luxe.draw.rectangle({ x:control.right-rsize, y:control.bottom-rsize, w:rsize, h:rsize, color:color });
-        select = Luxe.draw.rectangle({ x:control.x-2, y:control.y-2, w:control.w+4, h:control.h+4, color:colorsel, visible:false });
-        light = Luxe.draw.rectangle({ x:control.x+1, y:control.y+1, w:control.w-2, h:control.h-2, color:colorlit, visible:false });
+        var _inner = cs(1);
+        var _outer = cs(2);
+
+        bounds = Luxe.draw.rectangle({ x:sx, y:sy, w:sw, h:sh, color:color });
+        resizer = Luxe.draw.rectangle({ x:cs(control.right-rsize), y:cs(control.bottom-rsize), w:cs(rsize), h:cs(rsize), color:color });
+        select = Luxe.draw.rectangle({ x:sx-_outer, y:sy-_outer, w:sw+(_outer*2), h:sh+(_outer*2), color:colorsel, visible:false });
+        light = Luxe.draw.rectangle({ x:sx+_inner, y:sy+_inner, w:sw-(_inner*2), h:sh-(_inner*2), color:colorlit, visible:false });
 
         text = new luxe.Text({
             batcher: render.options.batcher,
-            bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
+            bounds: new luxe.Rectangle(sx, sy, sw, sh),
             color: color,
             text: '${control.user.type}(${control.name})\n${control.x_local},${control.y_local},${control.w},${control.h}',
-            point_size: 12,
+            point_size: cs(12),
             align: center,
             align_vertical: center,
             depth: render.options.depth + control.depth,
@@ -54,6 +57,7 @@ class ControlRenderer extends mint.render.Render {
                 r.light.visible = state;
             }
         });
+
         control.onrenamed.listen(function(_prev:String,_name:String) { 
             text.text = '${control.user.type}(${_name})\n${control.x_local},${control.y_local},${control.w},${control.h}';
         });
@@ -61,24 +65,37 @@ class ControlRenderer extends mint.render.Render {
     } //new
 
     override function ondestroy() {
+
         bounds.drop();
         resizer.drop();
         select.drop();
         light.drop();
         text.destroy();
+
         bounds = null;
         resizer = null;
+        select = null;
+        light = null;
         text = null;
-    }
+
+    } //ondestroy
 
     override function onbounds() {
-        bounds.set_xywh(control.x, control.y, control.w, control.h);
-        select.set_xywh(control.x-2, control.y-2, control.w+4, control.h+4);
-        light.set_xywh(control.x+1, control.y+1, control.w-2, control.h-2);
-        resizer.set_xywh(control.right-rsize, control.bottom-rsize, rsize, rsize);
-        text.bounds = new luxe.Rectangle(control.x, control.y, control.w, control.h);
+
+        trace('onbounds ${control.name}');
+
+        var _inner = cs(1);
+        var _outer = cs(2);
+
+        bounds.set_xywh(sx, sy, sw, sh);
+        select.set_xywh(sx-_outer, sy-_outer, sw+(_outer*2), sh+(_outer*2));
+        light.set_xywh(sx+_inner, sy+_inner, sw-(_inner*2), sh-(_inner*2));
+        resizer.set_xywh(cs(control.right-rsize), cs(control.bottom-rsize), cs(rsize), cs(rsize));
+
+        text.bounds = new luxe.Rectangle(sx, sy, sw, sh);
         text.text = '${control.user.type}(${control.name})\n${control.x_local},${control.y_local},${control.w},${control.h}';
-    }
+
+    } //onbounds
 
     override function onvisible( _visible:Bool ) {
         bounds.visible = text.visible = _visible;
