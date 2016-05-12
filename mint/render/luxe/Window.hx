@@ -53,13 +53,13 @@ class Window extends mint.render.Render {
 
         var _opt: LuxeMintWindowOptions = window.options.options;
 
-        color = def(_opt.color, new Color().rgb(0x242424));
-        color_border = def(_opt.color_border, new Color().rgb(0x373739));
-        color_titlebar = def(_opt.color_titlebar, new Color().rgb(0x373737));
-        color_close = def(_opt.color_close, new Color().rgb(0x666666));
-        color_collapse = def(_opt.color_collapse, new Color().rgb(0x666666));
-        color_close_hover = def(_opt.color_close_hover, new Color().rgb(0x999999));
-        color_collapse_hover = def(_opt.color_collapse_hover, new Color().rgb(0x999999));
+        color = def(_opt.color, new Color().rgb(0x1f1f1f));
+        color_border = def(_opt.color_border, new Color().rgb(0x060606));
+        color_titlebar = def(_opt.color_titlebar, new Color().rgb(0x252525));
+        color_close = def(_opt.color_close, new Color().rgb(0x444444));
+        color_collapse = def(_opt.color_collapse, new Color().rgb(0x444444));
+        color_close_hover = def(_opt.color_close_hover, new Color().rgb(0x888888));
+        color_collapse_hover = def(_opt.color_collapse_hover, new Color().rgb(0x888888));
 
         visual = Luxe.draw.box({
             id: control.name+'.visual',
