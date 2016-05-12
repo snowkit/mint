@@ -82,8 +82,6 @@ class ControlRenderer extends mint.render.Render {
 
     override function onbounds() {
 
-        trace('onbounds ${control.name}');
-
         var _inner = cs(1);
         var _outer = cs(2);
 
