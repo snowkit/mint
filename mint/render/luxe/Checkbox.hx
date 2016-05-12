@@ -16,7 +16,7 @@ private typedef LuxeMintCheckboxOptions = {
     var color_hover: Color;
     var color_node: Color;
     var color_node_hover: Color;
-    var size_margin: Float;
+    var size_margin: Null<Float>;
 }
 
 class Checkbox extends mint.render.Render {
