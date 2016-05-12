@@ -315,7 +315,7 @@ class Main extends luxe.Game {
             #end
         });
 
-        _clear.onmouseup.listen(function(_,_) { ed_canvas.destroy_children(); });
+        _clear.onmouseup.listen(function(_,_) { do_clear(); });
         _load.onmouseup.listen(function(_,_) { do_load(); });
         _save.onmouseup.listen(function(_,_) { do_save(); });
         _options.onmouseup.listen(function(_,_) { do_options(); });
@@ -885,6 +885,23 @@ class Main extends luxe.Game {
 
 
     } //do_options
+
+    function do_clear() {
+        
+        if(parenting != null) {
+            (cast parenting.renderer:ControlRenderer).light.visible = false;
+            parenting = null;
+            ui_info.text = '...';
+        }
+
+        if(ed_canvas.focused!=null) {
+            deselect(ed_canvas.focused);
+        }
+
+        ed_canvas.destroy_children();
+        ed_canvas.unfocus();
+
+    } //do_clear
 
     function do_load() {
         #if cpp
