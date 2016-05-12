@@ -30,7 +30,7 @@ class KitchenSink extends State {
 
         bg.destroy();
 
-        timer.stop();
+        if(timer != null) timer.stop();
         timer = null;
         canvas = null;
         window1 = null;
@@ -139,9 +139,11 @@ class KitchenSink extends State {
 
     function create_window2() {
 
+        var _delay_visible = true;
+
         var _window = new mint.Window({
             parent: canvas, name: 'window2', title: 'window',
-            visible: false, closable: false, collapsible: true,
+            visible: !_delay_visible, closable: false, collapsible: true,
             x:500, y:10, w:256, h: 131,
             h_max: 131, h_min: 131, w_min: 131
         });
@@ -204,7 +206,9 @@ class KitchenSink extends State {
         Main.layout.margin(text1, right, fixed, 10);
         Main.layout.margin(_text2, right, fixed, 10);
 
-        timer = Luxe.timer.schedule(1, function(){ _window.visible = true; });
+        if(_delay_visible) {
+            timer = Luxe.timer.schedule(1, function(){ _window.visible = true; });
+        }
 
     } //create_window2
 
