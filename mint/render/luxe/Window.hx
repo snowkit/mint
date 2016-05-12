@@ -100,7 +100,7 @@ class Window extends mint.render.Render {
         collapse = Luxe.draw.ngon({
             id: control.name+'.border',
             batcher: render.options.batcher,
-            r: cs(5),
+            r: 5,
             solid: true,
             angle: 180,
             sides: 3,
@@ -127,7 +127,7 @@ class Window extends mint.render.Render {
         ];
 
         var _close_size = def(_opt.size_close, 10); 
-        for(_point in _close_poly) _point.multiplyScalar(_close_size*scale);
+        for(_point in _close_poly) _point.multiplyScalar(_close_size);
 
         close = Luxe.draw.poly({
             id: control.name+'.border',
@@ -143,7 +143,10 @@ class Window extends mint.render.Render {
         var _closer = window.close_handle;
         var _collapser = window.collapse_handle;
 
+        close.transform.scale.set_xy(scale, scale);
         close.transform.pos.set_xy(cs(_closer.x+(_closer.w/2)), cs(_closer.y+(_closer.h/2)));
+
+        collapse.transform.scale.set_xy(scale, scale);
         collapse.transform.pos.set_xy(cs(_collapser.x+(_collapser.w/2)), cs(_collapser.y+(_collapser.h/2)));
 
         _closer.onmouseenter.listen(function(_,_){ close.color = color_close_hover; });
