@@ -24,11 +24,14 @@ class KitchenSink extends State {
     var progress: mint.Progress;
     var canvas: mint.Canvas;
     var text1: mint.TextEdit;
+    var timer: snow.api.Timer;
 
     override function onleave<T>(_:T) {
 
         bg.destroy();
 
+        timer.stop();
+        timer = null;
         canvas = null;
         window1 = null;
         window2 = null;
@@ -201,7 +204,7 @@ class KitchenSink extends State {
         Main.layout.margin(text1, right, fixed, 10);
         Main.layout.margin(_text2, right, fixed, 10);
 
-        Luxe.timer.schedule(1, function(){ _window.visible = true; });
+        timer = Luxe.timer.schedule(1, function(){ _window.visible = true; });
 
     } //create_window2
 
