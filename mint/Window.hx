@@ -304,16 +304,16 @@ class Window extends Control {
             super.mousedown(e);
         }
 
-        if(focusable) canvas.bring_to_front(this);
+        if(focusable) {
+            canvas.bring_to_front(this);
+        }
 
-            if(!dragging && moveable) {
-                if( in_title ) {
-                    dragging = true;
-                    drag_x = e.x;
-                    drag_y = e.y;
-                    capture();
-                } //if inside title bounds
-            } //!dragging
+        if(moveable && in_title) {
+            dragging = true;
+            drag_x = e.x;
+            drag_y = e.y;
+            capture();
+        } //!dragging
 
     } //onmousedown
 
