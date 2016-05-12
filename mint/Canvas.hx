@@ -76,6 +76,7 @@ class Canvas extends Control {
         super(options);
 
         canvas = this;
+        scale = def(options.scale, 1);
 
         captured = null;
         focused = null;
