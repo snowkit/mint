@@ -121,16 +121,23 @@ class Main extends luxe.Game {
 
     override function onmousemove(e) {
 
+        var _me = Convert.mouse_event(e, canvas.scale);
+        canvas_mouse_pos = '${_me.x}, ${_me.y} window:${e.x},${e.y}';
+
         debugtext();
 
     } //onmousemove
+
+    var canvas_mouse_pos:String = '';
 
     public function debugtext() {
 
         var s = 'debug:  (${Luxe.snow.os} / ${Luxe.snow.platform})\n';
 
-        s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none');
-        s += '\n';
+        s += 'canvas scale: ' + (canvas != null ? '${canvas.scale}' : '1') + '\n';
+        s += 'canvas mouse: $canvas_mouse_pos\n';
+        s += 'canvas nodes: ' + (canvas != null ? '${canvas.nodes}' : 'none') + '\n';
+
         s += 'captured: ' + (canvas.captured != null ? '${canvas.captured.name} [${canvas.captured.nodes}]' : 'none');
         s += (canvas.captured != null ? ' / depth: '+canvas.captured.depth : '');
         s += '\n';
@@ -144,6 +151,14 @@ class Main extends luxe.Game {
     }
 
     override function onkeyup(e:luxe.Input.KeyEvent) {
+
+        if(e.keycode == Key.key_6) {
+            canvas.scale -= 0.1; 
+        }
+
+        if(e.keycode == Key.key_7) {
+            canvas.scale += 0.1; 
+        }
 
         if(e.keycode == Key.key_d && e.mod.ctrl) { debug = !debug; trace('debug: $debug'); }
         if(e.keycode == Key.key_v && e.mod.ctrl) canvas.visible = !canvas.visible;
@@ -174,10 +189,10 @@ class Main extends luxe.Game {
 
         Luxe.draw.rectangle({
             depth: 1000,
-            x: control.x,
-            y: control.y,
-            w: control.w,
-            h: control.h,
+            x: canvas.scale * control.x,
+            y: canvas.scale * control.y,
+            w: canvas.scale * control.w,
+            h: canvas.scale * control.h,
             color: new Color(1,0,0,0.5),
             immediate: true
         });

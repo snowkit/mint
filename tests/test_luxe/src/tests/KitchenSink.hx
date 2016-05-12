@@ -411,7 +411,7 @@ class CustomWindowRenderer extends mint.render.Render {
             top : 32, left : 32, right : 32, bottom : 32,
         });
 
-        visual.create(new Vector(window.x, window.y), window.w, window.h);
+        visual.create(new Vector(sx, sy), sw, sh);
 
         window.title.y_local += 3;
         window.close_handle.y_local += 1;
@@ -424,8 +424,8 @@ class CustomWindowRenderer extends mint.render.Render {
     }
 
     override function onbounds() {
-        visual.pos = new Vector(control.x, control.y);
-        visual.size = new Vector(control.w, control.h);
+        visual.pos = new Vector(sx, sy);
+        visual.size = new Vector(sw, sh);
     }
 
     override function onvisible( _visible:Bool ) visual.visible = _visible;
