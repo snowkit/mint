@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"tags": ["ui","user interface","cross"],
 	"description": "A minimal user interface library for haxe",
-	"version": "1.0.0-alpha-1.0",
+	"version": "1.0.0-alpha.2",
 	"releasenote": "alpha http://snowkit.github.io/mint/",
 	"contributors": [ "underscorediscovery" ],
 	"dependencies": {}
