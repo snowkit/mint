@@ -14,6 +14,13 @@
     "reflect": "invert"
   },
   {
+    "name": "slider.value",
+    "type": "edit",
+    "label": "value:",
+    "text": "50.0",
+    "reflect": "value"
+  },  
+  {
     "name": "slider.min",
     "type": "edit",
     "label": "min:",
