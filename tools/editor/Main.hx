@@ -75,8 +75,9 @@ class Main extends luxe.Game {
         ui_render = new LuxeMintRender({ batcher:ui_batch });
         ed_render = new EditorRendering();
 
-        ui_canvas = new mint.Canvas({ rendering: ui_render, scale:Luxe.screen.device_pixel_ratio, w: Luxe.screen.w, h: Luxe.screen.h });
-        ed_canvas = new mint.Canvas({ rendering: ed_render, scale:Luxe.screen.device_pixel_ratio, user:{type:'mint.Canvas'}, x:200, w: Luxe.screen.w-200, h: Luxe.screen.h });
+        var _scale = Luxe.screen.device_pixel_ratio;
+        ui_canvas = new mint.Canvas({ rendering: ui_render, scale:_scale, w: Luxe.screen.w/_scale, h: Luxe.screen.h/_scale });
+        ed_canvas = new mint.Canvas({ rendering: ed_render, scale:_scale, user:{type:'mint.Canvas'}, x:200, w: (Luxe.screen.w/_scale)-200, h: Luxe.screen.h/_scale });
 
         layout = new Margins();
         ui_focus = new Focus(ui_canvas);
@@ -767,11 +768,13 @@ class Main extends luxe.Game {
 
         Luxe.camera.viewport = new luxe.Rectangle(0, 0, Luxe.screen.w, Luxe.screen.h);
         
-        ui_canvas.scale = Luxe.screen.device_pixel_ratio;
-        ed_canvas.scale = Luxe.screen.device_pixel_ratio;
+        var _scale = Luxe.screen.device_pixel_ratio;
 
-        ui_canvas.set_size(Luxe.screen.w, Luxe.screen.h);
-        ed_canvas.set_size(Luxe.screen.w, Luxe.screen.h);
+        ui_canvas.scale = _scale;
+        ed_canvas.scale = _scale;
+
+        ui_canvas.set_size(Luxe.screen.w/_scale, Luxe.screen.h/_scale);
+        ed_canvas.set_size(Luxe.screen.w/_scale, Luxe.screen.h/_scale);
 
     } //onwindowsized
 
@@ -929,7 +932,7 @@ class Main extends luxe.Game {
             ed_canvas.scale -= 0.1; 
             ui_canvas.scale -= 0.1;
         }
-        
+
         if(e.keycode == Key.key_0) {
             ed_canvas.scale += 0.1; 
             ui_canvas.scale += 0.1;
