@@ -1002,12 +1002,40 @@ class Main extends luxe.Game {
         trace('\n\n$_str\n\n');
     } //do_save
 
+    var ui_preview: LoaderItems;
+    function recursive_mouse_input(_control:mint.Control, _state:Bool) {
+        _control.mouse_input = _state;
+        for(_child in _control.children) recursive_mouse_input(_child, _state);
+    }
+    function do_preview() {
+        if(ui_preview != null) {
+            for(_item in ui_preview.roots) _item.destroy();
+            ui_preview = null;
+        } else {
+            var _view_w = ui_canvas.w - ui_tools.w;
+            var _view_h = ui_canvas.h;
+            ui_preview = JSONLoader.parse(ui_canvas, 'preview', export(), 0, 0);
+            var _root = ui_preview.roots[0];
+            if(_root == null) {
+                ui_preview = null;
+                return;
+            }
+            if(_root.w < _view_w) _root.x_local = (_view_w/2)-(_root.w/2);
+            if(_root.h < _view_h) _root.y_local = (_view_h/2)-(_root.h/2);
+            recursive_mouse_input(_root, true);
+        }
+    }
+
     override function onkeyup(e:luxe.Input.KeyEvent) {
 
         if(e.keycode == Key.escape && parenting!=null) {
             (cast parenting.renderer:ControlRenderer).light.visible = false;
             parenting = null;
             ui_info.text = '...';
+        }
+
+        if(e.keycode == Key.key_p && (e.mod.ctrl || e.mod.meta)) {
+            do_preview();
         }
 
         if(e.keycode == Key.escape && e.mod.shift) {
