@@ -267,9 +267,9 @@ class Main extends luxe.Game {
 
     function spawn_control(_name:String, _type:String, _select:Bool=true, ?_x:Float, ?_y:Float, ?_w:Float, ?_h:Float) {
 
-        def(_x, Luxe.screen.mid.x-128);
-        def(_y, Luxe.screen.h-128);
-        def(_w, 256);
+        def(_x, (ed_canvas.w/2)+128);
+        def(_y, ed_canvas.h-128);
+        def(_w, 128);
         def(_h, 64);
 
         var control = new mint.Panel({
