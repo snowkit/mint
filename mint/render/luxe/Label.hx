@@ -40,19 +40,19 @@ class Label extends mint.render.Render {
         text = new luxe.Text({
             name: control.name+'.text',
             batcher: render.options.batcher,
-            bounds: new luxe.Rectangle(control.x, control.y, control.w, control.h),
+            bounds: new luxe.Rectangle(sx, sy, sw, sh),
             no_scene: true,
             color: color,
             text: label.text,
             bounds_wrap: label.options.bounds_wrap,
             align: Convert.text_align(label.options.align),
             align_vertical: Convert.text_align(label.options.align_vertical),
-            point_size: label.options.text_size,
+            point_size: cs(label.options.text_size),
             depth: render.options.depth + control.depth,
-            visible: control.visible,
+            visible: control.visible
         });
 
-        text.clip_rect = Convert.bounds(control.clip_with);
+        text.clip_rect = Convert.bounds(control.clip_with, scale);
 
         label.onchange.listen(ontext);
 
@@ -61,36 +61,51 @@ class Label extends mint.render.Render {
 
     }
 
+    override function onscale(_scale:Float, _prev_scale:Float) {
+
+        text.clip_rect = Convert.bounds(control.clip_with, _scale);
+        text.point_size = cs(label.options.text_size);
+
+    } //onscale
+
     override function onbounds() {
-        text.bounds = new luxe.Rectangle(control.x, control.y, control.w, control.h);
-    }
+
+        text.bounds = new luxe.Rectangle(sx, sy, sw, sh);
+
+    } //onbounds
 
     function ontext(_text:String) {
+
         text.text = _text;
-    }
+
+    } //ontext
 
     override function ondestroy() {
+
         label.onchange.remove(ontext);
 
         text.destroy();
         text = null;
-    }
+
+    } //ondestroy
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
-        if(_disable) {
-            text.clip_rect = null;
-        } else {
-            text.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
+        
+        text.clip_rect = Convert.bounds(control.clip_with, scale);
+
     } //onclip
 
 
-    override function onvisible( _visible:Bool ) {
+    override function onvisible(_visible:Bool) {
+
         text.visible = _visible;
+
     } //onvisible
 
-    override function ondepth( _depth:Float ) {
+    override function ondepth(_depth:Float) {
+
         text.depth = render.options.depth + _depth;
+
     } //ondepth
 
 } //Label

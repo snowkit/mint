@@ -18,9 +18,6 @@ class List extends mint.render.Render {
 
     public var list : mint.List;
 
-    // public var select_rects: Array<RectangleGeometry>;
-    // public var hover_rect: RectangleGeometry;
-
     var render: LuxeMintRender;
 
     public function new( _render:LuxeMintRender, _control:mint.List ) {

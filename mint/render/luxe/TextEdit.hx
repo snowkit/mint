@@ -11,6 +11,7 @@ import mint.render.luxe.Convert;
 import phoenix.geometry.QuadGeometry;
 import phoenix.geometry.LineGeometry;
 import luxe.Color;
+import phoenix.geometry.RectangleGeometry;
 
 private typedef LuxeMintTextEditOptions = {
     var color: Color;
@@ -22,8 +23,10 @@ private typedef LuxeMintTextEditOptions = {
 class TextEdit extends mint.render.Render {
 
     public var textedit : mint.TextEdit;
+
     public var visual : QuadGeometry;
     public var cursor : LineGeometry;
+    public var focus : RectangleGeometry;
 
     public var color: Color;
     public var color_hover: Color;
@@ -49,14 +52,25 @@ class TextEdit extends mint.render.Render {
         visual = Luxe.draw.box({
             id: control.name+'.visual',
             batcher: render.options.batcher,
-            x:control.x,
-            y:control.y,
-            w:control.w,
-            h:control.h,
+            x: sx,
+            y: sy,
+            w: sw,
+            h: sh,
             color: color,
             depth: render.options.depth + control.depth,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with)
+        });
+
+        focus = Luxe.draw.rectangle({
+            id: control.name+'.focus',
+            batcher: render.options.batcher,
+            x: sx,
+            y: sy,
+            w: sw,
+            h: sh,
+            color: color_cursor,
+            depth: render.options.depth + control.depth+0.001,
+            visible: false,
         });
 
         cursor = Luxe.draw.line({
@@ -65,9 +79,8 @@ class TextEdit extends mint.render.Render {
             p0: new Vector(0,0),
             p1: new Vector(0,0),
             color: color_cursor,
-            depth: render.options.depth + control.depth+0.001,
+            depth: render.options.depth + control.depth+0.002,
             visible: false,
-            clip_rect: Convert.bounds(control.clip_with)
         });
 
         textedit.onmouseenter.listen(function(e,c) {
@@ -81,17 +94,18 @@ class TextEdit extends mint.render.Render {
         textedit.ontextinput.listen(function(_,_) {
             if(textedit.isfocused || textedit.iscaptured) {
                 #if (linc_sdl && cpp)
-                    sdl.SDL.setTextInputRect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+                    sdl.SDL.setTextInputRect(Std.int(textedit.x*scale),Std.int(textedit.y*scale),Std.int(textedit.w*scale),Std.int(textedit.h*scale));
                 #end
             }
         });
 
         textedit.onfocused.listen(function(state:Bool) {
+            focus.visible = state;
             if(state) {
                 start_cursor();
                 #if (linc_sdl && cpp)
                 sdl.SDL.startTextInput();
-                    sdl.SDL.setTextInputRect(Std.int(textedit.x),Std.int(textedit.y),Std.int(textedit.w),Std.int(textedit.h));
+                    sdl.SDL.setTextInputRect(Std.int(textedit.x*scale),Std.int(textedit.y*scale),Std.int(textedit.w*scale),Std.int(textedit.h*scale));
                 #end
             } else {
                 stop_cursor();
@@ -106,108 +120,130 @@ class TextEdit extends mint.render.Render {
             update_cursor();
         });
 
-        textedit.onrender.listen(function() {
-
-            if(textedit.isfocused) {
-                Luxe.draw.rectangle({
-                    id: control.name+'.border',
-                    batcher: render.options.batcher,
-                    x:textedit.x,
-                    y:textedit.y,
-                    w:textedit.w,
-                    h:textedit.h,
-                    immediate: true,
-                    color: color_cursor,
-                    depth: render.options.depth+textedit.depth+0.001,
-                });
-            }
-        });
+        update_clip(scale);
 
     } //new
 
-    var timer: snow.api.Timer;
-    function start_cursor() {
-        cursor.visible = true;
+    function update_clip(_scale:Float) {
+        
+        var _clip = Convert.bounds(control.clip_with, _scale);
+
+        visual.clip_rect = _clip;
+        focus.clip_rect = _clip;
+        cursor.clip_rect = _clip;
+
+    } //update_clip
+
+    override function onscale(_scale:Float, _prev_scale:Float) {
+            
+        update_clip(_scale);
         update_cursor();
-        timer = Luxe.timer.schedule(cursor_blink_rate, blink_cursor, true);
-    }
 
-    function stop_cursor() {
-        if(timer != null) timer.stop();
-        timer = null;
-        cursor.visible = false;
-    }
+    } //onscale
 
-    function blink_cursor() {
-        if(timer == null) return;
-        cursor.visible = !cursor.visible;
-    }
+    //cursor
 
-    inline function reset_cursor() {
-        if(timer != null) {
+        var timer: snow.api.Timer;
+        function start_cursor() {
             cursor.visible = true;
-            timer.fire_at = Luxe.time + cursor_blink_rate;
-        }
-    }
-
-    function update_cursor() {
-
-        var text = (cast textedit.label.renderer:mint.render.luxe.Label).text;
-        var _t = textedit.before_display(textedit.index);
-
-        var _tw = text.font.width_of(textedit.edit, text.point_size, text.letter_spacing);
-        var _twh = _tw/2.0;
-        var _w = text.font.width_of(_t, text.point_size, text.letter_spacing);
-
-        var _th = text.font.height_of(_t, text.point_size);
-        var _thh = _th/2.0;
-
-        var _left = switch(text.align) {
-            case luxe.Text.TextAlign.center: textedit.label.x+(textedit.label.w/2);
-            case luxe.Text.TextAlign.right: textedit.label.w;
-            case _: textedit.label.x;
+            update_cursor();
+            timer = Luxe.timer.schedule(cursor_blink_rate, blink_cursor, true);
         }
 
-        var _x = _w;
-        var _y = 0.0;
-
-        _x -= switch(text.align) {
-            case luxe.Text.TextAlign.center: _twh;
-            case luxe.Text.TextAlign.right: _tw;
-            case _: 0.0;
+        function stop_cursor() {
+            if(timer != null) timer.stop();
+            timer = null;
+            cursor.visible = false;
         }
 
-        _y += _th * 0.2;
+        function blink_cursor() {
+            if(timer == null) return;
+            cursor.visible = !cursor.visible;
+        }
 
-        var _xx = _left + _x;
-        var _yy = textedit.label.y + 2;
+        inline function reset_cursor() {
+            if(timer != null) {
+                cursor.visible = true;
+                timer.fire_at = Luxe.time + cursor_blink_rate;
+            }
+        }
 
-        cursor.p0 = new Vector(_xx, _yy);
-        cursor.p1 = new Vector(_xx, _yy + textedit.label.h - 4);
-        reset_cursor();
+        function update_cursor() {
 
-    } //
+            var _text_visual = (cast textedit.label.renderer:mint.render.luxe.Label).text;
+            var _font = _text_visual.font;
+            var _point_size = _text_visual.point_size;
+            var _letter_space = cs(_text_visual.letter_spacing);
+
+            var _text_before = textedit.before_display(textedit.index);
+            var _text_all = textedit.edit;
+
+            var _text_width = _font.width_of(_text_all, _point_size, _letter_space);
+            var _text_height = _font.height_of(_text_before, _point_size);
+
+            var _label_x = cs(textedit.label.x);
+            var _label_y = cs(textedit.label.y);
+            var _label_w = cs(textedit.label.w);
+            var _label_h = cs(textedit.label.h);
+
+            var _x = _font.width_of(_text_before, _point_size, _letter_space);
+            var _y = _text_height * 0.2;
+            var _left = _label_x;
+
+            switch(_text_visual.align) {
+                case center: 
+                    _x -= _text_width/2.0;
+                    _left = _label_x+(_label_w/2);
+
+                case right:
+                    _x -= _text_width;
+                    _left = _label_w;
+
+                case _:
+            }
+
+            var _cursor_pad = cs(2);
+            var _cursor_x = _left + _x;
+            var _cursor_y = _label_y + _cursor_pad;
+
+            cursor.p0 = new Vector(_cursor_x, _cursor_y);
+            cursor.p1 = new Vector(_cursor_x, _cursor_y + _label_h - (_cursor_pad*2));
+            
+            reset_cursor();
+
+        } //
 
     override function ondestroy() {
+
         stop_cursor();
+
         cursor.drop();
         visual.drop();
+        focus.drop();
+
         visual = null;
         cursor = null;
-    }
+        focus = null;
+
+    } //ondestroy
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.resize_xy( control.w, control.h );
+
+        visual.transform.pos.set_xy(sx, sy);
+        visual.resize_xy(sw, sh);
+
+        focus.transform.pos.set_xy(sx, sy);
+        focus.set_xywh(sx, sy, sw, sh);
+
         reset_cursor();
-    }
+        update_cursor();
+
+    } //onbounds
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
-        if(_disable) {
-            visual.clip_rect = null;
-        } else {
-            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
+        
+        update_clip(scale);
+
     } //onclip
 
     override function onvisible( _visible:Bool ) {
@@ -216,15 +252,20 @@ class TextEdit extends mint.render.Render {
 
         if(!_visible) {
             stop_cursor();
+            focus.visible = false;
         } else if(_visible && textedit.isfocused) {
             start_cursor();
+            focus.visible = true;
         }
 
     } //onvisible
 
     override function ondepth( _depth:Float ) {
+
         visual.depth = render.options.depth+_depth;
-        cursor.depth = visual.depth+0.001;
+        focus.depth = visual.depth+0.001;
+        cursor.depth = visual.depth+0.002;
+
     } //ondepth
 
 } //TextEdit

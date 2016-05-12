@@ -75,25 +75,35 @@ class Image extends mint.render.Render {
                 centered: false,
                 no_scene: true,
                 texture: texture,
-                pos: new Vector(control.x, control.y),
-                size: new Vector(control.w*ratio_w, control.h*ratio_h),
+                pos: new Vector(sx, sy),
+                size: new Vector(sw*ratio_w, sh*ratio_h),
                 depth: render.options.depth + control.depth,
                 visible: control.visible,
                 uv: _opt.uv,
                 color: _opt.color
             });
 
-            visual.clip_rect = Convert.bounds(control.clip_with);
+            visual.clip_rect = Convert.bounds(control.clip_with, scale);
 
         }); //get
 
     } //new
 
+    override function onscale(_scale:Float, _prev_scale:Float) {
+        
+        if(visual != null) {
+            visual.clip_rect = Convert.bounds(control.clip_with, _scale);
+            visual.pos.set_xy(sx, sy);
+            visual.size.set_xy(sw*ratio_w, sh*ratio_h);
+        }
+
+    } //onscale
+
     override function onbounds() {
 
         if(visual != null) {
-            visual.transform.pos.set_xy(control.x, control.y);
-            visual.geometry_quad.resize_xy( control.w*ratio_w, control.h*ratio_h );
+            visual.transform.pos.set_xy(sx, sy);
+            visual.geometry_quad.resize_xy(sw*ratio_w, sh*ratio_h);
         }
 
     } //onbounds
@@ -110,11 +120,7 @@ class Image extends mint.render.Render {
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
 
         if(visual != null) {
-            if(_disable) {
-                visual.clip_rect = null;
-            } else {
-                visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-            }
+            visual.clip_rect = Convert.bounds(control.clip_with, scale);
         }
 
     } //onclip

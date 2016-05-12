@@ -23,11 +23,11 @@ class Convert {
     } //text_align
 
         /** from mint.Control bounds to luxe.Rectangle */
-    public static function bounds( _control:Control ) : Rectangle {
+    public static function bounds( _control:Control, ?_scale:Float=1.0 ) : Rectangle {
 
         if(_control == null) return null;
 
-        return new Rectangle( _control.x, _control.y, _control.w, _control.h );
+        return new Rectangle(_control.x*_scale, _control.y*_scale, _control.w*_scale, _control.h*_scale);
 
     } //bounds
 
@@ -115,7 +115,7 @@ class Convert {
     } //mod_state
 
         /** from luxe.Input.MouseEvent to mint.MouseEvent */
-    public static function mouse_event( _event:MouseEvent, ?view:phoenix.Camera ) : mint.types.MouseEvent {
+    public static function mouse_event( _event:MouseEvent, ?_scale:Float=1.0, ?view:phoenix.Camera ) : mint.types.MouseEvent {
 
         var _pos = new Vector(_event.x, _event.y);
 
@@ -127,10 +127,10 @@ class Convert {
             state       : interact_state(_event.state),
             button      : mouse_button(_event.button),
             timestamp   : _event.timestamp,
-            x           : Std.int(_pos.x),
-            y           : Std.int(_pos.y),
-            xrel        : _event.x_rel,
-            yrel        : _event.y_rel,
+            x           : Std.int(_pos.x/_scale),
+            y           : Std.int(_pos.y/_scale),
+            xrel        : Std.int(_event.x_rel/_scale),
+            yrel        : Std.int(_event.y_rel/_scale),
             bubble      : true
         };
 

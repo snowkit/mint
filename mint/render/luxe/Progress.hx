@@ -43,42 +43,65 @@ class Progress extends mint.render.Render {
         visual = Luxe.draw.box({
             id: control.name+'.visual',
             batcher: render.options.batcher,
-            x:control.x,
-            y:control.y,
-            w:control.w,
-            h:control.h,
+            x: sx,
+            y: sy,
+            w: sw,
+            h: sh,
             color: color,
             depth: render.options.depth + control.depth,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with)
         });
+
+        var _margin = cs(margin);
 
         bar = Luxe.draw.box({
             id: control.name+'.bar',
             batcher: render.options.batcher,
-            x:control.x+margin,
-            y:control.y+margin,
-            w:get_bar_width(progress.progress),
-            h:control.h-(margin*2),
+            x: sx+_margin,
+            y: sy+_margin,
+            w: get_bar_width(progress.progress),
+            h: sh-(_margin*2),
             color: color_bar,
             depth: render.options.depth + control.depth + 0.001,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with)
         });
 
+        update_clip(scale);
+
         progress.onchange.listen(function(cur, prev){
-            bar.resize_xy(get_bar_width(cur), control.h-(margin*2));
+            bar.resize_xy(get_bar_width(cur), sh-(cs(margin)*2));
         });
 
     } //new
 
+    function update_clip(_scale:Float) {
+        
+        var _clip = Convert.bounds(control.clip_with, _scale);
+
+        visual.clip_rect = _clip;
+        bar.clip_rect = _clip;
+
+    } //update_clip
+
+    override function onscale(_scale:Float, _prev_scale:Float) {
+        
+        update_clip(_scale);
+
+    } //onscale
+
     function get_bar_width(_progress:Float) {
-        var _width = (control.w-(margin*2)) * _progress;
-        if(_width <= 1) _width = 1;
-        var _control_w = (control.w - margin);
-        if(_width >= _control_w) _width = _control_w;
+
+        var _margin = cs(margin);
+        var _max_w = (sw - _margin);
+        var _width = (sw-(_margin*2)) * _progress;
+
+        _width = Helper.clamp(_width, 1, _max_w);
+        // if(_width <= 1) _width = 1;
+        // if(_width >= _max_w) _width = _max_w;
+
         return _width;
-    }
+
+    } //get_bar_width
 
     override function ondestroy() {
 
@@ -90,28 +113,34 @@ class Progress extends mint.render.Render {
     }
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.resize_xy(control.w, control.h);
-        bar.transform.pos.set_xy(control.x+margin, control.y+margin);
-        bar.resize_xy(get_bar_width(progress.progress), control.h-(margin*2));
-    }
+
+        var _margin = cs(margin);
+        
+        visual.transform.pos.set_xy(sx, sy);
+        visual.resize_xy(sw, sh);
+        
+        bar.transform.pos.set_xy(sx+_margin, sy+_margin);
+        bar.resize_xy(get_bar_width(progress.progress), sh-(_margin*2));
+
+    } //onbounds
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
-        if(_disable) {
-            visual.clip_rect = null;
-            bar.clip_rect = null;
-        } else {
-            visual.clip_rect = bar.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
+        
+        update_clip(scale);
+
     } //onclip
 
     override function onvisible( _visible:Bool ) {
+
         visual.visible = bar.visible = _visible;
+
     } //onvisible
 
     override function ondepth( _depth:Float ) {
+
         visual.depth = render.options.depth + _depth;
         bar.depth = visual.depth + 0.001;
+
     } //ondepth
 
 } //Progress

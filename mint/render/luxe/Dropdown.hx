@@ -43,60 +43,82 @@ class Dropdown extends mint.render.Render {
         visual = Luxe.draw.box({
             id: control.name+'.visual',
             batcher: render.options.batcher,
-            x:control.x,
-            y:control.y,
-            w:control.w,
-            h:control.h,
+            x: sx,
+            y: sy,
+            w: sw,
+            h: sh,
             color: color,
             depth: render.options.depth + control.depth,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with)
+            clip_rect: Convert.bounds(control.clip_with, scale)
         });
 
         border = Luxe.draw.rectangle({
             id: control.name+'.border',
             batcher: render.options.batcher,
-            x: control.x,
-            y: control.y,
-            w: control.w,
-            h: control.h,
+            x: sx,
+            y: sy,
+            w: sw,
+            h: sh,
             color: color_border,
             depth: render.options.depth + control.depth+0.001,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with)
+            clip_rect: Convert.bounds(control.clip_with, scale)
         });
 
     } //new
 
+    function update_clip(_scale:Float) {
+
+        var _clip = Convert.bounds(control.clip_with, _scale);
+
+        visual.clip_rect = _clip;
+        border.clip_rect = _clip;
+
+    } //update_clip
+
+    override function onscale(_scale:Float, _prev_scale:Float) {
+        
+        update_clip(_scale);
+
+    } //onscale
+
     override function ondestroy() {
+
         visual.drop();
         border.drop();
+        
         visual = null;
         border = null;
-    }
+
+    } //ondestroy
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.resize_xy(control.w, control.h);
-        border.set_xywh(control.x, control.y, control.w+1, control.h);
+
+        visual.transform.pos.set_xy(sx, sy);
+        visual.resize_xy(sw, sh);
+        border.set_xywh(sx, sy, sw+1, sh);
+
     }
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
-        if(_disable) {
-            visual.clip_rect = border.clip_rect = null;
-        } else {
-            visual.clip_rect = border.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
+        
+        update_clip(scale);
+
     } //onclip
 
-    override function onvisible( _visible:Bool ) {
-        visual.visible = border.visible = _visible;
-    }
+    override function onvisible(_visible:Bool) {
 
-    override function ondepth( _depth:Float ) {
+        visual.visible = border.visible = _visible;
+
+    } //onvisible
+
+    override function ondepth(_depth:Float) {
+
         visual.depth = render.options.depth + _depth;
         border.depth = visual.depth+0.001;
-    }
+
+    } //ondepth
 
 
 } //Dropdown

@@ -43,37 +43,52 @@ class Slider extends mint.render.Render {
         visual = Luxe.draw.box({
             id: control.name+'.visual',
             batcher: render.options.batcher,
-            x:control.x,
-            y:control.y,
-            w:control.w,
-            h:control.h,
+            x: sx,
+            y: sy,
+            w: sw,
+            h: sh,
             color: color,
             depth: render.options.depth + control.depth,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with)
         });
 
         bar = Luxe.draw.box({
             id: control.name+'.bar',
             batcher: render.options.batcher,
-            x:control.x + slider.bar_x,
-            y:control.y + slider.bar_y,
-            w:slider.bar_w,
-            h:slider.bar_h,
+            x: sx + cs(slider.bar_x),
+            y: sy + cs(slider.bar_y),
+            w: cs(slider.bar_w),
+            h: cs(slider.bar_h),
             color: color_bar,
             depth: render.options.depth + control.depth + 0.001,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with)
         });
+
+        update_clip(scale);
 
         slider.onchange.listen(onchange);
 
     } //new
 
+    function update_clip(_scale:Float) {
+
+        var _clip = Convert.bounds(control.clip_with, _scale);
+
+        visual.clip_rect = _clip;
+        bar.clip_rect = _clip;
+
+    } //update_clip
+
+    override function onscale(_scale:Float, _prev_scale:Float) {
+
+        update_clip(_scale);
+
+    } //onscale
+
     function onchange(value:Float, prev_value:Float) {
 
-        bar.transform.pos.set_xy(slider.x+slider.bar_x, slider.y+slider.bar_y);
-        bar.resize_xy(slider.bar_w, slider.bar_h);
+        bar.transform.pos.set_xy(sx + cs(slider.bar_x), sy + cs(slider.bar_y));
+        bar.resize_xy(cs(slider.bar_w), cs(slider.bar_h));
 
     } //onchange
 
@@ -87,28 +102,33 @@ class Slider extends mint.render.Render {
     } //ondestroy
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.resize_xy(control.w, control.h);
-        bar.transform.pos.set_xy(slider.x+slider.bar_x, slider.y+slider.bar_y);
-        bar.resize_xy(slider.bar_w, slider.bar_h);
-    }
+
+        visual.transform.pos.set_xy(sx, sy);
+        visual.resize_xy(sw, sh);
+
+        bar.transform.pos.set_xy(sx+cs(slider.bar_x), sy+cs(slider.bar_y));
+        bar.resize_xy(cs(slider.bar_w), cs(slider.bar_h));
+
+    } //onbounds
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
-        if(_disable) {
-            visual.clip_rect = bar.clip_rect = null;
-        } else {
-            visual.clip_rect = bar.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
+
+        update_clip(scale);
+
     } //onclip
 
     override function onvisible( _visible:Bool ) {
+
         visual.visible = _visible;
         bar.visible = _visible;
+
     } //onvisible
 
     override function ondepth( _depth:Float ) {
+
         visual.depth = render.options.depth + _depth;
         bar.depth = visual.depth + 0.001;
+
     } //ondepth
 
 } //Slider

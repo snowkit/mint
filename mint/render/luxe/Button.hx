@@ -28,7 +28,7 @@ class Button extends mint.render.Render {
 
     var render: LuxeMintRender;
 
-    public function new( _render:LuxeMintRender, _control:mint.Button ) {
+    public function new(_render:LuxeMintRender, _control:mint.Button) {
 
         render = _render;
         button = _control;
@@ -46,14 +46,14 @@ class Button extends mint.render.Render {
             batcher: render.options.batcher,
             no_scene: true,
             centered: false,            
-            pos: new Vector(control.x, control.y),
-            size: new Vector(control.w, control.h),
+            pos: new Vector(sx, sy),
+            size: new Vector(sw, sh),
             color: color,
             depth: render.options.depth + control.depth,
-            visible: control.visible,
+            visible: control.visible
         });
 
-        visual.clip_rect = Convert.bounds(control.clip_with);
+        visual.clip_rect = Convert.bounds(control.clip_with, scale);
 
         button.onmouseenter.listen(function(e,c) { visual.color = color_hover; });
         button.onmouseleave.listen(function(e,c) { visual.color = color; });
@@ -62,10 +62,16 @@ class Button extends mint.render.Render {
 
     } //new
 
+    override function onscale(_scale:Float, _prev_scale:Float) {
+        
+        visual.clip_rect = Convert.bounds(control.clip_with, _scale);
+
+    } //onscale
+
     override function onbounds() {
 
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.geometry_quad.resize_xy(control.w, control.h);
+        visual.transform.pos.set_xy(sx, sy);
+        visual.geometry_quad.resize_xy(sw, sh);
 
     } //onbounds
 
@@ -78,22 +84,18 @@ class Button extends mint.render.Render {
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
 
-        if(_disable) {
-            visual.clip_rect = null;
-        } else {
-            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
-
+        visual.clip_rect = Convert.bounds(control.clip_with, scale);
+        
     } //onclip
 
 
-    override function onvisible( _visible:Bool ) {
+    override function onvisible(_visible:Bool) {
 
         visual.visible = _visible;
 
     } //onvisible
 
-    override function ondepth( _depth:Float ) {
+    override function ondepth(_depth:Float) {
 
         visual.depth = render.options.depth + _depth;
 

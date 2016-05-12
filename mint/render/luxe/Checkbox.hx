@@ -16,6 +16,7 @@ private typedef LuxeMintCheckboxOptions = {
     var color_hover: Color;
     var color_node: Color;
     var color_node_hover: Color;
+    var size_margin: Float;
 }
 
 class Checkbox extends mint.render.Render {
@@ -29,10 +30,11 @@ class Checkbox extends mint.render.Render {
     public var color_hover: Color;
     public var color_node: Color;
     public var color_node_hover: Color;
+    public var size_margin: Float;
 
     var render: LuxeMintRender;
 
-    public function new( _render:LuxeMintRender, _control:mint.Checkbox ) {
+    public function new(_render:LuxeMintRender, _control:mint.Checkbox) {
 
         checkbox = _control;
         render = _render;
@@ -45,29 +47,31 @@ class Checkbox extends mint.render.Render {
         color_hover = def(_opt.color_hover, new Color().rgb(0x445158));
         color_node = def(_opt.color_node, new Color().rgb(0x9dca63));
         color_node_hover = def(_opt.color_node_hover, new Color().rgb(0xadca63));
+        size_margin = def(_opt.size_margin, 4);
 
         visual = new luxe.Sprite({
             name: control.name+'.visual',
             batcher: render.options.batcher,
             no_scene: true,
             centered: false,
-            pos: new Vector(control.x, control.y),
-            size: new Vector(control.w, control.h),
+            pos: new Vector(sx, sy),
+            size: new Vector(sw, sh),
             color: color,
             depth: render.options.depth + control.depth,
             visible: control.visible,
         });
 
+        var _margin = cs(size_margin);
         node_off = new luxe.Sprite({
             name: control.name+'.node_off',
             batcher: render.options.batcher,
             no_scene: true,
             centered: false,
-            pos: new Vector(control.x+4, control.y+4),
-            size: new Vector(control.w-8, control.h-8),
+            pos: new Vector(sx+_margin, sy+_margin),
+            size: new Vector(sw-(_margin*2), sh-(_margin*2)),
             color: color_node.clone().set(null,null,null,0.25),
             depth: render.options.depth + control.depth + 0.001,
-            visible: control.visible
+            visible: control.visible,
         });
 
         node = new luxe.Sprite({
@@ -75,16 +79,14 @@ class Checkbox extends mint.render.Render {
             batcher: render.options.batcher,
             no_scene: true,
             centered: false,
-            pos: new Vector(control.x+4, control.y+4),
-            size: new Vector(control.w-8, control.h-8),
+            pos: new Vector(sx+_margin, sy+_margin),
+            size: new Vector(sw-(_margin*2), sh-(_margin*2)),
             color: color_node,
             depth: render.options.depth + control.depth + 0.002,
-            visible: control.visible && checkbox.state
+            visible: control.visible && checkbox.state,
         });
 
-        visual.clip_rect = Convert.bounds(control.clip_with);
-        node_off.clip_rect = Convert.bounds(control.clip_with);
-        node.clip_rect = Convert.bounds(control.clip_with);
+        update_clip(scale);
 
         checkbox.onmouseenter.listen(function(e,c) { node.color = color_node_hover; visual.color = color_hover; });
         checkbox.onmouseleave.listen(function(e,c) { node.color = color_node; visual.color = color; });
@@ -92,6 +94,22 @@ class Checkbox extends mint.render.Render {
         checkbox.onchange.listen(oncheck);
 
     } //new
+
+    function update_clip(_scale:Float) {
+
+        var _clip = Convert.bounds(control.clip_with, _scale);
+
+        visual.clip_rect = _clip;
+        node_off.clip_rect = _clip;
+        node.clip_rect = _clip;
+
+    } //update_clip
+
+    override function onscale(_scale:Float, _prev_scale:Float) {
+
+        update_clip(_scale);
+
+    } //onscale
 
     function oncheck(_new:Bool, _old:Bool) {
 
@@ -101,12 +119,14 @@ class Checkbox extends mint.render.Render {
 
     override function onbounds() {
 
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.geometry_quad.resize_xy( control.w, control.h );
-        node_off.transform.pos.set_xy(control.x+4, control.y+4);
-        node_off.geometry_quad.resize_xy( control.w-8, control.h-8 );
-        node.transform.pos.set_xy(control.x+4, control.y+4);
-        node.geometry_quad.resize_xy( control.w-8, control.h-8 );
+        var _margin = cs(size_margin);
+
+        visual.transform.pos.set_xy(sx, sy);
+        visual.geometry_quad.resize_xy(sw, sh);
+        node_off.transform.pos.set_xy(sx+_margin, sy+_margin);
+        node_off.geometry_quad.resize_xy(sw-(_margin*2), sh-(_margin*2));
+        node.transform.pos.set_xy(sx+_margin, sy+_margin);
+        node.geometry_quad.resize_xy(sw-(_margin*2), sh-(_margin*2));
 
     } //onbounds
 
@@ -122,15 +142,11 @@ class Checkbox extends mint.render.Render {
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
 
-        if(_disable) {
-            visual.clip_rect = node_off.clip_rect = node.clip_rect = null;
-        } else {
-            visual.clip_rect = node_off.clip_rect = node.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
+        update_clip(scale);
 
     } //onclip
 
-    override function onvisible( _visible:Bool ) {
+    override function onvisible(_visible:Bool) {
 
         visual.visible = node_off.visible = _visible;
 
@@ -142,7 +158,7 @@ class Checkbox extends mint.render.Render {
 
     } //onvisible
 
-    override function ondepth( _depth:Float ) {
+    override function ondepth(_depth:Float) {
 
         visual.depth = render.options.depth + _depth;
         node_off.depth = visual.depth + 0.001;

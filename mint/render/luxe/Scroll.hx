@@ -77,12 +77,31 @@ class Scroll extends mint.render.Render {
             visible: scroll.visible_v
         });
 
-        visual.clip_rect = Convert.bounds(control.clip_with);
+        update_clip(scale);
 
         scroll.onchange.listen(onchange);
         scroll.onhandlevis.listen(onhandlevis);
 
     }
+
+    function update_clip(_scale:Float) {
+
+        var _clip = Convert.bounds(control.clip_with, _scale);
+
+        visual.clip_rect = _clip;
+        scrollh.clip_rect = _clip;
+        scrollv.clip_rect = _clip;
+
+    } //update_clip
+
+    override function onscale(_scale:Float, _prev_scale:Float) {
+
+        scrollh.geometry_quad.resize_xy(cs(scroll.scrollh.w), cs(scroll.scrollh.h));
+        scrollv.geometry_quad.resize_xy(cs(scroll.scrollv.w), cs(scroll.scrollv.h));
+
+        update_clip(_scale);
+
+    } //onscale
 
     override function ondestroy() {
 
@@ -96,42 +115,51 @@ class Scroll extends mint.render.Render {
     } //ondestroy
 
     override function onbounds() {
-        visual.transform.pos.set_xy(control.x, control.y);
-        visual.geometry_quad.resize_xy( control.w, control.h );
+
+        visual.transform.pos.set_xy(sx, sy);
+        visual.geometry_quad.resize_xy(sw, sh);
+        
         //
-        scrollh.pos.set_xy(scroll.scrollh.x, scroll.scrollh.y);
-        scrollv.pos.set_xy(scroll.scrollv.x, scroll.scrollv.y);
-    }
+        scrollh.pos.set_xy(cs(scroll.scrollh.x), cs(scroll.scrollh.y));
+        scrollv.pos.set_xy(cs(scroll.scrollv.x), cs(scroll.scrollv.y));
+
+    } //onbounds
 
     function onhandlevis(_h:Bool, _v:Bool) {
+
         scrollh.visible = _h && scroll.visible;
         scrollv.visible = _v && scroll.visible;
-    }
+
+    } //onhandlevis
 
     function onchange() {
-        scrollh.pos.x = scroll.scrollh.x;
-        scrollv.pos.y = scroll.scrollv.y;
-    }
+
+        scrollh.pos.x = cs(scroll.scrollh.x);
+        scrollv.pos.y = cs(scroll.scrollv.y);
+
+    } //onchange
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
-        if(_disable) {
-            visual.clip_rect = null;
-        } else {
-            visual.clip_rect = new luxe.Rectangle(_x, _y, _w, _h);
-        }
+        
+        update_clip(scale);
+
     } //onclip
 
 
     override function onvisible( _visible:Bool ) {
+
         visual.visible = _visible;
         scrollh.visible = scroll.visible_h && _visible;
         scrollv.visible = scroll.visible_v && _visible;
+
     } //onvisible
 
     override function ondepth( _depth:Float ) {
+
         visual.depth = render.options.depth + _depth;
         scrollv.depth = render.options.depth + scroll.scrollv.depth;
         scrollh.depth = render.options.depth + scroll.scrollh.depth;
+        
     } //ondepth
 
 } //Scroll
