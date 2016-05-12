@@ -46,6 +46,7 @@ class Main extends luxe.Game {
         
         config.preload.jsons.push({ id:'assets/test.json' });
         config.preload.jsons.push({ id:'assets/editor/tools.mint.json' });
+        config.preload.jsons.push({ id:'assets/editor/controls.list.json' });
 
         config.preload.jsons.push({ id:'assets/inspector/mint.Button.nodes.json' });
         config.preload.jsons.push({ id:'assets/inspector/mint.Checkbox.nodes.json' });
@@ -379,40 +380,30 @@ class Main extends luxe.Game {
         layout.margin(ed_props, right, fixed, 4);
         layout.margin(ed_props, bottom, fixed, 4);
 
-        var list = [
-            'Panel',
-            'Label',
-            'Button',
-            'Image',
-            'List',
-            'Slider',
-            'Scroll',
-            'Checkbox',
-            'Dropdown',
-            'TextEdit',
-            'Progress',
-            'Window',
-        ];
+        var _asset = Luxe.resources.json('assets/editor/controls.list.json').asset;
+        var _list: Array<{name:String, type:String}> = _asset.json;
 
-        ed_controls.onselect.listen(function(idx:Int, ctrl:Control, _) {
-            spawn_control(ctrl.user.name, ctrl.user.type);
-        });
-
-        for(name in list) {
-            var label = new mint.Label({
+        for(_item in _list) {
+            var _name = _item.name;
+            var _type = _item.type;
+            var _label = new mint.Label({
                 parent: ui_canvas,
-                name: 'palette.$name',
-                user: { type:'mint.$name', name:name.toLowerCase() },
-                text: name,
+                name: 'palette.$_name',
+                user: { type:_type, name:_name },
+                text: _name,
                 text_size: 16,
                 align: TextAlign.left,
                 x: 0, y:8,
                 w: ed_controls.w-12,
                 h: 32,
             });
-            ed_controls.add_item(label, 0, 0);
-            layout.size(label, width, 100);
+            ed_controls.add_item(_label, 0, 0);
+            layout.size(_label, width, 100);
         }
+
+        ed_controls.onselect.listen(function(idx:Int, ctrl:Control, _) {
+            spawn_control(ctrl.user.name, ctrl.user.type);
+        });
 
     } //create_palette
 
