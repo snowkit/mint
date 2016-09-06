@@ -145,10 +145,17 @@ class Dropdown extends Control {
 
         if(e.button == MouseButton.left) {
 
-            if( contains(e.x, e.y) && !is_open ) {
-                open_list();
-                skip_mouse_up = true;
-            }
+            var _inside = contains(e.x, e.y);
+            if(_inside) {
+                
+                if(!is_open) {
+                    open_list();
+                    skip_mouse_up = true;
+                } else {
+                    close_list();
+                }
+
+            } //!inside
 
         }//mouse left
 
