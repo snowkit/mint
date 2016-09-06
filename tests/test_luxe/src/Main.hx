@@ -87,6 +87,7 @@ class Main extends luxe.Game {
         state.add( new tests.KitchenSink({ name:'state0' }) );
         state.add( new tests.Scrolling({ name:'state1' }) );
         state.add( new tests.Depth({ name:'state2' }) );
+        state.add( new tests.Focus({ name:'state3' }) );
 
         count = Lambda.count( state._states );
 

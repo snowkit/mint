@@ -8,7 +8,7 @@ class Focus {
     public var canvas: mint.Canvas;
 
     public function new(_canvas:mint.Canvas) {
-        
+
         canvas = _canvas;
 
         canvas.onmousemove.listen(mousemove);
@@ -56,7 +56,7 @@ class Focus {
     function mousedown(e:MouseEvent, target:mint.Control) {
         if(canvas.focused != null && canvas.focused.mouse_input) {
             canvas.focused.mousedown(e);
-        } 
+        }
 
         if(marked_mouse()) canvas.marked.mousedown(e);
 
@@ -65,7 +65,7 @@ class Focus {
     function mouseup(e:MouseEvent, target:mint.Control) {
         if(canvas.focused != null && canvas.focused.mouse_input) {
             canvas.focused.mouseup(e);
-        } 
+        }
 
         if(marked_mouse()) canvas.marked.mouseup(e);
 
@@ -74,7 +74,7 @@ class Focus {
     function mousewheel(e:MouseEvent, target:mint.Control) {
         if(canvas.focused != null && canvas.focused.mouse_input) {
             canvas.focused.mousewheel(e);
-        } 
+        }
 
         if(marked_mouse()) canvas.marked.mousewheel(e);
 
@@ -84,59 +84,77 @@ class Focus {
         return canvas.marked != canvas.focused && canvas.marked != null && canvas.marked.mouse_input;
     }
 
-    function mousemove(e:MouseEvent, target:mint.Control) {
+    function get_markable(_target:mint.Control, _x:Float, _y:Float) {
+        
+        var _highest = _target.topmost_child_at_point(_x, _y);
+            
+        if(_highest == null && _highest == _target) {
+            return null;
+        }
 
-        if(canvas.ishovered) {
+        // now if we have the highest possible control, 
+        // we have to walk backward up the tree, 
+        // looking for the highest one with mouse input
 
-                //first we check if the mouse is still inside the focused element
-            var _marked = canvas.marked;
-            if(_marked != null) {
+        var _current = _highest;
+        var _canvas = _target.canvas;
 
-                if(_marked.contains(e.x, e.y)) {
+        while(true) {
 
-                    var _target = _marked.parent;
-                    if(_target == null) _target = canvas;
+            if(_current == null || _current == _canvas) {
+                return _current;
+            }
 
-                    var _hovered = _target.topmost_child_at_point(e.x, e.y);
-                    if(_hovered != null && _hovered != _marked && _hovered != canvas) {
+            if(_current.mouse_input) {
+                return _current;
+            }
 
-                            //reset the previous
-                        unmark_control(_marked, e);
-                            //set the newly hovered one
-                        mark_control(_hovered, e);
-                            //change the focused item
-                        canvas.marked = _hovered;
+            _current = _current.parent;
 
-                    } //_hovered != null
+        } //while
 
-                } else { //_marked.contains
+            //unreachable?
+        return null;
 
-                        //unfocus the existing one
-                    unmark_control(_marked, e);
+    } //get_markable
 
-                        //find a new one, if any
-                    find_marked(e);
+    function mousemove(e:MouseEvent, _) {
 
-                } //_marked inside
+        var _mark_target = canvas;
+        var _captured = canvas.captured;
 
-            } else { //_marked != null
+        if(_captured != null && _captured.mouse_input) {
 
-                    //nothing focused at the moment, check that the mouse is inside our canvas first
-                if( canvas.ishovered ) {
-                    find_marked(e);
-                } else {
-                    reset_marked(e);
-                }
+            var _markable = get_markable(_captured, e.x, e.y);
+            
+            if(_markable != null) {
+                mark_control(_markable, e);
+            }
 
-            } //no currently marked
+            if(marked_mouse()) canvas.marked.mousemove(e);
 
-        } //canvas.ishovered
+        } else if(canvas.ishovered) {
 
-        if(canvas.focused != null && canvas.focused.mouse_input) {
-            canvas.focused.mousemove(e);
-        } 
+                //if the mouse has left the current marked control, unmark
+            if(canvas.marked != null && !canvas.marked.contains(e.x, e.y)) {
+                unmark_control(canvas.marked, e);
+            }
 
-        if(marked_mouse()) canvas.marked.mousemove(e);
+                // the focused control always gets the events
+            if(canvas.focused != null && canvas.focused.mouse_input) {
+                canvas.focused.mousemove(e);
+            }
+
+                //get the marked control from the canvas
+            var _markable = get_markable(canvas, e.x, e.y);
+            
+            if(_markable != null) {
+                mark_control(_markable, e);
+            }
+
+            if(marked_mouse()) canvas.marked.mousemove(e);
+
+        } //canvas is hovered
 
     } //mousemove
 
@@ -146,7 +164,7 @@ class Focus {
             unmark_control(_control, e);
         }
 
-    } //reset_focus
+    } //reset_marked
 
     function get_focusable( _x:Float, _y:Float ) {
 
@@ -172,7 +190,7 @@ class Focus {
 
     function unmark_control(_control:Control, e:MouseEvent) {
 
-        if(_control != null) {
+        if(_control != null && _control.ismarked) {
 
             _control.unmark();
 
@@ -184,7 +202,9 @@ class Focus {
 
     function mark_control(_control:Control, e:MouseEvent) {
 
-        if(_control != null) {
+        if(_control != null && !_control.ismarked) {
+
+            reset_marked(canvas.marked);
 
             _control.mark();
 
@@ -192,6 +212,6 @@ class Focus {
 
         }
 
-    } //set_focused
+    } //mark_control
 
 }

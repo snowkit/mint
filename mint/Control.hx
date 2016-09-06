@@ -338,8 +338,7 @@ class Control {
 
         for(_child in children) {
 
-                //:todo: this filters by mouse but is a general function
-            if(_child.contains(_x, _y) && _child.mouse_input && _child.visible) {
+            if(_child.visible && _child.contains(_x, _y)) {
 
                 if(_child.depth >= highest_depth) {
                     highest_child = _child;
@@ -788,7 +787,7 @@ class Control {
         if(canvas == this) return;
 
         var _pre = canvas.captured == this;
-        
+
         canvas.captured = this;
         
         if(!_pre) oncaptured.emit(true);

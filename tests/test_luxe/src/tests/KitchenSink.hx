@@ -11,6 +11,7 @@ import mint.types.Types;
 import mint.render.luxe.Convert;
 import mint.render.luxe.Label;
 import mint.layout.margins.Margins;
+import luxe.utils.Maths;
 
 class KitchenSink extends State {
 
@@ -257,12 +258,19 @@ class KitchenSink extends State {
 
     function create_basics() {
 
-        new mint.Label({
+        var _panel = new mint.Panel({
             parent: canvas,
+            name: 'label_panel',
+            x:5, y:5, w:100, h:42,
+            mouse_input: false, //this is to test that mouse events land in the children when the parent has no mouse input
+        });
+
+        new mint.Label({
+            parent: _panel,
             name: 'labelmain',
-            x:10, y:10, w:100, h:32,
-            text: 'hello mint',
-            align:left,
+            x:0, y:0, w:100, h:42,
+            text: 'mint label',
+            align: center,
             text_size: 14,
             onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
         });
@@ -308,7 +316,7 @@ class KitchenSink extends State {
                 name : _s.name+'.label', text: '${_s.value}'
             });
 
-            _s.onchange.listen(function(_val,_) { _l.text = '$_val'; });
+            _s.onchange.listen(function(_val,_) { _l.text = '${Maths.fixed(_val,3)}'; });
 
         } //make_slider
 
@@ -316,9 +324,9 @@ class KitchenSink extends State {
         make_slider('slider2', 10, 357, 128, 24, 0x9dca63, 0, 100, 50, 1, false);
         make_slider('slider3', 10, 385, 128, 24, 0xf6007b, null, null, null, null, false);
 
-        make_slider('slider4', 14, 424, 32, 128, 0x9dca63, 0, 100, 20, 10, true);
-        make_slider('slider5', 56, 424, 32, 128, 0x9dca63, 0, 100, 0.3, 1, true);
-        make_slider('slider6', 98, 424, 32, 128, 0xf6007b, null, null, null, null, true);
+        make_slider('slider4', 12, 424, 36, 128, 0x9dca63, 0, 100, 20, 10, true);
+        make_slider('slider5', 56, 424, 36, 128, 0x9dca63, 0, 100, 0.3, 1, true);
+        make_slider('slider6', 101, 424, 36, 128, 0xf6007b, null, null, null, null, true);
 
         new mint.Button({
             parent: canvas,
