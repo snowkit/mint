@@ -13,6 +13,9 @@ typedef ScrollOptions = {
 
     > ControlOptions,
 
+    ?units_to_scroll_h: Float,
+    ?units_to_scroll_v: Float
+
 } //ScrollOptions
 
 
@@ -26,6 +29,9 @@ class Scroll extends Control {
 
     public var onchange : Signal<Void->Void>;
     public var onhandlevis : Signal<Bool->Bool->Void>;
+
+    public var units_to_scroll_h: Float = 16;
+    public var units_to_scroll_v: Float = 16;
 
     var drag_v = false;
     var drag_y = 0.0;
@@ -51,6 +57,9 @@ class Scroll extends Control {
 
         def(options.name, 'scroll');
         def(options.mouse_input, true);
+        
+        units_to_scroll_h = def(options.units_to_scroll_h, 16);
+        units_to_scroll_v = def(options.units_to_scroll_v, 16);
 
         super(_options);
 
@@ -216,8 +225,8 @@ class Scroll extends Control {
 
     } //update_scroll
 
-    inline function get_step_h() return 0.01;//(Math.abs(w - container.w)*0.02)/w;
-    inline function get_step_v() return 0.01;//(Math.abs(h - container.h)*0.02)/h;
+    inline function get_step_h() return units_to_scroll_h / container.w;
+    inline function get_step_v() return units_to_scroll_v / container.h;
 
 //Control overrides
 
@@ -275,11 +284,13 @@ class Scroll extends Control {
         super.mousewheel(e);
 
         if(e.x != 0 && visible_h) {
-            set_scroll_percent(percent_h + (e.x*get_step_h()), percent_v);
+            var _dir = Helper.sign(e.x);
+            set_scroll_percent(percent_h + (_dir*get_step_h()), percent_v);
         }
 
         if(e.y != 0 && visible_v) {
-            set_scroll_percent(percent_h, percent_v + (e.y*get_step_v()));
+            var _dir = Helper.sign(e.y);
+            set_scroll_percent(percent_h, percent_v + (_dir*get_step_v()));
         }
 
     } //mousewheel

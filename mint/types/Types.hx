@@ -201,6 +201,10 @@ class Helper {
         return ( value < a ) ? a : ( ( value > b ) ? b : value );
     }
 
+    static inline public function sign(x:Float) : Int {
+        return (x < 0) ? -1 : ((x > 0) ? 1 : 0);
+    } //sign
+
     static public function in_rect(x:Float, y:Float, rx:Float, ry:Float, rw:Float, rh:Float) {
 
             if(x < rx) return false;
