@@ -35,7 +35,7 @@ class Dropdown extends Control {
 
         options = _options;
 
-        def(options.name, 'dropdown');
+        def(options.name, 'dropdown.${Helper.uniqueid()}');
         def(options.mouse_input, true);
 
             //create the base control

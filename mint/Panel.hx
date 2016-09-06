@@ -28,7 +28,7 @@ class Panel extends Control {
 
         options = _options;
 
-        def(options.name, 'panel');
+        def(options.name, 'panel.${Helper.uniqueid()}');
 
         super(options);
 

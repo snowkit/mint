@@ -43,7 +43,7 @@ class Checkbox extends Control {
 
         options = _options;
 
-        def(options.name, 'checkbox');
+        def(options.name, 'checkbox.${Helper.uniqueid()}');
         def(options.mouse_input, true);
 
         super(_options);

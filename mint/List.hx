@@ -26,7 +26,7 @@ class List extends Control {
         items = [];
         options = _options;
 
-        def(options.name, 'list');
+        def(options.name, 'list.${Helper.uniqueid()}');
         def(options.mouse_input, true);
 
         super(options);

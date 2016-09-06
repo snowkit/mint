@@ -55,7 +55,7 @@ class Scroll extends Control {
 
         options = _options;
 
-        def(options.name, 'scroll');
+        def(options.name, 'scroll.${Helper.uniqueid()}');
         def(options.mouse_input, true);
         
         units_to_scroll_h = def(options.units_to_scroll_h, 16);

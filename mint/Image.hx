@@ -40,7 +40,7 @@ class Image extends Control {
 
         options = _options;
 
-        def(options.name, 'image');
+        def(options.name, 'image.${Helper.uniqueid()}');
 
         super(_options);
 

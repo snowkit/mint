@@ -35,7 +35,7 @@ class Progress extends Control {
 
         options = _options;
 
-        def(options.name, 'progress');
+        def(options.name, 'progress.${Helper.uniqueid()}');
 
         super(options);
 

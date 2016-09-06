@@ -61,7 +61,7 @@ class Window extends Control {
         onclose = new Signal();
         oncollapse = new Signal();
 
-        def(options.name, 'window');
+        def(options.name, 'window.${Helper.uniqueid()}');
         def(options.mouse_input, true);
 
         super(options);

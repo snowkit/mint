@@ -60,7 +60,7 @@ class Slider extends Control {
 
         options = _options;
 
-        def(options.name, 'slider');
+        def(options.name, 'slider.${Helper.uniqueid()}');
         def(options.mouse_input, true);
 
         max = def(options.max, 1);

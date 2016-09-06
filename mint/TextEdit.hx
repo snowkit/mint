@@ -68,7 +68,7 @@ class TextEdit extends Control {
 
         options = _options;
 
-        def(options.name, 'textedit');
+        def(options.name, 'textedit.${Helper.uniqueid()}');
         def(options.mouse_input, true);
         def(options.key_input, true);
 

@@ -32,7 +32,7 @@ class Button extends Control {
 
         options = _options;
 
-        def(options.name, 'button');
+        def(options.name, 'button.${Helper.uniqueid()}');
         def(options.mouse_input, true);
 
         super(options);

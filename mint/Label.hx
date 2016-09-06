@@ -48,7 +48,7 @@ class Label extends Control {
 
         options = _options;
 
-        def(options.name, 'label');
+        def(options.name, 'label.${Helper.uniqueid()}');
 
         super(options);
 

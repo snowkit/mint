@@ -340,7 +340,6 @@ class KitchenSink extends State {
 
         new mint.Button({
             parent: canvas,
-            name: 'button2',
             x: 76, y: 52, w: 32, h: 32,
             text: 'O',
             options: { color_hover: new Color().rgb(0xf6007b) },

@@ -228,7 +228,7 @@ class Control {
 
         children = [];
 
-        name = def(_options_.name, 'control');
+        name = def(_options_.name, 'control.${Helper.uniqueid()}');
         user = _options_.user;
         depth_offset = def(_options_.depth, 0);
 
