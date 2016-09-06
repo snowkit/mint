@@ -27,6 +27,14 @@ typedef WindowOptions = {
     @:optional var focusable: Bool;
         /** Whether or not the window is collapsible */
     @:optional var collapsible: Bool;
+        /** The x offset of the title bar (draggable label area) */
+    @:optional var title_margin_left: Float;
+        /** The y offset of the title bar (draggable label area) */
+    @:optional var title_margin_top: Float;
+        /** The offset of the title bar from the right edge (draggable label area) */
+    @:optional var title_margin_right: Float;
+        /** The height of the title bar (draggable label area) */
+    @:optional var title_height: Float;
 
 } //WindowOptions
 
@@ -52,6 +60,11 @@ class Window extends Control {
     var drag_x : Float = 0;
     var drag_y : Float = 0;
 
+    var title_margin_top: Float = 2;
+    var title_margin_left: Float = 2;
+    var title_margin_right: Float = 4;
+    var title_height: Float = 22;
+
     var options : WindowOptions;
     var ready = false;
 
@@ -72,6 +85,11 @@ class Window extends Control {
         focusable = def(options.focusable, true);
         collapsible = def(options.collapsible, false);
 
+        title_height = def(options.title_height, 22);
+        title_margin_left = def(options.title_margin_left, 2);
+        title_margin_top = def(options.title_margin_top, 2);
+        title_margin_right = def(options.title_margin_right, 4);
+
         resize_handle = new Control({
             parent : this,
             x: w-24, y: h-24, w: 24, h: 24,
@@ -85,7 +103,10 @@ class Window extends Control {
 
         title = new Label({
             parent : this,
-            x: 2, y: 2, w: w - 4, h: 22,
+            x: title_margin_left, 
+            y: title_margin_top, 
+            w: w - title_margin_right, 
+            h: title_height,
             text: options.title,
             align : TextAlign.center,
             align_vertical : TextAlign.center,
@@ -97,7 +118,10 @@ class Window extends Control {
 
         close_handle = new Control({
             parent : this,
-            x: w - 24, y: 2, w: 22, h: 22,
+            x: w - title_margin_right - 24, 
+            y: title_margin_top, 
+            w: 22, 
+            h: title_height,
             name : name + '.close',
             options: options.options.close_handle,
             internal_visible: options.visible
@@ -115,7 +139,10 @@ class Window extends Control {
         
         collapse_handle = new Control({
             parent : this,
-            x: closable ? w - 48 : w - 24, y: 2, w: 22, h: 22,
+            x: closable ? w - title_margin_right - 48 : w - title_margin_right - 24, 
+            y: title_margin_top, 
+            w: 22, 
+            h: title_height,
             name : name + '.collapse',
             options: options.options.collapse_handle,
             internal_visible: options.visible
@@ -332,10 +359,10 @@ class Window extends Control {
 
         super.bounds_changed(_dx, _dy, _dw, _dh);
 
-        if(close_handle != null) close_handle.x_local = w - 24;
-        if(collapse_handle != null) collapse_handle.x_local = closable ? w - 48 : w - 24;
-        if(title != null) title.w = w - 4;
-        if(resize_handle != null) resize_handle.set_pos(x + w - 24, y + h - 24);
+        if(close_handle != null)    close_handle.x_local = w - title_margin_right - 24;
+        if(collapse_handle != null) collapse_handle.x_local = closable ? w - title_margin_right - 48 : w - title_margin_right - 24;
+        if(title != null)           title.w = w - title_margin_right;
+        if(resize_handle != null)   resize_handle.set_pos(x + w - 24, y + h - 24);
 
     } //bounds_changed
 

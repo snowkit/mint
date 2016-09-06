@@ -65,8 +65,10 @@ class KitchenSink extends State {
 
         window1 = new mint.Window({
             parent: canvas,
+            title_height: 48,
+            text_size: 20,
             name: 'window1',
-            title: 'window',
+            title: 'inventory',
             options: {
                 color:new Color().rgb(0x121212),
                 color_titlebar:new Color().rgb(0x191919),
@@ -82,7 +84,7 @@ class KitchenSink extends State {
             parent: window1,
             name: 'list1',
             options: { view: { color:new Color().rgb(0x19191c) } },
-            x: 4, y: 28, w: 248, h: 400-28-4
+            x: 4, y: 54, w: 248, h: 400-54-4
         });
 
         Main.layout.margin(_list, right, fixed, 4);
