@@ -57,6 +57,10 @@ class TextEdit extends Control {
             `text:String, display_text:String, from_typing:Bool`  */
     public var onchange: Signal<String->String->Bool->Void>;
 
+        /** Emitted whenever the return key is pressed.
+        `text:String, display_text:String` */
+    public var oncommit: Signal<String->String->Void>;
+
     var edit : String = '';
     var composition : String = '';
     var composition_start : Int = 0;
@@ -76,6 +80,7 @@ class TextEdit extends Control {
 
         onchangeindex = new Signal();
         onchange = new Signal();
+        oncommit = new Signal();
 
         filter = def(options.filter, null);
 
@@ -196,6 +201,7 @@ class TextEdit extends Control {
             case KeyCode.right:
                 move(1);
             case KeyCode.enter:
+                oncommit.emit(edit, display);
             case KeyCode.escape:
             case KeyCode.tab:
             case KeyCode.unknown:
