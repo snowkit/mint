@@ -80,7 +80,7 @@ class TextEdit extends Control {
 
         onchangeindex = new Signal();
         onchange = new Signal();
-        onreturn = new Signal();
+        oncommit = new Signal();
 
         filter = def(options.filter, null);
 
