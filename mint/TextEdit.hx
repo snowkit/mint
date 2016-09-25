@@ -59,7 +59,7 @@ class TextEdit extends Control {
 
         /** Emitted whenever the return key is pressed.
 	    `text:String, display_text:String` */
-    public var onreturn: Signal<String->String->Void>;
+    public var oncommit: Signal<String->String->Void>;
 
     var edit : String = '';
     var composition : String = '';
@@ -201,7 +201,7 @@ class TextEdit extends Control {
             case KeyCode.right:
                 move(1);
             case KeyCode.enter:
-                onreturn.emit(edit,display);
+                onreturn.emit(edit, display);
             case KeyCode.escape:
             case KeyCode.tab:
             case KeyCode.unknown:
