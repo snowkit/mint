@@ -50,17 +50,21 @@ class Signal<T> {
             var _idx = 0;
             var _count = $ethis.listeners.length;
             while(_idx < _count) {
-                var fn = $ethis.listeners[_idx];
-                if(fn != null) {
-                    fn($a{args});
+                if($ethis != null) {
+                    var fn = $ethis.listeners[_idx];
+                    if(fn != null) {
+                        fn($a{args});
+                    }
                 }
                 _idx++;
             }
 
-            while(_count > 0) {
-                var fn = $ethis.listeners[_count-1];
-                if(fn == null) $ethis.listeners.splice(_count-1, 1);
-                _count--;
+            if($ethis != null) {
+                while(_count > 0) {
+                    var fn = $ethis.listeners[_count-1];
+                    if(fn == null) $ethis.listeners.splice(_count-1, 1);
+                    _count--;
+                }
             }
         }
     } //emit
