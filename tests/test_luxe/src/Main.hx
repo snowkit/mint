@@ -47,7 +47,7 @@ class Main extends luxe.Game {
             // });
 
         var _scale = Luxe.screen.device_pixel_ratio;
-        var auto_canvas = new AutoCanvas({
+        var auto_canvas = new AutoCanvas(Luxe.camera.view, {
             name:'canvas',
             rendering: rendering,
             options: { color:new Color(1,1,1,0.0) },
@@ -127,7 +127,8 @@ class Main extends luxe.Game {
 
     override function onmousemove(e) {
 
-        var _me = Convert.mouse_event(e, canvas.scale);
+        var _me = Convert.mouse_event(e, canvas.scale, Luxe.camera.view);
+
         canvas_mouse_pos = '${_me.x}, ${_me.y} window:${e.x},${e.y}';
 
         debugtext();
@@ -165,6 +166,37 @@ class Main extends luxe.Game {
         if(e.keycode == Key.key_7) {
             canvas.scale += 0.1; 
         }
+
+
+        //the canvas won't know we've changed the camera,
+        //so we tell it by setting the scale to the same value
+
+            if(e.keycode == Key.up && e.mod.shift) {
+                Luxe.camera.zoom += 0.2;
+                canvas.scale = canvas.scale+0;
+            }
+
+            if(e.keycode == Key.down && e.mod.shift) {
+                Luxe.camera.zoom -= 0.2;
+                canvas.scale = canvas.scale+0;
+            }
+
+            if(e.keycode == Key.left && e.mod.shift) {
+                Luxe.camera.pos.x -= 60; 
+                canvas.scale = canvas.scale+0;
+            }
+
+            if(e.keycode == Key.key_s && e.mod.shift) {
+                Luxe.camera.shake(200);
+                canvas.scale = canvas.scale+0;
+            }
+
+            if(e.keycode == Key.right && e.mod.shift) {
+                Luxe.camera.pos.x += 60;
+                canvas.scale = canvas.scale+0;
+            }
+
+        //
 
         if(e.keycode == Key.key_d && e.mod.ctrl) { debug = !debug; trace('debug: $debug'); }
         if(e.keycode == Key.key_v && e.mod.ctrl) canvas.visible = !canvas.visible;
