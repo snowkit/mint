@@ -4,6 +4,16 @@ import mint.render.luxe.Convert;
     which is convenient for quickly testing things and throwing ideas around. To stop listening call auto_unlisten(). */
 class AutoCanvas extends mint.Canvas {
 
+    public var view: phoenix.Camera;
+
+    public function new(?_view:phoenix.Camera, _options:mint.Canvas.CanvasOptions) {
+        
+        view = _view;
+
+        super(_options);
+
+    } //new
+
     public function auto_listen() {
 
         Luxe.on(luxe.Ev.render,     conv_render);
@@ -38,10 +48,10 @@ class AutoCanvas extends mint.Canvas {
 
     function conv_update(dt:Float)  update(dt);
     function conv_render(_)         render();
-    function conv_mousewheel(e)     mousewheel(Convert.mouse_event(e, scale));
-    function conv_mousedown(e)      mousedown(Convert.mouse_event(e, scale));
-    function conv_mouseup(e)        mouseup(Convert.mouse_event(e, scale));
-    function conv_mousemove(e)      mousemove(Convert.mouse_event(e, scale));
+    function conv_mousewheel(e)     mousewheel(Convert.mouse_event(e, scale, view));
+    function conv_mousedown(e)      mousedown(Convert.mouse_event(e, scale, view));
+    function conv_mouseup(e)        mouseup(Convert.mouse_event(e, scale, view));
+    function conv_mousemove(e)      mousemove(Convert.mouse_event(e, scale, view));
     function conv_keyup(e)          keyup(Convert.key_event(e));
     function conv_keydown(e)        keydown(Convert.key_event(e));
     function conv_textinput(e)      textinput(Convert.text_event(e));
