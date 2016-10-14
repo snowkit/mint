@@ -76,7 +76,7 @@ class Progress extends mint.render.Render {
 
     function update_clip(_scale:Float) {
         
-        var _clip = Convert.bounds(control.clip_with, _scale);
+        var _clip = Convert.clip_bounds(control.clip_with, render.options.batcher.view, _scale);
 
         visual.clip_rect = _clip;
         bar.clip_rect = _clip;

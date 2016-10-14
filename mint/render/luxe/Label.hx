@@ -52,7 +52,7 @@ class Label extends mint.render.Render {
             visible: control.visible
         });
 
-        text.clip_rect = Convert.bounds(control.clip_with, scale);
+        update_clip(scale);
 
         label.onchange.listen(ontext);
 
@@ -61,9 +61,15 @@ class Label extends mint.render.Render {
 
     }
 
+    function update_clip(_scale:Float) {
+        
+        text.clip_rect = Convert.clip_bounds(control.clip_with, render.options.batcher.view, _scale);
+
+    } //update_clip
+
     override function onscale(_scale:Float, _prev_scale:Float) {
 
-        text.clip_rect = Convert.bounds(control.clip_with, _scale);
+        update_clip(_scale);
         text.point_size = cs(label.options.text_size);
 
     } //onscale
@@ -91,7 +97,7 @@ class Label extends mint.render.Render {
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
         
-        text.clip_rect = Convert.bounds(control.clip_with, scale);
+        update_clip(scale);
 
     } //onclip
 

@@ -83,13 +83,19 @@ class Image extends mint.render.Render {
             color: _opt.color
         });
 
-        visual.clip_rect = Convert.bounds(control.clip_with, scale);
+        update_clip(scale);
 
     } //new
 
+    function update_clip(_scale:Float) {
+        
+        visual.clip_rect = Convert.clip_bounds(control.clip_with, render.options.batcher.view, _scale);
+
+    } //update_clip
+
     override function onscale(_scale:Float, _prev_scale:Float) {
         
-        visual.clip_rect = Convert.bounds(control.clip_with, _scale);
+        update_clip(_scale);
         visual.pos.set_xy(sx, sy);
         visual.size.set_xy(sw*ratio_w, sh*ratio_h);
 
@@ -111,7 +117,7 @@ class Image extends mint.render.Render {
 
     override function onclip(_disable:Bool, _x:Float, _y:Float, _w:Float, _h:Float) {
 
-        visual.clip_rect = Convert.bounds(control.clip_with, scale);
+        update_clip(scale);
 
     } //onclip
 

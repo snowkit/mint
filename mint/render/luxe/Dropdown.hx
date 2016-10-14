@@ -50,7 +50,6 @@ class Dropdown extends mint.render.Render {
             color: color,
             depth: render.options.depth + control.depth,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with, scale)
         });
 
         border = Luxe.draw.rectangle({
@@ -63,14 +62,15 @@ class Dropdown extends mint.render.Render {
             color: color_border,
             depth: render.options.depth + control.depth+0.001,
             visible: control.visible,
-            clip_rect: Convert.bounds(control.clip_with, scale)
         });
+
+        update_clip(scale);
 
     } //new
 
     function update_clip(_scale:Float) {
 
-        var _clip = Convert.bounds(control.clip_with, _scale);
+        var _clip = Convert.clip_bounds(control.clip_with, render.options.batcher.view, _scale);
 
         visual.clip_rect = _clip;
         border.clip_rect = _clip;
