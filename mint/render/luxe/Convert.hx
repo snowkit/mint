@@ -31,6 +31,29 @@ class Convert {
 
     } //bounds
 
+    static var tmp: luxe.Vector = new luxe.Vector();
+    
+        /** from mint.Control bounds in canvas space, to window clip space where clipping happens in luxe (OpenGL scissor rect) */
+    public static function clip_bounds( _control:Control, _view:phoenix.Camera, ?_scale:Float=1.0 ) : Rectangle {
+
+        if(_control == null) return null;
+
+        tmp.x = _control.x * _scale;
+        tmp.y = _control.y * _scale;
+
+        var pos = _view.world_point_to_screen(tmp);
+
+            //we add the width height, because we need the world space position to convert
+        tmp.x += _control.w * _scale;
+        tmp.y += _control.h * _scale;
+        
+        var bottom_right = _view.world_point_to_screen(tmp);
+
+            //then we subtract again
+        return new Rectangle(pos.x, pos.y, bottom_right.x - pos.x, bottom_right.y - pos.y);
+
+    } //clip_bounds
+
         /** from luxe.Input.InteractState to mint.InteractState */
     public static function interact_state( _state:InteractState ) : mint.types.InteractState {
 
