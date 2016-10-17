@@ -253,8 +253,7 @@ class Control {
         key_input = def(_options_.key_input, false);
 
         children_bounds = {
-            x:0, y:0, right:0, bottom:0,
-            real_x : 0, real_y : 0, real_w : 0, real_h : 0
+            x:0, y:0, w:0, h:0, x_local : 0, y_local : 0
         };
 
         if(_options_.parent != null) {
@@ -392,7 +391,7 @@ class Control {
 
             clip_with.onbounds.listen(onclipchanged);
 
-                //:todo:
+                //:todo: clip_with children applies to children
             for(child in children) {
                 child.clip_with = clip_with;
             }
@@ -493,7 +492,6 @@ class Control {
 
     }
 
-        //:todo: clean up
     function get_children_bounds() : ChildBounds {
 
         assert(destroyed == false, '$name was already destroyed but is being interacted with');
@@ -502,12 +500,10 @@ class Control {
 
             children_bounds.x = 0;
             children_bounds.y = 0;
-            children_bounds.right = 0;
-            children_bounds.bottom = 0;
-            children_bounds.real_x = 0;
-            children_bounds.real_y = 0;
-            children_bounds.real_w = 0;
-            children_bounds.real_h = 0;
+            children_bounds.w = 0;
+            children_bounds.h = 0;
+            children_bounds.x_local = 0;
+            children_bounds.y_local = 0;
 
             return children_bounds;
 
@@ -535,14 +531,13 @@ class Control {
 
         } //child in children
 
-        children_bounds.x = _current_x;
-        children_bounds.y = _current_y;
-        children_bounds.right = _current_r;
-        children_bounds.bottom = _current_b;
-        children_bounds.real_x = _real_x;
-        children_bounds.real_y = _real_y;
-        children_bounds.real_w = _current_r;
-        children_bounds.real_h = _current_b;
+        children_bounds.x_local = _current_x;
+        children_bounds.y_local = _current_y;
+
+        children_bounds.x = _real_x;
+        children_bounds.y = _real_y;
+        children_bounds.w = _current_r;
+        children_bounds.h = _current_b;
 
         return children_bounds;
 
@@ -1151,15 +1146,13 @@ class Control {
 
 typedef ChildBounds = {
 
-    var x : Float;
+    var x : Float; 
     var y : Float;
-    var bottom : Float;
-    var right : Float;
+    var w : Float;
+    var h : Float;
 
-    var real_y : Float;
-    var real_x : Float;
-    var real_w : Float;
-    var real_h : Float;
+    var x_local : Float;
+    var y_local : Float;
 
 } //ChildBounds
 

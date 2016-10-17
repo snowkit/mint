@@ -53,7 +53,7 @@ class List extends Control {
 
         var _childbounds = view.container.children_bounds;
 
-        item.y_local += _childbounds.bottom + offset_y;
+        item.y_local += (_childbounds.y_local + _childbounds.h) + offset_y;
         item.x_local += offset_x;
 
         view.add(item);

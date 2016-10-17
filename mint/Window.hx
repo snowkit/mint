@@ -127,7 +127,6 @@ class Window extends Control {
             internal_visible: options.visible
         });
 
-        //:todo: this logic is weird
         ready = true;
         close_handle.mouse_input = closable;
 

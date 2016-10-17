@@ -125,8 +125,8 @@ class Scroll extends Control {
 
         child_bounds = container.children_bounds;
 
-        container.w = child_bounds.real_w;
-        container.h = child_bounds.real_h;
+        container.w = child_bounds.w;
+        container.h = child_bounds.h;
 
     } //update_container
 
@@ -200,11 +200,6 @@ class Scroll extends Control {
 
         if(!ready) return;
 
-            //:todo: this should generally
-            //only be calculated when the children
-            //bounds are changing, where that calls this
-        // update_container();
-
         var _dy = (h - container.h);
         var _dx = (w - container.w);
 
@@ -232,7 +227,6 @@ class Scroll extends Control {
 
     public override function destroy() {
 
-            //:todo: hmm
         ready = false;
 
         super.destroy();
