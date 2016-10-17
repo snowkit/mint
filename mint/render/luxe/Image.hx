@@ -14,8 +14,14 @@ import luxe.Vector;
 private typedef LuxeMintImageOptions = {
     @:optional var uv: luxe.Rectangle;
     @:optional var color: luxe.Color;
-    @:optional var sizing: String; //:todo: type
+    @:optional var sizing: ImageSizing;
 }
+
+@:enum abstract ImageSizing(Int) from Int to Int {
+    var contain = 0;
+    var fit     = 1;
+    var cover   = 2;
+} //ImageSizing
 
 class Image extends mint.render.Render {
 
@@ -45,7 +51,7 @@ class Image extends mint.render.Render {
                 
                 //sets the uv to be the size on the longest edge
                 //possibly leaving whitespace on the sides (pillarbox) or top (letterbox)
-                case 'fit': {
+                case ImageSizing.fit: {
                     if(_texture.width > _texture.height) {
                         ratio_h = _texture.height/_texture.width;
                     } else {
@@ -54,7 +60,7 @@ class Image extends mint.render.Render {
                 } //fit
 
                     // cover the viewport with the size (possible cropping)
-                case 'cover': {
+                case ImageSizing.cover: {
                     var _rx = 1.0;
                     var _ry = 1.0;
                     if(_texture.width > _texture.height) {
@@ -64,6 +70,8 @@ class Image extends mint.render.Render {
                     }
                     _opt.uv = new luxe.Rectangle(0,0,_texture.width*_rx,_texture.height*_ry);
                 } //cover
+
+                case _:
 
             } //switch sizing
 

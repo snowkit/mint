@@ -108,6 +108,7 @@ class Main extends luxe.Game {
 
         config.preload.textures.push({ id:'assets/960.png' });
         config.preload.textures.push({ id:'assets/transparency.png' });
+        config.preload.textures.push({ id:'assets/transparency_other.png' });
         config.preload.textures.push({ id:'assets/mint.box.png' });
         config.preload.textures.push({ id:'assets/image.png' });
 

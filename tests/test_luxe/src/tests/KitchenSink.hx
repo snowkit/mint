@@ -75,7 +75,7 @@ class KitchenSink extends State {
                 label: { color:new Color().rgb(0x06b4fb) },
                 close_handle: { color:new Color().rgb(0x06b4fb) },
             },
-            x:160, y:10, w:256, h: 400,
+            x:160, y:100, w:256, h: 400,
             w_min: 256, h_min:256,
             collapsible:true
         });
@@ -357,6 +357,22 @@ class KitchenSink extends State {
             path: 'assets/transparency.png'
         });
 
+        new mint.Image({
+            parent: canvas,
+            name: 'image_cover',
+            x:160, y:10, w:64, h: 32,
+            options: { sizing: mint.render.luxe.Image.ImageSizing.cover },
+            path: 'assets/transparency_other.png'
+        });
+
+        new mint.Image({
+            parent: canvas,
+            name: 'image_fit',
+            x:160, y:48, w:64, h: 32,
+            options: { sizing: mint.render.luxe.Image.ImageSizing.fit },
+            path: 'assets/transparency_other.png'
+        });
+
         new mint.Panel({
             parent: canvas,
             name: 'panel1',
@@ -376,7 +392,6 @@ class KitchenSink extends State {
             x:0, y:100, w:512, h: 512,
             path: 'assets/image.png'
         });
-
 
     } //create_basics
 
