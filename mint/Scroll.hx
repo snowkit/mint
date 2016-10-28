@@ -7,7 +7,7 @@ import mint.types.Types.Helper.in_rect;
 import mint.core.Signal;
 import mint.core.Macros.*;
 
-
+//:todo: expose hardcoded sizes in options and setters
 /** Options for constructing a scroll area */
 typedef ScrollOptions = {
 
