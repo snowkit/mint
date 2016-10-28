@@ -61,7 +61,7 @@ class List extends Control {
         item.mouse_input = true;
         items.push(item);
 
-        item.onmouseup.listen(item_mousedown);
+        item.onmouseup.listen(item_mouseup);
         item.onmouseenter.listen(item_mouseenter);
         item.onmouseleave.listen(item_mouseleave);
 
@@ -77,7 +77,7 @@ class List extends Control {
         onitemleave.emit(idx, ctrl, event);
     }
 
-    function item_mousedown(event:MouseEvent, ctrl:Control ) {
+    function item_mouseup(event:MouseEvent, ctrl:Control ) {
         var idx = items.indexOf(ctrl);
         onselect.emit(idx, ctrl, event);
     }
