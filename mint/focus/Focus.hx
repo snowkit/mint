@@ -120,7 +120,6 @@ class Focus {
 
     function mousemove(e:MouseEvent, _) {
 
-        var _mark_target = canvas;
         var _captured = canvas.captured;
 
         if(_captured != null && _captured.mouse_input) {
