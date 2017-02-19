@@ -277,6 +277,7 @@ class KitchenSink extends State {
             onclick: function(e,c) {trace('hello mint! ${Luxe.time}' );}
         });
 
+
         check = new mint.Checkbox({
             parent: canvas,
             name: 'check1',
@@ -330,7 +331,7 @@ class KitchenSink extends State {
         make_slider('slider5', 56, 424, 36, 128, 0x9dca63, 0, 100, 0.3, 1, true);
         make_slider('slider6', 101, 424, 36, 128, 0xf6007b, null, null, null, null, true);
 
-        new mint.Button({
+        var button = new mint.Button({
             parent: canvas,
             name: 'button1',
             x: 10, y: 52, w: 60, h: 32,
@@ -339,6 +340,20 @@ class KitchenSink extends State {
             options: { label: { color:new Color().rgb(0x9dca63) } },
             onclick: function(e,c) {trace('mint button! ${Luxe.time}' );}
         });
+
+
+        //To modify the rendering properties,
+        //we must remember that mint logic keeps the rendering separated,
+        //the logic + controls are just the data to operate,
+        //after that, the renderer is in charge of rendering.
+
+        //To get the renderer for a control: control.renderer
+        //This value is generically typed, so you want to cast it to a specific type.
+        //We will cast to a luxe mint button renderer
+        var render = cast(button.renderer, mint.render.luxe.Button);
+        //now we can modify anything the renderer has:
+        render.visual.color = new Color().rgb(0xf6007b);
+
 
         new mint.Button({
             parent: canvas,
