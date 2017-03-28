@@ -355,6 +355,10 @@ class Control {
 
     } //topmost_child_at_point
 
+    public function get( _name:String) {
+        return Lambda.find(children, function(child) {return child.name == _name;});
+    }
+
     public function contains( _x:Float, _y:Float ) {
 
         assert(destroyed == false, '$name was already destroyed but is being interacted with');
