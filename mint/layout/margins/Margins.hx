@@ -37,6 +37,10 @@ class Margins {
         lay.sizers.push( sizer );
         update_sizer( sizer );
 
+        self.ondestroy.listen(function(){
+            lay.sizers.remove(sizer);
+        });
+
     } //size
 
     public function anchor( self:Control, ?other:Control, self_anchor:AnchorType, other_anchor:AnchorType, offset:Int=0 ) {
@@ -56,6 +60,10 @@ class Margins {
 
         lay.anchors.push( anchor );
         update_anchor( anchor );
+
+        self.ondestroy.listen(function(){
+            lay.anchors.remove(anchor);
+        });
 
     } //anchor
 
@@ -77,6 +85,10 @@ class Margins {
         lay.margins.push( margin );
         update_margin( margin );
 
+        self.ondestroy.listen(function(){
+            lay.margins.remove(margin);
+        });
+
     } //margin
 
 //Internal
@@ -90,7 +102,12 @@ class Margins {
         var ref = { margins:[], anchors:[], sizers:[] };
 
         observed.set(other, ref);
-
+        other.ondestroy.listen(function(){
+            observed.remove(other);
+            ref.anchors = null;
+            ref.margins = null;
+            ref.sizers = null;
+        });
         other.onbounds.listen( update_layout.bind(other) );
 
         return ref;
