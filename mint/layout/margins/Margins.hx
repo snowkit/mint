@@ -38,8 +38,9 @@ class Margins {
         update_sizer( sizer );
 
         self.ondestroy.listen(function(){
-            if(lay.sizers != null)
+            if(lay.sizers != null) {
                 lay.sizers.remove(sizer);
+            }
         });
 
     } //size
@@ -63,8 +64,9 @@ class Margins {
         update_anchor( anchor );
 
         self.ondestroy.listen(function(){
-            if(lay.anchors != null)
+            if(lay.anchors != null) {
                 lay.anchors.remove(anchor);
+            }
         });
 
     } //anchor
@@ -88,8 +90,9 @@ class Margins {
         update_margin( margin );
 
         self.ondestroy.listen(function(){
-            if(lay.margins != null)
+            if(lay.margins != null) {
                 lay.margins.remove(margin);
+            }
         });
 
     } //margin
@@ -105,6 +108,7 @@ class Margins {
         var ref = { margins:[], anchors:[], sizers:[] };
 
         observed.set(other, ref);
+        
         other.ondestroy.listen(function(){
             observed.remove(other);
             ref.anchors = null;
