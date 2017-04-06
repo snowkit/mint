@@ -48,6 +48,8 @@ class Button extends Control {
             text_size: options.text_size,
             name: name + '.label',
             options: options.options.label,
+            align: options.align,
+            align_vertical: options.align_vertical,
             mouse_input: false,
             internal_visible: options.visible
         });
