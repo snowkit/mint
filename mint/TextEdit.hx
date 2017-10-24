@@ -126,6 +126,8 @@ class TextEdit extends Control {
         onchange = null;
         onchangeindex.clear();
         onchangeindex = null;
+        oncommit.clear();
+        oncommit = null;
 
     } //destroy
 
@@ -234,49 +236,49 @@ class TextEdit extends Control {
 
     } //refresh
 
-    inline function get_text() {
-        return edit;
-    }
-
-    inline function get_display_text() {
-        return display;
-    }
-
-    inline function get_display_char() {
-        return display_char;
-    }
-
-    inline function set_text(v:String) {
-        index = v.uLength();
-        return refresh(v, false);
-    }
-
-    inline function set_display_char(v:String) {
-
-        if(v != null) {
-            display_char = v.uCharAt(0);
-        } else {
-            display_char = v;
+        inline function get_text() {
+            return edit;
         }
 
-        refresh(edit, false);
-        update_cur();
+        inline function get_display_text() {
+            return display;
+        }
 
-        return display_char;
+        inline function get_display_char() {
+            return display_char;
+        }
 
-    } //set_display_char
+        inline function set_text(v:String) {
+            index = v.uLength();
+            return refresh(v, false);
+        }
 
-    function move(amount:Int = -1) {
+        inline function set_display_char(v:String) {
 
-        index += amount;
-        index = Std.int(Helper.clamp(index, 0, edit.uLength()));
+            if(v != null) {
+                display_char = v.uCharAt(0);
+            } else {
+                display_char = v;
+            }
 
-        // trace('index $index / ${edit.uLength()}');
-        // trace(before(index) + '|' + after(index));
+            refresh(edit, false);
+            update_cur();
 
-        update_cur();
+            return display_char;
 
-    } //move
+        } //set_display_char
+
+        function move(amount:Int = -1) {
+
+            index += amount;
+            index = Std.int(Helper.clamp(index, 0, edit.uLength()));
+
+            // trace('index $index / ${edit.uLength()}');
+            // trace(before(index) + '|' + after(index));
+
+            update_cur();
+
+        } //move
 
     inline function cut( start:Int = 0, count:Int = 1 ) {
 
